@@ -45,7 +45,7 @@ Or with `FetchContent`:
 include(FetchContent)
 FetchContent_Declare(v4script
     GIT_REPOSITORY https://github.com/sigdev2/v4script.git
-    GIT_TAG v0.1.0)
+    GIT_TAG v0.1.1)
 FetchContent_MakeAvailable(v4script)
 target_link_libraries(myapp PRIVATE V4Script::V4Script)
 ```
@@ -140,7 +140,7 @@ order of [languages.json](../../languages.json). Every `LanguageInfo` has:
 | `version` | `3.2.2`, `R7RS`, `C17` | the version of the language |
 | `dialect` | `Free Pascal 3.2.2 (objfpc mode)` | what exactly is implemented |
 | `implementation` | `v4script`, `Skulpt` | who runs it: v4script's own translator or a third-party interpreter |
-| `implementationVersion` | `0.1.0`, `ae5f462` | the version of the implementation |
+| `implementationVersion` | `0.1.1`, `ae5f462` | the version of the implementation |
 | `license` | `MIT`, `BSD-3-Clause` | the license of the implementation |
 | `extensions` | `pas`, `pp` | file extensions; `findLanguageForFile("main.pas")` uses them |
 | `lineComment` | `//` | the line comment of the language |
