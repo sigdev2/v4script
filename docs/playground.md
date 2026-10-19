@@ -12,6 +12,11 @@ server.
    program: an example or one of your own. A link opens a program directly:
    `#basic/guess.bas` - an example, `#pascal` - the last program of a
    language.
+ - **The editor** colors the program as it is typed: comments, strings,
+   numbers, keywords, types, built-in names, directives and variables.
+   The colors come from regular expressions, not from a parser of the
+   language (see [highlighting](#highlighting)), so a rare construct may
+   be colored wrongly. A program over 100 000 characters stays plain.
  - **Run** (Ctrl+Enter) starts the program, **Stop** (Esc) stops it. The
    output shows standard output, standard error in red, interpreter
    warnings in orange, the value of the run after `=>`, and an error with
@@ -91,7 +96,9 @@ node tools/run-samples.mjs basic --examples  # the examples of a language run wi
 minifies `js/` with [tools/minify.mjs](../tools/minify.mjs), writes
 `languages.json` with the version from [VERSION](../VERSION) and
 `examples.json` from [web/examples](../web/examples), and copies the license
-texts. `--serve` sends the isolation headers itself; a plain static server
+texts. It fails when a language has no [highlighting](#highlighting) rules
+or when the highlighted text of an example differs from the example.
+`--serve` sends the isolation headers itself; a plain static server
 works too, through the service worker (`localhost` counts as a secure
 origin).
 
@@ -107,6 +114,7 @@ Actions*.
 | --- | --- |
 | [web/index.html](../web/index.html), [web/style.css](../web/style.css) | the page |
 | [web/app.js](../web/app.js) | the editor, the lists of programs, `localStorage`, the console, the runs |
+| [web/highlight.js](../web/highlight.js) | the syntax highlighting: the rules and word lists of every language |
 | [web/worker.js](../web/worker.js) | the engine: the bridge of the [host layer](internals/host.md) in a Web Worker - loading a language, output, input, the canvas, timers |
 | [web/sw.js](../web/sw.js) | the service worker that adds the isolation headers |
 | [web/examples/](../web/examples) | the examples: a directory per language and `index.json` - groups, titles and input for the check |
@@ -114,6 +122,29 @@ Actions*.
 The page and the worker run only in browsers, so they use modern
 JavaScript, like the tools; the rules of
 [StyleGuide.JS.md](../StyleGuide.JS.md) are for `js/`.
+
+## Highlighting
+
+The editor is a text area with transparent text over `<pre id="highlight">`,
+the colored copy of the same text: both have the same font, padding and
+white space, ligatures and kerning are off (the tokens of the copy would
+break them), and [app.js](../web/app.js) moves the copy as the text area
+scrolls and colors it again once per frame while the user types.
+
+A language in [highlight.js](../web/highlight.js) is a list of rules, in
+the manner of [Colorer](https://github.com/colorer/Colorer-library): a
+regular expression and the class of what it finds - `comment`, `string`,
+`number`, `constant`, `keyword`, `type`, `builtin`, `meta` (preprocessor
+lines, directives, annotations), `variable` - or `word` for names, which
+the word lists of the language (and its optional `classify`) give a class.
+At every position the leftmost match wins, then the first rule. A rule may
+also require the text before the match: a regular expression literal of
+JavaScript or Perl follows an operator, `<stdio.h>` follows `#include`.
+There is no parser, so the colors may differ from the language where it
+needs context: a heredoc of Perl takes the rest of its first line, nested
+block comments end at the first end, a method named as a built-in is
+colored as one. A new language adds its
+rules there; the build fails without them.
 
 ## Adding an example
 

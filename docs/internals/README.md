@@ -81,6 +81,7 @@ translator core is shared), then calls the adapter with the `host` object.
  - In both cases: an entry in [languages.json](../../languages.json),
    samples in `tests/samples/<id>/`, rows in
    [LanguagesTest.cpp](../../tests/LanguagesTest.cpp), a reference page in
-   [docs/languages](../languages/README.md), lines in the
+   [docs/languages](../languages/README.md), examples and highlighting
+   rules for the [playground](../playground.md#highlighting), lines in the
    [README](../../README.md), the plan in [TODO.md](../../TODO.md)
    updated.

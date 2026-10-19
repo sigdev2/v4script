@@ -37,9 +37,17 @@ implementation, tests, documentation). The order approved by the owner:
 | 22 | WebAssembly (WAT) | done (2.0) |
 | 23 | x86 assemblers (NASM, FASM, TASM) and ASMX | planned |
 | 24 | Verilog | planned |
+| 25 | MASM | planned |
+| 26 | Ada | planned |
+| 27 | Common Lisp | planned |
+| 28 | NES assembler: ca65 (6502) | planned |
+| 29 | Z80 assembler: sjasmplus | planned |
+| 30 | CoffeeScript | planned |
+| 31 | IL assembler (.NET CIL) | planned |
 
 Remaining order: C#, Kotlin, Rust, Swift, Dart, Scala, F#, Haskell,
-Erlang, Fortran, COBOL, Nim, Zig, assemblers, Verilog.
+Erlang, Fortran, COBOL, Nim, Zig, assemblers, Verilog, MASM, Ada,
+Common Lisp, the NES and Z80 assemblers, CoffeeScript, IL assembler.
 
 Decisions already taken for these stages:
 
@@ -54,6 +62,47 @@ Decisions already taken for these stages:
    with an output port.
  - **Verilog**: four-state logic. Waiting in concurrent code is real time
    through timers (the run ends, fibers go on), as in the other languages.
+ - **MASM**: the syntax of MASM 6.x (`.MODEL`, `PROC`/`ENDP`, `INVOKE`,
+   `.IF`/`.WHILE`, `STRUCT`, macros) over the 16-bit 8086 DOS machine of
+   TASM (`int 21h`, `.COM` and `.EXE` programs); later the 32-bit flat
+   model with a console subset of Win32 (`WriteConsoleA`, `ExitProcess`).
+   Reference: MASM 6.15 with DOSBox; UASM only as a black box (its license
+   is not MIT-compatible).
+ - **Ada**: Ada 2012 translated by v4script: packages, strong types with
+   range checks (`Constraint_Error`), records with discriminants, arrays
+   with any index type, generics, exceptions, tasks and protected objects
+   over the fibers of the translator, `Ada.Text_IO` with the generic
+   `Integer_IO` and `Float_IO`. Reference: GNAT (GCC), a black box.
+ - **Common Lisp**: ANSI Common Lisp: the numeric tower of Scheme (big
+   integers, ratios), `defmacro` with evaluation at compile time,
+   packages, special variables, multiple values, conditions and restarts,
+   CLOS (`defclass`, generic functions, standard method combination),
+   `format` and `loop`. Reference: SBCL, a black box.
+ - **NES**: the syntax of ca65 (the assembler of cc65), in which most NES
+   homebrew and the NESdev examples are written, with the layout of ld65
+   for NROM (an iNES header, mapper 0); the program runs on an emulated
+   NES - a 6502 (shared with ASMX), the PPU on the canvas, the controllers
+   from the keyboard, no APU sound. The syntax of asm6 and NESASM later as
+   dialects. Reference: ca65/ld65 and the Mesen emulator for the picture.
+ - **Z80**: the syntax of sjasmplus (Zilog mnemonics, the assembler of
+   most ZX Spectrum sources today; Pasmo as a dialect) for two machines: a
+   ZX Spectrum 48K - the screen memory on the canvas, `RST 10h` printing
+   and the keyboard through an own small ROM (the Sinclair ROM is not
+   free) - and CP/M `.COM` programs with BDOS calls (`CALL 5`). The Z80 is
+   shared with ASMX. Reference: sjasmplus with the Fuse emulator and a
+   CP/M emulator, black boxes.
+ - **CoffeeScript**: the official compiler (MIT) of CoffeeScript 2 as a
+   vendor bundle, as the other interpreters; its JavaScript (classes,
+   arrow functions, destructuring) runs in V4 as it is. Check first that
+   V4 compiles the compiler bundle (deep expressions); run-time errors get
+   CoffeeScript lines from the source map.
+ - **IL assembler**: the syntax of ilasm (ECMA-335 CIL: `.assembly`,
+   `.class`, `.method`, `.locals init`, `ldstr`,
+   `call void [mscorlib]System.Console::WriteLine(string)`) after C# and
+   over its run time: the type system, value types, generics, exceptions,
+   the `System` subset. The evaluation stack is typed at translation time
+   as the verifier of .NET does. Reference: ilasm and the .NET 8 runtime
+   (MIT).
  - **Ruby** is not planned through Opal: Opal crashes the V4 compiler.
    It would need its own translator.
 
@@ -149,4 +198,7 @@ Decisions already taken for these stages:
  - BASIC `SCREEN` and Pascal `Graph`: put the picture on the canvas before
    the program waits for input (now at the end of a run and at waits for
    time) - in the Qt engine too.
- - Syntax highlighting in the editor; a link that carries a program.
+ - A link that carries a program.
+ - Highlighting: nested block comments (Scheme `#| |#`, WebAssembly
+   `(; ;)`), the interpolation in strings, a parser state instead of
+   guesses for regular expression literals.

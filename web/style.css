@@ -11,6 +11,14 @@
     --warning: #9a6700;
     --value: #2e7d32;
     --echo: #2f6fdb;
+    --comment: #6a737d;
+    --string: #a31515;
+    --number: #098658;
+    --keyword: #0000ff;
+    --type: #267f99;
+    --builtin: #795e26;
+    --meta: #af00db;
+    --variable: #001080;
     --mono: ui-monospace, 'Cascadia Mono', 'Consolas', 'DejaVu Sans Mono', 'Liberation Mono', monospace;
     color-scheme: light dark;
 }
@@ -29,6 +37,14 @@
         --warning: #e3b341;
         --value: #7ee787;
         --echo: #79b8ff;
+        --comment: #7f8a99;
+        --string: #ce9178;
+        --number: #b5cea8;
+        --keyword: #569cd6;
+        --type: #4ec9b0;
+        --builtin: #dcdcaa;
+        --meta: #c586c0;
+        --variable: #9cdcfe;
     }
 }
 
@@ -201,7 +217,7 @@ main {
     position: relative;
 }
 
-#gutter, #code, #output, #line, #input {
+#gutter, #highlight, #code, #output, #line, #input {
     font-family: var(--mono);
     font-size: 13px;
     line-height: 1.45;
@@ -225,16 +241,92 @@ main {
     font-weight: 700;
 }
 
-#code {
+/* The highlighted copy of the text lies under the transparent text of the
+   text area, letter on letter: both have the same font, padding and white
+   space, ligatures and kerning are off (tokens split them), and app.js moves
+   the copy as the text area scrolls. */
+.code {
     flex: 1;
+    display: flex;
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+}
+
+#highlight, #code {
     margin: 0;
     padding: 8px 10px;
+    white-space: pre;
+    font-variant-ligatures: none;
+    font-kerning: none;
+}
+
+#highlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    color: var(--text);
+}
+
+#code {
+    position: relative;
+    flex: 1;
     border: 0;
     outline: none;
     resize: none;
     background: transparent;
-    white-space: pre;
+    color: transparent;
+    caret-color: var(--text);
     overflow: auto;
+}
+
+/* Literal colors: highlight pseudo-elements may not see custom properties. */
+#code:not(.plain)::selection {
+    color: transparent;
+    background: rgba(47, 111, 219, 0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+    #code:not(.plain)::selection {
+        background: rgba(91, 147, 240, 0.35);
+    }
+}
+
+#code.plain {
+    color: var(--text);
+}
+
+#highlight .comment {
+    color: var(--comment);
+}
+
+#highlight .string {
+    color: var(--string);
+}
+
+#highlight .number, #highlight .constant {
+    color: var(--number);
+}
+
+#highlight .keyword {
+    color: var(--keyword);
+}
+
+#highlight .type {
+    color: var(--type);
+}
+
+#highlight .builtin {
+    color: var(--builtin);
+}
+
+#highlight .meta {
+    color: var(--meta);
+}
+
+#highlight .variable {
+    color: var(--variable);
 }
 
 #input-pane {
