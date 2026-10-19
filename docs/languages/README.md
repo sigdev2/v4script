@@ -14,6 +14,7 @@ beyond what the embedding application gives.
 | PHP | [php.md](php.md) | 7 | Uniter translates PHP into JavaScript |
 | Go | [go.md](go.md) | 1.22 | the v4script translator |
 | C | [c.md](c.md) | C17 | the v4script translator, own linear memory |
+| C++ | [cpp.md](cpp.md) | C++17 | the v4script translator over the memory of C, the standard library written in C++ |
 | Java | [java.md](java.md) | 21 | the v4script translator, a JDK subset written in Java |
 | Forth | [forth.md](forth.md) | Forth 2012 | an interpreter of v4script, definitions translated into JavaScript; own linear memory |
 | BASIC | [basic.md](basic.md) | QBasic 4.5 | the v4script translator, graphics on a canvas |
@@ -42,7 +43,7 @@ standard input come from, errors, and what is missing.
    before the program reads input. Standard error (where the language has
    it) is a separate stream, and so are interpreter warnings (PHP, Prolog).
  - **Value.** Like an interactive session, a run returns the value of the
-   program (`Result::value`): Python, Lua, Go, C, Java and Pascal - the
+   program (`Result::value`): Python, Lua, Go, C, C++, Java and Pascal - the
    last expression of the unit; PHP - the value of `return` in the unit;
    Forth - what is left on the stack (`<2> 1 2`); WebAssembly - the result
    of the last `invoke` command or of the function `main`; Scheme - the
@@ -58,26 +59,27 @@ standard input come from, errors, and what is missing.
    interrupted (`Status::Interrupted`); the variables of the language
    stay.
  - **Programs that wait** (`time.Sleep` in Go, `Thread.sleep` in Java,
-   `SLEEP` in BASIC, `Delay` in Pascal, SRFI 18 threads in Scheme, Forth
-   `MS`) end their run when everything waits for time and go on in timers
-   of the engine: run the event loop or `Runtime::waitForFinished()`.
+   `std::this_thread::sleep_for` in C++, `SLEEP` in BASIC, `Delay` in
+   Pascal, SRFI 18 threads in Scheme, Forth `MS`) end their run when
+   everything waits for time and go on in timers of the engine: run the
+   event loop or `Runtime::waitForFinished()`.
  - **Recursion** goes up to 10 000 nested calls after
    `v4script::prepareProcess()` (1000 on Android); deeper is a stack
    overflow error of the language, not a crash.
  - **Modules and data files** come from the host
    (`Host::readModule(name)`): `import` in Python and Go, `require` in Lua,
    `consult` in Prolog, `use` and `require` in Perl, `include` and
-   `require` in PHP, `#include` in C, a class `Name` from `Name.java` in
-   Java, `INCLUDE` and `REQUIRE` in Forth, `'$INCLUDE: 'name'` in BASIC,
+   `require` in PHP, `#include` in C and C++, a class `Name` from
+   `Name.java` in Java, `INCLUDE` and `REQUIRE` in Forth, `'$INCLUDE: 'name'` in BASIC,
    `uses Name` (`Name.pas`) and `{$I name}` in Pascal, `(import "name" …)`
    (`name.wat`) in WebAssembly, `(import (name))` (`name.sld`), `load` and
    `include` in Scheme. Files are read only. A changed file is loaded again
    at the next run.
  - **Standard input** comes from the host (`Host::readLine`, or
    `Runtime::setInputText`): `input()`, `io.read`, `read/1`, `<STDIN>`,
-   `fgets(STDIN)`, `fmt.Scan`, `scanf`, `Scanner(System.in)`, `ACCEPT`,
-   `INPUT`, `ReadLn`, WASI `fd_read`, `read-line`. Without a host input
-   programs see the end of input.
+   `fgets(STDIN)`, `fmt.Scan`, `scanf`, `std::cin`, `Scanner(System.in)`,
+   `ACCEPT`, `INPUT`, `ReadLn`, WASI `fd_read`, `read-line`. Without a host
+   input programs see the end of input.
 
 ## Host modules
 
@@ -103,7 +105,7 @@ runtime.addModule(v4script::HostModule("app", object, {
 | Perl | `greet("Ann")`, `counter()` | `app::greet("Ann")` |
 | PHP | `greet("Ann")`, `counter()` | `app\greet("Ann")` |
 | Go | - | `app.Greet("Ann")`, `app.Counter()` |
-| C | `greet("Ann")`, `counter()` | `app_greet("Ann")` |
+| C, C++ | `greet("Ann")`, `counter()` | `app_greet("Ann")` |
 | Java | `greet("Ann")`, `counter()` | `App.greet("Ann")` |
 | Forth | `s" Ann" greet`, `counter` | `app.greet`, `app.counter` |
 | BASIC | `GREET("Ann")`, `COUNTER` | `APP.greet("Ann")`, `APP.counter` |
@@ -116,10 +118,10 @@ runtime.addModule(v4script::HostModule("app", object, {
    only through its name. A global function never hides a built-in name of
    the language (`log` in a language that has its own `log` stays the
    language's); the function is then reachable through the module.
- - Names follow the language: `isEven` is `is_even` in C and Prolog,
+ - Names follow the language: `isEven` is `is_even` in C, C++ and Prolog,
    `IsEven` in Go and Pascal, `is-even` in Scheme and Forth, `ISEVEN` in
    BASIC; JavaScript, Python, Lua, Perl, PHP, Java and WebAssembly keep the
-   JavaScript name. In C a module is the header `app.h` (included
+   JavaScript name. In C and C++ a module is the header `app.h` (included
    implicitly for a global module), in Java the class `app.App`, in Pascal
    the unit `App`, in Go the package `app`.
  - Types: `int` is a 64-bit integer where the language has one (`int64`,
@@ -143,7 +145,7 @@ functions to JavaScript.
 | `o.fillStyle = "red"` | `o.fillStyle = "red"` | `o.fillStyle = "red"` | `setProperty($o, "fillStyle", "red")` | `$o->fillStyle = "red"` |
 | `Math.max(1, 5)` | `js.Math.max(1, 5)` | `js.global.Math:max(1, 5)` | `js()->Math->max(1, 5)` | `$js->Math->max(1, 5)` |
 
-| JavaScript | Go | C | Java | Forth |
+| JavaScript | Go | C, C++ | Java | Forth |
 | --- | --- | --- | --- | --- |
 | `o.value("B2")` | `o.Call("value", "B2")` | `js_call(o, "value", "B2")` | `o.call("value", "B2")` | `js" B2" 1 o s" value" js-call` |
 | `o.title` | `o.Get("title")` | `js_get(o, "title")` | `o.get("title")` | `o s" title" js-get` |

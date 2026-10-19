@@ -16,8 +16,8 @@ implementation, tests, documentation). The order approved by the owner:
 | 1 | Go (with the translator core) | done |
 | 2 | C | done |
 | 3 | Java | done |
-| 4 | **C++** | next |
-| 5 | C# | planned |
+| 4 | C++ | done (C++17) |
+| 5 | **C#** | next |
 | 6 | Kotlin | planned |
 | 7 | Scheme | done (R7RS-small) |
 | 8 | Pascal | done (Free Pascal 3.2.2) |
@@ -38,13 +38,11 @@ implementation, tests, documentation). The order approved by the owner:
 | 23 | x86 assemblers (NASM, FASM, TASM) and ASMX | planned |
 | 24 | Verilog | planned |
 
-Remaining order: C++, C#, Kotlin, Rust, Swift, Dart, Scala, F#, Haskell,
+Remaining order: C#, Kotlin, Rust, Swift, Dart, Scala, F#, Haskell,
 Erlang, Fortran, COBOL, Nim, Zig, assemblers, Verilog.
 
 Decisions already taken for these stages:
 
- - **C++** runs over the linear memory of C, with the STL over it (the most
-   expensive stage).
  - **64-bit integers** stay exact (the hybrid `T.i64`); 32-bit types wrap.
  - **Recursion**: translators turn tail calls into loops; the process-wide
    call depth is raised by `prepareProcess()`.
@@ -68,6 +66,15 @@ Decisions already taken for these stages:
  - **C**: `goto`, `_Generic`, `setjmp`/`longjmp`, `wchar.h`; writing files
    through the host; bounds checks inside the program memory (as
    AddressSanitizer does).
+ - **C++**: class template argument deduction, pointers to members,
+   virtual inheritance, `goto`, `alignas` on classes, `noexcept` violations
+   terminating, `std::exception_ptr`, wide strings; threads (`std::thread`,
+   `mutex`, `atomic`), `<regex>`, `<variant>`, `<any>`, `<complex>`; the
+   binomial and gamma families of `<random>` and the Poisson method of
+   libstdc++ for a mean of 12 or more; `vector<bool>` as a bit vector;
+   the speed of translation in V4 (2-4 s for the first unit that uses
+   several containers: cache or precompute the tokens of the library, less
+   checking work per library declaration).
  - **Java**: access checks (`private`) and checked exceptions,
    `java.time`, `CompletableFuture`, `java.util.concurrent.locks`, detailed
    `NullPointerException` messages and `at …` lines in `printStackTrace`,

@@ -1,8 +1,8 @@
 # Host modules
 
 A host module is an API of the application that programs in every language
-can call: a package in Go, a header in C, a class in Java, a unit in
-Pascal, predicates in Prolog, procedures in Scheme, imports in
+can call: a package in Go, a header in C and C++, a class in Java, a unit
+in Pascal, predicates in Prolog, procedures in Scheme, imports in
 WebAssembly. The implementation is one JavaScript object (often a wrapped
 `QObject`); the description of its functions tells every language how to
 show and convert them.
@@ -96,7 +96,7 @@ the full table in [languages](../languages/README.md#host-modules)):
 | Perl | subroutines of `main` | the package `app::` |
 | PHP | global functions | the namespace `app\` |
 | Go | - (imported implicitly) | the package `app`: `app.Greet`, `app.IsEven` |
-| C | `greet`, `is_even` (included header) | `#include <app.h>`: `app_greet`, `app_is_even` |
+| C, C++ | `greet`, `is_even` (included header) | `#include <app.h>`: `app_greet`, `app_is_even` |
 | Java | static import: `greet("Ann")` | the class `app.App`: `App.greet` |
 | Forth | words `greet`, `is-even` | words `app.greet`, `app.is-even` |
 | BASIC | `GREET("Ann")`, `COUNTER` | the object `APP`: `APP.greet("Ann")` |
@@ -122,8 +122,8 @@ the full table in [languages](../languages/README.md#host-modules)):
    `value` and `array` the JavaScript value of the language's value (a list
    becomes an array, a map or a record an object). A `value` parameter
    takes strings and numbers in every language except where the language
-   has no such conversion: C needs `js_from_int`/`js_from_double` for a
-   number, Forth a handle (`js"`, `n>js`).
+   has no such conversion: C and C++ need `js_from_int`/`js_from_double`
+   for a number, Forth a handle (`js"`, `n>js`).
  - Results are converted back by the result type: `array` gives the
    language's array of values; `value` a handle or an object of the
    language.

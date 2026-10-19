@@ -41,8 +41,8 @@ private slots:
                     !language.license.isEmpty() && !language.extensions.isEmpty() && !language.lineComment.isEmpty(),
                 qPrintable(language.id));
         }
-        const QStringList expected { "python", "lua",   "prolog", "perl",   "php", "go",    "c",
-                                     "java",   "forth", "basic",  "pascal", "wat", "scheme" };
+        const QStringList expected { "python", "lua",  "prolog", "perl",  "php",    "go",  "c",
+                                     "cpp",    "java", "forth",  "basic", "pascal", "wat", "scheme" };
         QCOMPARE(ids, expected);
         QCOMPARE(v4script::findLanguage("php")->name, QString("PHP"));
         QCOMPARE(v4script::findLanguage("go")->version, QString("1.22"));
@@ -86,6 +86,10 @@ private slots:
             << "c"
             << "printf(\"Hello, мир %d\\n\", 1 + 2);\nprintf(\"a\");\nputs(\"b\");\nsizeof(int) * 10 + 2;"
             << QStringList { "Hello, мир 3", "ab" } << "42";
+        QTest::newRow("cpp") << "cpp"
+                             << "#include <iostream>\nstd::cout << \"Hello, мир \" << 1 + 2 << \"\\n\" << 'a';\n"
+                                "std::cout << \"b\" << std::endl;\nsizeof(int) * 10 + 2;"
+                             << QStringList { "Hello, мир 3", "ab" } << "42";
         QTest::newRow("java") << "java"
                               << "System.out.println(\"Hello, мир \" + (1 + 2));\nSystem.out.print(\"a\");\n"
                                  "System.out.println(\"b\");\nList.of(1, 2, 3).size() * 14"
@@ -199,6 +203,21 @@ private slots:
         QTest::newRow("c host") << "c"
                                 << "int x = 1;\nfail(\"Z\");"
                                 << "RangeError" << 2;
+        QTest::newRow("cpp") << "cpp"
+                             << "int x = 1;\nint y = x + undefinedName;"
+                             << "'undefinedName' was not declared in this scope" << 2;
+        QTest::newRow("cpp syntax") << "cpp"
+                                    << "int x = 1;\nint y = = 2;"
+                                    << "expected primary-expression" << 2;
+        QTest::newRow("cpp segfault") << "cpp"
+                                      << "int *p = nullptr;\nint x = 1;\nprintf(\"%d\\n\", *p + x);"
+                                      << "Segmentation fault" << 3;
+        QTest::newRow("cpp exception") << "cpp"
+                                       << "#include <vector>\nstd::vector<int> v;\nint x = v.at(3);"
+                                       << "terminate called after throwing an instance of 'std::out_of_range'" << 3;
+        QTest::newRow("cpp host") << "cpp"
+                                  << "int x = 1;\nfail(\"Z\");"
+                                  << "RangeError" << 2;
         QTest::newRow("java") << "java"
                               << "int x = 1;\nint y = x + undefinedName;"
                               << "cannot find symbol" << 2;
@@ -337,6 +356,10 @@ private slots:
                            << "int base = 40;\nint add(int v) { return base + v; }"
                            << "add(2);"
                            << "42";
+        QTest::newRow("cpp") << "cpp"
+                             << "int base = 40;\nint add(int v) { return base + v; }"
+                             << "add(2);"
+                             << "42";
         QTest::newRow("java") << "java"
                               << "int base = 40;\nint add(int v) { return base + v; }"
                               << "add(2)"
@@ -415,6 +438,11 @@ private slots:
                            << "#define SEVEN 7\nstruct K { int x; };\nint get(struct K k) { return k.x; }\n"
                               "int f(void) { static int calls; calls++; return SEVEN; }\nf();"
                            << "7";
+        QTest::newRow("cpp") << "cpp"
+                             << "#define SEVEN 7\nstruct K { int x; };\nint get(K k) { return k.x; }\n"
+                                "template <class T> T twice(T v) { return v + v; }\n"
+                                "int f() { static int calls; calls++; return twice(SEVEN) / 2; }\nf();"
+                             << "7";
         QTest::newRow("java") << "java"
                               << "record K(int x) {}\nenum Color { RED }\nint f() { return new K(7).x(); }\nf()"
                               << "7";
@@ -509,6 +537,9 @@ private slots:
         QTest::newRow("c") << "c"
                            << "printf(\"%s %lld %lld\\n\", greet(\"Ann\"), counter(), app_counter());\n"
                               "app_log(\"one\");";
+        QTest::newRow("cpp") << "cpp"
+                             << "printf(\"%s %lld %lld\\n\", greet(\"Ann\"), counter(), app_counter());\n"
+                                "app_log(\"one\");";
         QTest::newRow("java") << "java"
                               << "System.out.println(greet(\"Ann\") + \" \" + counter() + \" \" + App.counter());\n"
                                  "log(\"one\");";
@@ -574,6 +605,9 @@ private slots:
         QTest::newRow("c") << "c"
                            << "js_value ctx = js_call(canvas(), \"getContext\", \"2d\");\n"
                               "js_set(ctx, \"fillStyle\", \"red\");\njs_call(ctx, \"fillRect\", 0, 0, 50, 40);";
+        QTest::newRow("cpp") << "cpp"
+                             << "js_value ctx = js_call(canvas(), \"getContext\", \"2d\");\n"
+                                "js_set(ctx, \"fillStyle\", \"red\");\njs_call(ctx, \"fillRect\", 0, 0, 50, 40);";
         QTest::newRow("java") << "java"
                               << "var ctx = canvas().call(\"getContext\", \"2d\");\nctx.set(\"fillStyle\", \"red\");\n"
                                  "ctx.call(\"fillRect\", 0, 0, 50, 40);";
@@ -669,6 +703,12 @@ private slots:
                               "printf(\"%lld\\n\", js_int(js_call(js_global(), \"jsDouble\", 21)));"
                            << "42"
                            << "cSquare(7)";
+        QTest::newRow("cpp")
+            << "cpp"
+            << "int cppSquare(int x) { return x * x; }\njs_set(js_global(), \"cppSquare\", cppSquare);\n"
+               "printf(\"%lld\\n\", js_int(js_call(js_global(), \"jsDouble\", 21)));"
+            << "42"
+            << "cppSquare(7)";
         QTest::newRow("java") << "java"
                               << "Js.global().set(\"javaSquare\", (IntUnaryOperator) x -> x * x);\n"
                                  "System.out.println(Js.global().call(\"jsDouble\", 21).asInt());"
@@ -765,6 +805,11 @@ private slots:
                            << "int triple(int x) { return 3 * x; }\n"
                            << "int triple(int x) { return -x; }\n"
                            << "#include \"mathx.h\"\ntriple(5);";
+        QTest::newRow("cpp") << "cpp"
+                             << "mathx.hpp"
+                             << "namespace mathx {\nint triple(int x) { return 3 * x; }\n}\n"
+                             << "namespace mathx {\nint triple(int x) { return -x; }\n}\n"
+                             << "#include \"mathx.hpp\"\nmathx::triple(5);";
         QTest::newRow("java") << "java"
                               << "Mathx.java"
                               << "public class Mathx {\n    public static int triple(int x) { return 3 * x; }\n}\n"
@@ -861,6 +906,14 @@ private slots:
                                   << "broken.c"
                                   << "int broken(void)\n{\n    return +;\n}\n"
                                   << "#include \"broken.c\"\nbroken();" << 3;
+        QTest::newRow("cpp") << "cpp"
+                             << "bad.hpp"
+                             << "int bad()\n{\n    int *p = nullptr;\n    return *p;\n}\n"
+                             << "#include \"bad.hpp\"\nbad();" << 4;
+        QTest::newRow("cpp syntax") << "cpp"
+                                    << "broken.hpp"
+                                    << "int broken()\n{\n    return +;\n}\n"
+                                    << "#include \"broken.hpp\"\nbroken();" << 3;
         QTest::newRow("java") << "java"
                               << "Bad.java"
                               << "public class Bad {\n    public static int f() {\n        int[] a = new int[1];\n"
@@ -1036,6 +1089,11 @@ private slots:
                            << "int deep(int n) { return n; }\nfor (;;) deep(1);"
                            << "kept;"
                            << "5";
+        QTest::newRow("cpp") << "cpp"
+                             << "int kept = 5;"
+                             << "int deep(int n) { return n; }\nfor (;;) deep(1);"
+                             << "kept;"
+                             << "5";
         QTest::newRow("java") << "java"
                               << "int kept = 5;"
                               << "int deep(int n) { return n; }\nwhile (true) deep(1);"

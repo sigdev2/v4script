@@ -340,6 +340,41 @@
       ]
     }
   ],
+  "cpp": [
+    {
+      "group": "C++",
+      "examples": [
+        {
+          "file": "hello.cpp",
+          "title": "Hello: std::cin and std::string",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "shapes.cpp",
+          "title": "Classes: virtual functions and smart pointers"
+        },
+        {
+          "file": "words.cpp",
+          "title": "Word frequency: std::map and lambdas",
+          "input": [
+            "the cat and the dog",
+            "the end of the cat",
+            ""
+          ]
+        },
+        {
+          "file": "templates.cpp",
+          "title": "Templates: a matrix, folds, constexpr"
+        },
+        {
+          "file": "dice.cpp",
+          "title": "<random>: two dice"
+        }
+      ]
+    }
+  ],
   "java": [
     {
       "group": "Java",
