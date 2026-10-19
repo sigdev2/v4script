@@ -8,7 +8,7 @@ and C library; everything above C is in
 
 | File | Role |
 | --- | --- |
-| [types.js](../../js/translator/cpp/types.js) | interned types: cv-qualified, references, classes, enums, template placeholders, dependent names; names as in g++ messages; Itanium mangling for `typeid` |
+| [types.js](../../js/translator/cpp/types.js) | interned types: cv-qualified, references, classes, enums, template placeholders, dependent names; names as in g++ messages; Itanium mangling for `typeid` with substitutions (`S_`, `S0_`) and the names of libstdc++ (`std::__cxx11::basic_string`) |
 | [scope.js](../../js/translator/cpp/scope.js) | scopes, lookup (qualified, `using`, inline namespaces), overload sets, the transaction of a unit, lazy library names (`X.ensure`) |
 | [parser.js](../../js/translator/cpp/parser.js), [declarations.js](../../js/translator/cpp/declarations.js), [statements.js](../../js/translator/cpp/statements.js), [expressions.js](../../js/translator/cpp/expressions.js) | parsing with semantic actions: tokens, names, declarators, declarations, statements, expression syntax |
 | [check.js](../../js/translator/cpp/check.js), [conversions.js](../../js/translator/cpp/conversions.js), [overload.js](../../js/translator/cpp/overload.js), [special.js](../../js/translator/cpp/special.js), [classes.js](../../js/translator/cpp/classes.js) | checked expression trees, implicit conversion sequences and initialization, overload resolution and calls, `new`/`throw`/`typeid`/`dynamic_cast`, class layout, virtual functions, implicit special members |

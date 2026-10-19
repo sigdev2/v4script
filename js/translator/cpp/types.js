@@ -553,65 +553,206 @@
         'char16_t': 'Ds', 'char32_t': 'Di'
     };
 
-    function mangleName(entity) {
+    // The name of a class as the parts of its path: namespaces and classes
+    // ({ name, args } - args of a template instance), from the outermost.
+    // std::string of the library is a class; libstdc++ has
+    // std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char>>,
+    // and list is in __cxx11 too.
+    function namePath(entity) {
         var parts = [];
-        for (var scope = entity; scope !== null && scope !== undefined; scope = scope.parent) {
+        var next;
+        for (var scope = entity; scope !== null && scope !== undefined; scope = next) {
+            // An instance lives in the namespace of its template.
+            next = scope.template ? scope.template.owner : scope.parent;
             if (scope.kind === 'namespace') {
                 if (scope.parent === null)
                     break;
                 if (!scope.inlineNamespace)
-                    parts.unshift(scope.name === null ? '12_GLOBAL__N_1' : scope.name.length + scope.name);
+                    parts.unshift({ name: scope.name === null ? '_GLOBAL__N_1' : scope.name, args: null });
             } else if (scope.isClass || scope.kind === 'enum') {
-                var name = scope.template !== null && scope.template !== undefined ? scope.template.name : scope.name;
-                var text = name.length + name;
-                if (scope.templateArgs)
-                    text += 'I' + scope.templateArgs.map(mangleArgument).join('') + 'E';
-                parts.unshift(text);
+                var template = scope.template !== null && scope.template !== undefined;
+                parts.unshift({ name: template ? scope.template.name : scope.name,
+                                args: template ? scope.templateArgs : null });
             } else {
                 break;
             }
         }
-        if (parts.length === 1)
-            return parts[0];
-        if (parts[0] === '3std')
-            return parts.length === 2 ? 'St' + parts[1] : 'NSt' + parts.slice(1).join('') + 'E';
-        return 'N' + parts.join('') + 'E';
-    }
-
-    // A template argument: L<type><value>E for a value, J...E for a pack.
-    function mangleArgument(arg) {
-        if (arg.kind === 'pack')
-            return 'J' + arg.items.map(mangleArgument).join('') + 'E';
-        if (arg.kind === 'value') {
-            var text = typeof arg.value === 'number' ? String(arg.value) : T.big.str(arg.value);
-            return 'L' + X.mangle(X.unqual(arg.type || X.types.int)) + (text.charAt(0) === '-' ? 'n' + text.substring(1)
-                                                                                                : text) + 'E';
+        if (parts.length === 2 && parts[0].name === 'std' && parts[1].args === null && parts[1].name === 'string') {
+            var char = { kind: 'type', type: X.types.char };
+            var traits = { kind: 'struct', mangledPath: [parts[0], { name: 'char_traits', args: [char] }] };
+            var allocator = { kind: 'struct', mangledPath: [parts[0], { name: 'allocator', args: [char] }] };
+            var args = [char, { kind: 'type', type: traits }, { kind: 'type', type: allocator }];
+            return [parts[0], { name: '__cxx11', args: null }, { name: 'basic_string', args: args }];
         }
-        return X.mangle(arg.type);
+        if (parts.length === 2 && parts[0].name === 'std' && parts[1].name === 'list' && parts[1].args !== null)
+            return [parts[0], { name: '__cxx11', args: null }, parts[1]];
+        return parts;
     }
 
-    X.mangle = function (type) {
+    function source(name) {
+        return name.length + name;
+    }
+
+    // A mangling with the substitutions of repeated parts: dictionary holds
+    // the keys of the parts written so far, S_ is the first, S0_ the second.
+    function Mangler() {
+        this.dictionary = [];
+    }
+
+    Mangler.prototype.substitution = function (key) {
+        var index = this.dictionary.indexOf(key);
+        if (index < 0)
+            return null;
+        return index === 0 ? 'S_' : 'S' + (index - 1).toString(36).toUpperCase() + '_';
+    };
+
+    Mangler.prototype.type = function (type) {
         var cv = type.cv || 0;
-        var prefix = (cv & VOLATILE ? 'V' : '') + (cv & CONST ? 'K' : '');
+        var plain = cv !== 0 ? type.unqualified || type : type;
+        var builtin = MANGLED[plain.name];
+        if (cv === 0 && builtin !== undefined && plain.kind !== 'struct' && plain.kind !== 'union' &&
+            plain.kind !== 'enum')
+            return builtin;
+        if (plain.kind === 'nullptr' && cv === 0)
+            return 'Dn';
+        var key = 'type:' + this.typeKey(type);
+        var found = this.substitution(key);
+        if (found !== null)
+            return found;
+        var text;
+        if (cv !== 0)
+            text = (cv & VOLATILE ? 'V' : '') + (cv & CONST ? 'K' : '') + this.type(plain);
+        else
+            text = this.unqualified(type);
+        this.dictionary.push(key);
+        return text;
+    };
+
+    Mangler.prototype.unqualified = function (type) {
+        var self = this;
         switch (type.kind) {
         case 'pointer':
-            return prefix + 'P' + X.mangle(type.to);
+            return 'P' + this.type(type.to);
         case 'lref':
-            return 'R' + X.mangle(type.to);
+            return 'R' + this.type(type.to);
         case 'rref':
-            return 'O' + X.mangle(type.to);
+            return 'O' + this.type(type.to);
         case 'array':
-            return 'A' + (type.length === null ? '' : type.length) + '_' + X.mangle(type.of);
-        case 'function':
-            var params = type.params.length === 0 ? 'v' : type.params.map(X.mangle).join('');
-            return 'F' + X.mangle(type.returns) + params + 'E';
+            return 'A' + (type.length === null ? '' : type.length) + '_' + this.type(type.of);
+        case 'function': {
+            var returns = this.type(type.returns);
+            var params = type.params.length === 0 ? 'v' : type.params.map(function (param) {
+                return self.type(param);
+            }).join('');
+            return 'F' + returns + params + 'E';
+        }
         case 'nullptr':
             return 'Dn';
         case 'struct':
         case 'union':
         case 'enum':
-            return prefix + mangleName(type);
+            return this.name(type.mangledPath || namePath(type));
         }
-        return prefix + (MANGLED[type.name] || 'v');
+        return MANGLED[type.name] || 'v';
+    };
+
+    // The name of a class: unscoped (St6vector, 3Box) or nested (N...E);
+    // prefixes and template names are substitutable, the whole name is the
+    // type (the caller records it).
+    Mangler.prototype.name = function (parts) {
+        var std = parts.length > 0 && parts[0].name === 'std';
+        var rest = std ? parts.slice(1) : parts;
+        if (rest.length === 1)
+            return this.unscoped(rest[0], std);
+        // The longest prefix written before.
+        var text = '';
+        var keys = [];
+        var key = std ? 'std' : '';
+        for (var index = 0; index < rest.length; ++index) {
+            key += '::' + rest[index].name;
+            keys.push({ template: key, full: key + this.argumentsKey(rest[index].args) });
+        }
+        var start = 0;
+        for (var at = rest.length - 2; at >= 0; --at) {
+            var found = this.substitution('prefix:' + keys[at].full);
+            if (found !== null) {
+                text = found;
+                start = at + 1;
+                break;
+            }
+        }
+        if (start === 0)
+            text = std ? 'St' : '';
+        for (var part = start; part < rest.length; ++part) {
+            text += source(rest[part].name);
+            if (rest[part].args !== null) {
+                this.dictionary.push('prefix:' + keys[part].template);
+                text += this.templateArguments(rest[part].args);
+            }
+            if (part < rest.length - 1)
+                this.dictionary.push('prefix:' + keys[part].full);
+        }
+        return 'N' + text + 'E';
+    };
+
+    Mangler.prototype.unscoped = function (part, std) {
+        if (part.args === null)
+            return (std ? 'St' : '') + source(part.name);
+        var key = 'prefix:' + (std ? 'std::' : '') + part.name;
+        var prefix;
+        if (std && part.name === 'allocator') {
+            prefix = 'Sa';
+        } else {
+            prefix = this.substitution(key);
+            if (prefix === null) {
+                prefix = (std ? 'St' : '') + source(part.name);
+                this.dictionary.push(key);
+            }
+        }
+        return prefix + this.templateArguments(part.args);
+    };
+
+    // Keys of the dictionary: the text of a type or of a name.
+    Mangler.prototype.typeKey = function (type) {
+        var self = this;
+        if (type.mangledPath !== undefined) {
+            return type.mangledPath.map(function (part) {
+                return part.name + self.argumentsKey(part.args);
+            }).join('::');
+        }
+        return X.typeString(type);
+    };
+
+    Mangler.prototype.argumentsKey = function (args) {
+        var self = this;
+        if (args === null)
+            return '';
+        return '<' + args.map(function (arg) {
+            if (arg.kind === 'pack')
+                return self.argumentsKey(arg.items);
+            return arg.kind === 'type' ? self.typeKey(arg.type) : String(arg.value);
+        }).join(',') + '>';
+    };
+
+    Mangler.prototype.templateArguments = function (args) {
+        var self = this;
+        return 'I' + args.map(function (arg) { return self.argument(arg); }).join('') + 'E';
+    };
+
+    // A template argument: L<type><value>E for a value, J...E for a pack.
+    Mangler.prototype.argument = function (arg) {
+        var self = this;
+        if (arg.kind === 'pack')
+            return 'J' + arg.items.map(function (item) { return self.argument(item); }).join('') + 'E';
+        if (arg.kind === 'value') {
+            var text = typeof arg.value === 'number' ? String(arg.value) : T.big.str(arg.value);
+            return 'L' + this.type(X.unqual(arg.type || X.types.int)) +
+                (text.charAt(0) === '-' ? 'n' + text.substring(1) : text) + 'E';
+        }
+        return this.type(arg.type);
+    };
+
+    X.mangle = function (type) {
+        return new Mangler().type(type);
     };
 })(globalThis);

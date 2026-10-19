@@ -78,7 +78,8 @@ stock.size();                                              // the value of the r
  - **Inheritance**: single and multiple (non-virtual) inheritance,
    virtual functions, `override` and `final`, abstract classes, virtual
    destructors, `dynamic_cast` (also across bases and to `void*`),
-   `typeid` and `type_info::name()` (names mangled as g++ does: `6Square`).
+   `typeid` and `type_info::name()` (names mangled as g++ does: `6Square`,
+   `St6vectorIiSaIiEE`).
  - **Overloading** of functions and of all operators, user-defined
    literals, argument-dependent lookup, default arguments, overload
    resolution with the ranking of the standard.
