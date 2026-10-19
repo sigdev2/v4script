@@ -726,6 +726,12 @@
                     named = this.entityType(name.entity);
                     continue;
                 }
+                // std::pair p(1, 2): the arguments come from the initializer.
+                if (name !== null && name.entity !== null && name.entity.kind === 'template' &&
+                    name.entity.what === 'class' && !this.pattern) {
+                    named = X.deducedClass(name.entity);
+                    continue;
+                }
                 if (name !== null && name.dependent && name.entity === null && (this.isIdent() || this.is('&') ||
                                                                                   this.is('*') || this.is('&&') ||
                                                                                   this.is('...'))) {

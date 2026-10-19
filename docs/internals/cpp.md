@@ -53,6 +53,15 @@ and C library; everything above C is in
    same template: a definition after a declaration gives its body to the
    instances made before it, a definition in a later unit replaces the old
    one.
+ - Class template argument deduction: a declaration with the name of a
+   class template has a placeholder type (`X.deducedClass`, an `auto` with
+   the template) that the initializer replaces. The candidates are function
+   templates over the parameters of the class: declared guides (the
+   library declares those of the standard) and guides from the constructors
+   - their parameter lists parsed as patterns, with the member typedefs of
+   the class bound to their patterns (`typedef T value_type`). A guide that
+   is not a template wins, then the first that deduces; a list initializer
+   tries the `initializer_list` guides with the whole list first.
 
 ## Classes and objects
 
@@ -148,10 +157,9 @@ call at run time.
 
 ## Known places
 
- - Missing: virtual inheritance, pointers to members, class template
-   argument deduction, `goto`, `alignas` on classes, wide strings, threads,
-   `<regex>`, `<variant>`, `<any>`, `std::exception_ptr`; `noexcept`
-   functions that throw do not terminate.
+ - Missing: virtual inheritance, pointers to members, `goto`, `alignas` on
+   classes, wide strings, threads, `<regex>`, `<variant>`, `<any>`,
+   `std::exception_ptr`; `noexcept` functions that throw do not terminate.
  - Arguments are evaluated from left to right (g++: often right to left).
  - Speed of translation in V4: the first unit with `<iostream>` takes about
    0.7 s, a unit that uses several containers 2-4 s (Node.js is about 6

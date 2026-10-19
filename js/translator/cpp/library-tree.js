@@ -700,18 +700,22 @@ template <class K, class T> struct __map_key {
 
     X.addHeader('v4script/map', [
         ['std', 3, 170, 'map'],
-        ['std', 171, 173, 'operator=='],
-        ['std', 174, 176, 'operator!='],
-        ['std', 177, 179, 'operator<'],
-        ['std', 180, 182, 'operator>'],
-        ['std', 183, 185, 'operator<='],
-        ['std', 186, 188, 'operator>='],
-        ['std', 189, 189, 'swap'],
-        ['std', 191, 280, 'multimap'],
-        ['std', 281, 284, 'operator=='],
-        ['std', 285, 288, 'operator!='],
-        ['std', 289, 292, 'operator<'],
-        ['std', 293, 295, 'swap']
+        ['std', 171, 171, 'map'],
+        ['std', 172, 172, 'map'],
+        ['std', 173, 175, 'map'],
+        ['std', 176, 178, 'operator=='],
+        ['std', 179, 181, 'operator!='],
+        ['std', 182, 184, 'operator<'],
+        ['std', 185, 187, 'operator>'],
+        ['std', 188, 190, 'operator<='],
+        ['std', 191, 193, 'operator>='],
+        ['std', 194, 194, 'swap'],
+        ['std', 196, 285, 'multimap'],
+        ['std', 286, 286, 'multimap'],
+        ['std', 287, 290, 'operator=='],
+        ['std', 291, 294, 'operator!='],
+        ['std', 295, 298, 'operator<'],
+        ['std', 299, 301, 'swap']
     ], String.raw`
 namespace std {
 template <class K, class T, class C = less<K>, class A = allocator<pair<const K, T>>> class map {
@@ -882,6 +886,11 @@ public:
         return pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
     }
 };
+template <class K, class T> map(initializer_list<pair<K, T>>) -> map<K, T>;
+template <class K, class T, class C> map(initializer_list<pair<K, T>>, C) -> map<K, T, C>;
+template <class I>
+map(I, I) -> map<typename remove_const<typename iterator_traits<I>::value_type::first_type>::type,
+                 typename iterator_traits<I>::value_type::second_type>;
 template <class K, class T, class C, class A> bool operator==(const map<K, T, C, A>& a, const map<K, T, C, A>& b) {
     return __tree_equal(a.__tree_, b.__tree_);
 }
@@ -992,6 +1001,7 @@ public:
         return pair<const_iterator, const_iterator>(lower_bound(key), upper_bound(key));
     }
 };
+template <class K, class T> multimap(initializer_list<pair<K, T>>) -> multimap<K, T>;
 template <class K, class T, class C, class A>
 bool operator==(const multimap<K, T, C, A>& a, const multimap<K, T, C, A>& b) {
     return __tree_equal(a.__tree_, b.__tree_);
@@ -1012,18 +1022,20 @@ template <class K, class T, class C, class A> void swap(multimap<K, T, C, A>& a,
 
     X.addHeader('v4script/set', [
         ['std', 3, 87, 'set'],
-        ['std', 88, 90, 'operator=='],
-        ['std', 91, 91, 'operator!='],
-        ['std', 92, 94, 'operator<'],
-        ['std', 95, 95, 'operator>'],
-        ['std', 96, 96, 'operator<='],
-        ['std', 97, 97, 'operator>='],
-        ['std', 98, 98, 'swap'],
-        ['std', 100, 175, 'multiset'],
-        ['std', 176, 178, 'operator=='],
-        ['std', 179, 181, 'operator!='],
-        ['std', 182, 184, 'operator<'],
-        ['std', 185, 185, 'swap']
+        ['std', 88, 88, 'set'],
+        ['std', 89, 91, 'operator=='],
+        ['std', 92, 92, 'operator!='],
+        ['std', 93, 95, 'operator<'],
+        ['std', 96, 96, 'operator>'],
+        ['std', 97, 97, 'operator<='],
+        ['std', 98, 98, 'operator>='],
+        ['std', 99, 99, 'swap'],
+        ['std', 101, 176, 'multiset'],
+        ['std', 177, 177, 'multiset'],
+        ['std', 178, 180, 'operator=='],
+        ['std', 181, 183, 'operator!='],
+        ['std', 184, 186, 'operator<'],
+        ['std', 187, 187, 'swap']
     ], String.raw`
 namespace std {
 template <class K, class C = less<K>, class A = allocator<K>> class set {
@@ -1111,6 +1123,7 @@ public:
         return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
     }
 };
+template <class I> set(I, I) -> set<typename iterator_traits<I>::value_type>;
 template <class K, class C, class A> bool operator==(const set<K, C, A>& a, const set<K, C, A>& b) {
     return __tree_equal(a.__tree_, b.__tree_);
 }
@@ -1199,6 +1212,7 @@ public:
         return pair<iterator, iterator>(lower_bound(key), upper_bound(key));
     }
 };
+template <class I> multiset(I, I) -> multiset<typename iterator_traits<I>::value_type>;
 template <class K, class C, class A> bool operator==(const multiset<K, C, A>& a, const multiset<K, C, A>& b) {
     return __tree_equal(a.__tree_, b.__tree_);
 }

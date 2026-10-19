@@ -1157,6 +1157,8 @@
     // --- auto
 
     Parser.prototype.deduceVariable = function (type, init, node) {
+        if (unqual(type).ctad !== undefined)
+            return X.qualify(this.deduceClassTemplate(unqual(type).ctad, init, node), X.cvOf(type));
         if (init === null)
             this.error(node, "declaration of 'auto " + node.name + "' has no initializer");
         var value;

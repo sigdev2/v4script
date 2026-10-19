@@ -1174,6 +1174,10 @@
     // T(args), T{args}.
     Parser.prototype.functionalCastIr = function (node) {
         var type = node.type;
+        if (unqual(type).ctad !== undefined) {
+            var init = node.braced ? { k: 'braced', items: node.args, copy: false } : { k: 'direct', args: node.args };
+            type = this.deduceClassTemplate(unqual(type).ctad, init, node);
+        }
         if (X.containsAuto(type)) {
             if (node.args.length !== 1)
                 this.error(node, "invalid use of 'auto'");

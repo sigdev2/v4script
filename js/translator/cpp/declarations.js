@@ -32,7 +32,7 @@
         while (this.peek().type !== 'eof') {
             if (this.accept(';'))
                 continue;
-            if (this.startsDeclaration('namespace')) {
+            if (this.startsDeclaration('namespace') || this.isDeductionGuide()) {
                 this.declaration('namespace');
             } else {
                 if (this.is('}'))
@@ -64,7 +64,7 @@
         var tok = this.peek();
         if (tok.type === 'keyword') {
             if (DECLARATION_WORDS[tok.value] === 1 || X.TYPE_WORDS[tok.value] === 1)
-                return !(tok.value === 'using' && false);
+                return true;
             if (tok.value === 'decltype')
                 return true;
             return false;
@@ -95,6 +95,9 @@
                     result = this.isParenthesizedDeclarator();
                 else if (next.type === 'op' && next.value === '[' && this.is('[', 1))
                     result = true;
+            } else if (name.entity !== null && name.entity.kind === 'template' && name.entity.what === 'class') {
+                // std::pair p(1, 2): a placeholder of the template.
+                result = next.type === 'ident' || (next.type === 'keyword' && next.value === 'const');
             }
         }
         this.reset(save);
@@ -149,6 +152,10 @@
         }
         if (tok.type === 'ident' && tok.value === '_Static_assert') {
             this.staticAssertDeclaration();
+            return [];
+        }
+        if (context === 'namespace' && this.isDeductionGuide()) {
+            this.deductionGuide([]);
             return [];
         }
         if (this.accept(';'))

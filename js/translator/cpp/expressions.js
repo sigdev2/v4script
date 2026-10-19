@@ -572,6 +572,9 @@
         var name = this.parseName({ allowUnknown: true });
         if (X.isTypeEntity(name.entity) && (this.is('(') || this.is('{')))
             return this.functionalCast(this.entityType(name.entity), tok);
+        if (name.entity !== null && name.entity.kind === 'template' && name.entity.what === 'class' && !this.pattern &&
+            (this.is('(') || this.is('{')))
+            return this.functionalCast(X.deducedClass(name.entity), tok);
         if (name.dependent && name.entity === null && this.pattern && (this.is('(') || this.is('{')))
             return this.node('name', tok, name);
         return name;

@@ -125,13 +125,14 @@ template <class I, class T> T* __uninitialized_copy(I first, I last, T* target) 
 
     X.addHeader('v4script/vector', [
         ['std', 3, 411, 'vector'],
-        ['std', 412, 414, 'operator=='],
-        ['std', 415, 415, 'operator!='],
-        ['std', 416, 418, 'operator<'],
-        ['std', 419, 419, 'operator>'],
-        ['std', 420, 420, 'operator<='],
-        ['std', 421, 421, 'operator>='],
-        ['std', 422, 422, 'swap']
+        ['std', 412, 412, 'vector'],
+        ['std', 413, 415, 'operator=='],
+        ['std', 416, 416, 'operator!='],
+        ['std', 417, 419, 'operator<'],
+        ['std', 420, 420, 'operator>'],
+        ['std', 421, 421, 'operator<='],
+        ['std', 422, 422, 'operator>='],
+        ['std', 423, 423, 'swap']
     ], String.raw`
 namespace std {
 template <class T, class A = allocator<T>> class vector {
@@ -543,6 +544,7 @@ public:
         std::swap(__end_of_storage, other.__end_of_storage);
     }
 };
+template <class I> vector(I, I) -> vector<typename iterator_traits<I>::value_type>;
 template <class T, class A> bool operator==(const vector<T, A>& a, const vector<T, A>& b) {
     return a.size() == b.size() && std::equal(a.begin(), a.end(), b.begin());
 }
@@ -559,18 +561,19 @@ template <class T, class A> void swap(vector<T, A>& a, vector<T, A>& b) noexcept
 
     X.addHeader('v4script/array', [
         ['std', 3, 58, 'array'],
-        ['std', 59, 61, 'operator=='],
-        ['std', 62, 62, 'operator!='],
-        ['std', 63, 65, 'operator<'],
-        ['std', 66, 66, 'operator>'],
-        ['std', 67, 67, 'operator<='],
-        ['std', 68, 68, 'operator>='],
-        ['std', 69, 69, 'swap'],
-        ['std', 70, 70, 'tuple_size'],
-        ['std', 71, 71, 'tuple_element'],
-        ['std', 72, 72, 'get'],
+        ['std', 59, 59, 'array'],
+        ['std', 60, 62, 'operator=='],
+        ['std', 63, 63, 'operator!='],
+        ['std', 64, 66, 'operator<'],
+        ['std', 67, 67, 'operator>'],
+        ['std', 68, 68, 'operator<='],
+        ['std', 69, 69, 'operator>='],
+        ['std', 70, 70, 'swap'],
+        ['std', 71, 71, 'tuple_size'],
+        ['std', 72, 72, 'tuple_element'],
         ['std', 73, 73, 'get'],
-        ['std', 74, 74, 'get']
+        ['std', 74, 74, 'get'],
+        ['std', 75, 75, 'get']
     ], String.raw`
 namespace std {
 template <class T, size_t N> struct array {
@@ -629,6 +632,7 @@ template <class T, size_t N> struct array {
     T* data() noexcept { return __elements; }
     const T* data() const noexcept { return __elements; }
 };
+template <class T, class... U> array(T, U...) -> array<T, 1 + sizeof...(U)>;
 template <class T, size_t N> bool operator==(const array<T, N>& a, const array<T, N>& b) {
     return std::equal(a.begin(), a.end(), b.begin());
 }
@@ -652,13 +656,14 @@ template <size_t I, class T, size_t N> T&& get(array<T, N>&& a) noexcept { retur
         ['std', 5, 93, '__deque_iterator'],
         ['std', 94, 96, 'operator+'],
         ['std', 98, 427, 'deque'],
-        ['std', 428, 430, 'operator=='],
-        ['std', 431, 431, 'operator!='],
-        ['std', 432, 434, 'operator<'],
-        ['std', 435, 435, 'operator>'],
-        ['std', 436, 436, 'operator<='],
-        ['std', 437, 437, 'operator>='],
-        ['std', 438, 438, 'swap']
+        ['std', 428, 428, 'deque'],
+        ['std', 429, 431, 'operator=='],
+        ['std', 432, 432, 'operator!='],
+        ['std', 433, 435, 'operator<'],
+        ['std', 436, 436, 'operator>'],
+        ['std', 437, 437, 'operator<='],
+        ['std', 438, 438, 'operator>='],
+        ['std', 439, 439, 'swap']
     ], String.raw`
 namespace std {
 // Blocks of 512 bytes (at least one element) as in libstdc++; a map of
@@ -1086,6 +1091,7 @@ public:
         std::swap(__finish, other.__finish);
     }
 };
+template <class I> deque(I, I) -> deque<typename iterator_traits<I>::value_type>;
 template <class T, class A> bool operator==(const deque<T, A>& a, const deque<T, A>& b) {
     return a.size() == b.size() && std::equal(a.begin(), a.end(), b.begin());
 }
@@ -1111,13 +1117,14 @@ template <class T, class A> void swap(deque<T, A>& a, deque<T, A>& b) noexcept {
         ['std', 90, 93, '__list_unhook'],
         ['std', 95, 105, '__list_transfer'],
         ['std', 107, 452, 'list'],
-        ['std', 453, 455, 'operator=='],
-        ['std', 456, 456, 'operator!='],
-        ['std', 457, 459, 'operator<'],
-        ['std', 460, 460, 'operator>'],
-        ['std', 461, 461, 'operator<='],
-        ['std', 462, 462, 'operator>='],
-        ['std', 463, 463, 'swap']
+        ['std', 453, 453, 'list'],
+        ['std', 454, 456, 'operator=='],
+        ['std', 457, 457, 'operator!='],
+        ['std', 458, 460, 'operator<'],
+        ['std', 461, 461, 'operator>'],
+        ['std', 462, 462, 'operator<='],
+        ['std', 463, 463, 'operator>='],
+        ['std', 464, 464, 'swap']
     ], String.raw`
 namespace std {
 struct __list_links {
@@ -1570,6 +1577,7 @@ public:
         } while (node != &__head);
     }
 };
+template <class I> list(I, I) -> list<typename iterator_traits<I>::value_type>;
 template <class T, class A> bool operator==(const list<T, A>& a, const list<T, A>& b) {
     return a.size() == b.size() && std::equal(a.begin(), a.end(), b.begin());
 }
@@ -1590,10 +1598,11 @@ template <class T, class A> void swap(list<T, A>& a, list<T, A>& b) noexcept { a
         ['std', 9, 31, '__slist_iterator'],
         ['std', 32, 58, '__slist_const_iterator'],
         ['std', 60, 345, 'forward_list'],
-        ['std', 346, 348, 'operator=='],
-        ['std', 349, 351, 'operator!='],
-        ['std', 352, 354, 'operator<'],
-        ['std', 355, 355, 'swap']
+        ['std', 346, 346, 'forward_list'],
+        ['std', 347, 349, 'operator=='],
+        ['std', 350, 352, 'operator!='],
+        ['std', 353, 355, 'operator<'],
+        ['std', 356, 356, 'swap']
     ], String.raw`
 namespace std {
 struct __slist_links {
@@ -1939,6 +1948,7 @@ public:
         __head.__next = reversed;
     }
 };
+template <class I> forward_list(I, I) -> forward_list<typename iterator_traits<I>::value_type>;
 template <class T, class A> bool operator==(const forward_list<T, A>& a, const forward_list<T, A>& b) {
     return std::equal(a.begin(), a.end(), b.begin(), b.end());
 }
@@ -1954,7 +1964,8 @@ template <class T, class A> void swap(forward_list<T, A>& a, forward_list<T, A>&
 
     X.addHeader('v4script/stack', [
         ['std', 3, 35, 'stack'],
-        ['std', 36, 36, 'swap']
+        ['std', 36, 36, 'stack'],
+        ['std', 37, 37, 'swap']
     ], String.raw`
 namespace std {
 template <class T, class C = deque<T>> class stack {
@@ -1990,15 +2001,17 @@ public:
     bool operator<=(const stack& other) const { return c <= other.c; }
     bool operator>=(const stack& other) const { return c >= other.c; }
 };
+template <class C> stack(C) -> stack<typename C::value_type, C>;
 template <class T, class C> void swap(stack<T, C>& a, stack<T, C>& b) noexcept { a.swap(b); }
 }
 `);
 
     X.addHeader('v4script/queue', [
         ['std', 3, 34, 'queue'],
-        ['std', 35, 35, 'swap'],
-        ['std', 37, 89, 'priority_queue'],
-        ['std', 90, 92, 'swap']
+        ['std', 35, 35, 'queue'],
+        ['std', 36, 36, 'swap'],
+        ['std', 38, 90, 'priority_queue'],
+        ['std', 91, 93, 'swap']
     ], String.raw`
 namespace std {
 template <class T, class C = deque<T>> class queue {
@@ -2033,6 +2046,7 @@ public:
     bool operator!=(const queue& other) const { return c != other.c; }
     bool operator<(const queue& other) const { return c < other.c; }
 };
+template <class C> queue(C) -> queue<typename C::value_type, C>;
 template <class T, class C> void swap(queue<T, C>& a, queue<T, C>& b) noexcept { a.swap(b); }
 
 template <class T, class C = vector<T>, class P = less<typename C::value_type>> class priority_queue {

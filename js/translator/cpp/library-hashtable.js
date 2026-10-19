@@ -673,13 +673,14 @@ template <class K, class T> struct __hash_map_key {
 
     X.addHeader('v4script/unordered_map', [
         ['std', 3, 177, 'unordered_map'],
-        ['std', 178, 181, 'operator=='],
-        ['std', 182, 185, 'operator!='],
-        ['std', 186, 189, 'swap'],
-        ['std', 191, 296, 'unordered_multimap'],
-        ['std', 297, 300, 'operator=='],
-        ['std', 301, 304, 'operator!='],
-        ['std', 305, 308, 'swap']
+        ['std', 178, 178, 'unordered_map'],
+        ['std', 179, 182, 'operator=='],
+        ['std', 183, 186, 'operator!='],
+        ['std', 187, 190, 'swap'],
+        ['std', 192, 297, 'unordered_multimap'],
+        ['std', 298, 301, 'operator=='],
+        ['std', 302, 305, 'operator!='],
+        ['std', 306, 309, 'swap']
     ], String.raw`
 namespace std {
 template <class K, class T, class H = hash<K>, class E = equal_to<K>, class A = allocator<pair<const K, T>>>
@@ -857,6 +858,7 @@ public:
     void rehash(size_t n) { __table.rehash(n); }
     void reserve(size_t n) { __table.reserve(n); }
 };
+template <class K, class T> unordered_map(initializer_list<pair<K, T>>) -> unordered_map<K, T>;
 template <class K, class T, class H, class E, class A>
 bool operator==(const unordered_map<K, T, H, E, A>& a, const unordered_map<K, T, H, E, A>& b) {
     return a.__table.__equals(b.__table);
@@ -993,13 +995,14 @@ void swap(unordered_multimap<K, T, H, E, A>& a, unordered_multimap<K, T, H, E, A
 
     X.addHeader('v4script/unordered_set', [
         ['std', 3, 99, 'unordered_set'],
-        ['std', 100, 103, 'operator=='],
-        ['std', 104, 107, 'operator!='],
-        ['std', 108, 110, 'swap'],
-        ['std', 112, 201, 'unordered_multiset'],
-        ['std', 202, 205, 'operator=='],
-        ['std', 206, 209, 'operator!='],
-        ['std', 210, 213, 'swap']
+        ['std', 100, 100, 'unordered_set'],
+        ['std', 101, 104, 'operator=='],
+        ['std', 105, 108, 'operator!='],
+        ['std', 109, 111, 'swap'],
+        ['std', 113, 202, 'unordered_multiset'],
+        ['std', 203, 206, 'operator=='],
+        ['std', 207, 210, 'operator!='],
+        ['std', 211, 214, 'swap']
     ], String.raw`
 namespace std {
 template <class K, class H = hash<K>, class E = equal_to<K>, class A = allocator<K>> class unordered_set {
@@ -1099,6 +1102,7 @@ public:
     void rehash(size_t n) { __table.rehash(n); }
     void reserve(size_t n) { __table.reserve(n); }
 };
+template <class I> unordered_set(I, I) -> unordered_set<typename iterator_traits<I>::value_type>;
 template <class K, class H, class E, class A>
 bool operator==(const unordered_set<K, H, E, A>& a, const unordered_set<K, H, E, A>& b) {
     return a.__table.__equals(b.__table);

@@ -15,41 +15,43 @@
         ['std', 3, 3, 'tuple'],
         ['std', 4, 8, 'tuple'],
         ['std', 9, 75, 'tuple'],
-        ['std', 77, 77, 'tuple_size'],
-        ['std', 78, 80, 'tuple_element'],
-        ['std', 81, 81, 'tuple_element'],
-        ['std', 84, 89, '__tuple_at'],
-        ['std', 90, 95, '__tuple_at'],
-        ['std', 96, 98, 'get'],
-        ['std', 99, 102, 'get'],
-        ['std', 103, 105, 'get'],
-        ['std', 106, 106, '__type_index'],
-        ['std', 107, 107, '__type_index'],
-        ['std', 108, 109, '__type_index'],
-        ['std', 110, 112, 'get'],
-        ['std', 113, 115, 'get'],
-        ['std', 117, 119, 'make_tuple'],
-        ['std', 120, 120, 'tie'],
-        ['std', 121, 123, 'forward_as_tuple'],
-        ['std', 124, 126, '__ignore_type'],
-        ['std', 127, 127, 'ignore'],
-        ['std', 129, 131, '__apply'],
-        ['std', 132, 135, 'apply'],
-        ['std', 136, 138, '__make_from_tuple'],
-        ['std', 139, 142, 'make_from_tuple'],
-        ['std', 144, 148, '__tuple_cat2'],
-        ['std', 149, 149, 'tuple_cat'],
-        ['std', 150, 150, 'tuple_cat'],
-        ['std', 151, 154, 'tuple_cat'],
-        ['std', 156, 164, '__tuple_compare'],
-        ['std', 165, 168, '__tuple_compare'],
-        ['std', 169, 171, 'operator=='],
-        ['std', 172, 174, 'operator!='],
-        ['std', 175, 177, 'operator<'],
-        ['std', 178, 178, 'operator>'],
-        ['std', 179, 181, 'operator<='],
-        ['std', 182, 184, 'operator>='],
-        ['std', 185, 185, 'swap']
+        ['std', 76, 76, 'tuple'],
+        ['std', 77, 77, 'tuple'],
+        ['std', 79, 79, 'tuple_size'],
+        ['std', 80, 82, 'tuple_element'],
+        ['std', 83, 83, 'tuple_element'],
+        ['std', 86, 91, '__tuple_at'],
+        ['std', 92, 97, '__tuple_at'],
+        ['std', 98, 100, 'get'],
+        ['std', 101, 104, 'get'],
+        ['std', 105, 107, 'get'],
+        ['std', 108, 108, '__type_index'],
+        ['std', 109, 109, '__type_index'],
+        ['std', 110, 111, '__type_index'],
+        ['std', 112, 114, 'get'],
+        ['std', 115, 117, 'get'],
+        ['std', 119, 121, 'make_tuple'],
+        ['std', 122, 122, 'tie'],
+        ['std', 123, 125, 'forward_as_tuple'],
+        ['std', 126, 128, '__ignore_type'],
+        ['std', 129, 129, 'ignore'],
+        ['std', 131, 133, '__apply'],
+        ['std', 134, 137, 'apply'],
+        ['std', 138, 140, '__make_from_tuple'],
+        ['std', 141, 144, 'make_from_tuple'],
+        ['std', 146, 150, '__tuple_cat2'],
+        ['std', 151, 151, 'tuple_cat'],
+        ['std', 152, 152, 'tuple_cat'],
+        ['std', 153, 156, 'tuple_cat'],
+        ['std', 158, 166, '__tuple_compare'],
+        ['std', 167, 170, '__tuple_compare'],
+        ['std', 171, 173, 'operator=='],
+        ['std', 174, 176, 'operator!='],
+        ['std', 177, 179, 'operator<'],
+        ['std', 180, 180, 'operator>'],
+        ['std', 181, 183, 'operator<='],
+        ['std', 184, 186, 'operator>='],
+        ['std', 187, 187, 'swap']
     ], String.raw`
 namespace std {
 template <class... T> class tuple;
@@ -125,6 +127,8 @@ public:
         __tail().swap(other.__tail());
     }
 };
+template <class... T> tuple(T...) -> tuple<T...>;
+template <class T1, class T2> tuple(pair<T1, T2>) -> tuple<T1, T2>;
 
 template <class... T> struct tuple_size<tuple<T...>> : integral_constant<size_t, sizeof...(T)> {};
 template <class H, class... R> struct tuple_element<0, tuple<H, R...>> {
@@ -240,21 +244,23 @@ template <class... T> void swap(tuple<T...>& a, tuple<T...>& b) { a.swap(b); }
 
     X.addHeader('v4script/functional', [
         ['std', 3, 14, 'reference_wrapper'],
-        ['std', 15, 15, 'ref'],
+        ['std', 15, 15, 'reference_wrapper'],
         ['std', 16, 16, 'ref'],
-        ['std', 17, 17, 'cref'],
-        ['std', 18, 20, 'cref'],
-        ['std', 21, 23, 'invoke'],
-        ['std', 25, 28, 'bad_function_call'],
-        ['std', 29, 33, '__function_base'],
-        ['std', 34, 45, '__function_holder'],
-        ['std', 46, 46, 'function'],
-        ['std', 47, 89, 'function'],
-        ['std', 90, 90, 'operator=='],
-        ['std', 91, 91, 'operator=='],
-        ['std', 92, 92, 'operator!='],
-        ['std', 93, 93, 'operator!='],
-        ['std', 94, 94, 'swap']
+        ['std', 17, 17, 'ref'],
+        ['std', 18, 18, 'cref'],
+        ['std', 19, 21, 'cref'],
+        ['std', 22, 24, 'invoke'],
+        ['std', 26, 29, 'bad_function_call'],
+        ['std', 30, 34, '__function_base'],
+        ['std', 35, 46, '__function_holder'],
+        ['std', 47, 47, 'function'],
+        ['std', 48, 90, 'function'],
+        ['std', 91, 91, 'function'],
+        ['std', 92, 92, 'operator=='],
+        ['std', 93, 93, 'operator=='],
+        ['std', 94, 94, 'operator!='],
+        ['std', 95, 95, 'operator!='],
+        ['std', 96, 96, 'swap']
     ], String.raw`
 namespace std {
 template <class T> class reference_wrapper {
@@ -269,6 +275,7 @@ public:
     template <class... A>
     decltype(auto) operator()(A&&... args) const { return (*__pointer)(std::forward<A>(args)...); }
 };
+template <class T> reference_wrapper(T&) -> reference_wrapper<T>;
 template <class T> reference_wrapper<T> ref(T& t) noexcept { return reference_wrapper<T>(t); }
 template <class T> reference_wrapper<T> ref(reference_wrapper<T> t) noexcept { return t; }
 template <class T> reference_wrapper<const T> cref(const T& t) noexcept { return reference_wrapper<const T>(t); }
@@ -344,6 +351,7 @@ public:
         return __callable->__call(std::forward<A>(args)...);
     }
 };
+template <class R, class... A> function(R (*)(A...)) -> function<R(A...)>;
 template <class F> bool operator==(const function<F>& f, nullptr_t) noexcept { return !f; }
 template <class F> bool operator==(nullptr_t, const function<F>& f) noexcept { return !f; }
 template <class F> bool operator!=(const function<F>& f, nullptr_t) noexcept { return (bool)f; }
@@ -857,23 +865,24 @@ template <class T> struct owner_less<weak_ptr<T>> {
         ['std', 10, 10, 'in_place'],
         ['std', 11, 14, 'bad_optional_access'],
         ['std', 15, 139, 'optional'],
-        ['std', 140, 142, 'make_optional'],
-        ['std', 143, 145, 'make_optional'],
-        ['std', 146, 148, 'operator=='],
-        ['std', 149, 151, 'operator!='],
-        ['std', 152, 154, 'operator<'],
-        ['std', 155, 155, 'operator>'],
-        ['std', 156, 156, 'operator<='],
-        ['std', 157, 157, 'operator>='],
-        ['std', 158, 158, 'operator=='],
+        ['std', 140, 140, 'optional'],
+        ['std', 141, 143, 'make_optional'],
+        ['std', 144, 146, 'make_optional'],
+        ['std', 147, 149, 'operator=='],
+        ['std', 150, 152, 'operator!='],
+        ['std', 153, 155, 'operator<'],
+        ['std', 156, 156, 'operator>'],
+        ['std', 157, 157, 'operator<='],
+        ['std', 158, 158, 'operator>='],
         ['std', 159, 159, 'operator=='],
-        ['std', 160, 160, 'operator!='],
+        ['std', 160, 160, 'operator=='],
         ['std', 161, 161, 'operator!='],
-        ['std', 162, 162, 'operator=='],
-        ['std', 163, 163, 'operator!='],
-        ['std', 164, 164, 'operator<'],
-        ['std', 165, 165, 'swap'],
-        ['std', 166, 168, 'hash']
+        ['std', 162, 162, 'operator!='],
+        ['std', 163, 163, 'operator=='],
+        ['std', 164, 164, 'operator!='],
+        ['std', 165, 165, 'operator<'],
+        ['std', 166, 166, 'swap'],
+        ['std', 167, 169, 'hash']
     ], String.raw`
 namespace std {
 struct nullopt_t {
@@ -1013,6 +1022,7 @@ public:
         return __engaged ? std::move(__value) : static_cast<T>(std::forward<U>(fallback));
     }
 };
+template <class T> optional(T) -> optional<T>;
 template <class T> constexpr optional<typename decay<T>::type> make_optional(T&& value) {
     return optional<typename decay<T>::type>(std::forward<T>(value));
 }

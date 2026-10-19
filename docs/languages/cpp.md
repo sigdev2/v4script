@@ -91,6 +91,12 @@ stock.size();                                              // the value of the r
    templates, fold expressions, `sizeof...`, SFINAE (`enable_if`,
    `decltype` in signatures), `if constexpr`, `auto` and `decltype(auto)`
    return types, the type traits of `<type_traits>`.
+ - **Class template argument deduction**: `std::pair p(1, 2.5)`,
+   `std::vector v{1, 2, 3}`, `std::map m(other.begin(), other.end())`,
+   `auto t = std::tuple(1, 'c')` - from the deduction guides of the library
+   and of the program (`template <class T> Box(T) -> Box<T>;`), from the
+   constructors of a template, and from a copy (`std::vector w{v}` is a
+   copy of `v`).
  - **constexpr**: constexpr functions are evaluated where a constant is
    needed (`static_assert`, array bounds, template arguments, `case`) when
    they work on numbers: locals, loops, branches, recursion; elsewhere they
@@ -204,10 +210,9 @@ other host files. A changed file is included again at the next run.
 ## What is missing
 
  - Virtual inheritance, pointers to members (`&A::f`, `.*`, `->*`),
-   class template argument deduction (`std::pair p(1, 2)` - write
-   `std::pair<int, int>` or `std::make_pair`), `goto`, `alignas` on
-   classes, `wchar_t` strings and `std::wstring`, coroutines and other
-   C++20 features.
+   `goto`, `alignas` on classes, `wchar_t` strings and `std::wstring`,
+   coroutines and other C++20 features; deduction guides of
+   `std::function` from a lambda.
  - Threads (`std::thread`, `mutex`, `atomic`, `future`), `<regex>`,
    `<variant>`, `<any>`, `<complex>`, `<valarray>`, `<filesystem>`,
    locales, `std::exception_ptr`, the binomial, gamma and other

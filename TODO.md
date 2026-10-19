@@ -66,15 +66,15 @@ Decisions already taken for these stages:
  - **C**: `goto`, `_Generic`, `setjmp`/`longjmp`, `wchar.h`; writing files
    through the host; bounds checks inside the program memory (as
    AddressSanitizer does).
- - **C++**: class template argument deduction, pointers to members,
-   virtual inheritance, `goto`, `alignas` on classes, `noexcept` violations
-   terminating, `std::exception_ptr`, wide strings; threads (`std::thread`,
-   `mutex`, `atomic`), `<regex>`, `<variant>`, `<any>`, `<complex>`; the
-   binomial and gamma families of `<random>` and the Poisson method of
-   libstdc++ for a mean of 12 or more; `vector<bool>` as a bit vector;
-   the speed of translation in V4 (2-4 s for the first unit that uses
-   several containers: cache or precompute the tokens of the library, less
-   checking work per library declaration).
+ - **C++**: pointers to members, virtual inheritance, `goto`, `alignas` on
+   classes, `noexcept` violations terminating, `std::exception_ptr`, wide
+   strings, deduction of `std::function` from a lambda; threads
+   (`std::thread`, `mutex`, `atomic`), `<regex>`, `<variant>`, `<any>`,
+   `<complex>`; the binomial and gamma families of `<random>` and the
+   Poisson method of libstdc++ for a mean of 12 or more; `vector<bool>` as
+   a bit vector; the speed of translation in V4 (2-4 s for the first unit
+   that uses several containers: cache or precompute the tokens of the
+   library, less checking work per library declaration).
  - **Java**: access checks (`private`) and checked exceptions,
    `java.time`, `CompletableFuture`, `java.util.concurrent.locks`, detailed
    `NullPointerException` messages and `at …` lines in `printStackTrace`,

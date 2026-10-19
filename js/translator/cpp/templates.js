@@ -60,6 +60,8 @@
             this.skipDeclaration();
             return;
         }
+        if (this.isDeductionGuide())
+            return this.deductionGuide(params);
         return this.functionTemplate(params, tok, context, start, headerStart);
     };
 
@@ -956,6 +958,343 @@
         left.params.forEach(function (param) { backMap.set(param.placeholder, undefined); });
         var backward = this.unifyArgumentLists(left.args, right.args, backMap);
         return forward && !backward;
+    };
+
+    // --- Class template argument deduction
+    //
+    // std::pair p(1, 2.5): the type is a placeholder of the template
+    // (X.deducedClass) until the initializer gives the arguments. The
+    // candidates are the deduction guides of the template (declared ones,
+    // then the ones its constructors imply); each is a function template whose
+    // parameters are those of the class (and of a constructor template).
+
+    X.deducedClass = function (template) {
+        if (template.deducedPlaceholder === undefined)
+            template.deducedPlaceholder = { kind: 'auto', name: template.name, ctad: template, size: 0, align: 1,
+                                            id: X.newId() };
+        return template.deducedPlaceholder;
+    };
+
+    // pair(T1, T2) -> pair<T1, T2>; after the name of a class template.
+    Parser.prototype.isDeductionGuide = function () {
+        var offset = this.is('explicit') ? 1 : 0;
+        if (!this.isIdent(offset) || !this.is('(', offset + 1))
+            return false;
+        var entity = this.lookup(this.peek(offset).value);
+        if (entity === null || entity.kind !== 'template' || entity.what !== 'class')
+            return false;
+        var after = this.matching(this.index + offset + 1);
+        return this.tokens[after] !== undefined && this.tokens[after].value === '->';
+    };
+
+    Parser.prototype.deductionGuide = function (params) {
+        var scope = this.templateScope(params);
+        this.accept('explicit');
+        var nameTok = this.expectIdent();
+        var classTemplate = this.lookup(nameTok.value);
+        // The parameters alone: the parser of a suffix would take '->' too.
+        var after = this.matching(this.index);
+        var parser = new Parser(this.session, sliceTokens(this.tokens, this.index, after),
+                                { scope: scope, library: this.library });
+        parser.pattern = params.length > 0;
+        parser.deferDefaults = true;
+        var suffix = parser.functionSuffix();
+        this.index = after;
+        this.expect('->');
+        var typeStart = this.index;
+        this.skipDeclaration();
+        var guide = this.newTemplate('function', nameTok.value, params, this.slice(typeStart, this.index - 1));
+        guide.pattern = X.functionType(types.void, suffix.params.map(function (param) {
+            return X.parameterType(param.type);
+        }), suffix.variadic, 0, null, false);
+        guide.paramInfo = suffix.params;
+        guide.initializerList = isInitializerListGuide(guide);
+        if (classTemplate.guides === undefined)
+            classTemplate.guides = [];
+        X.append(classTemplate.guides, guide);
+    };
+
+    function isInitializerListGuide(guide) {
+        var first = guide.pattern.params[0];
+        if (first === undefined)
+            return false;
+        var plain = unqual(X.removeRef(first));
+        return plain.kind === 'tspec' && plain.template.name === 'initializer_list';
+    }
+
+    // The guides that the constructors of a class template imply: their
+    // parameter lists parsed as patterns over the parameters of the class.
+    // A constructor whose parameters do not parse so is no guide.
+    Parser.prototype.implicitGuides = function (template) {
+        if (template.implicitGuides !== undefined)
+            return template.implicitGuides;
+        var guides = [];
+        template.implicitGuides = guides;
+        var tokens = template.tokens;
+        if (tokens === null)
+            return guides;
+        var open = 0;
+        while (open < tokens.length && tokens[open].value !== '{')
+            ++open;
+        // Member typedefs name types of the parameters: typedef T value_type.
+        var scope = this.templateScope(template.params);
+        scope.parent = template.scope;
+        var depth = 0;
+        var start = open + 1;
+        for (var index = open; index < tokens.length; ++index) {
+            var tok = tokens[index];
+            if (tok.value === '{' || tok.value === '(' || tok.value === '[') {
+                if (depth === 1 && tok.value === '(' && index > start && tokens[index - 1].value === template.name &&
+                    (index - 2 < 0 || tokens[index - 2].value !== '~')) {
+                    var guide = this.constructorGuide(template, scope, tokens, start, this.matchingIn(tokens, index));
+                    if (guide !== null)
+                        guides.push(guide);
+                }
+                ++depth;
+                continue;
+            }
+            if (tok.value === '}' || tok.value === ')' || tok.value === ']') {
+                --depth;
+                if (depth === 1 && tok.value === '}' && !(tokens[index + 1] && tokens[index + 1].value === ';'))
+                    start = index + 1;
+                if (depth === 0)
+                    break;
+                continue;
+            }
+            if (depth !== 1)
+                continue;
+            if (tok.value === ';') {
+                this.memberTypedef(template, scope, tokens, start, index);
+                start = index + 1;
+            } else if (tok.value === ':' && (tokens[index - 1].value === 'public' ||
+                                             tokens[index - 1].value === 'private' ||
+                                             tokens[index - 1].value === 'protected')) {
+                start = index + 1;
+            }
+        }
+        return guides;
+    };
+
+    // The index of the bracket that closes the one at index.
+    Parser.prototype.matchingIn = function (tokens, index) {
+        var depth = 0;
+        for (var at = index; at < tokens.length; ++at) {
+            var value = tokens[at].value;
+            if (value === '(' || value === '[' || value === '{')
+                ++depth;
+            else if ((value === ')' || value === ']' || value === '}') && --depth === 0)
+                return at;
+        }
+        return tokens.length - 1;
+    };
+
+    function sliceTokens(tokens, start, end) {
+        var list = tokens.slice(start, end);
+        var last = list.length > 0 ? list[list.length - 1] : tokens[start];
+        list.push({ type: 'eof', value: '', text: '', line: last.line, column: last.column + 1, file: last.file });
+        return list;
+    }
+
+    // typedef T value_type; using size_type = size_t;
+    Parser.prototype.memberTypedef = function (template, scope, tokens, start, end) {
+        var first = tokens[start];
+        if (first === undefined || (first.value !== 'typedef' && first.value !== 'using'))
+            return;
+        var parser = new Parser(this.session, sliceTokens(tokens, start, end + 1),
+                                { scope: scope, library: template.library });
+        parser.pattern = true;
+        try {
+            if (parser.accept('using')) {
+                var name = parser.expectIdent().value;
+                if (!parser.accept('='))
+                    return;
+                scope.members[name] = { kind: 'typedef', name: name, type: parser.typeId() };
+                return;
+            }
+            parser.next();
+            var specs = parser.declSpecifiers('type');
+            var declarator = parser.declarator(false, 'block');
+            var declared = X.declaratorName(declarator);
+            if (declared !== null)
+                scope.members[declared.name] = { kind: 'typedef', name: declared.name,
+                                                 type: parser.declaratorType(declarator, specs.type) };
+        } catch (error) {
+            if (!(error instanceof CompileError))
+                throw error;
+        }
+    };
+
+    // A guide from the constructor whose declaration starts at start and
+    // whose parameters close at close.
+    Parser.prototype.constructorGuide = function (template, scope, tokens, start, close) {
+        var parser = new Parser(this.session, sliceTokens(tokens, start, close + 1),
+                                { scope: new X.Scope('template', scope), library: template.library });
+        parser.pattern = true;
+        parser.deferDefaults = true;
+        var params = template.params;
+        try {
+            if (parser.is('template')) {
+                parser.next();
+                parser.expect('<');
+                var own = [];
+                for (;;) {
+                    own.push(parser.templateParameter(params.length + own.length, parser.scope));
+                    if (!parser.accept(','))
+                        break;
+                }
+                parser.closeAngle();
+                params = params.concat(own);
+            }
+            while (parser.accept('explicit') || parser.accept('constexpr') || parser.accept('inline'))
+                continue;
+            if (!parser.isIdent() || parser.next().value !== template.name)
+                return null;
+            var suffix = parser.functionSuffix();
+        } catch (error) {
+            if (error instanceof CompileError)
+                return null;
+            throw error;
+        }
+        var guide = this.newTemplate('function', template.name, params, sliceTokens(tokens, start, close + 1));
+        guide.scope = template.scope;
+        guide.pattern = X.functionType(types.void, suffix.params.map(function (param) {
+            return X.parameterType(param.type);
+        }), suffix.variadic, 0, null, false);
+        guide.paramInfo = suffix.params;
+        guide.implicitFor = template;
+        guide.initializerList = isInitializerListGuide(guide);
+        return guide;
+    };
+
+    // The class that the initializer of a declaration with a placeholder
+    // of a class template gives: init is the syntax of the initializer
+    // (copy, direct, braced); its expressions are checked here once.
+    Parser.prototype.deduceClassTemplate = function (template, init, node) {
+        var self = this;
+        function failed(args) {
+            self.error(node, "class template argument deduction failed: no matching function for call to '" +
+                       template.name + '(' + self.argumentText(args) + ")'");
+        }
+        if (init === null)
+            failed([]);
+        function checked(syntax) {
+            return syntax.k === 'braced' ? syntax : self.check(syntax);
+        }
+        function wrap(ir, syntax) {
+            return ir.k === 'braced' ? ir : { k: 'checked', ir: ir, line: syntax.line, column: syntax.column,
+                                              file: syntax.file };
+        }
+        var args;
+        var braced = init.k === 'braced';
+        if (init.k === 'copy') {
+            args = [checked(init.expr)];
+            init.expr = wrap(args[0], init.expr);
+        } else {
+            var list = braced ? init.items : init.args;
+            args = list.map(checked);
+            for (var index = 0; index < list.length; ++index)
+                list[index] = wrap(args[index], list[index]);
+        }
+        // T x(a) and T x{a} with a of an instance of T: a copy.
+        if (args.length === 1 && args[0].k !== 'braced') {
+            var only = unqual(args[0].type);
+            if (only.isClass && only.template === template)
+                return only;
+        }
+        var guides = (template.guides || []).concat(this.implicitGuides(template));
+        var found = null;
+        if (braced) {
+            // List-initialization tries the initializer-list constructors
+            // with the whole list first.
+            var whole = [{ k: 'braced', items: args, checkedItems: true, line: node.line, file: node.file }];
+            found = this.firstGuide(template, guides.filter(function (guide) { return guide.initializerList; }),
+                                    whole, node);
+        }
+        if (found === null)
+            found = this.firstGuide(template, guides, args, node);
+        if (found === null)
+            failed(args);
+        return found;
+    };
+
+    // The class of the best guide: a guide that is not a template wins, as
+    // in overload resolution; then the guides in their order (declared ones
+    // before the ones of constructors).
+    Parser.prototype.firstGuide = function (template, guides, args, node) {
+        var found = null;
+        for (var index = 0; index < guides.length; ++index) {
+            var guide = guides[index];
+            if (!guideTakes(guide, args.length) || !this.guideConverts(guide, args))
+                continue;
+            try {
+                var deduced = this.deduceCall(guide, args, null, node);
+                if (deduced === null)
+                    continue;
+                var type = this.guideResult(template, guide, deduced, node);
+                if (type === null)
+                    continue;
+                if (guide.params.length === 0)
+                    return type;
+                if (found === null)
+                    found = type;
+            } catch (error) {
+                if (!(error instanceof CompileError))
+                    throw error;
+            }
+        }
+        return found;
+    };
+
+    // The arguments of the parameters that name no template parameter
+    // convert to them.
+    Parser.prototype.guideConverts = function (guide, args) {
+        var map = new Map();
+        guide.params.forEach(function (param) { map.set(param.placeholder, undefined); });
+        var params = guide.pattern.params;
+        for (var index = 0; index < params.length && index < args.length; ++index) {
+            if (guide.paramInfo[index].pack)
+                return true;
+            if (mentions(params[index], map))
+                continue;
+            try {
+                if (this.conversion(params[index], args[index], {}) === null)
+                    return false;
+            } catch (error) {
+                if (!(error instanceof CompileError))
+                    throw error;
+                return false;
+            }
+        }
+        return true;
+    };
+
+    function guideTakes(guide, count) {
+        var required = 0, pack = false;
+        guide.paramInfo.forEach(function (param) {
+            if (param.pack)
+                pack = true;
+            else if (param.defaultArg === null && param.defaultTokens === null)
+                ++required;
+        });
+        return count >= required && (pack || count <= guide.paramInfo.length);
+    }
+
+    // The class of a guide for the deduced arguments of its parameters.
+    Parser.prototype.guideResult = function (template, guide, deduced, node) {
+        if (guide.implicitFor !== undefined) {
+            var args = [];
+            template.params.forEach(function (param, index) {
+                args = args.concat(param.pack ? deduced[index].items : [deduced[index]]);
+            });
+            return this.specialize(template, args, node);
+        }
+        var scope = new X.Scope('template', guide.scope);
+        guide.params.forEach(function (param, index) {
+            if (param.name !== null)
+                scope.members[param.name] = bindingEntity(param, deduced[index]);
+        });
+        var type = unqual(new Parser(this.session, guide.tokens, { scope: scope, library: guide.library }).typeId());
+        return type.isClass && type.template === template ? type : null;
     };
 
     // --- Deduction
