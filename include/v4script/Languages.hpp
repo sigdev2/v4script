@@ -18,7 +18,7 @@ struct LanguageInfo {
     QString version;               // version of the language: "3", "1.22", "C17", "R7RS"
     QString dialect;               // what exactly is implemented: "Free Pascal 3.2.2 (objfpc mode)"
     QString implementation;        // "v4script" for own translators, else the interpreter: "Skulpt"
-    QString implementationVersion; // version of the implementation: "0.1.0", "0.3.4", "ae5f462"
+    QString implementationVersion; // version of the implementation: "0.1.1", "0.3.4", "ae5f462"
     QString license;               // license of the implementation: "MIT", "BSD-3-Clause"
     QStringList extensions;        // file extensions without the dot: "py"
     QString lineComment;           // line comment of the language: "#", "//"
@@ -39,7 +39,7 @@ std::optional<LanguageInfo> findLanguage(const QString& id);
 std::optional<LanguageInfo> findLanguageForFile(const QString& fileName);
 
 /**
- * @brief Version of the library that is linked: "0.1.0". Compare with
+ * @brief Version of the library that is linked: "0.1.1". Compare with
  * V4SCRIPT_VERSION_STRING from v4script/Version.hpp to detect mismatched
  * headers.
  */

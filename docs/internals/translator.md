@@ -12,6 +12,7 @@ adapter in [languages.json](../../languages.json).
 | --- | --- |
 | [Go](go.md) | value representation, type checking, interfaces, goroutines, generics, the standard library |
 | [C](c.md) | linear memory, the preprocessor, type checking, function pointers, variable arguments, libc, `js_value` |
+| [C++](cpp.md) | parsing with names resolved on the fly, templates parsed again per instance, class layout and vtables, exceptions, copy elision, constant evaluation, the standard library written in C++ and parsed by name on demand |
 | [Java](java.md) | classes in JavaScript, inference of generics, the JDK library written in Java and loaded on demand, threads as fibers, `JsValue` |
 | [Forth](forth.md) | the interpreter and the dictionary in JavaScript, definitions translated through a virtual stack, labels into blocks and loops, memory, JavaScript handles |
 | [BASIC](basic.md) | the program shared by units, module variables, QBasic arithmetic with overflow, parameters by reference, GOSUB and ON ERROR as a state machine, graphics on a canvas |

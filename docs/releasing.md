@@ -8,14 +8,14 @@ version is 0.x, a minor version may change the API.
 | Where | What |
 | --- | --- |
 | [VERSION](../VERSION) | the version of the project; CMake reads it into `project()`, `Version.hpp` and `v4script::version()` |
-| [languages.json](../languages.json) | `implementationVersion` of the translated languages (Go, C, Java, Forth, BASIC, Pascal, WebAssembly, Scheme) is the version of v4script; the versions of the languages and of third-party interpreters change when the implementation does |
+| [languages.json](../languages.json) | `implementationVersion` of the translated languages (Go, C, C++, Java, Forth, BASIC, Pascal, WebAssembly, Scheme) is the version of v4script; the versions of the languages and of third-party interpreters change when the implementation does |
 | [README](../README.md) | the version badge and the table of languages with their versions |
 
 ## Steps
 
 On `dev`:
 
-1. All tests pass on Linux and Windows, also with the minified scripts:
+1. All tests pass on Linux, also with the minified scripts:
 
    ```
    cmake -S . -B build-release -DCMAKE_PREFIX_PATH=<Qt>/<kit> -DV4SCRIPT_MINIFY_JS=ON

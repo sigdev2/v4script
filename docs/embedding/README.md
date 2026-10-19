@@ -1,7 +1,7 @@
 # Embedding v4script
 
 v4script is a static C++ library for Qt applications. It runs programs in
-13 languages inside a `QJSEngine` and lets the application decide what the
+14 languages inside a `QJSEngine` and lets the application decide what the
 programs see: output, standard input, module files, a canvas and its own
 API (host modules).
 
@@ -16,9 +16,9 @@ API (host modules).
 
  - Qt 6.4 or later (developed and tested with 6.4.1): Core and Qml; Gui for
    `V4Script::ImageCanvas`.
- - A C++17 compiler and CMake 3.19. Tested with GCC on Linux and MinGW on
-   Windows; the library is also built for Android. MSVC and macOS are
-   expected to work but are not tested yet. Node.js is needed
+ - A C++17 compiler and CMake 3.19. Tested with GCC on Linux; the library
+   is also built for Android. MinGW and MSVC on Windows and macOS are
+   expected to work but are not tested. Node.js is needed
    only for the tools in [tools/](../../tools) (minified scripts, rebuilding
    the vendor bundles, running samples without Qt).
 
@@ -45,7 +45,7 @@ Or with `FetchContent`:
 include(FetchContent)
 FetchContent_Declare(v4script
     GIT_REPOSITORY https://github.com/sigdev2/v4script.git
-    GIT_TAG v0.1.0)
+    GIT_TAG v0.1.1)
 FetchContent_MakeAvailable(v4script)
 target_link_libraries(myapp PRIVATE V4Script::V4Script)
 ```
@@ -72,8 +72,8 @@ time.
 | `V4SCRIPT_BUILD_EXAMPLES` | top level only | build [examples/](../../examples) |
 
 Embedded size of each language (the host layer adds 25 KB, the translator
-core shared by Go, C, Java, Forth, BASIC, Pascal, WebAssembly and Scheme
-124 KB; minified: 10 KB and 50 KB):
+core shared by Go, C, C++, Java, Forth, BASIC, Pascal, WebAssembly and
+Scheme 124 KB; minified: 10 KB and 50 KB):
 
 | Language | Scripts | Minified |
 | --- | --- | --- |
@@ -83,7 +83,8 @@ core shared by Go, C, Java, Forth, BASIC, Pascal, WebAssembly and Scheme
 | Perl | 1823 KB | 1157 KB |
 | PHP | 2551 KB | 877 KB |
 | Go | 537 KB | 270 KB |
-| C | 352 KB | 165 KB |
+| C | 354 KB | 166 KB |
+| C++ (with the files of C) | 1449 KB | 920 KB |
 | Java | 852 KB | 570 KB |
 | Forth | 199 KB | 91 KB |
 | BASIC | 309 KB | 143 KB |
@@ -139,7 +140,7 @@ order of [languages.json](../../languages.json). Every `LanguageInfo` has:
 | `version` | `3.2.2`, `R7RS`, `C17` | the version of the language |
 | `dialect` | `Free Pascal 3.2.2 (objfpc mode)` | what exactly is implemented |
 | `implementation` | `v4script`, `Skulpt` | who runs it: v4script's own translator or a third-party interpreter |
-| `implementationVersion` | `0.1.0`, `ae5f462` | the version of the implementation |
+| `implementationVersion` | `0.1.1`, `ae5f462` | the version of the implementation |
 | `license` | `MIT`, `BSD-3-Clause` | the license of the implementation |
 | `extensions` | `pas`, `pp` | file extensions; `findLanguageForFile("main.pas")` uses them |
 | `lineComment` | `//` | the line comment of the language |

@@ -64,6 +64,7 @@ black box:
 | Language | Reference |
 | --- | --- |
 | C | gcc with glibc on Linux |
+| C++ | g++ 13 with libstdc++ on Linux (`g++ -std=c++17`) |
 | Java | JDK 19 (`java --enable-preview`) |
 | Forth | gforth 0.7.3; Forth 2012 words missing in it by hand |
 | BASIC | QB64-PE 4.7.0, where it departs from QBasic - QBasic rules |
@@ -86,7 +87,7 @@ cd tools && npm ci && cd ..
 node tools/run-samples.mjs go                     # all Go samples
 node tools/run-samples.mjs go slices              # samples whose name contains "slices"
 node tools/run-samples.mjs c --run prog.c --input in.txt --dump   # one file, show the generated JavaScript
-node tools/run-samples.mjs java --library         # translate the whole Java library
+node tools/run-samples.mjs java --library         # translate the whole Java library (also cpp)
 node tools/run-samples.mjs wat --wast testsuite/  # WebAssembly spec tests (.wast)
 V4SCRIPT_JS=build/js-min node tools/run-samples.mjs pascal   # the minified scripts
 node tools/run-samples.mjs basic --examples       # the examples of the playground run without errors
@@ -102,8 +103,7 @@ so `LanguagesTest` is the final check.
 
 ## Before a change is done
 
- - `ctest` passes on Linux (and on Windows when C++ or platform code
-   changed).
+ - `ctest` passes on Linux.
  - Changed scripts: the samples of the language pass in Node and in
    `LanguagesTest`, also with the minified scripts
    (`-DV4SCRIPT_MINIFY_JS=ON` or `V4SCRIPT_JS=build/js-min`).

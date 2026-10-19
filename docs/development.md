@@ -19,7 +19,7 @@ How to work on v4script itself. Contribution rules are in
 | [tests/](../tests) | C++ tests and the sample programs |
 | [examples/](../examples) | small projects that embed the library |
 | [web/](../web) | the playground: the page, the worker that runs the languages in a browser, the examples ([playground](playground.md)) |
-| [tools/](../tools) | Node.js tools: vendor bundles, minification, the sample runner, the playground site |
+| [tools/](../tools) | Node.js tools: vendor bundles, minification, the sample runner, the playground site, the tables of the C++ library |
 | [docs/](README.md) | the documentation |
 
 ## Building
@@ -94,6 +94,20 @@ the original text is still there. After updating a bundle: run the samples
 of the language, update the versions in [languages.json](../languages.json),
 [THIRD_PARTY_NOTICES](../THIRD_PARTY_NOTICES.md) and the README.
 
+## The C++ library
+
+The C++ standard library is C++ text in
+`js/translator/cpp/library-*.js`, with a table of the top-level
+declarations before every header (the translator parses a declaration
+when its name is first used, see [internals](internals/cpp.md#the-library)).
+After changing the text, rewrite the tables:
+
+```
+node tools/build-cpp-library.mjs            # rewrite the tables
+node tools/build-cpp-library.mjs --check    # only report stale tables
+node tools/run-samples.mjs cpp --library    # parse and check the whole library
+```
+
 ## Minified scripts
 
 [tools/minify.mjs](../tools/minify.mjs) writes a minified copy of `js/`
@@ -101,7 +115,7 @@ of the language, update the versions in [languages.json](../languages.json),
 value of its last expression) and checks that no expression is deeper than
 the V4 compiler can take. Embed it with `-DV4SCRIPT_MINIFY_JS=ON` (minifies
 at configure time) or `-DV4SCRIPT_JS_DIR=<directory>`. The resources shrink
-from 11.1 MB to 5.6 MB. Run the tests with the minified scripts before a
+from 12.3 MB to 6.4 MB. Run the tests with the minified scripts before a
 release: V4 has crashed on code shapes that only the minified scripts had.
 
 ## The playground
