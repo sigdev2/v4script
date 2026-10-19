@@ -105,12 +105,18 @@ Decisions already taken for these stages:
    JavaScript; fast division of big integers (bit by bit now).
  - **Python, Lua, Prolog, Perl, PHP**: limited by their interpreters (see
    their pages); Perl run-time errors have no line; PHP lacks `...$args`
-   and exponent literals.
+   and exponent literals. Python: `Fraction` from a string
+   (`Fraction('3/4')`) fails with a `TypeError` - the `fractions` module of
+   Skulpt parses the string with named groups, which V4 lacks.
 
 ## The library
 
  - Android: measure the stack on devices and raise the call depth as on
    desktop (now the V4 default of 1000).
+ - `Runtime::interrupt()` while a language loads: the run returns
+   `Status::Failed` ("Cannot load the Python interpreter: Error:
+   Interrupted") instead of `Status::Interrupted`; the next run loads the
+   language again.
  - Writing files: an optional `Host` callback for programs that write files
    (C `fopen("w")`, Pascal `Rewrite`, BASIC `OPEN … FOR OUTPUT`, WASI).
  - CI on Windows and macOS; MSVC builds.
