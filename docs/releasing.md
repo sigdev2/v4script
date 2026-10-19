@@ -15,7 +15,7 @@ version is 0.x, a minor version may change the API.
 
 On `dev`:
 
-1. All tests pass on Linux and Windows, also with the minified scripts:
+1. All tests pass on Linux, also with the minified scripts:
 
    ```
    cmake -S . -B build-release -DCMAKE_PREFIX_PATH=<Qt>/<kit> -DV4SCRIPT_MINIFY_JS=ON

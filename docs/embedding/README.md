@@ -16,9 +16,9 @@ API (host modules).
 
  - Qt 6.4 or later (developed and tested with 6.4.1): Core and Qml; Gui for
    `V4Script::ImageCanvas`.
- - A C++17 compiler and CMake 3.19. Tested with GCC on Linux and MinGW on
-   Windows; the library is also built for Android. MSVC and macOS are
-   expected to work but are not tested yet. Node.js is needed
+ - A C++17 compiler and CMake 3.19. Tested with GCC on Linux; the library
+   is also built for Android. MinGW and MSVC on Windows and macOS are
+   expected to work but are not tested. Node.js is needed
    only for the tools in [tools/](../../tools) (minified scripts, rebuilding
    the vendor bundles, running samples without Qt).
 

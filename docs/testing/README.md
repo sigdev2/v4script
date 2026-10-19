@@ -103,8 +103,7 @@ so `LanguagesTest` is the final check.
 
 ## Before a change is done
 
- - `ctest` passes on Linux (and on Windows when C++ or platform code
-   changed).
+ - `ctest` passes on Linux.
  - Changed scripts: the samples of the language pass in Node and in
    `LanguagesTest`, also with the minified scripts
    (`-DV4SCRIPT_MINIFY_JS=ON` or `V4SCRIPT_JS=build/js-min`).
