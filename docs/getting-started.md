@@ -1,5 +1,11 @@
 # Getting started
 
+## Try it without building
+
+The [playground](https://sigdev2.github.io/v4script/) runs every language
+in the browser, with examples and your own programs
+([how it works](playground.md)).
+
 ## Build and try
 
 You need Qt 6.4 or later (Core, Qml, Gui), CMake 3.19 and a C++17

@@ -1,0 +1,62 @@
+name: Playground
+
+# The playground on GitHub Pages (docs/playground.md): built from a release
+# on master, or by hand from any branch the github-pages environment allows.
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build the site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install the tools
+        working-directory: tools
+        run: npm ci
+
+      - name: Check the examples
+        run: |
+          status=0
+          for language in $(node -e "for (const l of require('./languages.json').languages) console.log(l.id)"); do
+            echo "::group::$language"
+            node tools/run-samples.mjs "$language" --examples || status=1
+            echo "::endgroup::"
+          done
+          exit $status
+
+      - name: Build the site
+        run: node tools/build-site.mjs build/site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/site
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

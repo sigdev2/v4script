@@ -1,0 +1,354 @@
+:root {
+    --background: #f6f7f9;
+    --surface: #ffffff;
+    --border: #d5d9e0;
+    --text: #1d2330;
+    --muted: #677085;
+    --accent: #2f6fdb;
+    --accent-text: #ffffff;
+    --gutter: #eef0f4;
+    --error: #c62828;
+    --warning: #9a6700;
+    --value: #2e7d32;
+    --echo: #2f6fdb;
+    --mono: ui-monospace, 'Cascadia Mono', 'Consolas', 'DejaVu Sans Mono', 'Liberation Mono', monospace;
+    color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #15181e;
+        --surface: #1c2028;
+        --border: #343a46;
+        --text: #dde1e8;
+        --muted: #8c94a5;
+        --accent: #5b93f0;
+        --accent-text: #0b0e13;
+        --gutter: #191c23;
+        --error: #ff7b72;
+        --warning: #e3b341;
+        --value: #7ee787;
+        --echo: #79b8ff;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background: var(--background);
+    color: var(--text);
+    font: 14px/1.4 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+a {
+    color: var(--accent);
+}
+
+.bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    color: var(--text);
+    margin-right: 6px;
+}
+
+.brand span {
+    font-weight: 400;
+    color: var(--muted);
+}
+
+.spacer {
+    flex: 1;
+}
+
+.group {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.field {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+}
+
+select, button, input, textarea {
+    font: inherit;
+    color: var(--text);
+}
+
+select {
+    max-width: 260px;
+    padding: 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+}
+
+.program select {
+    min-width: 200px;
+}
+
+button {
+    white-space: nowrap;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+    border-color: var(--accent);
+}
+
+button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+button.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-text);
+    font-weight: 600;
+}
+
+button.small {
+    padding: 1px 8px;
+    font-size: 12px;
+}
+
+main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px;
+    min-height: 0;
+}
+
+.pane {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.pane-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+}
+
+#file-name {
+    color: var(--text);
+    font-weight: 600;
+}
+
+#modified {
+    color: var(--warning);
+}
+
+#isolation {
+    color: var(--warning);
+}
+
+.status.running {
+    color: var(--accent);
+}
+
+.status.failed {
+    color: var(--error);
+}
+
+.editor {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    position: relative;
+}
+
+#gutter, #code, #output, #line, #input {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.45;
+    tab-size: 4;
+}
+
+#gutter {
+    margin: 0;
+    padding: 8px 8px 8px 12px;
+    min-width: 3.5em;
+    text-align: right;
+    color: var(--muted);
+    background: var(--gutter);
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+    user-select: none;
+}
+
+#gutter .error {
+    color: var(--error);
+    font-weight: 700;
+}
+
+#code {
+    flex: 1;
+    margin: 0;
+    padding: 8px 10px;
+    border: 0;
+    outline: none;
+    resize: none;
+    background: transparent;
+    white-space: pre;
+    overflow: auto;
+}
+
+#input-pane {
+    border-top: 1px solid var(--border);
+}
+
+#input-pane summary {
+    padding: 6px 10px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.hint {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+#input {
+    display: block;
+    width: 100%;
+    padding: 6px 10px;
+    border: 0;
+    border-top: 1px solid var(--border);
+    outline: none;
+    resize: vertical;
+    background: var(--gutter);
+}
+
+#screen {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    background: #000;
+    max-height: 60%;
+}
+
+#canvas {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+#console {
+    flex: 1;
+    overflow: auto;
+    padding: 8px 10px;
+    min-height: 0;
+}
+
+#output {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    display: inline;
+}
+
+#output .stderr, #output .error {
+    color: var(--error);
+}
+
+#output .warning {
+    color: var(--warning);
+}
+
+#output .value {
+    color: var(--value);
+}
+
+#output .echo {
+    color: var(--echo);
+}
+
+#output .note {
+    color: var(--muted);
+    font-style: italic;
+}
+
+#output .error a {
+    color: inherit;
+}
+
+#prompt {
+    display: inline;
+}
+
+#line {
+    width: 60%;
+    min-width: 8em;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px dashed var(--echo);
+    outline: none;
+    background: transparent;
+    color: var(--echo);
+}
+
+.small-print {
+    border-top: 1px solid var(--border);
+    border-bottom: 0;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+@media (max-width: 800px) {
+    main {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(300px, 1fr) minmax(250px, 1fr);
+    }
+
+    select {
+        max-width: 180px;
+    }
+}

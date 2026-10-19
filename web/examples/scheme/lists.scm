@@ -1,0 +1,21 @@
+; Lists and higher-order procedures: quicksort, fold, association lists.
+(define (quicksort items)
+  (if (null? items)
+      '()
+      (let ((pivot (car items)) (rest (cdr items)))
+        (append (quicksort (filter (lambda (x) (< x pivot)) rest))
+                (list pivot)
+                (quicksort (filter (lambda (x) (>= x pivot)) rest))))))
+
+(define numbers '(33 7 81 2 54 19 7 66 1))
+(display "Sorted: ") (write (quicksort numbers)) (newline)
+(display "Sum: ") (write (fold + 0 numbers)) (newline)
+(display "Squares of the odd ones: ")
+(write (map (lambda (x) (* x x)) (filter odd? numbers)))
+(newline)
+
+(define capitals '((france . paris) (italy . rome) (japan . tokyo)))
+(display "The capital of Italy: ") (write (cdr (assq 'italy capitals))) (newline)
+(display "Exact arithmetic: ") (write (/ 1 3)) (display " + ") (write (/ 1 6))
+(display " = ") (write (+ 1/3 1/6)) (newline)
+(display "2^100 = ") (write (expt 2 100)) (newline)

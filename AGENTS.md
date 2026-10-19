@@ -47,7 +47,10 @@ ctest --test-dir build --output-on-failure
 ```
 
 Qt 6.4.1 is the reference version; a Linux build of the tests and the
-examples is required, Windows when C++ changes. Quick checks of the scripts
+examples is required, Windows when C++ changes. The playground (the
+languages in a browser, [docs/playground.md](docs/playground.md)) builds
+with `node tools/build-site.mjs --serve`; its examples are checked with
+`node tools/run-samples.mjs <language> --examples`. Quick checks of the scripts
 run in Node.js: `node tools/run-samples.mjs <language>` (needs
 `npm ci` in `tools/` once). Node is more forgiving than V4: the final check
 is `LanguagesTest`. Before a release, run the tests with

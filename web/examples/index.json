@@ -1,0 +1,485 @@
+{
+  "basic": [
+    {
+      "group": "First steps",
+      "examples": [
+        {
+          "file": "hello.bas",
+          "title": "Hello: your name and age",
+          "input": [
+            "Ann",
+            "2010"
+          ]
+        },
+        {
+          "file": "table.bas",
+          "title": "The multiplication table"
+        },
+        {
+          "file": "guess.bas",
+          "title": "Guess the number",
+          "input": [
+            "50",
+            "25",
+            "0"
+          ]
+        },
+        {
+          "file": "quiz.bas",
+          "title": "Arithmetic quiz",
+          "input": [
+            "5",
+            "7",
+            "12",
+            "3",
+            "20"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Numbers and words",
+      "examples": [
+        {
+          "file": "primes.bas",
+          "title": "Primes: the sieve of Eratosthenes"
+        },
+        {
+          "file": "rabbits.bas",
+          "title": "Fibonacci's rabbits"
+        },
+        {
+          "file": "pi.bas",
+          "title": "Three ways to compute pi"
+        },
+        {
+          "file": "palindrome.bas",
+          "title": "Palindromes",
+          "input": [
+            "A man, a plan, a canal: Panama",
+            "Hello, world",
+            ""
+          ]
+        },
+        {
+          "file": "roman.bas",
+          "title": "Roman numerals",
+          "input": [
+            "1987",
+            "2026",
+            "3999",
+            "0"
+          ]
+        },
+        {
+          "file": "calendar.bas",
+          "title": "The calendar of a month",
+          "input": [
+            "2026",
+            "10"
+          ]
+        },
+        {
+          "file": "sorting.bas",
+          "title": "Bubble sort"
+        }
+      ]
+    },
+    {
+      "group": "Games",
+      "examples": [
+        {
+          "file": "bulls.bas",
+          "title": "Bulls and cows",
+          "input": [
+            "1234",
+            "5678",
+            "123",
+            ""
+          ]
+        },
+        {
+          "file": "matches.bas",
+          "title": "Matches: who takes the last one",
+          "input": [
+            "3",
+            "2",
+            "1",
+            "0"
+          ]
+        },
+        {
+          "file": "lander.bas",
+          "title": "Moon landing",
+          "input": [
+            "0",
+            "0",
+            "10",
+            "30",
+            "30",
+            "30",
+            "30"
+          ]
+        },
+        {
+          "file": "dice.bas",
+          "title": "Two dice: statistics"
+        }
+      ]
+    },
+    {
+      "group": "Graphics",
+      "examples": [
+        {
+          "file": "house.bas",
+          "title": "A house, a tree and the sun"
+        },
+        {
+          "file": "pattern.bas",
+          "title": "String art"
+        },
+        {
+          "file": "plot.bas",
+          "title": "Graphs of functions"
+        },
+        {
+          "file": "rosette.bas",
+          "title": "A rosette with DRAW"
+        },
+        {
+          "file": "snowflake.bas",
+          "title": "The Koch snowflake"
+        },
+        {
+          "file": "stars.bas",
+          "title": "The night sky (animation)"
+        },
+        {
+          "file": "bounce.bas",
+          "title": "A bouncing ball (animation)"
+        }
+      ]
+    }
+  ],
+  "python": [
+    {
+      "group": "Python",
+      "examples": [
+        {
+          "file": "hello.py",
+          "title": "Hello: input and f-strings",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "words.py",
+          "title": "Word frequency"
+        },
+        {
+          "file": "classes.py",
+          "title": "Classes: fractions"
+        },
+        {
+          "file": "generators.py",
+          "title": "Generators: primes"
+        },
+        {
+          "file": "spiral.py",
+          "title": "Drawing on the canvas"
+        }
+      ]
+    }
+  ],
+  "lua": [
+    {
+      "group": "Lua",
+      "examples": [
+        {
+          "file": "hello.lua",
+          "title": "Hello: io.read",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "tables.lua",
+          "title": "Tables: a shopping list"
+        },
+        {
+          "file": "vectors.lua",
+          "title": "Metatables: vectors"
+        },
+        {
+          "file": "coroutines.lua",
+          "title": "Coroutines: permutations"
+        }
+      ]
+    }
+  ],
+  "prolog": [
+    {
+      "group": "Prolog",
+      "examples": [
+        {
+          "file": "family.pro",
+          "title": "A family tree"
+        },
+        {
+          "file": "queens.pro",
+          "title": "The eight queens"
+        },
+        {
+          "file": "hanoi.pro",
+          "title": "The towers of Hanoi"
+        },
+        {
+          "file": "lists.pro",
+          "title": "Lists and relations"
+        }
+      ]
+    }
+  ],
+  "perl": [
+    {
+      "group": "Perl",
+      "examples": [
+        {
+          "file": "hello.pl",
+          "title": "Hello: STDIN and hashes",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "words.pl",
+          "title": "Word frequency with regular expressions"
+        },
+        {
+          "file": "objects.pl",
+          "title": "Objects: a stack calculator"
+        }
+      ]
+    }
+  ],
+  "php": [
+    {
+      "group": "PHP",
+      "examples": [
+        {
+          "file": "hello.php",
+          "title": "Hello: readline",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "arrays.php",
+          "title": "Arrays: a class register"
+        },
+        {
+          "file": "classes.php",
+          "title": "Classes: shapes"
+        }
+      ]
+    }
+  ],
+  "go": [
+    {
+      "group": "Go",
+      "examples": [
+        {
+          "file": "hello.go",
+          "title": "Hello: bufio and runes",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "pipeline.go",
+          "title": "Goroutines and channels"
+        },
+        {
+          "file": "generics.go",
+          "title": "Generics"
+        },
+        {
+          "file": "shapes.go",
+          "title": "Interfaces: shapes"
+        },
+        {
+          "file": "countdown.go",
+          "title": "Waiting: Sleep and a ticker"
+        }
+      ]
+    }
+  ],
+  "c": [
+    {
+      "group": "C",
+      "examples": [
+        {
+          "file": "hello.c",
+          "title": "Hello: fgets and strings",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "list.c",
+          "title": "A linked list"
+        },
+        {
+          "file": "sorting.c",
+          "title": "qsort: structs and strings"
+        },
+        {
+          "file": "life.c",
+          "title": "The Game of Life"
+        }
+      ]
+    }
+  ],
+  "java": [
+    {
+      "group": "Java",
+      "examples": [
+        {
+          "file": "Hello.java",
+          "title": "Hello: Scanner",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "Shapes.java",
+          "title": "Records and pattern matching"
+        },
+        {
+          "file": "Streams.java",
+          "title": "Streams and collectors"
+        },
+        {
+          "file": "Threads.java",
+          "title": "Threads: producer and consumer"
+        }
+      ]
+    }
+  ],
+  "forth": [
+    {
+      "group": "Forth",
+      "examples": [
+        {
+          "file": "hello.fth",
+          "title": "Hello: words and loops",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "math.fth",
+          "title": "Recursion: factorials, Fibonacci, gcd"
+        },
+        {
+          "file": "table.fth",
+          "title": "A temperature table"
+        }
+      ]
+    }
+  ],
+  "pascal": [
+    {
+      "group": "Pascal",
+      "examples": [
+        {
+          "file": "hello.pas",
+          "title": "Hello: ReadLn",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "records.pas",
+          "title": "Records: a table of results"
+        },
+        {
+          "file": "classes.pas",
+          "title": "Classes and exceptions"
+        },
+        {
+          "file": "hanoi.pas",
+          "title": "The towers of Hanoi"
+        },
+        {
+          "file": "graph.pas",
+          "title": "The Graph unit: a target and a star"
+        }
+      ]
+    }
+  ],
+  "wat": [
+    {
+      "group": "WebAssembly",
+      "examples": [
+        {
+          "file": "hello.wat",
+          "title": "Hello: WASI fd_write"
+        },
+        {
+          "file": "math.wat",
+          "title": "Functions and commands"
+        },
+        {
+          "file": "memory.wat",
+          "title": "Linear memory"
+        }
+      ]
+    }
+  ],
+  "scheme": [
+    {
+      "group": "Scheme",
+      "examples": [
+        {
+          "file": "hello.scm",
+          "title": "Hello: read-line",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "lists.scm",
+          "title": "Lists and higher-order procedures"
+        },
+        {
+          "file": "generators.scm",
+          "title": "call/cc: generators"
+        },
+        {
+          "file": "streams.scm",
+          "title": "Lazy streams: primes"
+        }
+      ]
+    }
+  ],
+  "javascript": [
+    {
+      "group": "JavaScript",
+      "examples": [
+        {
+          "file": "hello.js",
+          "title": "Hello: arrays and the value"
+        },
+        {
+          "file": "canvas.js",
+          "title": "Drawing on the canvas"
+        },
+        {
+          "file": "timers.js",
+          "title": "Timers"
+        }
+      ]
+    }
+  ]
+}

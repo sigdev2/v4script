@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Run BASIC, Pascal, C, Go, Java, Python, Lua, Prolog, Perl, PHP, Forth, Scheme and WebAssembly in the browser with the interpreters of v4script.">
+<title>v4script playground</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="https://github.com/sigdev2/v4script" title="v4script on GitHub">v4script <span>playground</span></a>
+  <label class="field">Language <select id="language" aria-label="Language"></select></label>
+  <label class="field program">Program <select id="program" aria-label="Program"></select></label>
+  <button id="run" class="primary" title="Run (Ctrl+Enter)" disabled>&#9654; Run</button>
+  <button id="stop" title="Stop (Esc)" disabled>&#9632; Stop</button>
+  <span class="spacer"></span>
+  <button id="new" title="A new program of this language">New</button>
+  <button id="open" title="Open a file from the computer as my program">Open&hellip;</button>
+  <input type="file" id="file" hidden>
+</header>
+<main>
+  <section class="pane editor-pane">
+    <div class="pane-title">
+      <span id="file-name"></span><span id="modified" hidden>&bull; changed</span>
+      <span class="spacer"></span>
+      <button id="save" class="small" title="Save a copy as my program (Ctrl+S)">Save as&hellip;</button>
+      <button id="revert" class="small" title="Discard the changes of this example">Revert</button>
+      <button id="rename" class="small" title="Rename my program">Rename</button>
+      <button id="delete" class="small" title="Delete my program">Delete</button>
+      <button id="download" class="small" title="Save the program to the computer">Download</button>
+    </div>
+    <div class="editor">
+      <pre id="gutter" aria-hidden="true"></pre>
+      <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" aria-label="Program text"></textarea>
+    </div>
+    <details id="input-pane">
+      <summary>Standard input <span class="hint">- lines the program reads first</span></summary>
+      <textarea id="input" spellcheck="false" wrap="off" rows="4" aria-label="Standard input" placeholder="Lines of input, one per line"></textarea>
+    </details>
+  </section>
+  <section class="pane output-pane">
+    <div class="pane-title">
+      <span>Output</span><span id="status" class="status"></span>
+      <span class="spacer"></span>
+      <button id="clear" class="small" title="Clear the output">Clear</button>
+    </div>
+    <div id="screen" hidden><canvas id="canvas" width="320" height="200"></canvas></div>
+    <div id="console">
+      <pre id="output"></pre>
+      <form id="prompt" hidden>
+        <input id="line" autocomplete="off" spellcheck="false" aria-label="A line of input (Enter to send, Ctrl+D for the end of input)">
+      </form>
+    </div>
+  </section>
+</main>
+<footer class="bar small-print">
+  <a id="language-info" target="_blank" rel="noopener"></a>
+  <span class="spacer"></span>
+  <span id="isolation" hidden></span>
+  <span>Your programs and changes stay in this browser.</span>
+  <a href="https://github.com/sigdev2/v4script/blob/HEAD/docs/playground.md" target="_blank" rel="noopener">About</a>
+  <span id="version"></span>
+</footer>
+</body>
+</html>

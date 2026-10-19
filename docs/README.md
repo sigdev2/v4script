@@ -3,6 +3,7 @@
 | Section | For whom | What it covers |
 | --- | --- | --- |
 | [getting-started.md](getting-started.md) | everyone | building, the examples, the `v4run` runner, the first embedding |
+| [playground.md](playground.md) | everyone | the languages in a browser: using the playground, its differences from the Qt engine, building it for GitHub Pages, adding examples |
 | [languages/](languages/README.md) | authors of programs | every language: what works, input and output, modules, host modules and JavaScript, errors, differences from the reference implementation |
 | [embedding/](embedding/README.md) | application developers | adding the library to a CMake project, build options, `Runtime` and `Engine`, host modules, graphics, versions |
 | [internals/](internals/README.md) | developers of v4script | architecture, the host layer, the translator and each translated language, third-party interpreters, V4 pitfalls |
