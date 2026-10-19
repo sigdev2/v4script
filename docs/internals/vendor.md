@@ -25,7 +25,18 @@ Brython needs ES modules and `Intl`.
 
 [tools/build-bundles.mjs](../../tools/build-bundles.mjs) builds every
 interpreter with esbuild into one IIFE file for ES2016 (V4 knows no newer
-syntax) with `global` = `globalThis`. Versions are pinned in
+syntax) with `global` = `globalThis`. The bundles are not minified, so
+that they can be read: the names stay, and every module starts with a
+comment with its path (`// node_modules/fengari/src/lapi.js`); esbuild
+drops the comments of the sources (after a build the sources are in
+`tools/node_modules` and `tools/.work/skulpt`). Perlito5 is the prebuilt
+file of its repository, readable as it is. The standard library of Skulpt
+(`skulpt-stdlib.js`) has a template literal per file of `src/builtin` and
+`src/lib`, sorted by path: the Python files as they are, the JavaScript
+modules as they are if they are ES2016, lowered by esbuild otherwise.
+Releases minify the bundles with the rest of `js/`
+([tools/minify.mjs](../../tools/minify.mjs) minifies the JavaScript modules
+inside the standard library too). Versions are pinned in
 [tools/package.json](../../tools/package.json) (Skulpt and Perlito5 are
 downloaded at fixed commits). Patches of third-party code (each one checks
 that the original text did not change, otherwise the build fails):

@@ -13,7 +13,7 @@ How to work on v4script itself. Contribution rules are in
 | [js/host/](../js/host) | the host layer, polyfills, the canvas object |
 | [js/adapters/](../js/adapters) | one adapter per language |
 | [js/translator/](../js/translator) | v4script's own translator: `core/` and one directory per language |
-| [js/vendor/](../js/vendor) | built third-party interpreters with their licenses (generated, do not edit) |
+| [js/vendor/](../js/vendor) | built third-party interpreters, not minified, with their licenses (generated, do not edit) |
 | [languages.json](../languages.json) | the manifest of the languages |
 | [cmake/](../cmake) | embedding the scripts as resources, the version header |
 | [tests/](../tests) | C++ tests and the sample programs |
@@ -85,8 +85,10 @@ node tools/build-bundles.mjs            # all
 node tools/build-bundles.mjs lua php    # some
 ```
 
-The build is reproducible: the same versions give the same bytes. Patches
-of third-party code and the reasons are in
+The bundles are not minified, so that they can be read; releases minify
+them with the rest of `js/` (see below). The build is reproducible: the
+same versions give the same bytes. Patches of third-party code and the
+reasons are in
 [vendor](internals/vendor.md#building-the-bundles); every patch checks that
 the original text is still there. After updating a bundle: run the samples
 of the language, update the versions in [languages.json](../languages.json),
@@ -99,7 +101,7 @@ of the language, update the versions in [languages.json](../languages.json),
 value of its last expression) and checks that no expression is deeper than
 the V4 compiler can take. Embed it with `-DV4SCRIPT_MINIFY_JS=ON` (minifies
 at configure time) or `-DV4SCRIPT_JS_DIR=<directory>`. The resources shrink
-from 7.8 MB to 5.4 MB. Run the tests with the minified scripts before a
+from 11.1 MB to 5.6 MB. Run the tests with the minified scripts before a
 release: V4 has crashed on code shapes that only the minified scripts had.
 
 ## The playground

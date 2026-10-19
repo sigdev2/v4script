@@ -57,8 +57,8 @@ runtime.run("go",     "fmt.Println(strings.Repeat(\"Go\", 3))");       // GoGoGo
   code, deep recursion is an error, not a crash.
 - 🎨 **Graphics included.** QBasic `SCREEN 13` and Pascal `Graph` draw on a
   canvas - into a `QImage` or a Qt Quick `Canvas`.
-- 📦 **Pick what you need.** Embed all languages (about 8 MB of scripts,
-  5.4 MB minified) or just the few your application uses.
+- 📦 **Pick what you need.** Embed all languages (about 11 MB of scripts,
+  5.6 MB minified) or just the few your application uses.
 
 ## Supported languages
 

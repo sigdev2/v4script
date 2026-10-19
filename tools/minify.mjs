@@ -6,7 +6,8 @@
 // syntax is left as it is: the engine takes the value of the last
 // expression of a file, and the code must stay ES2016 for V4; esbuild
 // does not check that, the tests do) and checked
-// for the expression depth that crashes the V4 compiler. Other files are
+// for the expression depth that crashes the V4 compiler; so are the
+// JavaScript modules inside the Skulpt standard library. Other files are
 // copied. The output (build/js-min by default) is what
 // -DV4SCRIPT_JS_DIR=<directory> or -DV4SCRIPT_MINIFY_JS=ON puts into the
 // resources. See docs/releasing.md.
@@ -64,28 +65,63 @@ function* walk(directory) {
     }
 }
 
+const MINIFY = {
+    loader: 'js',
+    // No lowering: the sources are ES2016 already, and lowering would
+    // add helpers (esbuild wraps yield* for es2016) that V4 code does
+    // not need.
+    target: 'esnext',
+    charset: 'utf8',
+    minifyWhitespace: true,
+    minifyIdentifiers: true,
+    minifySyntax: false,
+    // Third-party bundles keep their license comments; their full texts
+    // are in LICENSES.txt next to them.
+    legalComments: 'inline',
+};
+
+// The JavaScript modules of the Skulpt standard library are texts in
+// skulpt-stdlib.js (a template literal per file, under a key that ends with
+// .js): they are minified as files of their own and become strings. Their
+// top-level names stay, Skulpt looks for $builtinmodule.
+async function minifyEmbeddedModules(code) {
+    const modules = [];
+    const stack = [acorn.parse(code, { ecmaVersion: 'latest', sourceType: 'script' })];
+    while (stack.length > 0) {
+        const node = stack.pop();
+        if (node.type === 'Property' && node.key.type === 'Literal' && /\.js$/.test(node.key.value) &&
+            node.value.type === 'TemplateLiteral' && node.value.expressions.length === 0) {
+            modules.push(node.value);
+            continue;
+        }
+        for (const key of Object.keys(node)) {
+            const child = node[key];
+            for (const item of Array.isArray(child) ? child : [child]) {
+                if (item !== null && typeof item === 'object' && typeof item.type === 'string') {
+                    stack.push(item);
+                }
+            }
+        }
+    }
+    modules.sort((left, right) => right.start - left.start);
+    for (const literal of modules) {
+        const result = await esbuild.transform(literal.quasis[0].value.cooked, MINIFY);
+        code = code.substring(0, literal.start) + JSON.stringify(result.code) + code.substring(literal.end);
+    }
+    return code;
+}
+
 async function minifyFile(source, target) {
-    const code = fs.readFileSync(source, 'utf8');
-    const result = await esbuild.transform(code, {
-        loader: 'js',
-        // No lowering: the sources are ES2016 already, and lowering would
-        // add helpers (esbuild wraps yield* for es2016) that V4 code does
-        // not need.
-        target: 'esnext',
-        charset: 'utf8',
-        minifyWhitespace: true,
-        minifyIdentifiers: true,
-        minifySyntax: false,
-        // Third-party bundles keep their license comments; their full texts
-        // are in LICENSES.txt next to them.
-        legalComments: 'inline',
-    });
+    const original = fs.readFileSync(source, 'utf8');
+    const code = /[\\/]vendor[\\/]python[\\/]skulpt-stdlib\.js$/.test(source) ? await minifyEmbeddedModules(original)
+                                                                               : original;
+    const result = await esbuild.transform(code, MINIFY);
     const depth = maxExpressionDepth(result.code);
     if (depth > MAX_EXPRESSION_DEPTH) {
         throw new Error(`${path.relative(root, source)}: an expression is ${depth} levels deep after minification`);
     }
     fs.writeFileSync(target, result.code);
-    return { before: Buffer.byteLength(code), after: Buffer.byteLength(result.code) };
+    return { before: Buffer.byteLength(original), after: Buffer.byteLength(result.code) };
 }
 
 async function main() {
