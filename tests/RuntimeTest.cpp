@@ -368,8 +368,10 @@ private slots:
 
         // interrupt() from another thread. The thread reaches the runtime by
         // reference because that is what is tested; it is joined before the
-        // runtime goes.
+        // runtime goes. Python loads first: the interruption is meant for the
+        // loop, not for the loading of the interpreter (about 250 ms).
         runtime.setTimeLimit(0);
+        QCOMPARE(runtime.load("python"), QString());
         const std::unique_ptr<QThread> thread(QThread::create([&runtime]() {
             QThread::msleep(200);
             runtime.interrupt();
