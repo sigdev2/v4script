@@ -63,7 +63,8 @@ Decisions already taken for these stages:
 
  - **Go**: `regexp`, `encoding/json`, `math/big`, complex numbers, `goto`,
    range-over-func iterators; faster 64-bit loop counters (no checks when
-   the bound is known).
+   the bound is known). A receive from the channel of `time.NewTicker`
+   never returns (`time.Tick` works).
  - **C**: `goto`, `_Generic`, `setjmp`/`longjmp`, `wchar.h`; writing files
    through the host; bounds checks inside the program memory (as
    AddressSanitizer does).
