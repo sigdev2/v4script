@@ -29,10 +29,17 @@
         return { type: type, value: value, file: file, line: line, column: column, space: false, bol: false };
     }
 
+    // C++ only: the member pointer operators and raw strings.
+    var CPP_PUNCTUATORS = ['->*', '.*'];
+    var RAW_STRING = /(?:u8|u|U|L)?R"([^()\\\s"]{0,16})\(/y;
+
     // Splitting a text into preprocessor tokens; line breaks are 'newline'
-    // tokens (directives need them).
-    function lex(text, file) {
+    // tokens (directives need them). cpp - the tokens of C++; line - of the
+    // first line (a part of a file).
+    function lex(text, file, cpp, line) {
         var scanner = new T.Scanner(text.replace(/\\\r?\n/g, function () { return '\u0001'; }), file);
+        if (line !== undefined)
+            scanner.line = line;
         var tokens = [];
         var space = false;
         var bol = true;
@@ -90,6 +97,11 @@
             }
             var line = scanner.line, column = scanner.column();
             var code = scanner.code();
+            var raw = cpp ? scanner.match(RAW_STRING) : null;
+            if (raw !== null) {
+                push(token('string', rawString(scanner, raw, file, line, column), file, line, column));
+                continue;
+            }
             // Strings and characters, with the prefixes u8, u, U, L.
             var prefix = scanner.match(/(?:u8|u|U|L)?(?=["'])/y);
             if (prefix !== null && (scanner.peek(prefix.length) === '"' || scanner.peek(prefix.length) === "'")) {
@@ -125,7 +137,13 @@
                 continue;
             }
             var operator = null;
-            for (var index = 0; index < PUNCTUATORS.length; ++index) {
+            for (var cppIndex = 0; cpp && cppIndex < CPP_PUNCTUATORS.length; ++cppIndex) {
+                if (scanner.startsWith(CPP_PUNCTUATORS[cppIndex])) {
+                    operator = CPP_PUNCTUATORS[cppIndex];
+                    break;
+                }
+            }
+            for (var index = 0; operator === null && index < PUNCTUATORS.length; ++index) {
                 if (scanner.startsWith(PUNCTUATORS[index])) {
                     operator = PUNCTUATORS[index];
                     break;
@@ -144,6 +162,27 @@
         return tokens;
     }
     C.lex = lex;
+
+    // A raw string R"delimiter(...)delimiter" as an ordinary literal with
+    // escapes (the parser decodes one kind of string). Line splices inside
+    // it are undone.
+    function rawString(scanner, opening, file, line, column) {
+        var prefix = opening.substring(0, opening.indexOf('R'));
+        var delimiter = opening.substring(opening.indexOf('"') + 1, opening.length - 1);
+        var start = scanner.pos + opening.length;
+        var end = scanner.text.indexOf(')' + delimiter + '"', start);
+        if (end < 0)
+            throw new CompileError('unterminated raw string', line, column, file);
+        var body = scanner.text.substring(start, end).replace(/\u0001/g, '\\\n');
+        for (var index = scanner.pos; index < end; ++index) {
+            if (scanner.text.charAt(index) === '\u0001')
+                ++scanner.line;
+        }
+        scanner.advance(end + delimiter.length + 2 - scanner.pos);
+        var escaped = body.replace(/[\\"]/g, function (char) { return '\\' + char; })
+            .replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+        return prefix + '"' + escaped + '"';
+    }
 
     // --- The preprocessor
 
@@ -283,8 +322,10 @@
                 }
                 continue;
             }
-            if (active)
-                pending = pending.concat(line);
+            if (active) {
+                for (var item = 0; item < line.length; ++item)
+                    pending.push(line[item]);
+            }
         }
         flush();
         if (conditions.length > 0)
@@ -368,7 +409,7 @@
         if (this.once[found.file])
             return;
         ++this.includeDepth;
-        this.run(lex(found.text, found.file), found.file);
+        this.run(lex(found.text, found.file, this.options.cpp), found.file);
         --this.includeDepth;
     };
 
@@ -520,7 +561,7 @@
                         pieces = right.slice();
                     } else if (right.length > 0) {
                         var glued = pieces[pieces.length - 1].value + right[0].value;
-                        var relexed = lex(glued, nameToken.file).filter(function (token) {
+                        var relexed = lex(glued, nameToken.file, this.options.cpp).filter(function (token) {
                             return token.type !== 'newline';
                         });
                         if (relexed.length !== 1)
@@ -708,7 +749,7 @@
     // __LINE__ and __FILE__ in place).
     C.preprocess = function (text, file, options) {
         var preprocessor = new Preprocessor(options);
-        preprocessor.run(lex(text, file), file);
+        preprocessor.run(lex(text, file, options.cpp, options.line), file);
         return preprocessor.output.map(function (item) {
             if (item.type === 'ident' && item.value === '__LINE__')
                 return copy(item, { type: 'number', value: String(item.line) });
