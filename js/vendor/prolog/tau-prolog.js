@@ -1,65 +1,9840 @@
-(()=>{var he=(e=>typeof require!="undefined"?require:typeof Proxy!="undefined"?new Proxy(e,{get:(D,G)=>(typeof require!="undefined"?require:D)[G]}):e)(function(e){if(typeof require!="undefined")return require.apply(this,arguments);throw Error('Dynamic require of "'+e+'" is not supported')});var me=(e,D)=>()=>{try{return D||e((D={exports:{}}).exports,D),D.exports}catch(G){throw D=0,G}};var Ye=me((er,Re)=>{(function(){var e={major:0,minor:3,patch:4,status:"beta"};function D(r,a,t,s){s=s===void 0?"":s,this.name=r,this.type=a,this.parent=t,this.text=s,this.created=Date.now()/1e3,this.modified=this.created}D.prototype.get=function(r,a){return a===this.text.length||a>this.text.length?"end_of_stream":this.text.substring(a,a+r)},D.prototype.eof=function(r){return r===this.text.length},D.prototype.put=function(r,a){return a==="end_of_stream"?(this.text+=r,!0):a==="past_end_of_stream"?null:(this.text=this.text.substring(0,a)+r+this.text.substring(a+r.length),!0)},D.prototype.get_byte=function(r){if(r==="end_of_stream")return-1;var a=Math.floor(r/2);if(this.text.length<=a)return-1;var t=T(this.text[Math.floor(r/2)],0);return r%2===0?t&255:t/256>>>0},D.prototype.put_byte=function(r,a){var t=a==="end_of_stream"?this.text.length:Math.floor(a/2);if(this.text.length<t)return null;var s=this.text.length===t?-1:T(this.text[Math.floor(a/2)],0);return a%2===0?(s=s/256>>>0,s=(s&255)<<8|r&255):(s=s&255,s=(r&255)<<8|s&255),this.text.length===t?this.text+=l(s):this.text=this.text.substring(0,t)+l(s)+this.text.substring(t+1),!0},D.prototype.flush=function(){return!0},D.prototype.close=function(){return this.modified=Date.now()/1e3,!0},D.prototype.size=function(){return this.text.length};function G(r,a){this.name=r,this.parent=a,this.files={},this.length=0,this.created=Date.now()/1e3,this.modified=this.created}G.prototype.lookup=function(r){return this.files.hasOwnProperty(r)?this.files[r]:null},G.prototype.push=function(r,a){this.files.hasOwnProperty(r)||this.length++,this.files[r]=a,this.modified=Date.now()/1e3},G.prototype.remove=function(r){this.files.hasOwnProperty(r)&&(this.length--,delete this.files[r],this.modified=Date.now()/1e3)},G.prototype.empty=function(){return this.length===0},G.prototype.size=function(){return 4096},tau_file_system={files:new G("/","/",null),open:function(r,a,t){for(var s=r.replace(/\/$/,"").split("/"),y=tau_file_system.files,o=s[s.length-1],_=1;_<s.length-1;_++)if(y=y.lookup(s[_]),!n.type.is_directory(y))return null;var u=y.lookup(o);if(u===null){if(t==="read")return null;u=new D(o,a,y),y.push(o,u)}else if(!n.type.is_file(u))return null;return t==="write"&&(u.text=""),u},get:function(r){for(var a=r.replace(/\/$/,"").split("/"),t=tau_file_system.files,s=1;s<a.length;s++)if(n.type.is_directory(t))t=t.lookup(a[s]);else return null;return t}},tau_user_input={buffer:"",get:function(r,a){for(var t;tau_user_input.buffer.length<r;){if(t=window.prompt(),t.length===0)return"end_of_stream";t&&(tau_user_input.buffer+=t)}return t=tau_user_input.buffer.substr(0,r),tau_user_input.buffer=tau_user_input.buffer.substr(r),t},eof:function(r){return!1}},tau_user_output={put:function(r,a){return console.log(r),!0},flush:function(){return!0}},tau_user_error={put:function(r,a){return(console.error||console.log)(r),!0},flush:function(){return!0}},nodejs_file_system={open:function(r,a,t){var s,y=he("fs");if(t==="read"&&!y.existsSync(r))return null;try{s=y.openSync(r,t[0])}catch(o){return!1}return{get:function(o,_){var u=new Buffer(o);y.readSync(s,u,0,o,_);for(var c=!0,p=u.toString(),v=0;v<o&&c;v++)c=p[v]==="\0";return c?"end_of_stream":u.toString()},eof:function(o){var _=y.statSync(r);return o===_.size},put:function(o,_){var u=Buffer.from(o);if(_==="end_of_stream")y.writeSync(s,u);else{if(_==="past_end_of_stream")return null;y.writeSync(s,u,0,u.length,_)}return!0},get_byte:function(o){try{var _=Buffer.alloc(1),u=y.readSync(s,_,0,1,o),c=u<1;return c?"end_of_stream":_.readUInt8(0)}catch(p){return"end_of_stream"}},put_byte:function(o,_){var u=Buffer.from([o]);if(_==="end_of_stream")y.writeSync(s,u);else{if(_==="past_end_of_stream")return null;y.writeSync(s,u,0,u.length,_)}return!0},flush:function(){return!0},close:function(){return y.closeSync(s),!0}}}},nodejs_user_input={buffer:"",get:function(r,a){for(var t,s=he("readline-sync");nodejs_user_input.buffer.length<r;)nodejs_user_input.buffer+=s.question("",{keepWhitespace:!0})+`
-`;return t=nodejs_user_input.buffer.substr(0,r),nodejs_user_input.buffer=nodejs_user_input.buffer.substr(r),t},eof:function(r){return!1}},nodejs_user_output={put:function(r,a){return process.stdout.write(r),!0},flush:function(){return!0}},nodejs_user_error={put:function(r,a){return process.stderr.write(r),!0},flush:function(){return!0}};var P;Array.prototype.indexOf?P=function(r,a){return r.indexOf(a)}:P=function(r,a){for(var t=r.length,s=0;s<t;s++)if(a===r[s])return s;return-1};var m=function(r,a){if(r.length!==0){for(var t=r[0],s=r.length,y=1;y<s;y++)t=a(t,r[y]);return t}},d;Array.prototype.map?d=function(r,a){return r.map(a)}:d=function(r,a){for(var t=[],s=r.length,y=0;y<s;y++)t.push(a(r[y]));return t};var g;Array.prototype.filter?g=function(r,a){return r.filter(a)}:g=function(r,a){for(var t=[],s=r.length,y=0;y<s;y++)a(r[y])&&t.push(r[y]);return t};var T;String.prototype.codePointAt?T=function(r,a){return r.codePointAt(a)}:T=function(r,a){return r.charCodeAt(a)};var l;String.fromCodePoint?l=function(){return String.fromCodePoint.apply(null,arguments)}:l=function(){return String.fromCharCode.apply(null,arguments)};var x,N=/[\uD800-\uDBFF][\uDC00-\uDFFF]/g;Array.from?x=function(r){return Array.from(r).length}:x=function(r){return r.replace(N,"_").length};var b=0,X=1,Y=/(\\a)|(\\b)|(\\d)|(\\e)|(\\f)|(\\n)|(\\r)|(\\s)|(\\t)|(\\v)|\\x([0-9a-fA-F]+)\\|\\([0-7]+)\\|(\\\\)|(\\')|('')|(\\")|(\\`)|(\\.)|(.)/g,J={"\\a":7,"\\b":8,"\\d":127,"\\e":27,"\\f":12,"\\n":10,"\\r":13,"\\s":32,"\\t":9,"\\v":11};function H(r){var a=[],t=!1;return r.replace(Y,function(s,y,o,_,u,c,p,v,V,R,O,A,C,$,F,ee,j,Z,K,re){switch(!0){case A!==void 0:return a.push(parseInt(A,16)),"";case C!==void 0:return a.push(parseInt(C,8)),"";case $!==void 0:case F!==void 0:case ee!==void 0:case j!==void 0:case Z!==void 0:return a.push(T(s.substr(1),0)),"";case re!==void 0:return a.push(T(re,0)),"";case K!==void 0:t=!0;default:return a.push(J[s]),""}}),t?null:a}function U(r,a){var t="";if(r==="\\")return null;if(r.length<2)return r;try{r=r.replace(/((?:\\\\)+)|\\([0-7]+)\\/g,function(_,u,c){return u||l(parseInt(c,8))}),r=r.replace(/((?:\\\\)+)|\\x([0-9a-fA-F]+)\\/g,function(_,u,c){return u||l(parseInt(c,16))}),r=r.replace(/((?:\\\\)+)|\\u([0-9a-fA-F]{4})/g,function(_,u,c){return u||l(parseInt(c,16))})}catch(_){return null}for(var s=0;s<r.length;s++){var y=r.charAt(s),o=r.charAt(s+1);if(y===a&&o===a)s++,t+=a;else if(y==="\\")if(["a","b","f","n","r","t","v","'",'"',"\\","a","\b","\f",`
-`,"\r","	","\v"].indexOf(o)!==-1)switch(s+=1,o){case"a":t+="a";break;case"b":t+="\b";break;case"f":t+="\f";break;case"n":t+=`
-`;break;case"r":t+="\r";break;case"t":t+="	";break;case"v":t+="\v";break;case"'":t+="'";break;case'"':t+='"';break;case"\\":t+="\\";break}else return null;else t+=y}return t}function te(r){for(var a="",t=0;t<r.length;t++)switch(r.charAt(t)){case"'":a+="\\'";break;case"\\":a+="\\\\";break;case"\b":a+="\\b";break;case"\f":a+="\\f";break;case`
-`:a+="\\n";break;case"\r":a+="\\r";break;case"	":a+="\\t";break;case"\v":a+="\\v";break;default:a+=r.charAt(t);break}return a}function ve(r){var a=r.substr(2);switch(r.substr(0,2).toLowerCase()){case"0x":return parseInt(a,16);case"0b":return parseInt(a,2);case"0o":return parseInt(a,8);case"0'":return H(a)[0];default:return parseFloat(r)}}function Te(r){return/^[#\$\&\*\+\-\.\/\:\<\=\>\?\@\^\~\\]+/.test(r)}var de={whitespace:/^\s*(?:(?:%.*)|(?:\/\*(?:\n|\r|.)*?(?:\*\/|$))|(?:\s+))\s*/,variable:/^(?:[A-Z_][a-zA-Z0-9_]*)/,atom:/^(\!|,|;|[a-z][0-9a-zA-Z_]*|[#\$\&\*\+\-\.\/\:\<\=\>\?\@\^\~\\]+|'(?:(?:'')|(?:\\\\)|(?:\\')|[^'])*')/,number:/^(?:0o[0-7]+|0x[0-9a-fA-F]+|0b[01]+|0'(?:''|\\[abdefnrstv\\'"`]|\\x?\d+\\|[^\\])|\d+(?:\.\d+(?:[eE][+-]?\d+)?)?)/,string:/^(?:"([^"]|""|\\")*"|`([^`]|``|\\`)*`)/,l_brace:/^(?:\[)/,r_brace:/^(?:\])/,l_bracket:/^(?:\{)/,r_bracket:/^(?:\})/,bar:/^(?:\|)/,l_paren:/^(?:\()/,r_paren:/^(?:\))/};function B(r,a){return r.get_flag("char_conversion").id==="on"?a.replace(/./g,function(t){return r.get_char_conversion(t)}):a}function k(r){this.thread=r,this.text="",this.tokens=[]}k.prototype.set_last_tokens=function(r){return this.tokens=r},k.prototype.new_text=function(r){this.text=r,this.tokens=[]},k.prototype.get_tokens=function(r){var a,t=0,s=0,y=0,o=[],_;if(r){var u=this.tokens[r-1];t=u.len,a=B(this.thread,this.text.substr(u.len)),s=u.line,y=u.start}else a=this.text;if(/^\s*$/.test(a))return null;for(;a!=="";){var c=[];if(_=!1,/^\n/.exec(a)!==null){s++,y=0,t++,a=a.replace(/\n/,""),_=!0;continue}for(var p in de)if(de.hasOwnProperty(p)){var v=de[p].exec(a);v&&c.push({value:v[0],name:p,matches:v})}if(!c.length)return this.set_last_tokens([{value:a,matches:[],name:"lexical",line:s,start:y}]);var u=m(c,function(F,ee){return F.value.length>=ee.value.length?F:ee});u.start=y,u.line=s,a=a.replace(u.value,""),y+=u.value.length,t+=u.value.length;var V=(u.value.match(/\n/g)||[]).length;switch(s+=V,V>0&&(y=u.value.length-u.value.lastIndexOf(`
-`)-1),u.line_count=s,u.line_position=y,u.name){case"atom":u.raw=u.value,u.value.charAt(0)==="'"&&(u.value=U(u.value.substring(1,u.value.length-1),"'"),u.value===null&&(u.name="lexical",u.value=u.raw,u.error="unknown_escape_sequence"));break;case"number":var R=u.value.substring(0,2);u.raw=u.value,u.float=R!=="0x"&&R!=="0'"&&u.value.match(/[.eE]/)!==null,u.value=ve(u.value),u.blank=_,!u.float&&n.flag.bounded.value.indicator==="true/0"&&u.value>n.flag.max_integer.value.value&&(u.name="lexical",u.value=u.raw,u.error="int_overflow");break;case"string":var O=u.value.charAt(0);u.raw=u.value,u.value=U(u.value.substring(1,u.value.length-1),O),u.value===null&&(u.name="lexical",u.value=u.raw,u.error="unknown_escape_sequence");break;case"whitespace":var A=o[o.length-1];A&&(A.space=!0),_=!0;continue;case"r_bracket":o.length>0&&o[o.length-1].name==="l_bracket"&&(u=o.pop(),u.name="atom",u.value="{}",u.raw="{}",u.space=!1);break;case"r_brace":o.length>0&&o[o.length-1].name==="l_brace"&&(u=o.pop(),u.name="atom",u.value="[]",u.raw="[]",u.space=!1);break}u.len=t,o.push(u),_=!1}var C=this.set_last_tokens(o);return C.length===0?null:C};function q(r,a,t,s,y){if(!a[t])return{type:b,value:n.error.syntax(a[t-1],"expression expected",!0)};var o;if(s==="0"){var _=a[t];switch(_.name){case"number":return{type:X,len:t+1,value:new n.type.Num(_.value,_.float)};case"variable":return{type:X,len:t+1,value:new n.type.Var(_.value)};case"string":var u;switch(r.get_flag("double_quotes").id){case"atom":u=new w(_.value,[]);break;case"codes":u=new w("[]",[]);for(var c=_.value.length-1;c>=0;c--)u=new w(".",[new n.type.Num(T(_.value,c),!1),u]);break;case"chars":u=new w("[]",[]);for(var c=_.value.length-1;c>=0;c--)u=new w(".",[new n.type.Term(_.value.charAt(c),[]),u]);break}return{type:X,len:t+1,value:u};case"l_paren":var A=q(r,a,t+1,r.__get_max_priority(),!0);return A.type!==X?A:a[A.len]&&a[A.len].name==="r_paren"?(A.len++,A):{type:b,derived:!0,value:n.error.syntax(a[A.len]?a[A.len]:a[A.len-1],") or operator expected",!a[A.len])};case"l_bracket":var A=q(r,a,t+1,r.__get_max_priority(),!0);return A.type!==X?A:a[A.len]&&a[A.len].name==="r_bracket"?(A.len++,A.value=new w("{}",[A.value]),A):{type:b,derived:!0,value:n.error.syntax(a[A.len]?a[A.len]:a[A.len-1],"} or operator expected",!a[A.len])}}var p=oe(r,a,t,y);return p.type===X||p.derived||(p=_e(r,a,t),p.type===X||p.derived)?p:{type:b,derived:!1,value:n.error.syntax(a[t],_.error||"unexpected token")}}var v=r.__get_max_priority(),V=r.__get_next_priority(s),R=t;if(a[t].name==="atom"&&a[t+1]&&(a[t].space||a[t+1].name!=="l_paren")){var _=a[t++],O=r.__lookup_operator_classes(s,_.value);if(O&&O.indexOf("fy")>-1){var A=q(r,a,t,s,y);if(A.type!==b)return _.value==="-"&&!_.space&&n.type.is_number(A.value)?{value:new n.type.Num(-A.value.value,A.value.is_float),len:A.len,type:X}:{value:new n.type.Term(_.value,[A.value]),len:A.len,type:X};o=A}else if(O&&O.indexOf("fx")>-1){var A=q(r,a,t,V,y);if(A.type!==b)return{value:new n.type.Term(_.value,[A.value]),len:A.len,type:X};o=A}}t=R;var A=q(r,a,t,V,y);if(A.type===X){t=A.len;var _=a[t];if(a[t]&&(a[t].name==="atom"&&r.__lookup_operator_classes(s,_.value)||a[t].name==="bar"&&r.__lookup_operator_classes(s,"|"))){var C=V,$=s,O=r.__lookup_operator_classes(s,_.value);if(O.indexOf("xf")>-1)return{value:new n.type.Term(_.value,[A.value]),len:++A.len,type:X};if(O.indexOf("xfx")>-1){var F=q(r,a,t+1,C,y);return F.type===X?{value:new n.type.Term(_.value,[A.value,F.value]),len:F.len,type:X}:(F.derived=!0,F)}else if(O.indexOf("xfy")>-1){var F=q(r,a,t+1,$,y);return F.type===X?{value:new n.type.Term(_.value,[A.value,F.value]),len:F.len,type:X}:(F.derived=!0,F)}else if(A.type!==b)for(;;){t=A.len;var _=a[t];if(_&&_.name==="atom"&&r.__lookup_operator_classes(s,_.value)){var O=r.__lookup_operator_classes(s,_.value);if(O.indexOf("yf")>-1)A={value:new n.type.Term(_.value,[A.value]),len:++t,type:X};else if(O.indexOf("yfx")>-1){var F=q(r,a,++t,C,y);if(F.type===b)return F.derived=!0,F;t=F.len,A={value:new n.type.Term(_.value,[A.value,F.value]),len:t,type:X}}else break}else break}}else o={type:b,value:n.error.syntax(a[A.len-1],"operator expected")};return A}return A}function oe(r,a,t,s){if(!a[t]||a[t].name==="atom"&&a[t].raw==="."&&!s&&(a[t].space||!a[t+1]||a[t+1].name!=="l_paren"))return{type:b,derived:!1,value:n.error.syntax(a[t-1],"unfounded token")};var y=a[t],o=[];if(a[t].name==="atom"&&a[t].raw!==","){if(t++,a[t-1].space)return{type:X,len:t,value:new n.type.Term(y.value,o)};if(a[t]&&a[t].name==="l_paren"){if(a[t+1]&&a[t+1].name==="r_paren")return{type:b,derived:!0,value:n.error.syntax(a[t+1],"argument expected")};var _=q(r,a,++t,"999",!0);if(_.type===b)return _.derived?_:{type:b,derived:!0,value:n.error.syntax(a[t]?a[t]:a[t-1],"argument expected",!a[t])};for(o.push(_.value),t=_.len;a[t]&&a[t].name==="atom"&&a[t].value===",";){if(_=q(r,a,t+1,"999",!0),_.type===b)return _.derived?_:{type:b,derived:!0,value:n.error.syntax(a[t+1]?a[t+1]:a[t],"argument expected",!a[t+1])};o.push(_.value),t=_.len}if(a[t]&&a[t].name==="r_paren")t++;else return{type:b,derived:!0,value:n.error.syntax(a[t]?a[t]:a[t-1],", or ) expected",!a[t])}}return{type:X,len:t,value:new n.type.Term(y.value,o)}}return{type:b,derived:!1,value:n.error.syntax(a[t],"term expected")}}function _e(r,a,t){if(!a[t])return{type:b,derived:!1,value:n.error.syntax(a[t-1],"[ expected")};if(a[t]&&a[t].name==="l_brace"){var s=q(r,a,++t,"999",!0),y=[s.value],o=void 0;if(s.type===b)return a[t]&&a[t].name==="r_brace"?{type:X,len:t+1,value:new n.type.Term("[]",[])}:{type:b,derived:!0,value:n.error.syntax(a[t],"] expected")};for(t=s.len;a[t]&&a[t].name==="atom"&&a[t].value===",";){if(s=q(r,a,t+1,"999",!0),s.type===b)return s.derived?s:{type:b,derived:!0,value:n.error.syntax(a[t+1]?a[t+1]:a[t],"argument expected",!a[t+1])};y.push(s.value),t=s.len}var _=!1;if(a[t]&&a[t].name==="bar"){if(_=!0,s=q(r,a,t+1,"999",!0),s.type===b)return s.derived?s:{type:b,derived:!0,value:n.error.syntax(a[t+1]?a[t+1]:a[t],"argument expected",!a[t+1])};o=s.value,t=s.len}return a[t]&&a[t].name==="r_brace"?{type:X,len:t+1,value:we(y,o)}:{type:b,derived:!0,value:n.error.syntax(a[t]?a[t]:a[t-1],_?"] expected":", or | or ] expected",!a[t])}}return{type:b,derived:!1,value:n.error.syntax(a[t],"list expected")}}function ae(r,a,t){var s=a[t].line,y=q(r,a,t,r.__get_max_priority(),!1),o=null,_;if(y.type!==b)if(t=y.len,a[t]&&a[t].name==="atom"&&a[t].raw===".")if(t++,n.type.is_term(y.value)){if(y.value.indicator===":-/2")o=new n.type.Rule(y.value.args[0],ne(y.value.args[1])),_={value:o,len:t,type:X};else if(y.value.indicator==="-->/2"){if(o=new n.type.Rule(y.value.args[0],ne(y.value.args[1])),o=Be(o,r),o.body=ne(o.body),!n.type.is_rule(o))return{value:o,len:t,type:b};_={value:o,len:t,type:n.type.is_rule(o)?X:b}}else o=new n.type.Rule(y.value,null),_={value:o,len:t,type:X};if(o){var u=o.singleton_variables();u.length>0&&r.throw_warning(n.warning.singleton(u,o.head.indicator,s))}return _}else return{type:b,value:n.error.syntax(a[t],"callable expected")};else return{type:b,value:n.error.syntax(a[t]?a[t]:a[t-1],". or operator expected")};return y}function se(r,a,t){var s={};t=t||{},s.success=t.success?t.success:function(){},s.error=t.error?t.error:function(){},s.from=t.from?t.from:"$tau-js",s.reconsult=t.reconsult!==void 0?t.reconsult:!0,s.reconsulted=t.reconsulted===void 0?{}:t.reconsulted,s.context_module=t.context_module===void 0?"user":t.context_module,s.initialization=t.initialization===void 0?[]:t.initialization,s.current_token=t.current_token===void 0?0:t.current_token,s.tokenizer=t.tokenizer===void 0?null:t.tokenizer,s.tokens=t.tokens===void 0?null:t.tokens,s.string=a,s.term_expansion=!1;var y=s.reconsulted,o=s.tokenizer,_=s.tokens;o===null&&(o=new k(r),o.new_text(a),s.tokenizer=o,_=o.get_tokens(0),s.tokens=_);for(var u=s.current_token;_!==null&&_[u];){var c=ae(r,_,u);if(s.current_token=c.len,c.type===b){s.error!==void 0&&s.error(new w("throw",[c.value]));return}else{var p=s.context_module,v=r.session.modules[p].rules["term_expansion/2"];if(v&&v.length>0){s.term_expansion=!0;var V=new E(r.session),R=c.value.body?new w(":-",[c.value.head,c.value.body]):c.value.head;r.session.renamed_variables={},R=R.rename(r.session),V.query(p+":term_expansion("+R.toString({quoted:!0})+", X)."),V.answer((function(ee,j,Z,K){return function(re){if(re&&!n.type.is_error(re)&&n.type.is_term(re.links.X)){var ie=re.links.X,Se=ie.indicator===":-/2"?new I(ie.args[0],ie.args[1]):new I(ie,null);pe(ee,j,Z,{value:Se,len:K.len,type:K.type})}else pe(ee,j,Z,K)}})(r,s,y,c));return}else{s.term_expansion=!1;var O=pe(r,s,y,c);if(O)return;u=c.len}}}for(var A=s.success,C=new E(r.session),$=s.initialization.length-1;$>0;$--){var F=(function(ee,j){return function(Z){Z===null?C.answer():n.type.is_error(Z)?s.error(Z):(C.add_goal(ee),C.answer(j))}})(s.initialization[$],A);A=F}s.initialization.length>0?(C.add_goal(s.initialization[0]),C.answer(A)):A()}function fe(r,a,t){var s=new E(r.session);s.__goal_expansion=!0;var y=r.next_free_variable(),o=r.next_free_variable(),_=o+" = "+t.value.head+", goal_expansion("+t.value.body.toString({quoted:!0})+", "+y.toString({quoted:!0})+").";s.query(_),s.answer(function(u){u&&!n.type.is_error(u)&&u.links[y]?(t.value.head=u.links[o],t.value.body=ne(u.links[y]),fe(r,a,t)):(r.add_rule(t.value,a),se(r,a.string,a))})}function ye(r,a,t){var s=new E(r.session);s.__goal_expansion=!0;var y=r.next_free_variable(),o="goal_expansion("+a.toString({quoted:!0})+", "+y.toString({quoted:!0})+").";s.query(o);var _=s.head_point().substitution.domain();s.answer(function(u){if(u&&!n.type.is_error(u)&&u.links[y]){for(var c=0;c<_.length;c++)if(_[c]!==y.id&&u.links[_[c]]){var p=new L;p.links[u.links[_[c]]]=_[c],u.links[y]=u.links[y].apply(p)}ye(r,ne(u.links[y]),t)}else r.add_goal(a),t.success(a),be(r,t.string,t)})}function pe(r,a,t,s){var y=a.term_expansion===!0;if(s.value.body===null&&s.value.head.indicator==="?-/1"){y=!0;var o=new E(r.session);o.add_goal(s.value.head.args[0]),o.answer(function(R){n.type.is_error(R)?r.throw_warning(R.args[0]):(R===!1||R===null)&&r.throw_warning(n.warning.failed_goal(s.value.head.args[0],s.len)),se(r,a.string,a)})}else if(s.value.body===null&&s.value.head.indicator===":-/1"){var _=r.run_directive(s.value.head.args[0],a);y=y||_===!0,y&&se(r,a.string,a)}else{var u=a.context_module,c=s.value.head.indicator;if(s.value.head.indicator===":/2"&&(u=s.value.head.args[0].id,c=s.value.head.args[1].indicator),t.hasOwnProperty(u)||(t[u]={}),a.reconsult!==!1&&t[u][c]!==!0&&!r.is_multifile_predicate(c)){var p=r.session.modules[u];u!=="system"&&p&&p.rules[c]&&(p.rules[c]=g(p.rules[c],function(R){return R.dynamic}),p.update_indices_predicate(c)),t[u][c]=!0}var v=r.session.modules.user.rules["goal_expansion/2"];if(s.value.body!==null&&v&&v.length>0){y=!0,r.session.renamed_variables={};var V={head:function(){return s.value.head},term:function(){return s.value.body},set:function(R,O){s.value.head=R,s.value.body=O}};fe(r,a,s,ne(s.value.body),V.set,V)}else r.add_rule(s.value,a),y&&se(r,a.string,a)}return y}function be(r,a,t){var s={},y=typeof t=="function"?t:function(){};t=t===void 0||typeof t=="function"?{}:t,s.success=t.success===void 0?y:t.success,s.error=t.error===void 0?y:t.error,s.tokenizer=t.tokenizer===void 0?null:t.tokenizer,s.current_token=t.current_token===void 0?0:t.current_token,s.string=a;var o=s.tokenizer,_=s.current_token;o===null&&(o=new k(r),s.tokenizer=o,o.new_text(a));do{var u=o.get_tokens(_);if(u===null)break;var c=q(r,u,0,r.__get_max_priority(),!1);if(c.type!==b){var p=c.len;if(_=c.len+1,s.current_token=_,u[p]&&u[p].name==="atom"&&u[p].raw==="."){c.value=ne(c.value);var v=r.session.modules.user.rules["goal_expansion/2"];if(!r.__goal_expansion&&v&&v.length>0){ye(r,c.value,s);return}else r.add_goal(c.value),s.success(c.value)}else{var V=u[p];s.error(new w("throw",[n.error.syntax(V||u[p-1],V&&V.error?V.error:". or operator expected",!V)]));return}}else{s.error(new w("throw",[c.value]));return}}while(!0)}function Be(r,a){a.session.renamed_variables={},r=r.rename(a);var t=a.next_free_variable(),s=ue(r.body,t,a);if(s.error)return s.value;if(r.body=s.value,r.head.indicator===",/2"){var y=r.head.args[1];r.head=r.head.args[0];var o=a.next_free_variable(),_=y;if(!n.type.is_list(_))return n.error.type("list",_,"DCG/0");if(_.indicator==="[]/0")y=s.variable;else{for(;_.indicator==="./2"&&n.type.is_list(_)&&_.args[1].indicator!=="[]/0";)_=_.args[1];if(n.type.is_variable(_))return n.error.instantiation("DCG/0");if(!n.type.is_list(_))return n.error.type("list",y,"DCG/0");_.args[1]=s.variable}r.body=new w(",",[r.body,new w("=",[o,y])]),r.head=new w(r.head.id,r.head.args.concat([t,o]))}else{var u=r.body;n.type.is_term(u)&&u.indicator===",/2"&&(u=u.args[0]),n.type.is_term(u)&&u.indicator==="=/2"&&n.type.is_variable(u.args[0])&&u.args[0]===t&&(t=u.args[1],r.body=r.body.replace(null)),r.head.indicator===":/2"?r.head=new w(":",[new w(r.head.args[0].id,[]),new w(r.head.args[1].id,r.head.args[1].args.concat([t,s.variable]))]):r.head=new w(r.head.id,r.head.args.concat([t,s.variable]))}return r}function ue(r,a,t){var s;if(n.type.is_term(r)&&r.indicator==="!/0")return s=t.next_free_variable(),{value:new w(",",[r,new w("=",[a,s])]),variable:s,error:!1};if(n.type.is_term(r)&&r.indicator===":/2"){var y=ue(r.args[1],a,t);return y.error?y:{value:new w(":",[r.args[0],y.value]),variable:y.variable,error:!1}}else if(n.type.is_term(r)&&r.indicator==="\\+/1"){var o=ue(r.args[0],a,t);return o.error?o:(s=t.next_free_variable(),{value:new w(",",[new w(r.id,[o.value]),new w("=",[a,s])]),variable:s,error:!1})}else if(n.type.is_term(r)&&(r.indicator===",/2"||r.indicator==="->/2")){var o=ue(r.args[0],a,t);if(o.error)return o;var y=ue(r.args[1],o.variable,t);return y.error?y:{value:new w(r.id,[o.value,y.value]),variable:y.variable,error:!1}}else if(n.type.is_term(r)&&r.indicator===";/2"){var o=ue(r.args[0],a,t);if(o.error)return o;var y=ue(r.args[1],a,t);return y.error?y:{value:new w(",",[new w(";",[o.value,y.value]),new w("=",[o.variable,y.variable])]),variable:y.variable,error:!1}}else{if(n.type.is_term(r)&&r.indicator==="{}/1")return s=t.next_free_variable(),{value:new w(",",[r.args[0],new w("=",[a,s])]),variable:s,error:!1};if(n.type.is_empty_list(r))return{value:new w("true",[]),variable:a,error:!1};if(n.type.is_list(r)){s=t.next_free_variable();for(var _=r,u;_.indicator==="./2";)u=_,_=_.args[1];return n.type.is_variable(_)?{value:n.error.instantiation("DCG/0"),variable:a,error:!0}:n.type.is_empty_list(_)?(u.args[1]=s,{value:new w("=",[a,r]),variable:s,error:!1}):{value:n.error.type("list",r,"DCG/0"),variable:a,error:!0}}else return n.type.is_callable(r)?(s=t.next_free_variable(),r=new w(r.id,r.args.concat([a,s])),{value:r,variable:s,error:!1}):{value:n.error.type("callable",r,"DCG/0"),variable:a,error:!0}}}function ne(r){if(n.type.is_variable(r))return new w("call",[r]);if(n.type.is_term(r)&&[",/2",";/2","->/2"].indexOf(r.indicator)!==-1)return new w(r.id,[ne(r.args[0]),ne(r.args[1])]);if(n.type.is_term(r)&&r.indicator===":/2"){var a=ne(r.args[1]);return new w(":",[r.args[0],a])}return r}function we(r,a){for(var t=a||new w("[]",[]),s=r.length-1;s>=0;s--)t=new w(".",[r[s],t]);return t}function Le(r,a){for(var t=[],s=0;s<r.length;s++)P(t,r[s])===-1&&P(a,r[s])===-1&&t.push(r[s]);return t}function Ee(r,a){for(var t=r.length-1;t>=0;t--)r[t]===a&&r.splice(t,1)}function Ve(r){for(var a={},t=[],s=0;s<r.length;s++)r[s]in a||(t.push(r[s]),a[r[s]]=!0);return t}function ze(r,a,t,s,y){if(y.rules[t]){for(var o=0;o<y.rules[t].length;o++)if(y.rules[t][o]===s){y.rules[t].splice(o,1),y.update_indices_predicate(t),r.success(a);break}}}function ce(r){return function(a,t,s){var y=s.args[0],o=s.args.slice(1,r),_;if(n.type.is_term(y)&&y.indicator===":/2"){if(!n.type.is_atom(y.args[0])){a.throw_error(n.error.type("module",y.args[0],s.indicator));return}_=y.args[0],y=y.args[1]}if(n.type.is_variable(y))a.throw_error(n.error.instantiation(s.indicator));else if(!n.type.is_callable(y))a.throw_error(n.error.type("callable",y,s.indicator));else{var u=ne(new w(y.id,y.args.concat(o)));if(!n.type.is_callable(u)){a.throw_error(n.error.type("callable",u,s.indicator));return}_&&(u=new w(":",[_,u])),a.prepend([new h(t.goal.replace(u),t.substitution,t)])}}}function z(r){for(var a=r.length-1;a>=0;a--)if(r.charAt(a)==="/")return new w("/",[new w(r.substring(0,a)),new S(parseInt(r.substring(a+1)),!1)])}function Ce(r,a){return a===0?r:Math.abs(Ce(a,r%a))}function f(r){this.id=r,this.ground=!1}function S(r,a){this.is_float=a!==void 0?a:Math.trunc(r)!==r,this.value=this.is_float?r:Math.trunc(r),this.index=this.value,this.ground=!0}var xe=0;function w(r,a,t){xe++,this.ref=t||xe,this.id=r,this.args=a||[],this.indicator=r+"/"+this.args.length,this.index=this.indicator,this.ground=!0;for(var s=0;s<this.args.length;s++)if(this.args[s].hasOwnProperty("ground")&&this.args[s].ground===!1){this.ground=!1;break}}var $e=0;function W(r,a,t,s,y,o){this.id=$e++,this.stream=r,this.mode=a,this.alias=t,this.type=s!==void 0?s:"text",this.reposition=y!==void 0?y:!0,this.eof_action=o!==void 0?o:"eof_code",this.position=this.mode==="append"?"end_of_stream":0,this.output=this.mode==="write"||this.mode==="append",this.input=this.mode==="read",this.line_position=0,this.line_count=1,this.char_count=0}function L(r,a){r=r||{},a=a||{},this.links=r,this.attrs=a}function h(r,a,t){a=a||new L,t=t||null,this.goal=r,this.substitution=a,this.parent=t}function I(r,a,t){this.head=r,this.body=a,this.dynamic=t||!1}function M(r){r=typeof r=="number"&&r>0?r:null,this.rename=0,this.modules={},this.modules.user=new Q("user",{},"all",{session:this,dependencies:["system"]}),this.modules.system=n.modules.system,this.rules=this.modules.user.rules,this.total_threads=0,this.renamed_variables={},this.public_predicates=this.modules.user.public_predicates,this.multifile_predicates=this.modules.user.multifile_predicates,this.limit=r,this.streams={user_input:new W(le?nodejs_user_input:tau_user_input,"read","user_input","text",!1,"reset"),user_output:new W(le?nodejs_user_output:tau_user_output,"append","user_output","text",!1,"reset"),user_error:new W(le?nodejs_user_error:tau_user_error,"append","user_error","text",!1,"reset")},this.file_system=le?nodejs_file_system:tau_file_system,this.standard_input=this.streams.user_input,this.standard_output=this.streams.user_output,this.standard_error=this.streams.user_error,this.current_input=this.streams.user_input,this.current_output=this.streams.user_output,this.working_directory="/",this.format_success=function(a){return a.substitution},this.format_error=function(a){return a.goal},this.flag={bounded:n.flag.bounded.value,max_integer:n.flag.max_integer.value,min_integer:n.flag.min_integer.value,integer_rounding_function:n.flag.integer_rounding_function.value,char_conversion:n.flag.char_conversion.value,debug:n.flag.debug.value,max_arity:n.flag.max_arity.value,unknown:n.flag.unknown.value,double_quotes:n.flag.double_quotes.value,occurs_check:n.flag.occurs_check.value,dialect:n.flag.dialect.value,version_data:n.flag.version_data.value,nodejs:n.flag.nodejs.value,argv:n.flag.argv.value},this.__loaded_modules=[],this.__char_conversion={},this.__operators={1200:{":-":["fx","xfx"],"-->":["xfx"],"?-":["fx"]},1150:{meta_predicate:["fx"]},1100:{";":["xfy"]},1050:{"->":["xfy"],"*->":["xfy"]},1e3:{",":["xfy"]},900:{"\\+":["fy"]},700:{"=":["xfx"],"\\=":["xfx"],"==":["xfx"],"\\==":["xfx"],"@<":["xfx"],"@=<":["xfx"],"@>":["xfx"],"@>=":["xfx"],"=..":["xfx"],is:["xfx"],"=:=":["xfx"],"=\\=":["xfx"],"<":["xfx"],"=<":["xfx"],">":["xfx"],">=":["xfx"]},600:{":":["xfy"]},500:{"+":["yfx"],"-":["yfx"],"/\\":["yfx"],"\\/":["yfx"]},400:{"*":["yfx"],"/":["yfx"],"//":["yfx"],rem:["yfx"],mod:["yfx"],"<<":["yfx"],">>":["yfx"],div:["yfx"]},200:{"**":["xfx"],"^":["xfy"],"-":["fy"],"+":["fy"],"\\":["fy"]}},this.thread=new E(this)}function E(r){this.epoch=Date.now(),this.session=r,this.session.total_threads++,this.format_success=r.format_success,this.format_error=r.format_error,this.total_steps=0,this.cpu_time=0,this.points=[],this.debugger=!1,this.debugger_states=[],this.level=new w("top_level"),this.current_limit=this.session.limit,this.has_limit=this.session.limit!==null,this.warnings=[],this.__calls=[],this.__goal_expansion=!1,this.__stacks={}}function Q(r,a,t,s){if(s=s===void 0?{}:s,s.public_predicates=s.public_predicates===void 0?{}:s.public_predicates,s.multifile_predicates=s.multifile_predicates===void 0?{}:s.multifile_predicates,s.meta_predicates=s.meta_predicates===void 0?{}:s.meta_predicates,s.session=s.session===void 0?null:s.session,s.dependencies=s.dependencies===void 0?[]:s.dependencies,this.id=r,this.rules=a,this.indexed_clauses={},this.non_indexable_clauses={},this.public_predicates=s.public_predicates,this.multifile_predicates=s.multifile_predicates,this.meta_predicates=s.meta_predicates,this.src_predicates={},this.dependencies=s.dependencies,this.exports=t,this.is_library=s.session===null,this.modules={},s.session){s.session.modules[r]=this;for(var y=0;y<s.dependencies.length;y++){var o=s.dependencies[y];s.session.modules.hasOwnProperty(o)||(s.session.modules[o]=n.modules[o])}}else n.modules[r]=this;if(t!=="all")for(var y=0;y<t.length;y++)this.public_predicates[t[y]]=s.public_predicates.hasOwnProperty(t[y])&&s.public_predicates[t[y]]===!0;this.update_indices_clauses()}Q.prototype.exports_predicate=function(r){return this.exports==="all"||P(this.exports,r)!==-1},Q.prototype.is_public_predicate=function(r){return!this.public_predicates.hasOwnProperty(r)||this.public_predicates[r]===!0},Q.prototype.is_multifile_predicate=function(r){return this.multifile_predicates.hasOwnProperty(r)&&this.multifile_predicates[r]===!0},Q.prototype.is_meta_predicate=function(r){return this.meta_predicates.hasOwnProperty(r)?this.meta_predicates[r]:null},Q.prototype.update_indices_clauses=function(){this.indexed_clauses={},this.non_indexable_clauses={};for(var r in this.rules)this.update_indices_predicate(r)},Q.prototype.update_indices_predicate=function(r){if(this.indexed_clauses[r]={},this.non_indexable_clauses[r]=[],!!Array.isArray(this.rules[r]))for(var a=0;a<this.rules[r].length;a++){var t=this.rules[r][a];this.add_index_predicate(t)}},Q.prototype.add_index_predicate=function(r){var a=r.head.indicator,t=r.head.args.length>0?r.head.args[0].index:void 0;if(t){if(this.indexed_clauses.hasOwnProperty(a)||(this.indexed_clauses[a]={}),!this.indexed_clauses[a].hasOwnProperty(t)&&(this.indexed_clauses[a][t]=[],this.non_indexable_clauses.hasOwnProperty(a)))for(var s=0;s<this.non_indexable_clauses[a].length;s++)this.indexed_clauses[a][t].push(this.non_indexable_clauses[a][s]);this.indexed_clauses[a][t].push(r)}else{this.non_indexable_clauses.hasOwnProperty(a)||(this.non_indexable_clauses[a]=[]),this.non_indexable_clauses[a].push(r);for(var t in this.indexed_clauses[a])this.indexed_clauses[a][t].push(r)}},f.prototype.unify=function(r,a){if(a&&P(r.variables(),this.id)!==-1&&!n.type.is_variable(r))return null;var t={};return t[this.id]=r,new L(t)},S.prototype.unify=function(r,a){return n.type.is_number(r)&&this.value===r.value&&this.is_float===r.is_float?new L:null},w.prototype.unify=function(r,a){if(!n.type.is_term(r)&&r.unify!==void 0)return r.unify(this,a);if(n.type.is_term(r)&&this.indicator===r.indicator){for(var t=new L,s=0;s<this.args.length;s++){var y=n.unify(this.args[s].apply(t),r.args[s].apply(t),a);if(y===null)return null;for(var o in y.links)t.links[o]=y.links[o];t=t.apply(y)}return t}return null},W.prototype.unify=function(r,a){return n.type.is_stream(r)&&this.id===r.id?new L:null},W.prototype.compare=function(r){return this.id<r.id?-1:this.id===r.id?0:1},f.prototype.toString=function(r){if(r=r===void 0?{}:r,r.variable_names)for(var a=r.variable_names;n.type.is_term(a)&&a.indicator==="./2";){var t=a.args[0];if(n.type.is_term(t)&&t.indicator==="=/2"&&n.type.is_variable(t.args[1])&&t.args[1].id===this.id&&n.type.is_atom(t.args[0]))return t.args[0].id;a=a.args[1]}return this.id},S.prototype.toString=function(r){var a=this.value.toString(),t=a.indexOf("e");return t!==-1?a.indexOf(".")!==-1?a:a.replace("e",".0e"):this.is_float&&P(a,".")===-1?this.value+".0":a},w.prototype.toString=function(r,a,t){r=r||{},r.quoted=r.quoted===void 0?!1:r.quoted,r.ignore_ops=r.ignore_ops===void 0?!1:r.ignore_ops,r.numbervars=r.numbervars===void 0?!1:r.numbervars,r.variable_names=r.variable_names===void 0?!1:r.variable_names,a=a===void 0?{priority:1200,class:"",indicator:""}:a,t=t===void 0?"":t;var s={priority:999,class:"",indicator:""};if(r.numbervars&&this.indicator==="$VAR/1"&&n.type.is_integer(this.args[0])&&this.args[0].value>=0){var y=this.args[0].value,o=Math.floor(y/26),_=y%26;return"ABCDEFGHIJKLMNOPQRSTUVWXYZ"[_]+(o!==0?o:"")}switch(this.indicator){case"[]/0":case"{}/0":case"!/0":return this.id;case"{}/1":return r.ignore_ops===!1?"{"+this.args[0].toString(r)+"}":"{}("+this.args[0].toString(r)+")";case"./2":if(r.ignore_ops===!1){for(var u="["+this.args[0].toString(r,s),c=this.args[1];c.indicator==="./2";)u+=","+c.args[0].toString(r,s),c=c.args[1];return c.indicator!=="[]/0"&&(u+="|"+c.toString(r,s)),u+="]",u}default:var p=this.id,v=r.session?r.session.lookup_operator(this.id,this.args.length):null;if(r.session===void 0||r.ignore_ops||v===null)return r.quoted&&(!/^(!|[a-z][0-9a-zA-Z_]*|[#\$\&\*\+\-\.\/\:\<\=\>\?\@\^\~\\]+)$/.test(p)&&p!=="{}"&&p!=="[]"||P([".",",",";"],p)!==-1||p.substring(0,2)==="/*")&&(p="'"+te(p)+"'"),this.args.length===0&&Te(this.id)&&a.indicator!==""?"("+p+")":p+(this.args.length>0?"("+d(this.args,function(F){return F.toString(r,s)}).join(",")+")":"");var V=parseInt(v.priority),R=parseInt(a.priority),O=V>R||V===R&&(v.class==="xfx"||v.class==="xfy"&&this.indicator!==a.indicator||v.class==="yfx"&&this.indicator!==a.indicator||this.indicator===a.indicator&&v.class==="yfx"&&t==="right"||this.indicator===a.indicator&&v.class==="xfy"&&t==="left"||this.indicator===a.indicator&&v.class==="xf"&&t==="left"||this.indicator===a.indicator&&v.class==="fx"&&t==="right");v.indicator=this.indicator;var A=O?"(":"",C=O?")":"",$=!(Te(this.id)||this.id===","||this.id===";")||v.class.length===2||v.class.length===3&&n.type.is_number(this.args[1])&&this.args[1].value<0?" ":"";return this.args.length===0?A+this.id+C:["fy","fx"].indexOf(v.class)!==-1?A+p+$+this.args[0].toString(r,v,"right")+C:["yf","xf"].indexOf(v.class)!==-1?A+this.args[0].toString(r,v,"left")+$+p+C:A+this.args[0].toString(r,v,"left")+$+this.id+$+this.args[1].toString(r,v,"right")+C}},W.prototype.toString=function(r){return"<stream>("+this.id+")"},L.prototype.toString=function(r){var a="{";for(var t in this.links)this.links.hasOwnProperty(t)&&(a!=="{"&&(a+=", "),a+=t+"/"+this.links[t].toString(r));return a+="}",a},h.prototype.toString=function(r){return this.goal===null?"<"+this.substitution.toString(r)+">":"<"+this.goal.toString(r)+", "+this.substitution.toString(r)+">"},I.prototype.toString=function(r){return this.body?this.head.toString(r,1200,"left")+" :- "+this.body.toString(r,1200,"right")+".":this.head.toString(r)+"."},M.prototype.toString=function(r){var a="";for(var t in this.modules)this.modules.hasOwnProperty(t)&&this.modules[t].is_library&&(a+=":- use_module(library("+this.modules[t]+`)).
-`);a+=`
-`;for(var s in this.modules.user.rules)if(this.modules.user.rules.hasOwnProperty(s))for(i=0;i<this.modules.user.rules[s].length;i++)a+=this.modules.user.rules[s][i].toString(r),a+=`
-`;return a},f.prototype.clone=function(){return new f(this.id)},S.prototype.clone=function(){return new S(this.value,this.is_float)},w.prototype.clone=function(){var r=new w(this.id,d(this.args,function(a){return a.clone()}));return this.definition_module&&(r.definition_module=this.definition_module),r},W.prototype.clone=function(){return new W(this.stream,this.mode,this.alias,this.type,this.reposition,this.eof_action)},L.prototype.clone=function(){var r={},a={};for(var t in this.links)this.links.hasOwnProperty(t)&&(r[t]=this.links[t].clone());for(var s in this.attrs)if(this.attrs.hasOwnProperty(a)){a[s]={};for(var y in this.attrs[s])this.attrs[s].hasOwnProperty(y)&&(a[s][y]=this.attrs[s][y].clone())}return new L(r,a)},h.prototype.clone=function(){return new h(this.goal.clone(),this.substitution.clone(),this.parent)},I.prototype.clone=function(){return new I(this.head.clone(),this.body!==null?this.body.clone():null)},f.prototype.equals=function(r){return n.type.is_variable(r)&&this.id===r.id},S.prototype.equals=function(r){return n.type.is_number(r)&&this.value===r.value&&this.is_float===r.is_float},w.prototype.equals=function(r){if(!n.type.is_term(r)||this.indicator!==r.indicator)return!1;for(var a=0;a<this.args.length;a++)if(!this.args[a].equals(r.args[a]))return!1;return!0},W.prototype.equals=function(r){return n.type.is_stream(r)&&this.id===r.id},L.prototype.equals=function(r){var a;if(!n.type.is_substitution(r))return!1;for(a in this.links)if(this.links.hasOwnProperty(a)&&(!r.links[a]||!this.links[a].equals(r.links[a])))return!1;for(a in r.links)if(r.links.hasOwnProperty(a)&&!this.links[a])return!1;return!0},h.prototype.equals=function(r){return n.type.is_state(r)&&this.goal.equals(r.goal)&&this.substitution.equals(r.substitution)&&this.parent===r.parent},I.prototype.equals=function(r){return n.type.is_rule(r)&&this.head.equals(r.head)&&(this.body===null&&r.body===null||this.body!==null&&this.body.equals(r.body))},f.prototype.rename=function(r){return r.get_free_variable(this)},S.prototype.rename=function(r){return this},w.prototype.rename=function(r){if(this.ground)return new w(this.id,this.args);if(this.indicator==="./2"){for(var a=[],t=this;t.indicator==="./2"&&!t.ground;){var s=t.args[0].rename(r);a.push(s),t=t.args[1]}for(var y=t.rename(r),o=a.length-1;o>=0;o--)y=new w(".",[a[o],y]);return y}for(var _=[],o=0;o<this.args.length;o++){var s=this.args[o].rename(r);_.push(s)}return new w(this.id,_)},W.prototype.rename=function(r){return this},I.prototype.rename=function(r){return new I(this.head.rename(r),this.body!==null?this.body.rename(r):null)},f.prototype.is_rename=function(r,a){return a=a||{},!n.type.is_variable(r)||a.hasOwnProperty(this.id)&&a[this.id]!==r.id||a.hasOwnProperty(r.id)&&a[r.id]!==this.id?!1:(a[this.id]=r.id,a[r.id]=this.id,!0)},S.prototype.is_rename=function(r,a){return this.equals(r)},w.prototype.is_rename=function(r,a){if(a=a||{},!n.type.is_term(r)||this.indicator!==r.indicator)return!1;for(var t=0;t<this.args.length;t++)if(!n.is_rename(this.args[t],r.args[t],a))return!1;return!0},W.prototype.is_rename=function(r,a){return this.equals(r)},f.prototype.variables=function(){return[this.id]},S.prototype.variables=function(){return[]},w.prototype.variables=function(){return this.ground?[]:[].concat.apply([],d(this.args,function(r){return r.variables()}))},W.prototype.variables=function(){return[]},I.prototype.variables=function(){return this.body===null?this.head.variables():this.head.variables().concat(this.body.variables())},f.prototype.apply=function(r){return r.lookup(this.id)?r.lookup(this.id):this},S.prototype.apply=function(r){return this},w.prototype.apply=function(r){if(this.ground)return this;if(this.indicator==="./2"){for(var a=[],t=this;t.indicator==="./2"&&!t.ground;){var s=t.args[0].apply(r);a.push(s),t=t.args[1]}for(var y=t.apply(r),o=a.length-1;o>=0;o--)y=new w(".",[a[o],y]);return y}for(var _=[],o=0;o<this.args.length;o++){var s=this.args[o].apply(r);_.push(s)}return new w(this.id,_,this.ref)},W.prototype.apply=function(r){return this},I.prototype.apply=function(r){return new I(this.head.apply(r),this.body!==null?this.body.apply(r):null)},L.prototype.apply=function(r){var a,t={},s,y={},o;for(a in this.links)this.links.hasOwnProperty(a)&&(t[a]=this.links[a].apply(r));for(s in this.attrs)if(this.attrs.hasOwnProperty(s)){y[s]={};for(o in this.attrs[s])this.attrs[s].hasOwnProperty(o)&&(y[s][o]=this.attrs[s][o].apply(r))}return new L(t,y)},w.prototype.select=function(){for(var r=this;n.type.is_term(r)&&r.indicator===",/2";)r=r.args[0];return r},w.prototype.replace=function(r){return this.indicator===",/2"?this.args[0].indicator===",/2"?new w(",",[this.args[0].replace(r),this.args[1]]):r===null?this.args[1]:new w(",",[r,this.args[1]]):r},w.prototype.search=function(r){if(this==r||this.ref===r.ref)return!0;for(var a=0;a<this.args.length;a++)if(n.type.is_term(this.args[a])&&this.args[a].search(r))return!0;return!1},M.prototype.push_global_stack=function(r,a){return this.thread.push_global_stack(r,a)},E.prototype.push_global_stack=function(r,a){this.__stacks.hasOwnProperty(r)||(this.__stacks[r]=[]),this.__stacks[r].push(a)},M.prototype.flush_global_stack=function(r,a){return this.thread.push_global_stack(r,a)},E.prototype.flush_global_stack=function(r,a){var t=a||new w("[]",[]);if(this.__stacks.hasOwnProperty(r)){for(;this.__stacks[r].length>0;)t=new w(".",[this.__stacks[r].pop(),t]);delete this.__stacks[r]}return t},M.prototype.setMaxInferences=function(r){this.limit=typeof r=="number"&&r>0?r:null},E.prototype.setMaxInferences=function(r){this.session.setMaxInferences(r),this.current_limit=this.session.limit,this.has_limit=this.session.limit!==null},M.prototype.format_answer=function(r,a){return this.thread.format_answer(r,a)},E.prototype.format_answer=function(r,a){return n.format_answer(r,this,a)},M.prototype.get_current_input=function(){return this.current_input},E.prototype.get_current_input=function(){return this.session.get_current_input()},M.prototype.get_current_output=function(){return this.current_output},E.prototype.get_current_output=function(){return this.session.get_current_output()},M.prototype.set_current_input=function(r){this.current_input=r},E.prototype.set_current_input=function(r){return this.session.set_current_input(r)},M.prototype.set_current_output=function(r){this.current_output=r},E.prototype.set_current_output=function(r){return this.session.set_current_output(r)},M.prototype.get_stream_by_alias=function(r){return this.streams[r]},E.prototype.get_stream_by_alias=function(r){return this.session.get_stream_by_alias(r)},M.prototype.file_system_open=function(r,a,t){return this.get_flag("nodejs").indicator==="false/0"&&(r=this.absolute_file_name(r)),this.file_system.open(r,a,t)},E.prototype.file_system_open=function(r,a,t){return this.session.file_system_open(r,a,t)},M.prototype.absolute_file_name=function(r){var a;if(this.get_flag("nodejs").indicator==="true/0"){var t=he("path");a=r;for(var s in process.env)process.env.hasOwnProperty(s)&&(a=a.replace(new RegExp("\\$"+s,"g"),process.env[s]));return t.resolve(a)}else{var y=this.working_directory;r[0]==="/"?a=r:a=y+(y[y.length-1]==="/"?r:"/"+r),a=a.replace(/\/\.\//g,"/");for(var o=a.split("/"),_=[],u=0;u<o.length;u++)o[u]!==".."?_.push(o[u]):_.length!==0&&_.pop();a=_.join("/").replace(/\/\.$/,"/")}return a},E.prototype.absolute_file_name=function(r,a){return this.session.absolute_file_name(r,a)},M.prototype.get_char_conversion=function(r){return this.__char_conversion[r]||r},E.prototype.get_char_conversion=function(r){return this.session.get_char_conversion(r)},M.prototype.parse=function(r){return this.thread.parse(r)},E.prototype.parse=function(r){var a=new k(this);a.new_text(r);var t=a.get_tokens();if(t===null)return!1;var s=q(this,t,0,this.__get_max_priority(),!1);return s.len!==t.length?!1:{value:s.value,expr:s,tokens:t}},M.prototype.get_flag=function(r){return this.flag[r]},E.prototype.get_flag=function(r){return this.session.get_flag(r)},M.prototype.add_rule=function(r,a){return this.thread.add_rule(r,a)},E.prototype.add_rule=function(r,a){a=a||{},a.from=a.from?a.from:"$tau-js";var t,s;if(n.type.is_term(r.head)&&r.head.indicator===":/2"){if(!n.type.is_atom(r.head.args[0])){this.throw_warning(n.error.type("module",r.head.args[0],"top_level/0"));return}t=r.head.args[0].id,r.head=r.head.args[1]}return t?(s=this.session.modules[t],n.type.is_module(s)||(s=new Q(t,{},"all",{session:this.session}),this.session.modules[t]=s)):s=this.session.modules[a.context_module],s.src_predicates[r.head.indicator]=a.from,s.rules.hasOwnProperty(r.head.indicator)||(s.rules[r.head.indicator]=[]),s.rules[r.head.indicator].push(r),s.public_predicates.hasOwnProperty(r.head.indicator)||(s.public_predicates[r.head.indicator]=!1),s.add_index_predicate(r),!0},M.prototype.run_directive=function(r,a){return this.thread.run_directive(r,a)},E.prototype.run_directive=function(r,a){return n.type.is_directive(r)?n.directive[r.indicator]?n.directive[r.indicator](this,r,a):n.directive[r.id+"/*"](this,r,a):!1},M.prototype.__get_max_priority=function(){return"1200"},E.prototype.__get_max_priority=function(){return this.session.__get_max_priority()},M.prototype.__get_next_priority=function(r){var a=0;r=parseInt(r);for(var t in this.__operators)if(this.__operators.hasOwnProperty(t)){var s=parseInt(t);s>a&&s<r&&(a=s)}return a.toString()},E.prototype.__get_next_priority=function(r){return this.session.__get_next_priority(r)},M.prototype.__lookup_operator_classes=function(r,a){return this.__operators.hasOwnProperty(r)&&this.__operators[r][a]instanceof Array&&this.__operators[r][a]||!1},E.prototype.__lookup_operator_classes=function(r,a){return this.session.__lookup_operator_classes(r,a)},M.prototype.lookup_operator=function(r,a){for(var t in this.__operators)if(this.__operators[t][r]){for(var s=0;s<this.__operators[t][r].length;s++)if(this.__operators[t][r][s].length===a+1)return{priority:t,class:this.__operators[t][r][s]}}return null},E.prototype.lookup_operator=function(r,a){return this.session.lookup_operator(r,a)},M.prototype.throw_warning=function(r){this.thread.throw_warning(r)},E.prototype.throw_warning=function(r){this.warnings.push(r)},M.prototype.get_warnings=function(){return this.thread.get_warnings()},E.prototype.get_warnings=function(){return this.warnings},M.prototype.add_goal=function(r,a){this.thread.add_goal(r,a)},E.prototype.add_goal=function(r,a,t){t=t||null,a===!0&&(this.points=[]);for(var s=r.variables(),y={},o=0;o<s.length;o++)y[s[o]]=new f(s[o]);this.points.push(new h(r,new L(y),t))},M.prototype.consult=function(r,a){return this.thread.consult(r,a)},E.prototype.consult=function(r,a){var t="",s=!1,y={},o=typeof a=="function"?a:function(){};if(a=a===void 0||typeof a=="function"?{}:a,y.context_module=a.context_module===void 0?"user":a.context_module,y.text=a.text===void 0?!0:a.text,y.html=a.html===void 0?!0:a.html,y.url=a.url===void 0?!0:a.url,y.file=a.file===void 0?!0:a.file,y.script=a.script===void 0?!0:a.script,y.success=a.success===void 0?o:a.success,y.error=a.error===void 0?o:a.error,typeof r=="string"){if(t=r,y.script&&this.get_flag("nodejs").indicator==="false/0"&&r!=""&&document.getElementById(t)){var _=document.getElementById(t),u=_.getAttribute("type");u!==null&&u.replace(/ /g,"").toLowerCase()==="text/prolog"&&(t=_.text,s=!0)}if(!s&&y.file&&this.get_flag("nodejs").indicator==="true/0"){var c=he("fs"),p=this;c.readFile(r,function(V,R){V?(y.file=!1,p.consult(r,y)):se(p,R.toString(),y)});return}if(!s&&this.get_flag("nodejs").indicator==="false/0"&&y.url&&r!==""&&!/\s/.test(r))try{var v=new XMLHttpRequest,p=this;v.onreadystatechange=function(){this.readyState==4&&(this.status==200?(t=v.responseText,s=!0,se(p,t,y)):(y.url=!1,p.consult(r,y)))},v.open("GET",r,!0),v.send();return}catch(V){y.error(V);return}!s&&y.text&&(s=!0)}else if(y.html&&r.nodeName)switch(r.nodeName.toLowerCase()){case"input":case"textarea":t=r.value,s=!0;break;default:t=r.innerHTML,s=!0;break}else y.error(n.error.existence("source_sink",new w(t),"top_level/0"));this.warnings=[],se(this,t,y)},M.prototype.query=function(r,a){return this.thread.query(r,a)},E.prototype.query=function(r,a){return this.points=[],this.debugger_states=[],this.level=new w("top_level"),be(this,r,a)},M.prototype.head_point=function(){return this.thread.head_point()},E.prototype.head_point=function(){return this.points[this.points.length-1]},M.prototype.get_free_variable=function(r){return this.thread.get_free_variable(r)},E.prototype.get_free_variable=function(r){var a=[];if(r.id==="_"||this.session.renamed_variables[r.id]===void 0){for(this.session.rename++,this.current_point&&(a=this.current_point.substitution.domain());P(a,n.format_variable(this.session.rename,r.id))!==-1;)this.session.rename++;if(r.id==="_")return new f(n.format_variable(this.session.rename,r.id));this.session.renamed_variables[r.id]=n.format_variable(this.session.rename,r.id)}return new f(this.session.renamed_variables[r.id])},M.prototype.next_free_variable=function(){return this.thread.next_free_variable()},E.prototype.next_free_variable=function(){this.session.rename++;var r=[];for(this.current_point&&(r=this.current_point.substitution.domain());P(r,n.format_variable(this.session.rename))!==-1;)this.session.rename++;return new f(n.format_variable(this.session.rename))},M.prototype.is_public_predicate=function(r,a){return a=a===void 0?"user":a,n.type.is_module(this.modules[a])&&this.modules[a].is_public_predicate(r)},E.prototype.is_public_predicate=function(r,a){return this.session.is_public_predicate(r,a)},M.prototype.is_multifile_predicate=function(r,a){return a=a===void 0?"user":a,n.type.is_module(this.modules[a])&&this.modules[a].is_multifile_predicate(r)},E.prototype.is_multifile_predicate=function(r,a){return this.session.is_multifile_predicate(r,a)},M.prototype.is_meta_predicate=function(r,a){return a=a===void 0?"user":a,n.type.is_module(this.modules[a])?this.modules[a].is_meta_predicate(r):null},E.prototype.is_meta_predicate=function(r,a){return this.session.is_meta_predicate(r,a)},M.prototype.prepend=function(r){return this.thread.prepend(r)},E.prototype.prepend=function(r){for(var a=r.length-1;a>=0;a--)this.points.push(r[a])},M.prototype.success=function(r,a){return this.thread.success(r,a)},E.prototype.success=function(r,t){var t=typeof t=="undefined"?r:t;this.prepend([new h(r.goal.replace(null),r.substitution,t)])},M.prototype.throw_error=function(r){return this.thread.throw_error(r)},E.prototype.throw_error=function(r){n.type.is_variable(r)&&(r=n.error.instantiation(this.level.indicator));var a=new h(new w("throw",[r]),new L,null);a.error=!0,this.prepend([a])},M.prototype.lookup_module=function(r,a){return this.thread.lookup_module(r,a)},E.prototype.lookup_module=function(r,a){var t=this.session.modules[a];if(n.type.is_module(t)||(t=this.session.modules.user),t.rules.hasOwnProperty(r.indicator)&&(t.exports_predicate(r.indicator)||t.rules.hasOwnProperty(this.level.indicator)||a===t.id))return t;t.modules.system=n.modules.system,t.modules.user=this.session.modules.user;for(var s in t.modules)if(this.session.modules.hasOwnProperty(s)){var t=this.session.modules[s];if(t.rules.hasOwnProperty(r.indicator)&&(t.exports_predicate(r.indicator)||t.rules.hasOwnProperty(this.level.indicator)||a===t.id))return t}return null},M.prototype.expand_meta_predicate=function(r,a,t){return this.thread.expand_meta_predicate(r,a,t)},E.prototype.expand_meta_predicate=function(r,a,t){var s=this.session.modules[a];if(s){var y=s.is_meta_predicate(r.indicator);if(y){for(var o=0;o<y.args.length;o++)if(n.type.is_integer(y.args[o])||n.type.is_atom(y.args[o])&&P([":"],y.args[o].id)!==-1)(!n.type.is_term(r.args[o])||r.args[o].indicator!==":/2")&&(r.args[o]=new w(":",[new w(t),r.args[o]]));else if(n.type.is_atom(y.args[o])&&y.args[o].id==="^"){for(var _=r,u=o,c=r.args[o];n.type.is_term(c)&&c.indicator==="^/2";)_=c,u=1,c=c.args[1];(!n.type.is_term(c)||c.indicator!==":/2")&&(_.args[u]=new w(":",[new w(t),c]))}}}},M.prototype.step=function(){return this.thread.step()},E.prototype.step=function(){if(this.points.length!==0){var r=!1,a=this.points.pop();this.current_point=a,this.debugger&&this.debugger_states.push(a);var t=n.type.is_term(a.goal)?a.goal.select():a.goal;if(n.type.is_term(t)&&(t.indicator!==":/2"||n.type.is_term(t.args[1]))){var s=null,y=[];if(t!==null){this.total_steps++;for(var o=a;o.parent!==null&&o.parent.goal.search(t);)o=o.parent;if(o.parent===null?this.level=new w("top_level"):(this.level=o.parent.goal.select(),this.level.indicator===":/2"&&(this.level=this.level.args[1])),n.type.is_term(t)&&t.indicator===":/2"){if(s=t.args[0],t=t.args[1],!n.type.is_atom(s)){this.throw_error(n.error.type("module",s,this.level.indicator));return}s=s.id}else this.level.definition_module?s=this.level.definition_module:s="user";if(t.context_module=s,t.indicator===",/2"){this.prepend([new h(a.goal.replace(new w(",",[new w(":",[new w(s),t.args[0]]),new w(":",[new w(s),t.args[1]])])),a.substitution,a)]);return}this.__call_indicator=t.indicator;var _=this.lookup_module(t,s);t.definition_module=n.type.is_module(_)?_.id:"user",this.expand_meta_predicate(t,t.definition_module,s);var u=null;if(_&&t.args.length>0&&t.args[0].index&&_.indexed_clauses.hasOwnProperty(t.indicator)&&_.indexed_clauses[t.indicator].hasOwnProperty(t.args[0].index)?u=_.indexed_clauses[t.indicator][t.args[0].index]:u=_===null?null:_.rules[t.indicator],u===null)this.session.modules.user.rules.hasOwnProperty(t.indicator)||(this.get_flag("unknown").id==="error"?this.throw_error(n.error.existence("procedure",t.indicator,this.level.indicator)):this.get_flag("unknown").id==="warning"&&this.throw_warning("unknown procedure "+t.indicator+" (from "+this.level.indicator+")"));else if(u instanceof Function)r=u(this,a,t);else{this.__goal_expansion&&t.indicator==="goal_expansion/2"&&(u=u.concat(n.builtin.rules["goal_expansion/2"]));for(var c=0;c<u.length;c++){this.session.renamed_variables={};var p=u[c].rename(this),v=this.get_flag("occurs_check").indicator==="true/0",V=n.unify(t,p.head,v);if(V!==null){var R=new h;R.goal=a.goal.replace(p.body),R.goal!==null&&(R.goal=R.goal.apply(V)),R.substitution=a.substitution.apply(V),R.parent=a,y.push(R)}}this.prepend(y)}}}else{var O=n.type.is_term(t)&&t.indicator===":/2"?t.args[1]:t;n.type.is_variable(O)?this.throw_error(n.error.instantiation(this.level.indicator)):this.throw_error(n.error.type("callable",O,this.level.indicator))}return r}},M.prototype.answer=function(r){return this.thread.answer(r)},E.prototype.answer=function(r){var a={};r=r||function(){},typeof r=="function"?a={success:r,error:r,fail:r,limit:r}:(a.success=r.success===void 0?function(){}:r.success,a.error=r.error===void 0?function(){}:r.error,a.fail=r.fail===void 0?function(){}:r.fail,a.limit=r.limit===void 0?function(){}:r.limit),this.__calls.push(a),!(this.__calls.length>1)&&this.again()},M.prototype.answers=function(r,a,t){return this.thread.answers(r,a,t)},E.prototype.answers=function(r,a,t){var s=a===void 0?1e3:a,y=this;if(s<=0){t&&t();return}this.answer(function(o){r(o),o!==!1?setTimeout(function(){y.answers(r,s-1,t)},0):t&&t()})},M.prototype.again=function(r){return this.thread.again(r)},E.prototype.again=function(r){for(;this.__calls.length>0;){for(this.warnings=[],r!==!1&&(this.current_limit=this.session.limit);(!this.has_limit||this.current_limit>0)&&this.points.length>0&&this.head_point().goal!==null&&!n.type.is_error_state(this.head_point());){this.has_limit&&this.current_limit--;var a=Date.now(),t=this.step(),s=Date.now();if(this.cpu_time+=s-a,t===!0)return}var y=this.__calls.shift();if(this.has_limit&&this.current_limit<=0)(function(u){return setTimeout(function(){u.limit(null)},0)})(y);else if(this.points.length===0)(function(u){return setTimeout(function(){u.fail(!1)},0)})(y);else if(n.type.is_error(this.head_point().goal)){var o=this.format_error(this.points.pop());this.points=[],(function(u,c){return setTimeout(function(){c.error(u)},0)})(o,y)}else{this.debugger&&this.debugger_states.push(this.head_point());var _=this.format_success(this.points.pop());(function(u,c){return setTimeout(function(){c.success(u)},0)})(_,y)}}},M.prototype.unfold=function(r){if(r.body===null)return!1;var a=r.head,t=r.body,s=t.select(),y=new E(this),o=[];y.add_goal(s),y.step();for(var _=y.points.length-1;_>=0;_--){var u=y.points[_],c=a.apply(u.substitution),p=t.replace(u.goal);p!==null&&(p=p.apply(u.substitution)),o.push(new I(c,p))}var v=this.modules.user.rules[a.indicator],V=P(v,r);return o.length>0&&V!==-1?(v.splice.apply(v,[V,1].concat(o)),!0):!1},E.prototype.unfold=function(r){return this.session.unfold(r)},f.prototype.interpret=function(r){return n.error.instantiation(r.level.indicator)},S.prototype.interpret=function(r){return this},w.prototype.interpret=function(r){return n.type.is_unitary_list(this)?this.args[0].interpret(r):n.operate(r,this)},f.prototype.compare=function(r){return this.id<r.id?-1:this.id>r.id?1:0},S.prototype.compare=function(r){if(this.value===r.value&&this.is_float===r.is_float)return 0;if(this.value<r.value||this.value===r.value&&this.is_float&&!r.is_float)return-1;if(this.value>r.value)return 1},w.prototype.compare=function(r){if(this.args.length<r.args.length||this.args.length===r.args.length&&this.id<r.id)return-1;if(this.args.length>r.args.length||this.args.length===r.args.length&&this.id>r.id)return 1;for(var a=0;a<this.args.length;a++){var t=n.compare(this.args[a],r.args[a]);if(t!==0)return t}return 0},L.prototype.lookup=function(r){return this.links[r]?this.links[r]:null},L.prototype.filter=function(r){var a={};for(var t in this.links)if(this.links.hasOwnProperty(t)){var s=this.links[t];r(t,s)&&(a[t]=s)}return new L(a,this.attrs)},L.prototype.exclude=function(r){var a={};for(var t in this.links)this.links.hasOwnProperty(t)&&P(r,t)===-1&&(a[t]=this.links[t]);return new L(a,this.attrs)},L.prototype.add=function(r,a){this.links[r]=a},L.prototype.domain=function(r){var a=r===!0?function(y){return y}:function(y){return new f(y)},t=[];for(var s in this.links)t.push(a(s));return t},L.prototype.get_attribute=function(r,a){if(this.attrs[r])return this.attrs[r][a]},L.prototype.set_attribute=function(r,a,t){var s=new L(this.links);for(var y in this.attrs)if(y===r){s.attrs[y]={};for(var o in this.attrs[y])s.attrs[y][o]=this.attrs[y][o]}else s.attrs[y]=this.attrs[y];return s.attrs[r]||(s.attrs[r]={}),s.attrs[r][a]=t,s},L.prototype.has_attributes=function(r){return this.attrs[r]&&this.attrs[r]!=={}},f.prototype.compile=function(){return'new pl.type.Var("'+this.id.toString()+'")'},S.prototype.compile=function(){return"new pl.type.Num("+this.value.toString()+", "+this.is_float.toString()+")"},w.prototype.compile=function(){return'new pl.type.Term("'+this.id.replace(/"/g,'\\"')+'", ['+d(this.args,function(r){return r.compile()})+"])"},I.prototype.compile=function(){return"new pl.type.Rule("+this.head.compile()+", "+(this.body===null?"null":this.body.compile())+")"},M.prototype.compile=function(){var r,a=[],t;for(var s in this.modules.user.rules)if(this.modules.user.rules.hasOwnProperty(s)){var y=this.modules.user.rules[s];t=[],r='"'+s+'": [';for(var o=0;o<y.length;o++)t.push(y[o].compile());r+=t.join(),r+="]",a.push(r)}return"{"+a.join()+"};"},Q.prototype.compile=function(){var r=0,a=0,t=`var pl;
-`;t+=`(function(pl) {
-`,t+='	var name = "'+this.id+`";
-`,t+=`	var predicates = function() {
-`,t+=`		return {
-`;for(var s in this.rules){if(r>0&&(t+=`,
-`),t+='			"'+s+'": ',typeof this.rules[s]=="function")t+=this.rules[s];else{t+=`[
-`;for(var y=0;y<this.rules[s].length;y++)t+="				"+this.rules[s][y].compile(),y<this.rules[s].length-1&&(t+=","),t+=`
-`;t+="			]"}r++}t+=`
-		};
-`,t+=`	};
-`,t+="	var exports = [";for(var y=0;y<this.exports.length;y++)y>0&&(t+=", "),t+='"'+this.exports[y]+'"';t+=`];
-`,t+=`	var options = function() {
-`,t+=`		return {
-`,t+="			dependencies: [";for(var s in this.modules)a>0&&(t+=", "),t+='"'+s+'"',a++;return t+=`]
-`,t+=`		};
-`,t+=`};
-`,t+=`	if(typeof module !== 'undefined') {
-`,t+=`		module.exports = function(p) {
-`,t+=`			pl = p;
-`,t+=`			new pl.type.Module(name, predicates(), exports, options());
-`,t+=`		};
-`,t+=`	} else {
-`,t+=`		new pl.type.Module(name, predicates(), exports, options());
-`,t+=`	}
-`,t+=`})(pl);
-`,t},f.prototype.toJavaScript=function(){return this.toString()},S.prototype.toJavaScript=function(){return this.value},w.prototype.toJavaScript=function(r){if(this.args.length===0&&this.indicator!=="[]/0")return this.toString(r);if(n.type.is_list(this)){for(var a=!0,t=[],s={},y=this,o;y.indicator==="./2";)o=y.args[0].toJavaScript(r),t.push(o),a=a&&n.type.is_term(y.args[0])&&y.args[0].indicator==="-/2"&&n.type.is_atom(y.args[0].args[0]),a&&(s[y.args[0].args[0].id]=y.args[0].args[1].toJavaScript(r)),y=y.args[1];if(y.indicator==="[]/0")return a&&t.length>0?s:t}return this.toString(r)},I.prototype.singleton_variables=function(r){r=r||!1;var a=this.head.variables(),t={},s=[];this.body!==null&&(a=a.concat(this.body.variables()));for(var y=0;y<a.length;y++)t[a[y]]===void 0&&(t[a[y]]=0),t[a[y]]++;for(var o in t)if(t.hasOwnProperty(o)&&t[o]===1){var _=T(o,1);if((!r||o==="_")&&(o==="_"||o[0]==="_"&&(_===95||_>=65&&_<=90)))continue;s.push(o)}return s};var le=typeof process!="undefined"&&!process.browser,Me=le?we(d(process.argv.slice(1),function(r){return new w(r)})):new w("[]",[]),n={__env:globalThis,modules:{},version:e,parser:{tokenizer:k,expression:q},utils:{str_indicator:z,codePointAt:T,fromCodePoint:l,stringLength:x},statistics:{getCountTerms:function(){return xe}},fromJavaScript:{test:{boolean:function(r,a){return r===!0||r===!1},number:function(r,a){return typeof r=="number"},string:function(r,a){return typeof r=="string"},list:function(r,a){return r instanceof Array},variable:function(r,a){return r===void 0},object:function(r,a){return a=a===void 0?!1:a,a&&!(r instanceof Array)&&typeof r=="object"},any:function(r,a){return!0}},conversion:{boolean:function(r,a){return new w(r?"true":"false",[])},number:function(r,a){return new S(r,r%1!==0)},string:function(r,a){return new w(r,[])},list:function(r,a){a=a===void 0?!1:a;for(var t=[],s,y=0;y<r.length;y++){if(s=n.fromJavaScript.apply(r[y],a),s===void 0)return;t.push(s)}return we(t)},variable:function(r,a){return new f("_")},object:function(r,a){a=a===void 0?!1:a;var t=new w("[]",[]),s=[];for(var y in r)r.hasOwnProperty(y)&&s.push(new w("-",[n.fromJavaScript.apply(y,a),n.fromJavaScript.apply(r[y],a)]));return we(s)},any:function(r,a){}},apply:function(r,a){a=a===void 0?!1:a;for(var t in n.fromJavaScript.test)if(t!=="any"&&n.fromJavaScript.test[t](r,a))return n.fromJavaScript.conversion[t](r,a);return n.fromJavaScript.conversion.any(r,a)}},type:{Var:f,Num:S,Term:w,Rule:I,State:h,Stream:W,Module:Q,Thread:E,Session:M,Substitution:L,File:D,Directory:G,order:[f,S,w,W],compare:function(r,a){var t=P(n.type.order,r.constructor),s=P(n.type.order,a.constructor);if(t<s)return-1;if(t>s)return 1;if(r.constructor===S){if(r.is_float&&a.is_float)return 0;if(r.is_float)return-1;if(a.is_float)return 1}return 0},is_substitution:function(r){return r instanceof L},is_state:function(r){return r instanceof h},is_rule:function(r){return r instanceof I},is_variable:function(r){return r instanceof f},is_stream:function(r){return r instanceof W},is_anonymous_var:function(r){return r instanceof f&&r.id==="_"},is_callable:function(r){return r instanceof w&&(P([",/2",";/2","->/2"],r.indicator)===-1||n.type.is_callable(r.args[0])&&n.type.is_callable(r.args[1]))||r instanceof f},is_number:function(r){return r instanceof S},is_integer:function(r){return r instanceof S&&!r.is_float},is_float:function(r){return r instanceof S&&r.is_float},is_term:function(r){return r instanceof w},is_atom:function(r){return r instanceof w&&r.args.length===0},is_ground:function(r){if(r instanceof f)return!1;if(r instanceof w){for(var a=0;a<r.args.length;a++)if(!n.type.is_ground(r.args[a]))return!1}return!0},is_atomic:function(r){return r instanceof w&&r.args.length===0||r instanceof S},is_compound:function(r){return r instanceof w&&r.args.length>0},is_list:function(r){return r instanceof w&&(r.indicator==="[]/0"||r.indicator==="./2")},is_empty_list:function(r){return r instanceof w&&r.indicator==="[]/0"},is_non_empty_list:function(r){return r instanceof w&&r.indicator==="./2"},is_fully_list:function(r){for(;r instanceof w&&r.indicator==="./2";)r=r.args[1];return r instanceof f||r instanceof w&&r.indicator==="[]/0"},is_instantiated_list:function(r){for(;r instanceof w&&r.indicator==="./2";)r=r.args[1];return r instanceof w&&r.indicator==="[]/0"},is_unitary_list:function(r){return r instanceof w&&r.indicator==="./2"&&r.args[1]instanceof w&&r.args[1].indicator==="[]/0"},is_character:function(r){return r instanceof w&&r.args.length===0&&(r.id.length===1||r.id.length>0&&r.id.length<=2&&T(r.id,0)>=65536)},is_in_character:function(r){return r instanceof w&&(r.indicator==="end_of_file/0"||r.id.length===1||r.id.length>0&&r.id.length<=2&&T(r.id,0)>=65536)},is_character_code:function(r){return r instanceof S&&!r.is_float&&r.value>=0&&r.value<=1114111},is_in_character_code:function(r){return r instanceof S&&!r.is_float&&r.value>=-1&&r.value<=1114111},is_byte:function(r){return r instanceof S&&!r.is_float&&r.value>=0&&r.value<=255},is_in_byte:function(r){return r instanceof S&&!r.is_float&&r.value>=-1&&r.value<=255},is_operator:function(r){return r instanceof w&&n.arithmetic.evaluation[r.indicator]},is_directive:function(r){return r instanceof w&&(n.directive[r.indicator]!==void 0||n.directive[r.id+"/*"]!==void 0)},is_builtin:function(r){return r instanceof w&&n.builtin.rules.hasOwnProperty(r.indicator)&&r.indicator!=="goal_expansion/2"},is_error:function(r){return r instanceof w&&r.indicator==="throw/1"},is_error_state:function(r){return n.type.is_state(r)&&r.error&&r.error===!0},is_predicate_indicator:function(r){return r instanceof w&&r.indicator==="//2"&&r.args[0]instanceof w&&r.args[0].args.length===0&&r.args[1]instanceof S&&r.args[1].is_float===!1},is_flag:function(r){return r instanceof w&&r.args.length===0&&n.flag[r.id]!==void 0},is_value_flag:function(r,a){if(!n.type.is_flag(r))return!1;for(var t in n.flag[r.id].allowed)if(n.flag[r.id].allowed.hasOwnProperty(t)&&n.flag[r.id].allowed[t].equals(a))return!0;return!1},is_io_mode:function(r){return n.type.is_atom(r)&&["read","write","append"].indexOf(r.id)!==-1},is_stream_option:function(r){return n.type.is_term(r)&&(r.indicator==="alias/1"&&n.type.is_atom(r.args[0])||r.indicator==="reposition/1"&&n.type.is_atom(r.args[0])&&(r.args[0].id==="true"||r.args[0].id==="false")||r.indicator==="type/1"&&n.type.is_atom(r.args[0])&&(r.args[0].id==="text"||r.args[0].id==="binary")||r.indicator==="eof_action/1"&&n.type.is_atom(r.args[0])&&(r.args[0].id==="error"||r.args[0].id==="eof_code"||r.args[0].id==="reset"))},is_stream_position:function(r){return n.type.is_term(r)&&(r.indicator==="end_of_stream/0"||r.indicator==="past_end_of_stream/0"||r.indicator==="position/3"&&n.type.is_integer(r.args[0])&&n.type.is_integer(r.args[1])&&n.type.is_integer(r.args[2]))},is_stream_property:function(r){return n.type.is_term(r)&&(r.indicator==="input/0"||r.indicator==="output/0"||r.indicator==="alias/1"&&(n.type.is_variable(r.args[0])||n.type.is_atom(r.args[0]))||r.indicator==="file_name/1"&&(n.type.is_variable(r.args[0])||n.type.is_atom(r.args[0]))||r.indicator==="reposition/1"&&(n.type.is_variable(r.args[0])||n.type.is_atom(r.args[0])&&(r.args[0].id==="true"||r.args[0].id==="false"))||r.indicator==="type/1"&&(n.type.is_variable(r.args[0])||n.type.is_atom(r.args[0])&&(r.args[0].id==="text"||r.args[0].id==="binary"))||r.indicator==="mode/1"&&(n.type.is_variable(r.args[0])||n.type.is_atom(r.args[0])&&(r.args[0].id==="read"||r.args[0].id==="write"||r.args[0].id==="append"))||r.indicator==="eof_action/1"&&(n.type.is_variable(r.args[0])||n.type.is_atom(r.args[0])&&(r.args[0].id==="error"||r.args[0].id==="eof_code"||r.args[0].id==="reset"))||r.indicator==="end_of_stream/1"&&(n.type.is_variable(r.args[0])||n.type.is_atom(r.args[0])&&(r.args[0].id==="at"||r.args[0].id==="past"||r.args[0].id==="not"))||r.indicator==="position/1"&&(n.type.is_variable(r.args[0])||n.type.is_term(r.args[0])&&r.args[0].indicator==="position/3"&&(n.type.is_variable(r.args[0].args[0])||n.type.is_integer(r.args[0].args[0]))&&(n.type.is_variable(r.args[0].args[1])||n.type.is_integer(r.args[0].args[1]))&&(n.type.is_variable(r.args[0].args[2])||n.type.is_integer(r.args[0].args[2]))))},is_streamable:function(r){return r.__proto__.stream!==void 0},is_read_option:function(r){return n.type.is_term(r)&&["variables/1","variable_names/1","singletons/1"].indexOf(r.indicator)!==-1},is_write_option:function(r){return n.type.is_term(r)&&(r.indicator==="quoted/1"&&n.type.is_atom(r.args[0])&&(r.args[0].id==="true"||r.args[0].id==="false")||r.indicator==="ignore_ops/1"&&n.type.is_atom(r.args[0])&&(r.args[0].id==="true"||r.args[0].id==="false")||r.indicator==="numbervars/1"&&n.type.is_atom(r.args[0])&&(r.args[0].id==="true"||r.args[0].id==="false")||r.indicator==="variable_names/1"&&n.type.is_fully_list(r.args[0]))},is_close_option:function(r){return n.type.is_term(r)&&r.indicator==="force/1"&&n.type.is_atom(r.args[0])&&(r.args[0].id==="true"||r.args[0].id==="false")},is_modifiable_flag:function(r){return n.type.is_flag(r)&&n.flag[r.id].changeable},is_module:function(r){return r instanceof Q},is_file:function(r){return r instanceof D},is_directory:function(r){return r instanceof G},is_predicate_property:function(r){return n.type.is_term(r)&&(r.indicator==="built_in/0"||r.indicator==="static/0"||r.indicator==="dynamic/0"||r.indicator==="native_code/0"||r.indicator==="multifile/0"||r.indicator==="meta_predicate/1")},is_meta_argument_specifier:function(r){return n.type.is_integer(r)&&r.value>=0||n.type.is_atom(r)&&P(["+","-","?","*","^",":","//"],r.id)!==-1},is_time_property:function(r){return n.type.is_term(r)&&r.args.length===1&&(n.type.is_variable(r.args[0])||n.type.is_integer(r.args[0]))&&P(["year","month","day","hours","minutes","seconds","milliseconds","weekday"],r.id)!==-1}},arithmetic:{evaluation:{"e/0":{type_args:null,type_result:!0,fn:function(r){return Math.E}},"pi/0":{type_args:null,type_result:!0,fn:function(r){return Math.PI}},"tau/0":{type_args:null,type_result:!0,fn:function(r){return 2*Math.PI}},"epsilon/0":{type_args:null,type_result:!0,fn:function(r){return Number.EPSILON}},"+/1":{type_args:null,type_result:null,fn:function(r,a){return r}},"-/1":{type_args:null,type_result:null,fn:function(r,a){return-r}},"\\/1":{type_args:!1,type_result:!1,fn:function(r,a){return~r}},"abs/1":{type_args:null,type_result:null,fn:function(r,a){return Math.abs(r)}},"sign/1":{type_args:null,type_result:null,fn:function(r,a){return Math.sign(r)}},"float_integer_part/1":{type_args:!0,type_result:!1,fn:function(r,a){return parseInt(r)}},"float_fractional_part/1":{type_args:!0,type_result:!0,fn:function(r,a){return r-parseInt(r)}},"float/1":{type_args:null,type_result:!0,fn:function(r,a){return parseFloat(r)}},"floor/1":{type_args:!0,type_result:!1,fn:function(r,a){return Math.floor(r)}},"truncate/1":{type_args:!0,type_result:!1,fn:function(r,a){return parseInt(r)}},"round/1":{type_args:!0,type_result:!1,fn:function(r,a){return Math.round(r)}},"ceiling/1":{type_args:!0,type_result:!1,fn:function(r,a){return Math.ceil(r)}},"sin/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.sin(r)}},"cos/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.cos(r)}},"tan/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.tan(r)}},"asin/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.abs(r)<=1?Math.asin(r):n.error.evaluation("undefined",a.__call_indicator)}},"acos/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.abs(r)<=1?Math.acos(r):n.error.evaluation("undefined",a.__call_indicator)}},"atan/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.atan(r)}},"atan2/2":{type_args:null,type_result:!0,fn:function(r,a,t){return r===0&&a===0?n.error.evaluation("undefined",t.__call_indicator):Math.atan2(r,a)}},"acosh/1":{type_args:null,type_result:!0,fn:function(r,a){return r>=1?Math.acosh(r):n.error.evaluation("undefined",a.__call_indicator)}},"asinh/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.asinh(r)}},"atanh/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.abs(r)<1?Math.atanh(r):n.error.evaluation("undefined",a.__call_indicator)}},"cosh/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.cosh(r)}},"sinh/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.sinh(r)}},"tanh/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.tanh(r)}},"exp/1":{type_args:null,type_result:!0,fn:function(r,a){return Math.exp(r)}},"sqrt/1":{type_args:null,type_result:!0,fn:function(r,a){return r>=0?Math.sqrt(r):n.error.evaluation("undefined",a.__call_indicator)}},"log/1":{type_args:null,type_result:!0,fn:function(r,a){return r>0?Math.log(r):n.error.evaluation("undefined",a.__call_indicator)}},"log/2":{type_args:null,type_result:!0,fn:function(r,a,t){return r>0&&a>0?Math.log(a)/Math.log(r):n.error.evaluation("undefined",t.__call_indicator)}},"log10/1":{type_args:null,type_result:!0,fn:function(r,a){return r>0?Math.log(r)/Math.log(10):n.error.evaluation("undefined",a.__call_indicator)}},"+/2":{type_args:null,type_result:null,fn:function(r,a,t){return r+a}},"-/2":{type_args:null,type_result:null,fn:function(r,a,t){return r-a}},"*/2":{type_args:null,type_result:null,fn:function(r,a,t){return r*a}},"//2":{type_args:null,type_result:!0,fn:function(r,a,t){return a?r/a:n.error.evaluation("zero_divisor",t.__call_indicator)}},"///2":{type_args:!1,type_result:!1,fn:function(r,a,t){return a?Math.trunc(r/a):n.error.evaluation("zero_divisor",t.__call_indicator)}},"div/2":{type_args:!1,type_result:!1,fn:function(r,a,t){return a?Math.floor(r/a):n.error.evaluation("zero_divisor",t.__call_indicator)}},"**/2":{type_args:null,type_result:!0,fn:function(r,a,t){return r==0&&a<0?n.error.evaluation("zero_divisor",t.__call_indicator):Math.pow(r,a)}},"^/2":{type_args:null,type_result:null,fn:function(r,a,t){return r==0&&a<0?n.error.evaluation("zero_divisor",t.__call_indicator):Math.pow(r,a)}},"<</2":{type_args:!1,type_result:!1,fn:function(r,a,t){return r<<a}},">>/2":{type_args:!1,type_result:!1,fn:function(r,a,t){return r>>a}},"/\\/2":{type_args:!1,type_result:!1,fn:function(r,a,t){return r&a}},"\\//2":{type_args:!1,type_result:!1,fn:function(r,a,t){return r|a}},"xor/2":{type_args:!1,type_result:!1,fn:function(r,a,t){return r^a}},"rem/2":{type_args:!1,type_result:!1,fn:function(r,a,t){return a?r%a:n.error.evaluation("zero_divisor",t.__call_indicator)}},"mod/2":{type_args:!1,type_result:!1,fn:function(r,a,t){return a?r-Math.floor(r/a)*a:n.error.evaluation("zero_divisor",t.__call_indicator)}},"max/2":{type_args:null,type_result:null,fn:function(r,a,t){return Math.max(r,a)}},"min/2":{type_args:null,type_result:null,fn:function(r,a,t){return Math.min(r,a)}},"gcd/2":{type_args:!1,type_result:!1,fn:function(r,a,t){return Ce(r,a)}}}},directive:{"dynamic/1":function(r,a,t){var s=a.args[0];n.type.is_list(s)||(s=we([s]));for(var y=s;n.type.is_term(y)&&y.indicator==="./2";){if(indicator=y.args[0],n.type.is_variable(indicator))r.throw_warning(n.error.instantiation(a.indicator));else if(!n.type.is_compound(indicator)||indicator.indicator!=="//2")r.throw_warning(n.error.type("predicate_indicator",indicator,a.indicator));else if(n.type.is_variable(indicator.args[0])||n.type.is_variable(indicator.args[1]))r.throw_warning(n.error.instantiation(a.indicator));else if(!n.type.is_atom(indicator.args[0]))r.throw_warning(n.error.type("atom",indicator.args[0],a.indicator));else if(!n.type.is_integer(indicator.args[1]))r.throw_warning(n.error.type("integer",indicator.args[1],a.indicator));else{var o=indicator.args[0].id+"/"+indicator.args[1].value,_=r.session.modules[t.context_module];_.public_predicates[o]=!0,_.rules[o]||(_.rules[o]=[])}y=y.args[1]}n.type.is_variable(y)?r.throw_warning(n.error.instantiation(a.indicator)):(!n.type.is_term(y)||y.indicator!=="[]/0")&&r.throw_warning(n.error.type("predicate_indicator",indicator,a.indicator))},"dynamic/*":function(r,a){for(var t=0;t<a.args.length;t++)n.directive["dynamic/1"](r,new w("dynamic",[a.args[t]]))},"multifile/1":function(r,a,t){var s=a.args[0];if(n.type.is_variable(s))r.throw_warning(n.error.instantiation(a.indicator));else if(!n.type.is_compound(s)||s.indicator!=="//2")r.throw_warning(n.error.type("predicate_indicator",s,a.indicator));else if(n.type.is_variable(s.args[0])||n.type.is_variable(s.args[1]))r.throw_warning(n.error.instantiation(a.indicator));else if(!n.type.is_atom(s.args[0]))r.throw_warning(n.error.type("atom",s.args[0],a.indicator));else if(!n.type.is_integer(s.args[1]))r.throw_warning(n.error.type("integer",s.args[1],a.indicator));else{var y=a.args[0].args[0].id+"/"+a.args[0].args[1].value,o=r.session.modules[t.context_module];o.multifile_predicates[y]=!0,o.rules.hasOwnProperty(y)||(o.rules[y]=[],o.public_predicates[y]=!1)}},"meta_predicate/1":function(r,a,s){var s=s===void 0?{}:s,y=a.args[0];if(n.type.is_variable(y))r.throw_warning(n.error.instantiation(a.indicator));else if(!n.type.is_callable(y))r.throw_warning(n.error.type("callable",y,a.indicator));else{for(var o=0;o<y.args.length;o++){var _=y.args[o];if(!n.type.is_meta_argument_specifier(_)){r.throw_warning(n.error.type("meta_argument_specifier",_,a.indicator));return}}r.session.modules[s.context_module].meta_predicates[y.indicator]=y}},"set_prolog_flag/2":function(r,a){var t=a.args[0],s=a.args[1];n.type.is_variable(t)||n.type.is_variable(s)?r.throw_warning(n.error.instantiation(a.indicator)):n.type.is_atom(t)?n.type.is_flag(t)?n.type.is_modifiable_flag(t)?n.type.is_value_flag(t,s)?r.session.flag[t.id]=s:r.throw_warning(n.error.domain("flag_value",new w("+",[t,s]),a.indicator)):r.throw_warning(n.error.permission("modify","flag",t,a.indicator)):r.throw_warning(n.error.domain("prolog_flag",t,a.indicator)):r.throw_warning(n.error.type("atom",t,a.indicator))},"module/2":function(r,a,s){var s=s===void 0?{}:s;s.context_module=s.context_module===void 0?"user":s.context_module;var y=a.args[0],o=a.args[1];if(n.type.is_variable(y)||n.type.is_variable(o))r.throw_warning(n.error.instantiation(a.indicator));else if(!n.type.is_atom(y))r.throw_warning(n.error.type("atom",y,a.indicator));else if(!n.type.is_list(o))r.throw_warning(n.error.type("list",o,a.indicator));else if(n.type.is_module(r.session.modules[y.indicator]))r.throw_warning(n.error.permission("create","module",y,a.indicator));else{for(var _=o,u=[];n.type.is_term(_)&&_.indicator==="./2";){var c=_.args[0];n.type.is_predicate_indicator(c)?u.push(c.args[0].id+"/"+c.args[1].value):r.throw_warning(n.error.type("predicate_indicator",c,a.indicator)),_=_.args[1]}n.type.is_variable(_)?r.throw_warning(n.error.instantiation(a.indicator)):n.type.is_empty_list(_)||r.throw_warning(n.error.type("list",o,a.indicator));var p=new Q(y.id,{},u,{session:r.session});r.session.modules[y.id]=p,r.session.modules[s.context_module].modules[y.id]=p,s.context_module=y.id}},"use_module/1":function(r,a,s){var s=s===void 0?{}:s;s.context_module=s.context_module===void 0?"user":s.context_module;var y=a.args[0];if(n.type.is_variable(y))r.throw_warning(n.error.instantiation(a.indicator));else if(!n.type.is_term(y))r.throw_warning(n.error.type("term",y,a.indicator));else if(y.indicator==="library/1"){var o=y.args[0].id,_=n.modules[o];if(n.type.is_module(_)){if(!r.session.modules[s.context_module].modules.hasOwnProperty(o)){r.session.modules[o]=_,r.session.modules[s.context_module].modules[o]=_;for(var u=0;u<_.dependencies.length;u++){var c=new w("use_module",[new w("library",[new w(_.dependencies[u])])]);n.directive["use_module/1"](r,c,{context_module:o})}}}else r.throw_warning(n.error.existence("module",y,a.indicator))}else{var o=y.id;return r.consult(o,{context_module:s.context_module,text:!1,success:function(){se(r,s.string,s)},error:function(){s.error(n.error.existence("module",y,a.indicator))}}),!0}},"char_conversion/2":function(r,a,t){var s=a.args[0],y=a.args[1];if(n.type.is_variable(s)||n.type.is_variable(y))r.throw_warning(n.error.instantiation(a.indicator));else if(!n.type.is_character(s))r.throw_warning(n.error.type("character",s,a.indicator));else if(!n.type.is_character(y))r.throw_warning(n.error.type("character",y,a.indicator));else return s.id===y.id?delete r.session.__char_conversion[s.id]:r.session.__char_conversion[s.id]=y.id,t.tokens=t.tokenizer.get_tokens(t.current_token),t.current_token=0,!0},"op/3":function(r,a){var t=a.args[0],s=a.args[1],y=a.args[2];if(n.type.is_atom(y)&&(y=new w(".",[y,new w("[]")])),n.type.is_variable(t)||n.type.is_variable(s)||n.type.is_variable(y))r.throw_warning(n.error.instantiation(a.indicator));else if(!n.type.is_integer(t))r.throw_warning(n.error.type("integer",t,a.indicator));else if(!n.type.is_atom(s))r.throw_warning(n.error.type("atom",s,a.indicator));else if(!n.type.is_list(y))r.throw_warning(n.error.type("list",y,a.indicator));else if(n.type.is_empty_list(y))r.throw_warning(n.error.permission("create","operator",y,a.indicator));else{for(var o=y;n.type.is_term(o)&&o.indicator==="./2";){var _=o.args[0];if(o=o.args[1],n.type.is_variable(_))r.throw_warning(n.error.instantiation(a.indicator));else if(!n.type.is_atom(_))r.throw_warning(n.error.type("atom",_,a.indicator));else if(t.value<0||t.value>1200)r.throw_warning(n.error.domain("operator_priority",t,a.indicator));else if(_.id===",")r.throw_error(n.error.permission("modify","operator",_,a.indicator));else if(_.id==="{}")r.throw_warning(n.error.permission("create","operator",_,a.indicator));else if(_.id==="[]")r.throw_warning(n.error.permission("create","operator",_,a.indicator));else if(_.id==="|"&&t.value!==0&&(t.value<1001||s.id.length!==3))r.throw_warning(n.error.permission("create","operator",_,a.indicator));else if(["fy","fx","yf","xf","xfx","yfx","xfy"].indexOf(s.id)===-1)r.throw_warning(n.error.domain("operator_specifier",s,a.indicator));else{var u={prefix:null,infix:null,postfix:null};for(var c in r.session.__operators)if(r.session.__operators.hasOwnProperty(c)){var p=r.session.__operators[c][_.id];p&&(P(p,"fx")!==-1&&(u.prefix={priority:c,type:"fx"}),P(p,"fy")!==-1&&(u.prefix={priority:c,type:"fy"}),P(p,"xf")!==-1&&(u.postfix={priority:c,type:"xf"}),P(p,"yf")!==-1&&(u.postfix={priority:c,type:"yf"}),P(p,"xfx")!==-1&&(u.infix={priority:c,type:"xfx"}),P(p,"xfy")!==-1&&(u.infix={priority:c,type:"xfy"}),P(p,"yfx")!==-1&&(u.infix={priority:c,type:"yfx"}))}var v;switch(s.id){case"fy":case"fx":v="prefix";break;case"yf":case"xf":v="postfix";break;default:v="infix";break}u.infix&&v==="postfix"||u.postfix&&v==="infix"?r.throw_warning(n.error.permission("create","operator",_,a.indicator)):(u[v]&&(Ee(r.session.__operators[u[v].priority][_.id],u[v].type),r.session.__operators[u[v].priority][_.id].length===0&&delete r.session.__operators[u[v].priority][_.id]),t.value>0&&(r.session.__operators[t.value]||(r.session.__operators[t.value.toString()]={}),r.session.__operators[t.value][_.id]||(r.session.__operators[t.value][_.id]=[]),r.session.__operators[t.value][_.id].push(s.id)))}}if(n.type.is_variable(o)){r.throw_warning(n.error.instantiation(a.indicator));return}else if(!n.type.is_term(o)||o.indicator!=="[]/0"){r.throw_warning(n.error.type("list",y,a.indicator));return}}},"initialization/1":function(r,a,t){var s=a.args[0];t.initialization.push(s)}},flag:{bounded:{allowed:[new w("true"),new w("false")],value:new w("true"),changeable:!1},max_integer:{allowed:[new S(Number.MAX_SAFE_INTEGER)],value:new S(Number.MAX_SAFE_INTEGER),changeable:!1},min_integer:{allowed:[new S(Number.MIN_SAFE_INTEGER)],value:new S(Number.MIN_SAFE_INTEGER),changeable:!1},integer_rounding_function:{allowed:[new w("down"),new w("toward_zero")],value:new w("toward_zero"),changeable:!1},char_conversion:{allowed:[new w("on"),new w("off")],value:new w("on"),changeable:!0},debug:{allowed:[new w("on"),new w("off")],value:new w("off"),changeable:!0},max_arity:{allowed:[new w("unbounded")],value:new w("unbounded"),changeable:!1},unknown:{allowed:[new w("error"),new w("fail"),new w("warning")],value:new w("error"),changeable:!0},double_quotes:{allowed:[new w("chars"),new w("codes"),new w("atom")],value:new w("chars"),changeable:!0},occurs_check:{allowed:[new w("false"),new w("true")],value:new w("false"),changeable:!0},dialect:{allowed:[new w("tau")],value:new w("tau"),changeable:!1},version_data:{allowed:[new w("tau",[new S(e.major,!1),new S(e.minor,!1),new S(e.patch,!1),new w(e.status)])],value:new w("tau",[new S(e.major,!1),new S(e.minor,!1),new S(e.patch,!1),new w(e.status)]),changeable:!1},nodejs:{allowed:[new w("true"),new w("false")],value:new w(le?"true":"false"),changeable:!1},argv:{allowed:[Me],value:Me,changeble:!1}},unify:function(r,a,t){t=t===void 0?!1:t;var s=Array.isArray(r)?r:[r],y=Array.isArray(a)?a:[a];if(s.length!==y.length)return null;for(var o=new L;s.length>0;){var _=s.pop(),u=y.pop();if(n.type.is_variable(_)&&(_=_.apply(o)),n.type.is_variable(u)&&(u=u.apply(o)),_!=u)if(n.type.is_term(_)&&n.type.is_term(u)){if(_.indicator!==u.indicator)return null;for(var c=_.args.length-1;c>=0;c--)s.push(_.args[c]),y.push(u.args[c])}else if(n.type.is_number(_)&&n.type.is_number(u)){if(_.value!==u.value||_.is_float!==u.is_float)return null}else if(n.type.is_variable(_)){if(u=u.apply(o),n.type.is_variable(u)&&_.id===u.id)continue;if(t===!0&&P(u.variables(),_.id)!==-1)return null;_.id!=="_"&&o.add(_.id,u)}else if(n.type.is_variable(u))s.push(u),y.push(_);else if(_.unify!==void 0){var p=_.apply(o).unify(u.apply(o),t);if(p==null)return null;for(var c in p.links)o.add(c,p.links[c])}else return null}return o.apply(o)},is_rename:function(r,a,t){return t=t||{},r.is_rename&&a.is_rename?r.is_rename(a,t):r.equals&&a.equals?r.equals(a):!1},compare:function(r,a){var t=n.type.compare(r,a);return t!==0?t:r.compare(a)},arithmetic_compare:function(r,a,t){var s=a.interpret(r);if(n.type.is_number(s)){var y=t.interpret(r);return n.type.is_number(y)?s.value<y.value?-1:s.value>y.value?1:0:y}else return s},operate:function(r,a){if(n.type.is_operator(a)){for(var t=n.type.is_operator(a),s=[],y,o=!1,_=0;_<a.args.length;_++){if(y=a.args[_].interpret(r),n.type.is_number(y)){if(t.type_args!==null&&y.is_float!==t.type_args)return n.error.type(t.type_args?"float":"integer",y,r.__call_indicator);s.push(y.value)}else return y;o=o||y.is_float}return s.push(r),y=n.arithmetic.evaluation[a.indicator].fn.apply(this,s),a.indicator==="^/2"&&!o&&y!==parseInt(y,10)?n.error.type("float",new S(s[0],!1),r.__call_indicator):(o=t.type_result===null?o:t.type_result,n.type.is_term(y)?y:y===Number.POSITIVE_INFINITY||y===Number.NEGATIVE_INFINITY?n.error.evaluation("float_overflow",r.__call_indicator):o===!1&&r.get_flag("bounded").id==="true"&&(y>r.get_flag("max_integer").value||y<r.get_flag("min_integer").value)?n.error.evaluation("int_overflow",r.__call_indicator):new S(y,o))}else return n.error.type("evaluable",z(a.indicator),r.__call_indicator)},error:{existence:function(r,a,t){return typeof a=="string"&&(a=z(a)),new w("error",[new w("existence_error",[new w(r),a]),z(t)])},type:function(r,a,t){return new w("error",[new w("type_error",[new w(r),a]),z(t)])},instantiation:function(r){return new w("error",[new w("instantiation_error"),z(r)])},uninstantiation:function(r,a){return new w("error",[new w("uninstantiation_error",[new w(r)]),z(a)])},domain:function(r,a,t){return new w("error",[new w("domain_error",[new w(r),a]),z(t)])},representation:function(r,a){return new w("error",[new w("representation_error",[new w(r)]),z(a)])},permission:function(r,a,t,s){return new w("error",[new w("permission_error",[new w(r),new w(a),t]),z(s)])},evaluation:function(r,a){return new w("error",[new w("evaluation_error",[new w(r)]),z(a)])},syntax:function(r,a,t){r=r||{value:"",line:0,column:0,matches:[""],start:0};var s=t&&r.matches.length>0?r.start+r.matches[0].length:r.start,y=t?new w("token_not_found"):new w("found",[new w(r.value.toString())]),o=new w(".",[new w("line",[new S(r.line+1)]),new w(".",[new w("column",[new S(s)]),new w(".",[y,new w("[]",[])])])]);return new w("error",[new w("syntax_error",[new w(a)]),o])},syntax_by_predicate:function(r,a){return new w("error",[new w("syntax_error",[new w(r)]),z(a)])}},warning:{singleton:function(r,a,t){for(var s=new w("[]"),y=r.length-1;y>=0;y--)s=new w(".",[new f(r[y]),s]);return new w("warning",[new w("singleton_variables",[s,z(a)]),new w(".",[new w("line",[new S(t,!1)]),new w("[]")])])},failed_goal:function(r,a){return new w("warning",[new w("failed_goal",[r]),new w(".",[new w("line",[new S(a,!1)]),new w("[]")])])}},format_variable:function(r,a){var t=a&&a.length>0?T(a,1):0;return a==="_"||a&&a[0]==="_"&&(t===95||t>=65&&t<=90)?"__"+r:"_"+r},format_answer:function(r,a,s){a instanceof M&&(a=a.thread);var s=s||{};if(s.session=a?a.session:void 0,n.type.is_error(r))return"uncaught exception: "+r.args[0].toString(s);if(r===!1)return"false";if(r===null)return"limit exceeded";var y=0,o="";if(n.type.is_substitution(r)){var _=r.domain(!0);for(var u in r.links)if(r.links.hasOwnProperty(u)&&n.type.is_variable(r.links[u])){var c={};c[r.links[u].id]=new f(u),r=r.apply(new L(c))}r=r.filter(function(V,R){return!n.type.is_variable(R)||n.type.is_variable(R)&&r.has_attributes(V)||P(_,R.id)!==-1&&V!==R.id})}for(var u in r.links)if(r.links.hasOwnProperty(u))if(n.type.is_variable(r.links[u])&&u===r.links[u].id){var p=r.attrs[u];for(var v in p)p.hasOwnProperty(v)&&(y++,o!==""&&(o+=", "),o+="put_attr("+u+", "+v+", "+p[v].toString(s)+")")}else y++,o!==""&&(o+=", "),o+=u.toString(s)+" = "+r.links[u].toString(s,{priority:"700",class:"xfx",indicator:"=/2"},"right");return y===0?"true":o},flatten_error:function(r){if(!n.type.is_error(r))return null;r=r.args[0];var a={};return a.type=r.args[0].id,a.thrown=a.type==="syntax_error"?null:r.args[1].id,a.expected=null,a.found=null,a.representation=null,a.existence=null,a.existence_type=null,a.line=null,a.column=null,a.permission_operation=null,a.permission_type=null,a.evaluation_type=null,a.type==="type_error"||a.type==="domain_error"?(a.expected=r.args[0].args[0].id,a.found=r.args[0].args[1].toString()):a.type==="syntax_error"?r.args[1].indicator==="./2"?(a.expected=r.args[0].args[0].id,a.found=r.args[1].args[1].args[1].args[0],a.found=a.found.id==="token_not_found"?a.found.id:a.found.args[0].id,a.line=r.args[1].args[0].args[0].value,a.column=r.args[1].args[1].args[0].args[0].value):a.thrown=r.args[1].id:a.type==="permission_error"?(a.found=r.args[0].args[2].toString(),a.permission_operation=r.args[0].args[0].id,a.permission_type=r.args[0].args[1].id):a.type==="evaluation_error"?a.evaluation_type=r.args[0].args[0].id:a.type==="representation_error"?a.representation=r.args[0].args[0].id:a.type==="existence_error"&&(a.existence=r.args[0].args[1].toString(),a.existence_type=r.args[0].args[0].id),a},create:function(r){return new n.type.Session(r)}};n.builtin=new Q("system",{"goal_expansion/2":[new I(new w("goal_expansion",[new w(",",[new f("X"),new f("Y")]),new w(",",[new f("X_"),new f("Y_")])]),new w(";",[new w(",",[new w("goal_expansion",[new f("X"),new f("X_")]),new w(";",[new w("goal_expansion",[new f("Y"),new f("Y_")]),new w("=",[new f("Y_"),new f("Y")])])]),new w(",",[new w("=",[new f("X"),new f("X_")]),new w("goal_expansion",[new f("Y"),new f("Y_")])])])),new I(new w("goal_expansion",[new w(";",[new f("X"),new f("Y")]),new w(";",[new f("X_"),new f("Y_")])]),new w(";",[new w(",",[new w("goal_expansion",[new f("X"),new f("X_")]),new w(";",[new w("goal_expansion",[new f("Y"),new f("Y_")]),new w("=",[new f("Y_"),new f("Y")])])]),new w(",",[new w("=",[new f("X"),new f("X_")]),new w("goal_expansion",[new f("Y"),new f("Y_")])])])),new I(new w("goal_expansion",[new w("->",[new f("X"),new f("Y")]),new w("->",[new f("X_"),new f("Y_")])]),new w(";",[new w(",",[new w("goal_expansion",[new f("X"),new f("X_")]),new w(";",[new w("goal_expansion",[new f("Y"),new f("Y_")]),new w("=",[new f("Y_"),new f("Y")])])]),new w(",",[new w("=",[new f("X"),new f("X_")]),new w("goal_expansion",[new f("Y"),new f("Y_")])])])),new I(new w("goal_expansion",[new w("catch",[new f("X"),new f("Y"),new f("Z")]),new w("catch",[new f("X_"),new f("Y"),new f("Z_")])]),new w(";",[new w(",",[new w("goal_expansion",[new f("X"),new f("X_")]),new w(";",[new w("goal_expansion",[new f("Z"),new f("Z_")]),new w("=",[new f("Z_"),new f("Z")])])]),new w(",",[new w("=",[new f("X_"),new f("X")]),new w("goal_expansion",[new f("Z"),new f("Z_")])])])),new I(new w("goal_expansion",[new w("\\+",[new f("X")]),new w("\\+",[new f("X_")])]),new w(",",[new w("nonvar",[new f("X")]),new w("goal_expansion",[new f("X"),new f("X_")])])),new I(new w("goal_expansion",[new w("once",[new f("X")]),new w("once",[new f("X_")])]),new w(",",[new w("nonvar",[new f("X")]),new w("goal_expansion",[new f("X"),new f("X_")])])),new I(new w("goal_expansion",[new w("findall",[new f("X"),new f("Y"),new f("Z")]),new w("findall",[new f("X"),new f("Y_"),new f("Z")])]),new w("goal_expansion",[new f("Y"),new f("Y_")])),new I(new w("goal_expansion",[new w("setof",[new f("X"),new f("Y"),new f("Z")]),new w("findall",[new f("X"),new f("Y_"),new f("Z")])]),new w("goal_expansion",[new f("Y"),new f("Y_")])),new I(new w("goal_expansion",[new w("bagof",[new f("X"),new f("Y"),new f("Z")]),new w("findall",[new f("X"),new f("Y_"),new f("Z")])]),new w("goal_expansion",[new f("Y"),new f("Y_")])),new I(new w("goal_expansion",[new w("call",[new f("X")]),new w("call",[new f("X_")])]),new w(",",[new w("nonvar",[new f("X")]),new w("goal_expansion",[new f("X"),new f("X_")])])),new I(new w("goal_expansion",[new w("call",[new f("X"),new f("A1")]),new w("call",[new f("F_")])]),new w(",",[new w("=..",[new f("F"),new w(".",[new f("X"),new w(".",[new f("A1"),new w("[]",[])])])]),new w("goal_expansion",[new f("F"),new f("F_")])])),new I(new w("goal_expansion",[new w("call",[new f("X"),new f("A1"),new f("A2")]),new w("call",[new f("F_")])]),new w(",",[new w("=..",[new f("F"),new w(".",[new f("X"),new w(".",[new f("A1"),new w(".",[new f("A2"),new w("[]",[])])])])]),new w("goal_expansion",[new f("F"),new f("F_")])])),new I(new w("goal_expansion",[new w("call",[new f("X"),new f("A1"),new f("A2"),new f("A3")]),new w("call",[new f("F_")])]),new w(",",[new w("=..",[new f("F"),new w(".",[new f("X"),new w(".",[new f("A1"),new w(".",[new f("A2"),new w(".",[new f("A3"),new w("[]",[])])])])])]),new w("goal_expansion",[new f("F"),new f("F_")])])),new I(new w("goal_expansion",[new w("call",[new f("X"),new f("A1"),new f("A2"),new f("A3"),new f("A4")]),new w("call",[new f("F_")])]),new w(",",[new w("=..",[new f("F"),new w(".",[new f("X"),new w(".",[new f("A1"),new w(".",[new f("A2"),new w(".",[new f("A3"),new w(".",[new f("A4"),new w("[]",[])])])])])])]),new w("goal_expansion",[new f("F"),new f("F_")])])),new I(new w("goal_expansion",[new w("call",[new f("X"),new f("A1"),new f("A2"),new f("A3"),new f("A4"),new f("A5")]),new w("call",[new f("F_")])]),new w(",",[new w("=..",[new f("F"),new w(".",[new f("X"),new w(".",[new f("A1"),new w(".",[new f("A2"),new w(".",[new f("A3"),new w(".",[new f("A4"),new w(".",[new f("A5"),new w("[]",[])])])])])])])]),new w("goal_expansion",[new f("F"),new f("F_")])])),new I(new w("goal_expansion",[new w("call",[new f("X"),new f("A1"),new f("A2"),new f("A3"),new f("A4"),new f("A5"),new f("A6")]),new w("call",[new f("F_")])]),new w(",",[new w("=..",[new f("F"),new w(".",[new f("X"),new w(".",[new f("A1"),new w(".",[new f("A2"),new w(".",[new f("A3"),new w(".",[new f("A4"),new w(".",[new f("A5"),new w(".",[new f("A6"),new w("[]",[])])])])])])])])]),new w("goal_expansion",[new f("F"),new f("F_")])])),new I(new w("goal_expansion",[new w("call",[new f("X"),new f("A1"),new f("A2"),new f("A3"),new f("A4"),new f("A5"),new f("A6"),new f("A7")]),new w("call",[new f("F_")])]),new w(",",[new w("=..",[new f("F"),new w(".",[new f("X"),new w(".",[new f("A1"),new w(".",[new f("A2"),new w(".",[new f("A3"),new w(".",[new f("A4"),new w(".",[new f("A5"),new w(".",[new f("A6"),new w(".",[new f("A7"),new w("[]",[])])])])])])])])])]),new w("goal_expansion",[new f("F"),new f("F_")])]))],"$push_global_stack/2":function(r,a,t){var s=t.args[0],y=t.args[1];n.type.is_variable(s)?(r.push_global_stack(s.id,y),r.success(a)):r.throw_error(n.error.instantiation(t.indicator))},"$flush_global_stack/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(!n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else{var _=r.flush_global_stack(s.id,o);r.prepend([new h(a.goal.replace(new w("=",[y,_])),a.substitution,a)])}},"$free_variable_set/3":function(r,a,t){for(var s=t.args[0],y=t.args[1],o=t.args[2],_=[],u=s;n.type.is_term(u)&&u.indicator==="^/2";)_=_.concat(u.args[0].variables()),u=u.args[1];var c=u.variables(),p=we(d(Le(c,_),function(v){return new f(v)}));r.prepend([new h(a.goal.replace(new w(",",[new w("=",[y,u]),new w("=",[o,p])])),a.substitution,a)])},"$member/2":[new n.type.Rule(new n.type.Term("$member",[new n.type.Var("X"),new n.type.Term(".",[new n.type.Var("X"),new n.type.Var("_")])]),null),new n.type.Rule(new n.type.Term("$member",[new n.type.Var("X"),new n.type.Term(".",[new n.type.Var("_"),new n.type.Var("Xs")])]),new n.type.Term("$member",[new n.type.Var("X"),new n.type.Var("Xs")]))],"$bind_bagof_keys/2":[new n.type.Rule(new n.type.Term("$bind_bagof_keys",[new n.type.Term("[]",[]),new n.type.Var("_")]),null),new n.type.Rule(new n.type.Term("$bind_bagof_keys",[new n.type.Term(".",[new n.type.Term("-",[new n.type.Var("Key"),new n.type.Var("_")]),new n.type.Var("Bag")]),new n.type.Var("Vars")]),new n.type.Term(",",[new n.type.Term("term_variables",[new n.type.Var("Key"),new n.type.Var("Vars"),new n.type.Var("_")]),new n.type.Term("$bind_bagof_keys",[new n.type.Var("Bag"),new n.type.Var("Vars")])]))],"$findall/4":[new n.type.Rule(new n.type.Term("$findall",[new n.type.Var("Template0"),new n.type.Var("Goal0"),new n.type.Var("Instances"),new n.type.Var("Tail")]),new n.type.Term(";",[new n.type.Term(",",[new n.type.Term("copy_term",[new n.type.Term("-",[new n.type.Var("Template0"),new n.type.Var("Goal0")]),new n.type.Term("-",[new n.type.Var("Template1"),new n.type.Var("Goal1")])]),new n.type.Term(",",[new n.type.Term("call",[new n.type.Var("Goal1")]),new n.type.Term(",",[new n.type.Term("copy_term",[new n.type.Var("Template1"),new n.type.Var("Template2")]),new n.type.Term(",",[new n.type.Term("$push_global_stack",[new n.type.Var("Var"),new n.type.Var("Template2")]),new n.type.Term("false",[])])])])]),new n.type.Term("$flush_global_stack",[new n.type.Var("Var"),new n.type.Var("Instances"),new n.type.Var("Tail")])]))],"$bagof/3":[new n.type.Rule(new n.type.Term("$bagof",[new n.type.Var("Template"),new n.type.Var("Goal0"),new n.type.Var("Answer")]),new n.type.Term(",",[new n.type.Term("$free_variable_set",[new n.type.Term("^",[new n.type.Var("Template"),new n.type.Var("Goal0")]),new n.type.Var("Goal1"),new n.type.Var("FV")]),new n.type.Term(",",[new n.type.Term("findall",[new n.type.Term("-",[new n.type.Var("FV"),new n.type.Var("Template")]),new n.type.Var("Goal1"),new n.type.Var("Answers"),new n.type.Term("[]",[])]),new n.type.Term(",",[new n.type.Term("$bind_bagof_keys",[new n.type.Var("Answers"),new n.type.Var("_")]),new n.type.Term(",",[new n.type.Term("keygroup",[new n.type.Var("Answers"),new n.type.Var("KeyGroups")]),new n.type.Term(",",[new n.type.Term("keysort",[new n.type.Var("KeyGroups"),new n.type.Var("KeySorted")]),new n.type.Term("$member",[new n.type.Term("-",[new n.type.Var("FV"),new n.type.Var("Answer")]),new n.type.Var("KeySorted")])])])])])]))],"$setof/3":[new n.type.Rule(new n.type.Term("$setof",[new n.type.Var("Template"),new n.type.Var("Goal0"),new n.type.Var("Answer")]),new n.type.Term(",",[new n.type.Term("$free_variable_set",[new n.type.Term("^",[new n.type.Var("Template"),new n.type.Var("Goal0")]),new n.type.Var("Goal1"),new n.type.Var("FV")]),new n.type.Term(",",[new n.type.Term("findall",[new n.type.Term("-",[new n.type.Var("FV"),new n.type.Var("Template")]),new n.type.Var("Goal1"),new n.type.Var("Answers"),new n.type.Term("[]",[])]),new n.type.Term(",",[new n.type.Term("$bind_bagof_keys",[new n.type.Var("Answers"),new n.type.Var("_")]),new n.type.Term(",",[new n.type.Term("keygroup",[new n.type.Var("Answers"),new n.type.Var("KeyGroups")]),new n.type.Term(",",[new n.type.Term("keysort",[new n.type.Var("KeyGroups"),new n.type.Var("KeySorted")]),new n.type.Term(",",[new n.type.Term("$member",[new n.type.Term("-",[new n.type.Var("FV"),new n.type.Var("Unsorted")]),new n.type.Var("KeySorted")]),new n.type.Term("sort",[new n.type.Var("Unsorted"),new n.type.Var("Answer")])])])])])])]))],"$if/3":[new n.type.Rule(new n.type.Term("$if",[new n.type.Var("If"),new n.type.Var("Then"),new n.type.Var("Else")]),new n.type.Term(";",[new n.type.Term(",",[new n.type.Term("call",[new n.type.Var("If")]),new n.type.Term(",",[new n.type.Term("$push_global_stack",[new n.type.Var("Stack"),new n.type.Var("_")]),new n.type.Term("call",[new n.type.Var("Then")])])]),new n.type.Term(",",[new n.type.Term("$flush_global_stack",[new n.type.Var("Stack"),new n.type.Term("[]",[]),new n.type.Term("[]",[])]),new n.type.Term("call",[new n.type.Var("Else")])])]))],"put_attr/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(!n.type.is_variable(s))r.throw_error(n.error.type("variable",s,t.indicator));else if(!n.type.is_atom(y))r.throw_error(n.error.type("atom",y,t.indicator));else{var _=a.substitution.set_attribute(s.id,y,o);r.prepend([new h(a.goal.replace(null),_,a)])}},"get_attr/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(!n.type.is_variable(s))r.throw_error(n.error.type("variable",s,t.indicator));else if(!n.type.is_atom(y))r.throw_error(n.error.type("atom",y,t.indicator));else{var _=a.substitution.get_attribute(s.id,y);_&&r.prepend([new h(a.goal.replace(new w("=",[o,_])),a.substitution,a)])}},"op/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(n.type.is_atom(o)&&(o=new w(".",[o,new w("[]")])),n.type.is_variable(s)||n.type.is_variable(y)||n.type.is_variable(o))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_integer(s))r.throw_error(n.error.type("integer",s,t.indicator));else if(!n.type.is_atom(y))r.throw_error(n.error.type("atom",y,t.indicator));else if(!n.type.is_list(o))r.throw_error(n.error.type("list",o,t.indicator));else if(n.type.is_empty_list(o))r.throw_error(n.error.permission("create","operator",o,t.indicator));else{for(var _=o;n.type.is_term(_)&&_.indicator==="./2";){var u=_.args[0];if(_=_.args[1],n.type.is_variable(u)){r.throw_error(n.error.instantiation(t.indicator));return}else if(n.type.is_atom(u))if(s.value<0||s.value>1200){r.throw_error(n.error.domain("operator_priority",s,t.indicator));return}else if(u.id===","){r.throw_error(n.error.permission("modify","operator",u,t.indicator));return}else if(u.id==="{}"){r.throw_error(n.error.permission("create","operator",u,t.indicator));return}else if(u.id==="[]"){r.throw_error(n.error.permission("create","operator",u,t.indicator));return}else if(u.id==="|"&&s.value!==0&&(s.value<1001||y.id.length!==3)){r.throw_error(n.error.permission("create","operator",u,t.indicator));return}else if(["fy","fx","yf","xf","xfx","yfx","xfy"].indexOf(y.id)===-1){r.throw_error(n.error.domain("operator_specifier",y,t.indicator));return}else{var c={prefix:null,infix:null,postfix:null};for(var p in r.session.__operators)if(r.session.__operators.hasOwnProperty(p)){var v=r.session.__operators[p][u.id];v&&(P(v,"fx")!==-1&&(c.prefix={priority:p,type:"fx"}),P(v,"fy")!==-1&&(c.prefix={priority:p,type:"fy"}),P(v,"xf")!==-1&&(c.postfix={priority:p,type:"xf"}),P(v,"yf")!==-1&&(c.postfix={priority:p,type:"yf"}),P(v,"xfx")!==-1&&(c.infix={priority:p,type:"xfx"}),P(v,"xfy")!==-1&&(c.infix={priority:p,type:"xfy"}),P(v,"yfx")!==-1&&(c.infix={priority:p,type:"yfx"}))}var V;switch(y.id){case"fy":case"fx":V="prefix";break;case"yf":case"xf":V="postfix";break;default:V="infix";break}if(c.infix&&V==="postfix"||c.postfix&&V==="infix"){r.throw_error(n.error.permission("create","operator",u,t.indicator));return}else c[V]&&(Ee(r.session.__operators[c[V].priority][u.id],c[V].type),r.session.__operators[c[V].priority][u.id].length===0&&delete r.session.__operators[c[V].priority][u.id]),s.value>0&&(r.session.__operators[s.value]||(r.session.__operators[s.value.toString()]={}),r.session.__operators[s.value][u.id]||(r.session.__operators[s.value][u.id]=[]),r.session.__operators[s.value][u.id].push(y.id))}else{r.throw_error(n.error.type("atom",u,t.indicator));return}}if(n.type.is_variable(_)){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_term(_)||_.indicator!=="[]/0"){r.throw_error(n.error.type("list",o,t.indicator));return}else r.success(a)}},"current_op/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2],_=[];if(!n.type.is_variable(s)&&!n.type.is_integer(s))r.throw_error(n.error.type("integer",s,t.indicator));else if(n.type.is_integer(s)&&(s.value<0||s.value>1200))r.throw_error(n.error.domain("operator_priority",s,t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_atom(y))r.throw_error(n.error.type("atom",y,t.indicator));else if(n.type.is_atom(y)&&P(["fy","fx","yf","xf","xfx","yfx","xfy"],y.id)===-1)r.throw_error(n.error.domain("operator_specifier",y,t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_atom(o))r.throw_error(n.error.type("atom",o,t.indicator));else{for(var u in r.session.__operators)for(var c in r.session.__operators[u])for(var p=0;p<r.session.__operators[u][c].length;p++)_.push(new h(a.goal.replace(new w(",",[new w("=",[new S(u,!1),s]),new w(",",[new w("=",[new w(r.session.__operators[u][c][p],[]),y]),new w("=",[new w(c,[]),o])])])),a.substitution,a));r.prepend(_)}},";/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=s.args[0],_=s.indicator===":/2"?s.args[1]:s;if(n.type.is_term(_)&&_.indicator==="->/2"){var u=s.indicator===":/2"?new w(":",[o,new w("call",[_.args[0]])]):_.args[0],c=s.indicator===":/2"?new w(":",[o,_.args[1]]):_.args[1],p=y,v=a.goal.replace(new w(",",[u,new w(",",[new w("!"),c])])),V=a.goal.replace(new w(",",[new w("!"),p]));r.prepend([new h(v,a.substitution,a),new h(V,a.substitution,a)])}else if(n.type.is_term(_)&&_.indicator==="*->/2"){var u=s.indicator===":/2"?new w(":",[o,_.args[0]]):_.args[0],c=s.indicator===":/2"?new w(":",[o,_.args[1]]):_.args[1],p=y;r.prepend([new h(a.goal.replace(new w("$if",[u,c,p])),a.substitution,a)])}else r.prepend([new h(a.goal.replace(s),a.substitution,a),new h(a.goal.replace(y),a.substitution,a)])},"!/0":function(r,a,t){var s,y,o=[];for(s=a,y=null;s.parent!==null&&s.parent.goal.search(t);)if(y=s,s=s.parent,s.goal!==null){var _=s.goal.select();if(_&&_.indicator===":/2"&&(_=_.args[1]),_&&_.id==="call"&&_.search(t)){s=y;break}}for(var u=null,c=r.points.length-1;c>=0;c--){for(var p=r.points[c],v=p.parent;v!==null&&v!==s.parent;)v=v.parent;v===null&&v!==s.parent?o.push(p):p.setup_call_cleanup_goal&&(u=p.setup_call_cleanup_goal)}r.points=o.reverse(),r.prepend([new h(a.goal.replace(u),a.substitution,a)])},"\\+/1":function(r,a,t){var s=t.args[0];n.type.is_variable(s)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_callable(s)?r.prepend([new h(a.goal.replace(new w(",",[new w(",",[new w("call",[s]),new w("!",[])]),new w("fail",[])])),a.substitution,a),new h(a.goal.replace(null),a.substitution,a)]):r.throw_error(n.error.type("callable",s,t.indicator))},"->/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=a.goal.replace(new w(",",[new w("call",[s]),new w(",",[new w("!"),y])]));r.prepend([new h(o,a.substitution,a)])},"*->/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=a.goal.replace(new w(",",[new w("call",[s]),y]));r.prepend([new h(o,a.substitution,a)])},"fail/0":function(r,a,t){},"false/0":function(r,a,t){},"true/0":function(r,a,t){r.success(a)},"call/1":ce(1),"call/2":ce(2),"call/3":ce(3),"call/4":ce(4),"call/5":ce(5),"call/6":ce(6),"call/7":ce(7),"call/8":ce(8),"once/1":function(r,a,t){var s=t.args[0];r.prepend([new h(a.goal.replace(new w(",",[new w("call",[s]),new w("!",[])])),a.substitution,a)])},"forall/2":function(r,a,t){var s=t.args[0],y=t.args[1];r.prepend([new h(a.goal.replace(new w("\\+",[new w(",",[new w("call",[s]),new w("\\+",[new w("call",[y])])])])),a.substitution,a)])},"repeat/0":function(r,a,t){r.prepend([new h(a.goal.replace(null),a.substitution,a),a])},"throw/1":function(r,a,t){var s=t.args[0];if(n.type.is_variable(s))r.throw_error(n.error.instantiation(r.level.indicator));else{for(var y=0;y<r.points.length;y++){var o=r.points[y];if(o.setup_call_cleanup_catch){r.points=[new h(new w(",",[new w("catch",[o.setup_call_cleanup_catch,new f("_"),new w("throw",[s])]),new w("throw",[s])]),a.substitution,a)];return}}r.throw_error(s)}},"catch/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2],_;a.catch?_=a.catch:(_=new E(r.session),_.debugger=r.debugger,_.format_success=function(c){return c.substitution},_.format_error=function(c){return c.goal},_.add_goal(s,!0,a),a.catch=_);var u=function(c){if(n.type.is_error(c)){var p=r.get_flag("occurs_check").indicator==="true/0",v=new h,V=n.unify(c.args[0],y,p);V!==null?(v.substitution=a.substitution.apply(V),v.goal=a.goal.replace(o).apply(V),v.parent=a,r.prepend([v])):r.throw_error(c.args[0])}else if(c!==!1&&c!==null){var v=c===null?[]:new h(a.goal.apply(c).replace(null),a.substitution.apply(c),a);r.prepend([v,a])}else c===null&&(r.prepend([a]),r.has_limit&&(r.current_limit=0));r.again(c!==null)};return _.answer(u),!0},"call_cleanup/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(n.type.is_variable(s)||n.type.is_variable(y))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_callable(s))r.throw_error(n.error.type("callable",s,t.indicator));else if(!n.type.is_callable(y))r.throw_error(n.error.type("callable",y,t.indicator));else{var o,_;if(a.hasOwnProperty("setup_call_cleanup_thread"))o=a.setup_call_cleanup_thread,_=a.setup_call_cleanup_callback;else{var u=new w("call",[s]);o=new E(r.session),o.add_goal(u,!0,a),_=function(c){if(c===null){var p=new h(a.goal,a.substitution,a);p.setup_call_cleanup_thread=o,p.setup_call_cleanup_callback=_,r.prepend([p])}else if(c===!1){var v=new w(",",[new w("call",[y]),new w("fail")]),p=new h(a.goal.replace(v),a.substitution,a);r.prepend([p])}else if(n.type.is_error(c)){var V=new w(",",[new w("call",[y]),c]),p=new h(a.goal.replace(V),a.substitution,a);r.prepend([p])}else if(o.points.length===0){var p=new h(a.goal.replace(new w("call",[y])).apply(c),a.substitution.apply(c),a);r.prepend([p])}else{var R=new h(a.goal.apply(c).replace(null),a.substitution.apply(c),a),O=new h(a.goal,a.substitution,a);O.setup_call_cleanup_thread=o,O.setup_call_cleanup_callback=_,O.setup_call_cleanup_goal=y.apply(c),O.setup_call_cleanup_catch=y,r.prepend([R,O])}r.again()}}return o.answer(_),!0}},"setup_call_cleanup/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];n.type.is_variable(s)||n.type.is_variable(y)||n.type.is_variable(o)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_callable(s)?n.type.is_callable(y)?n.type.is_callable(o)?r.prepend([new h(a.goal.replace(new w(",",[new w("once",[s]),new w("call_cleanup",[y,o])])),a.substitution,a)]):r.throw_error(n.error.type("callable",o,t.indicator)):r.throw_error(n.error.type("callable",y,t.indicator)):r.throw_error(n.error.type("callable",s,t.indicator))},"=/2":function(r,a,t){var s=r.get_flag("occurs_check").indicator==="true/0",y=new h,o=n.unify(t.args[0],t.args[1],s);o!==null&&(y.goal=a.goal.apply(o).replace(null),y.substitution=a.substitution.apply(o),y.parent=a,r.prepend([y]))},"unify_with_occurs_check/2":function(r,a,t){var s=new h,y=n.unify(t.args[0],t.args[1],!0);y!==null&&(s.goal=a.goal.apply(y).replace(null),s.substitution=a.substitution.apply(y),s.parent=a,r.prepend([s]))},"\\=/2":function(r,a,t){var s=r.get_flag("occurs_check").indicator==="true/0",y=n.unify(t.args[0],t.args[1],s);y===null&&r.success(a)},"subsumes_term/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=r.next_free_variable(),_=r.next_free_variable();r.prepend([new h(a.goal.replace(new w("\\+",[new w("\\+",[new w(",",[new w("term_variables",[y,o]),new w(",",[new w("unify_with_occurs_check",[s,y]),new w(",",[new w("term_variables",[o,_]),new w("==",[o,_])])])])])])),a.substitution,a)])},"findall/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2],_=new w("[]",[]);r.prepend([new h(a.goal.replace(new w("findall",[s,y,o,_])),a.substitution,a)])},"findall/4":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2],_=t.args[3],u=y;n.type.is_term(y)&&y.indicator===":/2"&&(u=y.args[1]),n.type.is_variable(u)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_callable(u)?!n.type.is_variable(o)&&!n.type.is_list(o)?r.throw_error(n.error.type("list",o,t.indicator)):!n.type.is_variable(_)&&!n.type.is_list(_)?r.throw_error(n.error.type("list",_,t.indicator)):r.prepend([new h(a.goal.replace(new w("$findall",[s,y,o,_])),a.substitution,a)]):r.throw_error(n.error.type("callable",y,t.indicator))},"bagof/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];n.type.is_variable(y)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_callable(y)?!n.type.is_variable(o)&&!n.type.is_list(o)?r.throw_error(n.error.type("list",o,t.indicator)):r.prepend([new h(a.goal.replace(new w("$bagof",[s,y,o])),a.substitution,a)]):r.throw_error(n.error.type("callable",y,t.indicator))},"setof/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];n.type.is_variable(y)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_callable(y)?!n.type.is_variable(o)&&!n.type.is_list(o)?r.throw_error(n.error.type("list",o,t.indicator)):r.prepend([new h(a.goal.replace(new w("$setof",[s,y,o])),a.substitution,a)]):r.throw_error(n.error.type("callable",y,t.indicator))},"functor/3":function(r,a,t){var s,y=t.args[0],o=t.args[1],_=t.args[2];if(n.type.is_variable(y)&&(n.type.is_variable(o)||n.type.is_variable(_)))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(_)&&!n.type.is_integer(_))r.throw_error(n.error.type("integer",t.args[2],t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_atomic(o))r.throw_error(n.error.type("atomic",t.args[1],t.indicator));else if(n.type.is_variable(y)&&!n.type.is_atom(o)&&n.type.is_integer(_)&&_.value>0)r.throw_error(n.error.type("atom",t.args[1],t.indicator));else if(n.type.is_variable(y)&&n.type.is_integer(_)&&_.value<0)r.throw_error(n.error.domain("not_less_than_zero",t.args[2],t.indicator));else if(n.type.is_variable(y)){if(t.args[2].value>=0){for(var u=[],c=0;c<_.value;c++)u.push(r.next_free_variable());var p=n.type.is_number(o)?o:new w(o.id,u);r.prepend([new h(a.goal.replace(new w("=",[y,p])),a.substitution,a)])}}else{var v=n.type.is_number(y)?y:new w(y.id,[]),V=n.type.is_number(y)?new S(0,!1):new S(y.args.length,!1),R=new w(",",[new w("=",[v,o]),new w("=",[V,_])]);r.prepend([new h(a.goal.replace(R),a.substitution,a)])}},"arg/3":function(r,a,t){if(n.type.is_variable(t.args[0])||n.type.is_variable(t.args[1]))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_integer(t.args[0]))r.throw_error(n.error.type("integer",t.args[0],t.indicator));else if(t.args[0].value<0)r.throw_error(n.error.domain("not_less_than_zero",t.args[0],t.indicator));else if(!n.type.is_compound(t.args[1]))r.throw_error(n.error.type("compound",t.args[1],t.indicator));else{var s=t.args[0].value;if(s>0&&s<=t.args[1].args.length){var y=new w("=",[t.args[1].args[s-1],t.args[2]]);r.prepend([new h(a.goal.replace(y),a.substitution,a)])}}},"=../2":function(r,a,t){var s;if(n.type.is_variable(t.args[0])&&(n.type.is_variable(t.args[1])||n.type.is_non_empty_list(t.args[1])&&n.type.is_variable(t.args[1].args[0])))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_fully_list(t.args[1]))r.throw_error(n.error.type("list",t.args[1],t.indicator));else if(n.type.is_variable(t.args[0])&&n.type.is_empty_list(t.args[1]))r.throw_error(n.error.domain("non_empty_list",t.args[1],t.indicator));else if(n.type.is_variable(t.args[0])){if(!n.type.is_variable(t.args[1])){var o=[];for(s=t.args[1].args[1];s.indicator==="./2";)o.push(s.args[0]),s=s.args[1];n.type.is_variable(t.args[0])&&n.type.is_variable(s)?r.throw_error(n.error.instantiation(t.indicator)):o.length===0&&n.type.is_compound(t.args[1].args[0])?r.throw_error(n.error.type("atomic",t.args[1].args[0],t.indicator)):o.length>0&&(n.type.is_compound(t.args[1].args[0])||n.type.is_number(t.args[1].args[0]))?r.throw_error(n.error.type("atom",t.args[1].args[0],t.indicator)):o.length===0?r.prepend([new h(a.goal.replace(new w("=",[t.args[1].args[0],t.args[0]],a)),a.substitution,a)]):r.prepend([new h(a.goal.replace(new w("=",[new w(t.args[1].args[0].id,o),t.args[0]])),a.substitution,a)])}}else{if(n.type.is_term(t.args[0])&&t.args[0].args.length>0){s=new w("[]");for(var y=t.args[0].args.length-1;y>=0;y--)s=new w(".",[t.args[0].args[y],s]);s=new w(".",[new w(t.args[0].id),s])}else s=new w(".",[t.args[0],new w("[]")]);r.prepend([new h(a.goal.replace(new w("=",[s,t.args[1]])),a.substitution,a)])}},"copy_term/2":function(r,a,t){var s=t.args[0],y=t.args[1];r.session.renamed_variables={};var o=s.rename(r);r.session.renamed_variables={},r.prepend([new h(a.goal.replace(new w("=",[y,o])),a.substitution,a)])},"term_variables/2":[new n.type.Rule(new n.type.Term("term_variables",[new n.type.Var("Term"),new n.type.Var("Vars")]),new n.type.Term("term_variables",[new n.type.Var("Term"),new n.type.Var("Vars"),new n.type.Term("[]",[])]))],"term_variables/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(!n.type.is_fully_list(y))r.throw_error(n.error.type("list",y,t.indicator));else{var _=we(d(Ve(s.variables()),function(u){return new f(u)}),o);r.prepend([new h(a.goal.replace(new w("=",[y,_])),a.substitution,a)])}},"numbervars/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(n.type.is_variable(y))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_integer(y))r.throw_error(n.error.type("integer",y,t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_integer(o))r.throw_error(n.error.type("integer",o,t.indicator));else{for(var _=Ve(s.variables()),u=y.value,c=new w("true"),p=0;p<_.length;p++)c=new w(",",[new w("=",[new f(_[p]),new w("$VAR",[new S(u,!1)])]),c]),u++;var v=new w("=",[o,new S(u,!1)]);(n.type.is_variable(o)||o.value===u)&&r.prepend([new h(a.goal.replace(new w(",",[c,v])),a.substitution,a)])}},"clause/2":function(r,a,t){var s=t.args[0],y=t.args[1],o="user";if(n.type.is_term(s)&&s.indicator===":/2"){if(!n.type.is_atom(s.args[0])){r.throw_error(n.error.type("module",s.args[0],t.indicator));return}o=s.args[0].id,s=s.args[1]}var _=r.session.modules[o];if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_callable(s))r.throw_error(n.error.type("callable",s,t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_callable(y))r.throw_error(n.error.type("callable",y,t.indicator));else if(s.indicator===",/2"||r.session.modules.system.rules.hasOwnProperty(s.indicator))r.throw_error(n.error.permission("access","private_procedure",z(s.indicator),t.indicator));else if(n.type.is_module(_)&&_.rules[s.indicator])if(_.is_public_predicate(s.indicator)){var u=[];if(typeof _.rules[s.indicator]=="function"){r.throw_error(n.error.permission("modify","static_procedure",z(s.indicator),t.indicator));return}for(var c=0;c<_.rules[s.indicator].length;c++){var p=_.rules[s.indicator][c];r.session.renamed_variables={},p=p.rename(r),p.body===null&&(p.body=new w("true"));var v=new w(",",[new w("=",[p.head,s]),new w("=",[p.body,y])]);u.push(new h(a.goal.replace(v),a.substitution,a))}r.prepend(u)}else r.throw_error(n.error.permission("access","private_procedure",z(s.indicator),t.indicator))},"current_predicate/1":function(r,a,t){var s=t.args[0],y;if(n.type.is_term(s)&&s.indicator===":/2"){if(!n.type.is_atom(s.args[0])){r.throw_error(n.error.type("module",s.args[0],t.indicator));return}y=s.args[0].id,s=s.args[1]}else y="user";if(!n.type.is_variable(s)&&(!n.type.is_compound(s)||s.indicator!=="//2"))r.throw_error(n.error.type("predicate_indicator",s,t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_variable(s.args[0])&&!n.type.is_atom(s.args[0]))r.throw_error(n.error.type("atom",s.args[0],t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_variable(s.args[1])&&!n.type.is_integer(s.args[1]))r.throw_error(n.error.type("integer",s.args[1],t.indicator));else if(!n.type.is_variable(s)&&n.type.is_integer(s.args[1])&&s.args[1].value<0)r.throw_error(n.error.domain("not_less_than_zero",s.args[1],t.indicator));else{var o=[],_=r.session.modules[y];if(n.type.is_module(_)){for(var u in _.rules)if(_.rules.hasOwnProperty(u)){var c=z(u),p=new w("=",[c,s]);o.push(new h(a.goal.replace(p),a.substitution,a))}r.prepend(o)}}},"current_module/1":function(r,a,t){var s=t.args[0];if(!n.type.is_variable(s)&&!n.type.is_atom(s))r.throw_error(n.error.type("atom",s,t.indicator));else if(n.type.is_variable(s)){var y=[];for(var o in r.session.modules)r.session.modules.hasOwnProperty(o)&&y.push(new h(a.goal.replace(new w("=",[s,new w(o)])),a.substitution,a));r.prepend(y)}else r.session.modules.hasOwnProperty(s.id)&&r.success(a)},"predicate_property/2":function(r,a,t){var s=t.args[0],y=t.args[1],o;if(n.type.is_term(s)&&s.indicator===":/2"){if(!n.type.is_atom(s.args[0])){r.throw_error(n.error.type("module",s.args[0],t.indicator));return}o=s.args[0].id,s=s.args[1]}if(!n.type.is_variable(s)&&!n.type.is_callable(s))r.throw_error(n.error.type("callable",s,t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_predicate_property(y))r.throw_error(n.error.domain("predicate_property",y,t.indicator));else{var _=o?r.session.modules[o]:r.session.modules.user,u=[];if(n.type.is_variable(s)){if(!o){for(var c in n.builtin.rules)if(n.builtin.rules.hasOwnProperty(c)){for(var p=z(c),v=[],V=0;V<p.args[1].value;V++)v.push(r.next_free_variable());var R=new w(p.args[0].id,v),O=[new w("static"),new w("built_in"),new w("native_code")];n.builtin.meta_predicates.hasOwnProperty(c)&&O.push(new w("meta_predicate",[n.builtin.meta_predicates[c]]));for(var V=0;V<O.length;V++)(n.type.is_variable(y)||O[V].indicator===y.indicator)&&u.push(new h(a.goal.replace(new w(",",[new w("=",[s,R]),new w("=",[y,O[V]])])),a.substitution,a))}}if(n.type.is_module(_)){for(var c in _.rules)if(_.rules.hasOwnProperty(c)){for(var p=z(c),v=[],V=0;V<p.args[1].value;V++)v.push(r.next_free_variable());var R=new w(p.args[0].id,v),O=[];r.is_public_predicate(c,o)?O.push(new w("dynamic")):O.push(new w("static")),_.rules[c]instanceof Function&&O.push(new w("native_code")),r.is_multifile_predicate(c,o)&&O.push(new w("multifile")),_.meta_predicates.hasOwnProperty(c)&&O.push(new w("meta_predicate",[_.meta_predicates[c]]));for(var V=0;V<O.length;V++)(n.type.is_variable(y)||O[V].indicator===y.indicator)&&u.push(new h(a.goal.replace(new w(",",[new w("=",[s,R]),new w("=",[y,O[V]])])),a.substitution,a))}}}else{var A=!o&&n.type.is_builtin(s),C=A?n.builtin.rules[s.indicator]:_.rules[s.indicator];if(_=A?n.builtin:_,C){var O;A?O=[new w("static"),new w("built_in"),new w("native_code")]:(O=[],r.is_public_predicate(s.indicator,o)?O.push(new w("dynamic")):O.push(new w("static")),C instanceof Function&&O.push(new w("native_code")),r.is_multifile_predicate(s.indicator,o)&&O.push(new w("multifile"))),_.meta_predicates.hasOwnProperty(s.indicator)&&O.push(new w("meta_predicate",[_.meta_predicates[s.indicator]]));for(var v=[],V=0;V<s.args.length;V++)v.push(r.next_free_variable());for(var R=new w(s.id,v),V=0;V<O.length;V++)(n.type.is_variable(y)||O[V].indicator===y.indicator)&&u.push(new h(a.goal.replace(new w(",",[new w("=",[s,R]),new w("=",[y,O[V]])])),a.substitution,a))}}r.prepend(u)}},"listing/0":function(r,a,t){var s=t.context_module?t.context_module:"user",y={};n.type.is_module(r.session.modules[s])&&(y=r.session.modules[s].rules);var o="";for(var _ in y)if(y.hasOwnProperty(_)){var u=y[_];if(o+="% "+_+`
-`,u instanceof Array)for(var c=0;c<u.length;c++)o+=u[c].toString({session:r.session})+`
-`;else o+=`/*
-`+u.toString()+`
-*/`;o+=`
-`}r.prepend([new h(a.goal.replace(new w("write",[new w(o,[])])),a.substitution,a)])},"listing/1":function(r,a,t){var s=t.args[0],y="user";if(s.indicator===":/2"&&(y=s.args[0].id,s=s.args[1]),n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_predicate_indicator(s))r.throw_error(n.error.type("predicate_indicator",s,t.indicator));else{var o={};n.type.is_module(r.session.modules[y])&&(o=r.session.modules[y].rules);var _="",u=s.args[0].id+"/"+s.args[1].value;if(o.hasOwnProperty(u)){var c=o[u];if(c instanceof Array)for(var p=0;p<c.length;p++)_+=c[p].toString({session:r.session})+`
-`;else _+=`/*
-`+c.toString()+`
-*/`;_+=`
-`}r.prepend([new h(a.goal.replace(new w("write",[new w(_,[])])),a.substitution,a)])}},"sort/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_fully_list(y))r.throw_error(n.error.type("list",y,t.indicator));else{for(var o=[],_=s;_.indicator==="./2";)o.push(_.args[0]),_=_.args[1];if(n.type.is_variable(_))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_empty_list(_))r.throw_error(n.error.type("list",s,t.indicator));else{for(var u=o.sort(n.compare),c=u.length-1;c>0;c--)u[c].equals(u[c-1])&&u.splice(c,1);for(var p=new w("[]"),c=u.length-1;c>=0;c--)p=new w(".",[u[c],p]);r.prepend([new h(a.goal.replace(new w("=",[p,y])),a.substitution,a)])}}},"keysort/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_fully_list(y))r.throw_error(n.error.type("list",y,t.indicator));else{for(var o=[],_,u=s;u.indicator==="./2";){if(_=u.args[0],n.type.is_variable(_)){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_term(_)||_.indicator!=="-/2"){r.throw_error(n.error.type("pair",_,t.indicator));return}_.args[0].pair=_.args[1],o.push(_.args[0]),u=u.args[1]}if(n.type.is_variable(u))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_empty_list(u))r.throw_error(n.error.type("list",s,t.indicator));else{if(!n.type.is_variable(y)){for(var u=y;n.type.is_term(u)&&u.indicator==="./2";){var c=u.args[0];if(!n.type.is_variable(c)&&(!n.type.is_term(c)||c.indicator!=="-/2")){r.throw_error(n.error.type("pair",c,t.indicator));return}u=u.args[1]}if(!n.type.is_variable(u)&&!n.type.is_empty_list(u)){r.throw_error(n.error.type("list",y,t.indicator));return}}for(var p=o.sort(n.compare),v=new n.type.Term("[]"),V=p.length-1;V>=0;V--)v=new n.type.Term(".",[new n.type.Term("-",[p[V],p[V].pair]),v]),delete p[V].pair;r.prepend([new n.type.State(a.goal.replace(new n.type.Term("=",[v,y])),a.substitution,a)])}}},"keygroup/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_fully_list(y))r.throw_error(n.error.type("list",y,t.indicator));else{for(var o=[],_=[],u=s;n.type.is_term(u)&&u.indicator==="./2";){var c=u.args[0];if(n.type.is_variable(c)){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_term(c)||c.indicator!=="-/2"){r.throw_error(n.error.type("pair",c,t.indicator));return}for(var p=c.args[0],v=c.args[1],V=-1,R=0;R<o.length;R++)if(n.compare(p,o[R])===0){V=R;break}V===-1&&(V=o.length,o.push(p),_.push([])),_[V].push(v),u=u.args[1]}if(n.type.is_variable(u))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_empty_list(u))r.throw_error(n.error.type("list",s,t.indicator));else{if(!n.type.is_variable(y)){for(var u=y;n.type.is_term(u)&&u.indicator==="./2";){var O=u.args[0];if(!n.type.is_variable(O)&&(!n.type.is_term(O)||O.indicator!=="-/2")){r.throw_error(n.error.type("pair",O,t.indicator));return}u=u.args[1]}if(!n.type.is_variable(u)&&!n.type.is_empty_list(u)){r.throw_error(n.error.type("list",y,t.indicator));return}}group=new w("[]",[]);for(var R=o.length-1;R>=0;R--)group=new w(".",[new w("-",[o[R],we(_[R])]),group]);r.prepend([new h(a.goal.replace(new n.type.Term("=",[y,group])),a.substitution,a)])}}},"asserta/1":function(r,a,t){var s=t.args[0],y="user";if(n.type.is_term(s)&&s.indicator===":/2"&&(y=s.args[0].id,s=s.args[1]),n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_callable(s))r.throw_error(n.error.type("callable",s,t.indicator));else{var o,_,u;s.indicator===":-/2"?(o=s.args[0],_=ne(s.args[1])):(o=s,_=null),n.type.is_variable(o)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_callable(o)?_!==null&&!n.type.is_callable(_)?r.throw_error(n.error.type("callable",_,t.indicator)):(!n.type.is_module(r.session.modules[y])||r.is_public_predicate(o.indicator,y))&&o.indicator!==",/2"&&!r.session.modules.system.rules.hasOwnProperty(o.indicator)?(n.type.is_module(r.session.modules[y])?u=r.session.modules[y]:(u=new Q(y,{},"all",{session:r.session}),r.session.modules[y]=u),u.rules[o.indicator]===void 0&&(u.rules[o.indicator]=[]),u.public_predicates[o.indicator]=!0,u.rules[o.indicator]=[new I(o,_,!0)].concat(u.rules[o.indicator]),u.update_indices_predicate(o.indicator),r.success(a)):r.throw_error(n.error.permission("modify","static_procedure",z(o.indicator),t.indicator)):r.throw_error(n.error.type("callable",o,t.indicator))}},"assertz/1":function(r,a,t){var s=t.args[0],y="user";if(n.type.is_term(s)&&s.indicator===":/2"&&(y=s.args[0].id,s=s.args[1]),n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_callable(s))r.throw_error(n.error.type("callable",s,t.indicator));else{var o,_,u;s.indicator===":-/2"?(o=s.args[0],_=ne(s.args[1])):(o=s,_=null),n.type.is_variable(o)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_callable(o)?_!==null&&!n.type.is_callable(_)?r.throw_error(n.error.type("callable",_,t.indicator)):(!n.type.is_module(r.session.modules[y])||r.is_public_predicate(o.indicator,y))&&o.indicator!==",/2"&&!r.session.modules.system.rules.hasOwnProperty(o.indicator)?(n.type.is_module(r.session.modules[y])?u=r.session.modules[y]:(u=new Q(y,{},"all",{session:r.session}),r.session.modules[y]=u),u.rules[o.indicator]===void 0&&(u.rules[o.indicator]=[]),u.public_predicates[o.indicator]=!0,u.rules[o.indicator].push(new I(o,_,!0)),u.update_indices_predicate(o.indicator),r.success(a)):r.throw_error(n.error.permission("modify","static_procedure",z(o.indicator),t.indicator)):r.throw_error(n.error.type("callable",o,t.indicator))}},"retract/1":function(r,a,t){var s=t.args[0];if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_callable(s))r.throw_error(n.error.type("callable",s,t.indicator));else{var y,o,_,u;if(s.indicator===":/2"){if(_=s.args[0],s=s.args[1],!n.type.is_atom(_)){r.throw_error(n.error.type("module",_,t.indicator));return}}else _=new w("user");if(s.indicator===":-/2"?(y=s.args[0],o=s.args[1]):(y=s,o=new w("true")),n.type.is_variable(y)){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_callable(y)){r.throw_error(n.error.type("callable",y,t.indicator));return}u=_.id;var c=r.session.modules[u];if(!n.type.is_module(c))return;if(a.retract)ze(r,a,y.indicator,a.retract,c);else if(r.is_public_predicate(y.indicator,u)&&y.indicator!==",/2"&&!r.session.modules.system.rules.hasOwnProperty(y.indicator)){if(c.rules[y.indicator]!==void 0){var p=[];if(typeof c.rules[y.indicator]=="function"){r.throw_error(n.error.permission("modify","static_procedure",z(y.indicator),t.indicator));return}for(var v=0;v<c.rules[y.indicator].length;v++){r.session.renamed_variables={};var V=c.rules[y.indicator][v],R=V.rename(r);R.body===null&&(R.body=new w("true",[]));var O=r.get_flag("occurs_check").indicator==="true/0",A=n.unify(new w(",",[y,o]),new w(",",[R.head,R.body]),O);if(A!==null){var C=new h(a.goal.replace(new w(",",[new w(":",[_,new w("retract",[new w(":-",[y,o])])]),new w(",",[new w("=",[y,R.head]),new w("=",[o,R.body])])])),a.substitution,a);C.retract=V,p.push(C)}}r.prepend(p)}}else r.throw_error(n.error.permission("modify","static_procedure",z(y.indicator),t.indicator))}},"retractall/1":function(r,a,t){var s=t.args[0],y="user";n.type.is_term(s)&&s.indicator===":/2"&&(y=s.args[0].id,s=s.args[1]),n.type.is_variable(s)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_callable(s)?!r.is_public_predicate(s.indicator,y)||s.indicator===",/2"||r.session.modules.system.rules.hasOwnProperty(s.indicator)?r.throw_error(n.error.permission("modify","static_procedure",z(s.indicator),t.indicator)):r.prepend([new h(a.goal.replace(new w(",",[new w(":",[new w(y),new w("retract",[new n.type.Term(":-",[s,new f("_")])])]),new w("fail",[])])),a.substitution,a),new h(a.goal.replace(null),a.substitution,a)]):r.throw_error(n.error.type("callable",s,t.indicator))},"abolish/1":function(r,a,t){var s=t.args[0],y;if(n.type.is_term(s)&&s.indicator===":/2"){if(!n.type.is_atom(s.args[0])){r.throw_error(n.error.type("module",s.args[0],t.indicator));return}y=s.args[0].id,s=s.args[1]}else y="user";if(n.type.is_variable(s)||n.type.is_term(s)&&s.indicator==="//2"&&(n.type.is_variable(s.args[0])||n.type.is_variable(s.args[1])))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_term(s)||s.indicator!=="//2")r.throw_error(n.error.type("predicate_indicator",s,t.indicator));else if(!n.type.is_atom(s.args[0]))r.throw_error(n.error.type("atom",s.args[0],t.indicator));else if(!n.type.is_integer(s.args[1]))r.throw_error(n.error.type("integer",s.args[1],t.indicator));else if(s.args[1].value<0)r.throw_error(n.error.domain("not_less_than_zero",s.args[1],t.indicator));else if(n.type.is_number(r.get_flag("max_arity"))&&s.args[1].value>r.get_flag("max_arity").value)r.throw_error(n.error.representation("max_arity",t.indicator));else{var o=r.session.modules[y];if(n.type.is_module(o)){var _=s.args[0].id+"/"+s.args[1].value;r.is_public_predicate(_,y)&&_!==",/2"&&!r.session.modules.system.rules.hasOwnProperty(_)?(delete o.rules[_],delete o.indexed_clauses[_],delete o.non_indexable_clauses[_],delete o.public_predicates[_],delete o.multifile_predicates[_],r.success(a)):r.throw_error(n.error.permission("modify","static_procedure",t.args[0],t.indicator))}else r.success(a)}},"atom_length/2":function(r,a,t){if(n.type.is_variable(t.args[0]))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_atom(t.args[0]))r.throw_error(n.error.type("atom",t.args[0],t.indicator));else if(!n.type.is_variable(t.args[1])&&!n.type.is_integer(t.args[1]))r.throw_error(n.error.type("integer",t.args[1],t.indicator));else if(n.type.is_integer(t.args[1])&&t.args[1].value<0)r.throw_error(n.error.domain("not_less_than_zero",t.args[1],t.indicator));else{var s=new S(x(t.args[0].id),!1);r.prepend([new h(a.goal.replace(new w("=",[s,t.args[1]])),a.substitution,a)])}},"atom_concat/3":function(r,a,t){var s,y,o=t.args[0],_=t.args[1],u=t.args[2];if(n.type.is_variable(u)&&(n.type.is_variable(o)||n.type.is_variable(_)))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_atom(o))r.throw_error(n.error.type("atom",o,t.indicator));else if(!n.type.is_variable(_)&&!n.type.is_atom(_))r.throw_error(n.error.type("atom",_,t.indicator));else if(!n.type.is_variable(u)&&!n.type.is_atom(u))r.throw_error(n.error.type("atom",u,t.indicator));else{var c=n.type.is_variable(o),p=n.type.is_variable(_);if(!c&&!p)y=new w("=",[u,new w(o.id+_.id)]),r.prepend([new h(a.goal.replace(y),a.substitution,a)]);else if(c&&!p)s=u.id.substr(0,u.id.length-_.id.length),s+_.id===u.id&&(y=new w("=",[o,new w(s)]),r.prepend([new h(a.goal.replace(y),a.substitution,a)]));else if(p&&!c)s=u.id.substr(o.id.length),o.id+s===u.id&&(y=new w("=",[_,new w(s)]),r.prepend([new h(a.goal.replace(y),a.substitution,a)]));else{for(var v=[],V=0;V<=u.id.length;V++){var R=new w(u.id.substr(0,V)),O=new w(u.id.substr(V));y=new w(",",[new w("=",[R,o]),new w("=",[O,_])]),v.push(new h(a.goal.replace(y),a.substitution,a))}r.prepend(v)}}},"sub_atom/5":function(r,a,t){var s,y=t.args[0],o=t.args[1],_=t.args[2],u=t.args[3],c=t.args[4];if(n.type.is_variable(y))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_atom(y))r.throw_error(n.error.type("atom",y,t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_integer(o))r.throw_error(n.error.type("integer",o,t.indicator));else if(!n.type.is_variable(_)&&!n.type.is_integer(_))r.throw_error(n.error.type("integer",_,t.indicator));else if(!n.type.is_variable(u)&&!n.type.is_integer(u))r.throw_error(n.error.type("integer",u,t.indicator));else if(n.type.is_integer(o)&&o.value<0)r.throw_error(n.error.domain("not_less_than_zero",o,t.indicator));else if(n.type.is_integer(_)&&_.value<0)r.throw_error(n.error.domain("not_less_than_zero",_,t.indicator));else if(n.type.is_integer(u)&&u.value<0)r.throw_error(n.error.domain("not_less_than_zero",u,t.indicator));else if(!n.type.is_variable(c)&&!n.type.is_atom(c))r.throw_error(n.error.type("atom",c,t.indicator));else{var p=[],v=[],V=[];if(n.type.is_variable(o))for(s=0;s<=y.id.length;s++)p.push(s);else p.push(o.value);if(n.type.is_variable(_))for(s=0;s<=y.id.length;s++)v.push(s);else v.push(_.value);if(n.type.is_variable(u))for(s=0;s<=y.id.length;s++)V.push(s);else V.push(u.value);var R=[];for(var O in p)if(p.hasOwnProperty(O)){s=p[O];for(var A in v)if(v.hasOwnProperty(A)){var C=v[A],$=y.id.length-s-C;if(P(V,$)!==-1&&s+C+$===y.id.length){var F=y.id.substr(s,C);if(y.id===y.id.substr(0,s)+F+y.id.substr(s+C,$)){var ee=new w("=",[new w(F),c]),j=new w("=",[o,new S(s)]),Z=new w("=",[_,new S(C)]),K=new w("=",[u,new S($)]),re=new w(",",[new w(",",[new w(",",[j,Z]),K]),ee]);R.push(new h(a.goal.replace(re),a.substitution,a))}}}}r.prepend(R)}},"atom_chars/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(n.type.is_variable(s)&&n.type.is_variable(y))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_atom(s))r.throw_error(n.error.type("atom",s,t.indicator));else if(n.type.is_variable(s)){for(var o=y,p=n.type.is_variable(s),v="";o.indicator==="./2";){if(n.type.is_character(o.args[0]))v+=o.args[0].id;else if(n.type.is_variable(o.args[0])&&p){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_variable(o.args[0])){r.throw_error(n.error.type("character",o.args[0],t.indicator));return}o=o.args[1]}n.type.is_variable(o)&&p?r.throw_error(n.error.instantiation(t.indicator)):!n.type.is_empty_list(o)&&!n.type.is_variable(o)?r.throw_error(n.error.type("list",y,t.indicator)):r.prepend([new h(a.goal.replace(new w("=",[new w(v),s])),a.substitution,a)])}else{if(!n.type.is_variable(y))for(var o=y;n.type.is_term(o)&&o.indicator==="./2";){if(!n.type.is_character(o.args[0])&&!n.type.is_variable(o.args[0])){r.throw_error(n.error.type("character",o.args[0],t.indicator));return}o=o.args[1]}for(var _=new w("[]"),u=x(s.id),c=u-1;c>=0;c--)_=new w(".",[new w(s.id.charAt(c)),_]);r.prepend([new h(a.goal.replace(new w("=",[y,_])),a.substitution,a)])}},"atom_codes/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(n.type.is_variable(s)&&n.type.is_variable(y))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_atom(s))r.throw_error(n.error.type("atom",s,t.indicator));else if(n.type.is_variable(s)){for(var o=y,p=n.type.is_variable(s),v="";o.indicator==="./2";){if(n.type.is_character_code(o.args[0]))v+=l(o.args[0].value);else if(n.type.is_variable(o.args[0])&&p){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_variable(o.args[0])){r.throw_error(n.error.representation("character_code",t.indicator));return}o=o.args[1]}n.type.is_variable(o)&&p?r.throw_error(n.error.instantiation(t.indicator)):!n.type.is_empty_list(o)&&!n.type.is_variable(o)?r.throw_error(n.error.type("list",y,t.indicator)):r.prepend([new h(a.goal.replace(new w("=",[new w(v),s])),a.substitution,a)])}else{if(!n.type.is_variable(y))for(var o=y;n.type.is_term(o)&&o.indicator==="./2";){if(!n.type.is_character_code(o.args[0])&&!n.type.is_variable(o.args[0])){r.throw_error(n.error.type("integer",o.args[0],t.indicator));return}o=o.args[1]}for(var _=new w("[]"),u=x(s.id),c=u-1;c>=0;c--)_=new w(".",[new S(T(s.id,c),!1),_]);r.prepend([new h(a.goal.replace(new w("=",[y,_])),a.substitution,a)])}},"char_code/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(n.type.is_variable(s)&&n.type.is_variable(y))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_character(s))r.throw_error(n.error.type("character",s,t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_integer(y))r.throw_error(n.error.type("integer",y,t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_character_code(y))r.throw_error(n.error.representation("character_code",t.indicator));else if(n.type.is_variable(y)){var o=new S(T(s.id,0),!1);r.prepend([new h(a.goal.replace(new w("=",[o,y])),a.substitution,a)])}else{var _=new w(l(y.value));r.prepend([new h(a.goal.replace(new w("=",[_,s])),a.substitution,a)])}},"number_chars/2":function(r,a,t){var s,y=t.args[0],o=t.args[1];if(n.type.is_variable(y)&&n.type.is_variable(o))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_number(y))r.throw_error(n.error.type("number",y,t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_list(o))r.throw_error(n.error.type("list",o,t.indicator));else{var _=n.type.is_variable(y);if(!n.type.is_variable(o)){var u=o,c=!0;for(s="";u.indicator==="./2";){if(n.type.is_character(u.args[0]))s+=u.args[0].id;else if(n.type.is_variable(u.args[0]))c=!1;else if(!n.type.is_variable(u.args[0])){r.throw_error(n.error.type("character",u.args[0],t.indicator));return}u=u.args[1]}if(c=c&&n.type.is_empty_list(u),!n.type.is_empty_list(u)&&!n.type.is_variable(u)){r.throw_error(n.error.type("list",o,t.indicator));return}if(!c&&_){r.throw_error(n.error.instantiation(t.indicator));return}else if(c)if(n.type.is_variable(u)&&_){r.throw_error(n.error.instantiation(t.indicator));return}else{var p=r.parse(s),v=p.value;!n.type.is_number(v)||p.tokens[p.tokens.length-1].space?r.throw_error(n.error.syntax_by_predicate("parseable_number",t.indicator)):r.prepend([new h(a.goal.replace(new w("=",[y,v])),a.substitution,a)]);return}}if(!_){s=y.toString();for(var V=new w("[]"),R=s.length-1;R>=0;R--)V=new w(".",[new w(s.charAt(R)),V]);r.prepend([new h(a.goal.replace(new w("=",[o,V])),a.substitution,a)])}}},"number_codes/2":function(r,a,t){var s,y=t.args[0],o=t.args[1];if(n.type.is_variable(y)&&n.type.is_variable(o))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_number(y))r.throw_error(n.error.type("number",y,t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_list(o))r.throw_error(n.error.type("list",o,t.indicator));else{var _=n.type.is_variable(y);if(!n.type.is_variable(o)){var u=o,c=!0;for(s="";u.indicator==="./2";){if(n.type.is_character_code(u.args[0]))s+=l(u.args[0].value);else if(n.type.is_variable(u.args[0]))c=!1;else if(!n.type.is_variable(u.args[0])){r.throw_error(n.error.representation("character_code",t.indicator));return}u=u.args[1]}if(c=c&&n.type.is_empty_list(u),!n.type.is_empty_list(u)&&!n.type.is_variable(u)){r.throw_error(n.error.type("list",o,t.indicator));return}if(!c&&_){r.throw_error(n.error.instantiation(t.indicator));return}else if(c)if(n.type.is_variable(u)&&_){r.throw_error(n.error.instantiation(t.indicator));return}else{var p=r.parse(s),v=p.value;!n.type.is_number(v)||p.tokens[p.tokens.length-1].space?r.throw_error(n.error.syntax_by_predicate("parseable_number",t.indicator)):r.prepend([new h(a.goal.replace(new w("=",[y,v])),a.substitution,a)]);return}}if(!_){s=y.toString();for(var V=new w("[]"),R=s.length-1;R>=0;R--)V=new w(".",[new S(T(s,R),!1),V]);r.prepend([new h(a.goal.replace(new w("=",[o,V])),a.substitution,a)])}}},"upcase_atom/2":function(r,a,t){var s=t.args[0],y=t.args[1];n.type.is_variable(s)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_atom(s)?!n.type.is_variable(y)&&!n.type.is_atom(y)?r.throw_error(n.error.type("atom",y,t.indicator)):r.prepend([new h(a.goal.replace(new w("=",[y,new w(s.id.toUpperCase(),[])])),a.substitution,a)]):r.throw_error(n.error.type("atom",s,t.indicator))},"downcase_atom/2":function(r,a,t){var s=t.args[0],y=t.args[1];n.type.is_variable(s)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_atom(s)?!n.type.is_variable(y)&&!n.type.is_atom(y)?r.throw_error(n.error.type("atom",y,t.indicator)):r.prepend([new h(a.goal.replace(new w("=",[y,new w(s.id.toLowerCase(),[])])),a.substitution,a)]):r.throw_error(n.error.type("atom",s,t.indicator))},"atomic_concat/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(n.type.is_variable(s)||n.type.is_variable(y))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_atomic(s))r.throw_error(n.error.type("atomic",s,t.indicator));else if(!n.type.is_atomic(y))r.throw_error(n.error.type("atomic",y,t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_atom(o))r.throw_error(n.error.type("atom",o,t.indicator));else{var _="";n.type.is_atom(s)?_+=s.id:_+=""+s.value,n.type.is_atom(y)?_+=y.id:_+=""+y.value;var t=new w(_,[]);r.prepend([new h(a.goal.replace(new w("=",[t,o])),a.substitution,a)])}},"atomic_list_concat/2":function(r,a,t){var s=t.args[0],y=t.args[1];r.prepend([new h(a.goal.replace(new w("atomic_list_concat",[s,new w("",[]),y])),a.substitution,a)])},"atomic_list_concat/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(n.type.is_variable(y)||n.type.is_variable(s)&&n.type.is_variable(o))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_list(s))r.throw_error(n.error.type("list",s,t.indicator));else if(!n.type.is_atom(y)&&!n.type.is_number(y))r.throw_error(n.error.type("atomic",y,t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_atom(o))r.throw_error(n.error.type("atom",o,t.indicator));else{for(var _="",u=s;n.type.is_term(u)&&u.indicator==="./2";){if(n.type.is_variable(u.args[0])){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_atom(u.args[0])&&!n.type.is_number(u.args[0])){r.throw_error(n.error.type("atomic",u.args[0],t.indicator));return}_!==""&&(_+=y.id),n.type.is_atom(u.args[0])?_+=u.args[0].id:_+=""+u.args[0].value,u=u.args[1]}_=new w(_,[]),n.type.is_variable(u)?r.throw_error(n.error.instantiation(t.indicator)):!n.type.is_term(u)||u.indicator!=="[]/0"?r.throw_error(n.error.type("list",s,t.indicator)):r.prepend([new h(a.goal.replace(new w("=",[_,o])),a.substitution,a)])}},"@=</2":function(r,a,t){n.compare(t.args[0],t.args[1])<=0&&r.success(a)},"==/2":function(r,a,t){n.compare(t.args[0],t.args[1])===0&&r.success(a)},"\\==/2":function(r,a,t){n.compare(t.args[0],t.args[1])!==0&&r.success(a)},"@</2":function(r,a,t){n.compare(t.args[0],t.args[1])<0&&r.success(a)},"@>/2":function(r,a,t){n.compare(t.args[0],t.args[1])>0&&r.success(a)},"@>=/2":function(r,a,t){n.compare(t.args[0],t.args[1])>=0&&r.success(a)},"compare/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(!n.type.is_variable(s)&&!n.type.is_atom(s))r.throw_error(n.error.type("atom",s,t.indicator));else if(n.type.is_atom(s)&&["<",">","="].indexOf(s.id)===-1)r.throw_error(n.error.domain("order",s,t.indicator));else{var _=n.compare(y,o);_=_===0?"=":_===-1?"<":">",r.prepend([new h(a.goal.replace(new w("=",[s,new w(_,[])])),a.substitution,a)])}},"is/2":function(r,a,t){var s=t.args[1].interpret(r);n.type.is_number(s)?r.prepend([new h(a.goal.replace(new w("=",[t.args[0],s],t.indicator)),a.substitution,a)]):r.throw_error(s)},"between/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(n.type.is_variable(s)||n.type.is_variable(y))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_integer(s))r.throw_error(n.error.type("integer",s,t.indicator));else if(!n.type.is_integer(y))r.throw_error(n.error.type("integer",y,t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_integer(o))r.throw_error(n.error.type("integer",o,t.indicator));else if(n.type.is_variable(o)){if(s.value<=y.value){var _=[new h(a.goal.replace(new w("=",[o,s])),a.substitution,a)];_.push(new h(a.goal.replace(new w("between",[new S(s.value+1,!1),y,o])),a.substitution,a)),r.prepend(_)}}else s.value<=o.value&&y.value>=o.value&&r.success(a)},"succ/2":function(r,a,t){var s=t.args[0],y=t.args[1];n.type.is_variable(s)&&n.type.is_variable(y)?r.throw_error(n.error.instantiation(t.indicator)):!n.type.is_variable(s)&&!n.type.is_integer(s)?r.throw_error(n.error.type("integer",s,t.indicator)):!n.type.is_variable(y)&&!n.type.is_integer(y)?r.throw_error(n.error.type("integer",y,t.indicator)):!n.type.is_variable(s)&&s.value<0?r.throw_error(n.error.domain("not_less_than_zero",s,t.indicator)):!n.type.is_variable(y)&&y.value<0?r.throw_error(n.error.domain("not_less_than_zero",y,t.indicator)):(n.type.is_variable(y)||y.value>0)&&(n.type.is_variable(s)?r.prepend([new h(a.goal.replace(new w("=",[s,new S(y.value-1,!1)])),a.substitution,a)]):r.prepend([new h(a.goal.replace(new w("=",[y,new S(s.value+1,!1)])),a.substitution,a)]))},"=:=/2":function(r,a,t){var s=n.arithmetic_compare(r,t.args[0],t.args[1]);n.type.is_term(s)?r.throw_error(s):s===0&&r.success(a)},"=\\=/2":function(r,a,t){var s=n.arithmetic_compare(r,t.args[0],t.args[1]);n.type.is_term(s)?r.throw_error(s):s!==0&&r.success(a)},"</2":function(r,a,t){var s=n.arithmetic_compare(r,t.args[0],t.args[1]);n.type.is_term(s)?r.throw_error(s):s<0&&r.success(a)},"=</2":function(r,a,t){var s=n.arithmetic_compare(r,t.args[0],t.args[1]);n.type.is_term(s)?r.throw_error(s):s<=0&&r.success(a)},">/2":function(r,a,t){var s=n.arithmetic_compare(r,t.args[0],t.args[1]);n.type.is_term(s)?r.throw_error(s):s>0&&r.success(a)},">=/2":function(r,a,t){var s=n.arithmetic_compare(r,t.args[0],t.args[1]);n.type.is_term(s)?r.throw_error(s):s>=0&&r.success(a)},"var/1":function(r,a,t){n.type.is_variable(t.args[0])&&r.success(a)},"atom/1":function(r,a,t){n.type.is_atom(t.args[0])&&r.success(a)},"atomic/1":function(r,a,t){n.type.is_atomic(t.args[0])&&r.success(a)},"compound/1":function(r,a,t){n.type.is_compound(t.args[0])&&r.success(a)},"integer/1":function(r,a,t){n.type.is_integer(t.args[0])&&r.success(a)},"float/1":function(r,a,t){n.type.is_float(t.args[0])&&r.success(a)},"number/1":function(r,a,t){n.type.is_number(t.args[0])&&r.success(a)},"nonvar/1":function(r,a,t){n.type.is_variable(t.args[0])||r.success(a)},"ground/1":function(r,a,t){t.variables().length===0&&r.success(a)},"acyclic_term/1":function(r,a,t){for(var s=a.substitution.apply(a.substitution),y=t.args[0].variables(),o=0;o<y.length;o++)if(a.substitution.links[y[o]]!==void 0&&!a.substitution.links[y[o]].equals(s.links[y[o]]))return;r.success(a)},"callable/1":function(r,a,t){var s=t.args[0];n.type.is_term(s)&&r.success(a)},"is_list/1":function(r,a,t){for(var s=t.args[0];n.type.is_term(s)&&s.indicator==="./2";)s=s.args[1];n.type.is_term(s)&&s.indicator==="[]/0"&&r.success(a)},"current_input/1":function(r,a,t){var s=t.args[0];!n.type.is_variable(s)&&(!n.type.is_stream(s)||!r.get_stream_by_alias(s.alias)&&!r.get_stream_by_alias(s.id))&&(!n.type.is_atom(s)||!r.get_stream_by_alias(s.id))?r.throw_error(n.error.domain("stream",s,t.indicator)):(n.type.is_atom(s)&&(s=r.get_stream_by_alias(s.id)),r.prepend([new h(a.goal.replace(new w("=",[s,r.get_current_input()])),a.substitution,a)]))},"current_output/1":function(r,a,t){var s=t.args[0];!n.type.is_variable(s)&&(!n.type.is_stream(s)||!r.get_stream_by_alias(s.alias)&&!r.get_stream_by_alias(s.id))&&(!n.type.is_atom(s)||!r.get_stream_by_alias(s.id))?r.throw_error(n.error.domain("stream",s,t.indicator)):(n.type.is_atom(s)&&(s=r.get_stream_by_alias(s.id)),r.prepend([new h(a.goal.replace(new w("=",[s,r.get_current_output()])),a.substitution,a)]))},"set_input/1":function(r,a,t){var s=t.args[0],y=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);n.type.is_variable(s)?r.throw_error(n.error.instantiation(t.indicator)):!n.type.is_stream(s)&&!n.type.is_atom(s)?r.throw_error(n.error.domain("stream_or_alias",s,t.indicator)):!n.type.is_stream(y)||!r.get_stream_by_alias(s.alias)&&!r.get_stream_by_alias(s.id)?r.throw_error(n.error.existence("stream",s,t.indicator)):y.output===!0?r.throw_error(n.error.permission("input","stream",s,t.indicator)):(r.set_current_input(y),r.success(a))},"set_output/1":function(r,a,t){var s=t.args[0],y=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);n.type.is_variable(s)?r.throw_error(n.error.instantiation(t.indicator)):!n.type.is_stream(s)&&!n.type.is_atom(s)?r.throw_error(n.error.domain("stream_or_alias",s,t.indicator)):!n.type.is_stream(y)||!r.get_stream_by_alias(s.alias)&&!r.get_stream_by_alias(s.id)?r.throw_error(n.error.existence("stream",s,t.indicator)):y.input===!0?r.throw_error(n.error.permission("output","stream",s,t.indicator)):(r.set_current_output(y),r.success(a))},"open/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];r.prepend([new h(a.goal.replace(new w("open",[s,y,o,new w("[]",[])])),a.substitution,a)])},"open/4":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2],_=t.args[3];if(n.type.is_variable(s)||n.type.is_variable(y)||n.type.is_variable(_))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_atom(y))r.throw_error(n.error.type("atom",y,t.indicator));else if(!n.type.is_list(_))r.throw_error(n.error.type("list",_,t.indicator));else if(!n.type.is_variable(o))r.throw_error(n.error.uninstantiation(o,t.indicator));else if(!n.type.is_atom(s)&&!n.type.is_streamable(s))r.throw_error(n.error.domain("source_sink",s,t.indicator));else if(!n.type.is_io_mode(y))r.throw_error(n.error.domain("io_mode",y,t.indicator));else{for(var u={},c=_,p;n.type.is_term(c)&&c.indicator==="./2";){if(p=c.args[0],n.type.is_variable(p)){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_stream_option(p)){r.throw_error(n.error.domain("stream_option",p,t.indicator));return}u[p.id]=p.args[0].id,c=c.args[1]}if(c.indicator!=="[]/0"){n.type.is_variable(c)?r.throw_error(n.error.instantiation(t.indicator)):r.throw_error(n.error.type("list",_,t.indicator));return}else{var v=u.alias;if(v&&r.get_stream_by_alias(v)){r.throw_error(n.error.permission("open","source_sink",new w("alias",[new w(v,[])]),t.indicator));return}u.type||(u.type="text");var V;if(n.type.is_atom(s)?V=r.file_system_open(s.id,u.type,y.id):V=s.stream(u.type,y.id),V===!1){r.throw_error(n.error.permission("open","source_sink",s,t.indicator));return}else if(V===null){r.throw_error(n.error.existence("source_sink",s,t.indicator));return}var R=new W(V,y.id,u.alias,u.type,u.reposition==="true",u.eof_action);v?r.session.streams[v]=R:r.session.streams[R.id]=R,r.prepend([new h(a.goal.replace(new w("=",[o,R])),a.substitution,a)])}}},"close/1":function(r,a,t){var s=t.args[0];r.prepend([new h(a.goal.replace(new w("close",[s,new w("[]",[])])),a.substitution,a)])},"close/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(n.type.is_variable(s)||n.type.is_variable(y))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_list(y))r.throw_error(n.error.type("list",y,t.indicator));else if(!n.type.is_stream(s)&&!n.type.is_atom(s))r.throw_error(n.error.domain("stream_or_alias",s,t.indicator));else if(!n.type.is_stream(o)||o.stream===null)r.throw_error(n.error.existence("stream",s,t.indicator));else{for(var _={},u=y,c;n.type.is_term(u)&&u.indicator==="./2";){if(c=u.args[0],n.type.is_variable(c)){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_close_option(c)){r.throw_error(n.error.domain("close_option",c,t.indicator));return}_[c.id]=c.args[0].id==="true",u=u.args[1]}if(u.indicator!=="[]/0"){n.type.is_variable(u)?r.throw_error(n.error.instantiation(t.indicator)):r.throw_error(n.error.type("list",y,t.indicator));return}else{if(o===r.session.standard_input||o===r.session.standard_output||o===r.session.standard_error){r.success(a);return}else o===r.session.current_input?r.session.current_input=r.session.standard_input:o===r.session.current_output&&(r.session.current_output=r.session.standard_output);o.alias!==null&&o.alias!==void 0?delete r.session.streams[o.alias]:delete r.session.streams[o.id],o.output&&o.stream.flush();var p=o.stream.close();o.stream=null,(_.force===!0||p===!0)&&r.success(a)}}},"flush_output/0":[new I(new w("flush_output",[]),new w(",",[new w("current_output",[new f("S")]),new w("flush_output",[new f("S")])]))],"flush_output/1":function(r,a,t){var s=t.args[0],y=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);n.type.is_variable(s)?r.throw_error(n.error.instantiation(t.indicator)):!n.type.is_stream(s)&&!n.type.is_atom(s)?r.throw_error(n.error.domain("stream_or_alias",s,t.indicator)):!n.type.is_stream(y)||y.stream===null?r.throw_error(n.error.existence("stream",s,t.indicator)):y.input===!0?r.throw_error(n.error.permission("output","stream",s,t.indicator)):(y.stream.flush(),r.success(a))},"stream_property/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(!n.type.is_variable(s)&&!n.type.is_stream(s))r.throw_error(n.error.domain("stream",s,t.indicator));else if(!n.type.is_variable(s)&&(!n.type.is_stream(o)||o.stream===null))r.throw_error(n.error.existence("stream",s,t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_stream_property(y))r.throw_error(n.error.domain("stream_property",y,t.indicator));else{var _=[],u=[],c=n.type.is_variable(y);if(!n.type.is_variable(s))_.push(o);else for(var p in r.session.streams)_.push(r.session.streams[p]);for(var v=0;v<_.length;v++){var V=[];(c||y.indicator==="file_name/1")&&_[v].filename&&V.push(new w("file_name",[new w(_[v].file_name,[])])),(c||y.indicator==="mode/1")&&V.push(new w("mode",[new w(_[v].mode,[])])),(c||y.indicator==="input/0"||y.indicator==="output/0")&&V.push(new w(_[v].input?"input":"output",[])),(c||y.indicator==="alias/1")&&_[v].alias&&V.push(new w("alias",[new w(_[v].alias,[])])),(c||y.indicator==="position/1")&&V.push(new w("position",[new w("position",[new S(_[v].char_count,!1),new S(_[v].line_count,!1),new S(_[v].line_position,!1)])])),(c||y.indicator==="end_of_stream/1")&&V.push(new w("end_of_stream",[new w(_[v].position==="end_of_stream"||_[v].stream.eof&&_[v].stream.eof(_[v].position)?"at":_[v].position==="past_end_of_stream"?"past":"not",[])])),(c||y.indicator==="eof_action/1")&&V.push(new w("eof_action",[new w(_[v].eof_action,[])])),(c||y.indicator==="reposition/1")&&V.push(new w("reposition",[new w(_[v].reposition?"true":"false",[])])),(c||y.indicator==="type/1")&&V.push(new w("type",[new w(_[v].type,[])]));for(var R=0;R<V.length;R++)u.push(new h(a.goal.replace(new w(",",[new w("=",[n.type.is_variable(s)?s:o,_[v]]),new w("=",[y,V[R]])])),a.substitution,a))}r.prepend(u)}},"stream_position_data/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2];if(n.type.is_variable(y))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_term(y)||y.indicator!=="position/3")r.throw_error(n.error.domain("stream_position",y,t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_atom(s))r.throw_error(n.error.type("atom",s,t.indicator));else if(!n.type.is_variable(o)&&!n.type.is_integer(o))r.throw_error(n.error.type("integer",o,t.indicator));else{var _=["char_count","line_count","line_position"],u=[],c={char_count:0,line_count:1,line_position:2};if(n.type.is_variable(s))for(var p=0;p<_.length;p++)u.push(new h(a.goal.replace(new w(",",[new w("=",[new w(_[p]),s]),new w("=",[o,y.args[c[_[p]]]])])),a.substitution,a));else c.hasOwnProperty(s.id)&&u.push(new h(a.goal.replace(new w("=",[o,y.args[c[s.id]]])),a.substitution,a));r.prepend(u)}},"at_end_of_stream/0":[new I(new w("at_end_of_stream",[]),new n.type.Term(",",[new w("current_input",[new f("S")]),new w(",",[new w("stream_property",[new f("S"),new w("end_of_stream",[new f("E")])]),new w(",",[new w("!",[]),new w(";",[new w("=",[new f("E"),new w("at",[])]),new w("=",[new f("E"),new w("past",[])])])])])]))],"at_end_of_stream/1":function(r,a,t){var s=t.args[0],y=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_stream(y)||y.stream===null)r.throw_error(n.error.existence("stream",s,t.indicator));else{var o=r.next_free_variable();r.prepend([new h(a.goal.replace(new w(",",[new w("stream_property",[y,new w("end_of_stream",[o])]),new w(",",[new w("!",[]),new w(";",[new w("=",[o,new w("at",[])]),new w("=",[o,new w("past",[])])])])])),a.substitution,a)])}},"set_stream_position/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);n.type.is_variable(s)||n.type.is_variable(y)?r.throw_error(n.error.instantiation(t.indicator)):!n.type.is_stream(s)&&!n.type.is_atom(s)?r.throw_error(n.error.domain("stream_or_alias",s,t.indicator)):!n.type.is_stream(o)||o.stream===null?r.throw_error(n.error.existence("stream",s,t.indicator)):n.type.is_stream_position(y)?o.reposition===!1?r.throw_error(n.error.permission("reposition","stream",s,t.indicator)):(y.indicator==="position/3"?(o.position=y.args[0].value,o.char_count=y.args[0].value,o.line_count=y.args[1].value,o.line_position=y.args[2].value):o.position=y.id,r.success(a)):r.throw_error(n.error.domain("stream_position",y,t.indicator))},"get_char/1":[new I(new w("get_char",[new f("C")]),new w(",",[new w("current_input",[new f("S")]),new w("get_char",[new f("S"),new f("C")])]))],"get_char/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_in_character(y))r.throw_error(n.error.type("in_character",y,t.indicator));else if(!n.type.is_stream(s)&&!n.type.is_atom(s))r.throw_error(n.error.domain("stream_or_alias",s,t.indicator));else if(!n.type.is_stream(o)||o.stream===null)r.throw_error(n.error.existence("stream",s,t.indicator));else if(o.output)r.throw_error(n.error.permission("input","stream",s,t.indicator));else if(o.type==="binary")r.throw_error(n.error.permission("input","binary_stream",s,t.indicator));else if(o.position==="past_end_of_stream"&&o.eof_action==="error")r.throw_error(n.error.permission("input","past_end_of_stream",s,t.indicator));else{var _;if(o.position==="end_of_stream")_="end_of_file",o.position="past_end_of_stream";else if(o.position==="past_end_of_stream")_="end_of_file",o.position="past_end_of_stream";else if(_=o.stream.get(1,o.position),_===null){r.throw_error(n.error.representation("character",t.indicator));return}else _==="end_of_stream"?(_="end_of_file",o.position="past_end_of_stream"):(o.position++,o.char_count++,o.line_position++,_===`
-`&&(o.line_count++,o.line_position=0));r.prepend([new h(a.goal.replace(new w("=",[new w(_,[]),y])),a.substitution,a)])}},"get_code/1":[new I(new w("get_code",[new f("C")]),new w(",",[new w("current_input",[new f("S")]),new w("get_code",[new f("S"),new f("C")])]))],"get_code/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_integer(y))r.throw_error(n.error.type("integer",y,t.indicator));else if(n.type.is_integer(y)&&!n.type.is_in_character_code(y))r.throw_error(n.error.representation("in_character_code",t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_stream(s)&&!n.type.is_atom(s))r.throw_error(n.error.domain("stream_or_alias",s,t.indicator));else if(!n.type.is_stream(o)||o.stream===null)r.throw_error(n.error.existence("stream",s,t.indicator));else if(o.output)r.throw_error(n.error.permission("input","stream",s,t.indicator));else if(o.type==="binary")r.throw_error(n.error.permission("input","binary_stream",s,t.indicator));else if(o.position==="past_end_of_stream"&&o.eof_action==="error")r.throw_error(n.error.permission("input","past_end_of_stream",s,t.indicator));else{var _;if(o.position==="end_of_stream")_=-1,o.position="past_end_of_stream";else if(o.position==="past_end_of_stream")_=-1,o.position="past_end_of_stream";else if(_=o.stream.get(1,o.position),_===null){r.throw_error(n.error.representation("character",t.indicator));return}else _==="end_of_stream"?(_=-1,o.position="past_end_of_stream"):(_=T(_,0),o.position++,o.char_count++,o.line_position++,_===10&&(o.line_count++,o.line_position=0));r.prepend([new h(a.goal.replace(new w("=",[new S(_,!1),y])),a.substitution,a)])}},"peek_char/1":[new I(new w("peek_char",[new f("C")]),new w(",",[new w("current_input",[new f("S")]),new w("peek_char",[new f("S"),new f("C")])]))],"peek_char/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_in_character(y))r.throw_error(n.error.type("in_character",y,t.indicator));else if(!n.type.is_stream(s)&&!n.type.is_atom(s))r.throw_error(n.error.domain("stream_or_alias",s,t.indicator));else if(!n.type.is_stream(o)||o.stream===null)r.throw_error(n.error.existence("stream",s,t.indicator));else if(o.output)r.throw_error(n.error.permission("input","stream",s,t.indicator));else if(o.type==="binary")r.throw_error(n.error.permission("input","binary_stream",s,t.indicator));else if(o.position==="past_end_of_stream"&&o.eof_action==="error")r.throw_error(n.error.permission("input","past_end_of_stream",s,t.indicator));else{var _;if(o.position==="end_of_stream")_="end_of_file",o.position="past_end_of_stream";else if(o.position==="past_end_of_stream")_="end_of_file",o.position="past_end_of_stream";else if(_=o.stream.get(1,o.position),_===null){r.throw_error(n.error.representation("character",t.indicator));return}else _==="end_of_stream"&&(_="end_of_file");r.prepend([new h(a.goal.replace(new w("=",[new w(_,[]),y])),a.substitution,a)])}},"peek_code/1":[new I(new w("peek_code",[new f("C")]),new w(",",[new w("current_input",[new f("S")]),new w("peek_code",[new f("S"),new f("C")])]))],"peek_code/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_integer(y))r.throw_error(n.error.type("integer",y,t.indicator));else if(n.type.is_integer(y)&&!n.type.is_in_character_code(y))r.throw_error(n.error.representation("in_character_code",t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_stream(s)&&!n.type.is_atom(s))r.throw_error(n.error.domain("stream_or_alias",s,t.indicator));else if(!n.type.is_stream(o)||o.stream===null)r.throw_error(n.error.existence("stream",s,t.indicator));else if(o.output)r.throw_error(n.error.permission("input","stream",s,t.indicator));else if(o.type==="binary")r.throw_error(n.error.permission("input","binary_stream",s,t.indicator));else if(o.position==="past_end_of_stream"&&o.eof_action==="error")r.throw_error(n.error.permission("input","past_end_of_stream",s,t.indicator));else{var _;if(o.position==="end_of_stream")_=-1,o.position="past_end_of_stream";else if(_=o.stream.get(1,o.position),_===null){r.throw_error(n.error.representation("character",t.indicator));return}else _==="end_of_stream"?_=-1:_=T(_,0);r.prepend([new h(a.goal.replace(new w("=",[new S(_,!1),y])),a.substitution,a)])}},"put_char/1":[new I(new w("put_char",[new f("C")]),new w(",",[new w("current_output",[new f("S")]),new w("put_char",[new f("S"),new f("C")])]))],"put_char/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);n.type.is_variable(s)||n.type.is_variable(y)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_character(y)?!n.type.is_variable(s)&&!n.type.is_stream(s)&&!n.type.is_atom(s)?r.throw_error(n.error.domain("stream_or_alias",s,t.indicator)):!n.type.is_stream(o)||o.stream===null?r.throw_error(n.error.existence("stream",s,t.indicator)):o.input?r.throw_error(n.error.permission("output","stream",s,t.indicator)):o.type==="binary"?r.throw_error(n.error.permission("output","binary_stream",s,t.indicator)):o.stream.put(y.id,o.position)&&(typeof o.position=="number"&&o.position++,o.char_count++,o.line_position++,y.id===`
-`&&(o.line_count++,o.line_position=0),r.success(a)):r.throw_error(n.error.type("character",y,t.indicator))},"put_code/1":[new I(new w("put_code",[new f("C")]),new w(",",[new w("current_output",[new f("S")]),new w("put_code",[new f("S"),new f("C")])]))],"put_code/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);n.type.is_variable(s)||n.type.is_variable(y)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_integer(y)?n.type.is_character_code(y)?!n.type.is_variable(s)&&!n.type.is_stream(s)&&!n.type.is_atom(s)?r.throw_error(n.error.domain("stream_or_alias",s,t.indicator)):!n.type.is_stream(o)||o.stream===null?r.throw_error(n.error.existence("stream",s,t.indicator)):o.input?r.throw_error(n.error.permission("output","stream",s,t.indicator)):o.type==="binary"?r.throw_error(n.error.permission("output","binary_stream",s,t.indicator)):o.stream.put(l(y.value),o.position)&&(typeof o.position=="number"&&o.position++,o.char_count++,o.line_position++,y.value===10&&(o.line_count++,o.line_position=0),r.success(a)):r.throw_error(n.error.representation("character_code",t.indicator)):r.throw_error(n.error.type("integer",y,t.indicator))},"nl/0":[new I(new w("nl"),new w(",",[new w("current_output",[new f("S")]),new w("put_char",[new f("S"),new w(`
-`)])]))],"nl/1":function(r,a,t){var s=t.args[0];r.prepend([new h(a.goal.replace(new w("put_char",[s,new w(`
-`,[])])),a.substitution,a)])},"get_byte/1":[new I(new w("get_byte",[new f("B")]),new w(",",[new w("current_input",[new f("S")]),new w("get_byte",[new f("S"),new f("B")])]))],"get_byte/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_in_byte(y))r.throw_error(n.error.type("in_byte",y,t.indicator));else if(!n.type.is_stream(s)&&!n.type.is_atom(s))r.throw_error(n.error.domain("stream_or_alias",s,t.indicator));else if(!n.type.is_stream(o)||o.stream===null)r.throw_error(n.error.existence("stream",s,t.indicator));else if(o.output)r.throw_error(n.error.permission("input","stream",s,t.indicator));else if(o.type==="text")r.throw_error(n.error.permission("input","text_stream",s,t.indicator));else if(o.position==="past_end_of_stream"&&o.eof_action==="error")r.throw_error(n.error.permission("input","past_end_of_stream",s,t.indicator));else{var _;if(o.position==="end_of_stream")_=-1,o.position="past_end_of_stream";else if(_=o.stream.get_byte(o.position),_===null){r.throw_error(n.error.representation("byte",t.indicator));return}else _==="end_of_stream"?(_=-1,o.position="past_end_of_stream"):(o.position++,o.char_count++,o.line_position++);r.prepend([new h(a.goal.replace(new w("=",[new S(_,!1),y])),a.substitution,a)])}},"peek_byte/1":[new I(new w("peek_byte",[new f("B")]),new w(",",[new w("current_input",[new f("S")]),new w("peek_byte",[new f("S"),new f("B")])]))],"peek_byte/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_in_byte(y))r.throw_error(n.error.type("in_byte",y,t.indicator));else if(!n.type.is_stream(s)&&!n.type.is_atom(s))r.throw_error(n.error.domain("stream_or_alias",s,t.indicator));else if(!n.type.is_stream(o)||o.stream===null)r.throw_error(n.error.existence("stream",s,t.indicator));else if(o.output)r.throw_error(n.error.permission("input","stream",s,t.indicator));else if(o.type==="text")r.throw_error(n.error.permission("input","text_stream",s,t.indicator));else if(o.position==="past_end_of_stream"&&o.eof_action==="error")r.throw_error(n.error.permission("input","past_end_of_stream",s,t.indicator));else{var _;if(o.position==="end_of_stream")_=-1,o.position="past_end_of_stream";else if(_=o.stream.get_byte(o.position),_===null){r.throw_error(n.error.representation("byte",t.indicator));return}else _==="end_of_stream"&&(_=-1);r.prepend([new h(a.goal.replace(new w("=",[new S(_,!1),y])),a.substitution,a)])}},"put_byte/1":[new I(new w("put_byte",[new f("B")]),new w(",",[new w("current_output",[new f("S")]),new w("put_byte",[new f("S"),new f("B")])]))],"put_byte/2":function(r,a,t){var s=t.args[0],y=t.args[1],o=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);n.type.is_variable(s)||n.type.is_variable(y)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_byte(y)?!n.type.is_variable(s)&&!n.type.is_stream(s)&&!n.type.is_atom(s)?r.throw_error(n.error.domain("stream_or_alias",s,t.indicator)):!n.type.is_stream(o)||o.stream===null?r.throw_error(n.error.existence("stream",s,t.indicator)):o.input?r.throw_error(n.error.permission("output","stream",s,t.indicator)):o.type==="text"?r.throw_error(n.error.permission("output","text_stream",s,t.indicator)):o.stream.put_byte(y.value,o.position)&&(typeof o.position=="number"&&o.position++,o.char_count++,o.line_position++,r.success(a)):r.throw_error(n.error.type("byte",y,t.indicator))},"read/1":[new I(new w("read",[new f("T")]),new w(",",[new w("current_input",[new f("S")]),new w("read_term",[new f("S"),new f("T"),new w("[]")])]))],"read/2":[new I(new w("read",[new f("S"),new f("T")]),new w("read_term",[new f("S"),new f("T"),new w("[]")]))],"read_term/2":[new I(new w("read_term",[new f("T"),new f("O")]),new w(",",[new w("current_input",[new f("S")]),new w("read_term",[new f("S"),new f("T"),new f("O")])]))],"read_term/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2],_=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(n.type.is_variable(s)||n.type.is_variable(o))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_list(o))r.throw_error(n.error.type("list",o,t.indicator));else if(!n.type.is_stream(s)&&!n.type.is_atom(s))r.throw_error(n.error.domain("stream_or_alias",s,t.indicator));else if(!n.type.is_stream(_)||_.stream===null)r.throw_error(n.error.existence("stream",s,t.indicator));else if(_.output)r.throw_error(n.error.permission("input","stream",s,t.indicator));else if(_.type==="binary")r.throw_error(n.error.permission("input","binary_stream",s,t.indicator));else if(_.position==="past_end_of_stream"&&_.eof_action==="error")r.throw_error(n.error.permission("input","past_end_of_stream",s,t.indicator));else if(_.position==="past_end_of_stream"&&_.eof_action==="eof_code")R={value:new w("end_of_file",[]),type:X,len:-1};else{for(var u={},c=o,p;n.type.is_term(c)&&c.indicator==="./2";){if(p=c.args[0],n.type.is_variable(p)){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_read_option(p)){r.throw_error(n.error.domain("read_option",p,t.indicator));return}u[p.id]=p.args[0],c=c.args[1]}if(c.indicator!=="[]/0"){n.type.is_variable(c)?r.throw_error(n.error.instantiation(t.indicator)):r.throw_error(n.error.type("list",o,t.indicator));return}else{for(var v,V,R,O="",A=[],C=null,$=!1;C===null||$||C.name!=="atom"||C.value!=="."||A.length>0&&R.type===b;){for(v=_.stream.get(1,_.position);v!==null&&v!=="."&&v!=="end_of_stream"&&v!=="past_end_of_stream";)_.position++,O+=v,v=_.stream.get(1,_.position);if(v===null){r.throw_error(n.error.representation("character",t.indicator));return}else if(v==="end_of_stream"||v==="past_end_of_stream")if(A===null||A.length===0){_.position="past_end_of_stream",R={value:new w("end_of_file",[]),type:X,len:-1};break}else if(R){r.throw_error(n.error.syntax(C,"unexpected end of file",!1));return}else{r.throw_error(n.error.syntax(C,"token not found",!0));return}else v==="."&&(_.position++,O+=v);if(V=new k(r),V.new_text(O),A=V.get_tokens(),num_token=A!==null&&A.length>1?A[A.length-2]:null,C=A!==null&&A.length>0?A[A.length-1]:null,A!==null){$=!1;for(var F=0;F<A.length&&!$;F++)$=A[F].name==="lexical";if(!$&&(R=q(r,A,0,r.__get_max_priority(),!1),num_token&&num_token.name==="number"&&!num_token.float&&!num_token.blank&&C.value===".")){var ee=_.stream.get(1,_.position);if(ee>="0"&&ee<="9"){_.position++,O+=ee,C=null;continue}}}}if(C&&(C.line_position===C.len?_.line_position+=C.line_position:_.line_position=C.line_position,_.line_count+=C.line_count,_.char_count+=C.len),R.type===X&&(R.len===-1||R.len===A.length-1&&C.value===".")){r.session.renamed_variables={},R=R.value.rename(r);var j=new w("=",[y,R]);if(u.variables){var Z=we(d(Ve(R.variables()),function(Se){return new f(Se)}));j=new w(",",[j,new w("=",[u.variables,Z])])}if(u.variable_names){for(var Z=Ve(R.variables()),K=[],F=0;F<Z.length;F++){var re=Z[F];for(var ie in r.session.renamed_variables)if(r.session.renamed_variables.hasOwnProperty(ie)&&r.session.renamed_variables[ie]===re){K.push(new w("=",[new w(ie,[]),new f(re)]));break}}K=we(K),j=new w(",",[j,new w("=",[u.variable_names,K])])}if(u.singletons){for(var Z=Ve(new I(R,null).singleton_variables(!0)),K=[],F=0;F<Z.length;F++){var re=Z[F];for(var ie in r.session.renamed_variables)if(r.session.renamed_variables.hasOwnProperty(ie)&&r.session.renamed_variables[ie]===re){K.push(new w("=",[new w(ie,[]),new f(re)]));break}}K=we(K),j=new w(",",[j,new w("=",[u.singletons,K])])}r.prepend([new h(a.goal.replace(j),a.substitution,a)])}else R.type===X?r.throw_error(n.error.syntax(A[R.len],"unexpected token",!1)):r.throw_error(R.value)}}},"write/1":[new I(new w("write",[new f("T")]),new w(",",[new w("current_output",[new f("S")]),new w("write",[new f("S"),new f("T")])]))],"write/2":function(r,a,t){var s=t.args[0],y=t.args[1];r.prepend([new h(a.goal.replace(new w("write_term",[s,y,new w(".",[new w("quoted",[new w("false",[])]),new w(".",[new w("ignore_ops",[new w("false")]),new w(".",[new w("numbervars",[new w("true")]),new w("[]",[])])])])])),a.substitution,a)])},"writeq/1":[new I(new w("writeq",[new f("T")]),new w(",",[new w("current_output",[new f("S")]),new w("writeq",[new f("S"),new f("T")])]))],"writeq/2":function(r,a,t){var s=t.args[0],y=t.args[1];r.prepend([new h(a.goal.replace(new w("write_term",[s,y,new w(".",[new w("quoted",[new w("true",[])]),new w(".",[new w("ignore_ops",[new w("false")]),new w(".",[new w("numbervars",[new w("true")]),new w("[]",[])])])])])),a.substitution,a)])},"write_canonical/1":[new I(new w("write_canonical",[new f("T")]),new w(",",[new w("current_output",[new f("S")]),new w("write_canonical",[new f("S"),new f("T")])]))],"write_canonical/2":function(r,a,t){var s=t.args[0],y=t.args[1];r.prepend([new h(a.goal.replace(new w("write_term",[s,y,new w(".",[new w("quoted",[new w("true",[])]),new w(".",[new w("ignore_ops",[new w("true")]),new w(".",[new w("numbervars",[new w("false")]),new w("[]",[])])])])])),a.substitution,a)])},"write_term/2":[new I(new w("write_term",[new f("T"),new f("O")]),new w(",",[new w("current_output",[new f("S")]),new w("write_term",[new f("S"),new f("T"),new f("O")])]))],"write_term/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2],_=n.type.is_stream(s)?s:r.get_stream_by_alias(s.id);if(n.type.is_variable(s)||n.type.is_variable(o))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_list(o))r.throw_error(n.error.type("list",o,t.indicator));else if(!n.type.is_stream(s)&&!n.type.is_atom(s))r.throw_error(n.error.domain("stream_or_alias",s,t.indicator));else if(!n.type.is_stream(_)||_.stream===null)r.throw_error(n.error.existence("stream",s,t.indicator));else if(_.input)r.throw_error(n.error.permission("output","stream",s,t.indicator));else if(_.type==="binary")r.throw_error(n.error.permission("output","binary_stream",s,t.indicator));else if(_.position==="past_end_of_stream"&&_.eof_action==="error")r.throw_error(n.error.permission("output","past_end_of_stream",s,t.indicator));else{for(var u={},c=o,p;n.type.is_term(c)&&c.indicator==="./2";){if(p=c.args[0],n.type.is_variable(p)){r.throw_error(n.error.instantiation(t.indicator));return}else if(!n.type.is_write_option(p)){r.throw_error(n.error.domain("write_option",p,t.indicator));return}p.indicator==="variable_names/1"?u[p.id]=p.args[0]:u[p.id]=p.args[0].id==="true",c=c.args[1]}if(c.indicator!=="[]/0"){n.type.is_variable(c)?r.throw_error(n.error.instantiation(t.indicator)):r.throw_error(n.error.type("list",o,t.indicator));return}else{u.session=r.session;var v=y.toString(u);_.stream.put(v,_.position),typeof _.position=="number"&&(_.position+=v.length);var V=(v.match(/\n/g)||[]).length;_.line_count+=V,V>0?_.line_position=v.length-v.lastIndexOf(`
-`)-1:_.line_position+=v.length,_.char_count+=v.length,r.success(a)}}},"halt/0":function(r,a,t){r.get_flag("nodejs").indicator==="true/0"&&process.exit(),r.points=[]},"halt/1":function(r,a,t){var s=t.args[0];n.type.is_variable(s)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_integer(s)?(r.get_flag("nodejs").indicator==="true/0"&&process.exit(s.value),r.points=[]):r.throw_error(n.error.type("integer",s,t.indicator))},"current_prolog_flag/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(!n.type.is_variable(s)&&!n.type.is_atom(s))r.throw_error(n.error.type("atom",s,t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_flag(s))r.throw_error(n.error.domain("prolog_flag",s,t.indicator));else{var o=[];for(var _ in n.flag)if(n.flag.hasOwnProperty(_)){var u=new w(",",[new w("=",[new w(_),s]),new w("=",[r.get_flag(_),y])]);o.push(new h(a.goal.replace(u),a.substitution,a))}r.prepend(o)}},"set_prolog_flag/2":function(r,a,t){var s=t.args[0],y=t.args[1];n.type.is_variable(s)||n.type.is_variable(y)?r.throw_error(n.error.instantiation(t.indicator)):n.type.is_atom(s)?n.type.is_flag(s)?n.type.is_modifiable_flag(s)?n.type.is_value_flag(s,y)?(r.session.flag[s.id]=y,r.success(a)):r.throw_error(n.error.domain("flag_value",new w("+",[s,y]),t.indicator)):r.throw_error(n.error.permission("modify","flag",s,t.indicator)):r.throw_error(n.error.domain("prolog_flag",s,t.indicator)):r.throw_error(n.error.type("atom",s,t.indicator))},"consult/1":function(r,a,t){var s=t.args[0],y="user";if(s.indicator===":/2"&&(y=s.args[0].id,s=s.args[1]),n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_atom(s))r.throw_error(n.error.type("atom",s,t.indicator));else return r.consult(s.id,{context_module:y,text:!1,html:!1,success:function(){r.success(a),r.again()},error:function(o){r.throw_error(o),r.again()}}),!0},"get_time/1":function(r,a,t){var s=t.args[0];if(!n.type.is_variable(s)&&!n.type.is_number(s))r.throw_error(n.error.type("number",s,t.indicator));else{var y=new S(Date.now(),!0);r.prepend([new h(a.goal.replace(new w("=",[s,y])),a.substitution,a)])}},"time_property/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_variable(s)&&!n.type.is_number(s))r.throw_error(n.error.type("number",s,t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_time_property(y))r.throw_error(n.error.domain("time_property",y,t.indicator));else{var o;n.type.is_variable(y)?o=["year","month","day","hours","minutes","seconds","milliseconds","weekday"]:o=[y.id];for(var _=new Date(s.value),u,c=[],p=0;p<o.length;p++){switch(o[p]){case"year":u=new w("year",[new S(_.getFullYear(),!1)]);break;case"month":u=new w("month",[new S(_.getMonth(),!1)]);break;case"day":u=new w("day",[new S(_.getDate(),!1)]);break;case"hours":u=new w("hours",[new S(_.getHours(),!1)]);break;case"minutes":u=new w("minutes",[new S(_.getMinutes(),!1)]);break;case"seconds":u=new w("seconds",[new S(_.getSeconds(),!1)]);break;case"milliseconds":u=new w("milliseconds",[new S(_.getMilliseconds(),!1)]);break;case"weekday":u=new w("weekday",[new S(_.getDay(),!1)]);break}c.push(new h(a.goal.replace(new w("=",[y,u])),a.substitution,a))}r.prepend(c)}},"time_year/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_number(s))r.throw_error(n.error.type("number",s,t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_integer(y))r.throw_error(n.error.type("integer",y,t.indicator));else{var o=new S(new Date(s.value).getFullYear(),!1);r.prepend([new h(a.goal.replace(new w("=",[y,o])),a.substitution,a)])}},"time_month/2":function(r,a,t){var s=t.args[0],y=t.args[1];if(n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_number(s))r.throw_error(n.error.type("number",s,t.indicator));else if(!n.type.is_variable(y)&&!n.type.is_integer(y))r.throw_error(n.error.type("integer",y,t.indicator));else{var o=new S(new Date(s.value).getMonth(),!1);r.prepend([new h(a.goal.replace(new w("=",[y,o])),a.substitution,a)])}},"phrase/3":function(r,a,t){var s=t.args[0],y=t.args[1],o=t.args[2],_="user";if(s.indicator===":/2"&&(_=s.args[0].id,s=s.args[1]),n.type.is_variable(s))r.throw_error(n.error.instantiation(t.indicator));else if(!n.type.is_callable(s))r.throw_error(n.error.type("callable",s,t.indicator));else{var u=ue(s.clone(),y,r);u.value=new w(":",[new w(_),new w("call",[u.value])]),u!==null&&r.prepend([new h(a.goal.replace(new w(",",[u.value,new w("=",[u.variable,o])])),a.substitution,a)])}},"phrase/2":function(r,a,t){var s=t.args[0],y=t.args[1];r.prepend([new h(a.goal.replace(new w("phrase",[s,y,new w("[]",[])])),a.substitution,a)])},"version/0":function(r,a,t){var s="Welcome to Tau Prolog version "+e.major+"."+e.minor+"."+e.patch+`
-`;s+=`Tau Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.
-`,s+=`Please run ?- license. for legal details.
-`,s+="For online help and background, visit http:/tau-prolog.org",r.prepend([new h(a.goal.replace(new w("write",[new w(s,[])])),a.substitution,a)])},"license/0":function(r,a,t){var s=`Tau Prolog. A Prolog interpreter in JavaScript.
-`;s+=`Copyright (C) 2017 - 2022 Jos\xE9 Antonio Riaza Valverde
+// Generated by tools/build-bundles.mjs - do not edit (see docs/internals/vendor.md).
+(() => {
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function(x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
+  var __commonJS = (cb, mod) => function __require2() {
+    try {
+      return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+    } catch (e) {
+      throw mod = 0, e;
+    }
+  };
 
-`,s+=`Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-`,s+=`1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-`,s+=`2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-`,s+=`3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+  // node_modules/tau-prolog/modules/core.js
+  var require_core = __commonJS({
+    "node_modules/tau-prolog/modules/core.js"(exports, module) {
+      (function() {
+        var version = { major: 0, minor: 3, patch: 4, status: "beta" };
+        function TauFile(name, type, parent, text) {
+          text = text === void 0 ? "" : text;
+          this.name = name;
+          this.type = type;
+          this.parent = parent;
+          this.text = text;
+          this.created = Date.now() / 1e3;
+          this.modified = this.created;
+        }
+        TauFile.prototype.get = function(length, position) {
+          if (position === this.text.length) {
+            return "end_of_stream";
+          } else if (position > this.text.length) {
+            return "end_of_stream";
+          } else {
+            return this.text.substring(position, position + length);
+          }
+        };
+        TauFile.prototype.eof = function(position) {
+          return position === this.text.length;
+        };
+        TauFile.prototype.put = function(text, position) {
+          if (position === "end_of_stream") {
+            this.text += text;
+            return true;
+          } else if (position === "past_end_of_stream") {
+            return null;
+          } else {
+            this.text = this.text.substring(0, position) + text + this.text.substring(position + text.length);
+            return true;
+          }
+        };
+        TauFile.prototype.get_byte = function(position) {
+          if (position === "end_of_stream")
+            return -1;
+          var index = Math.floor(position / 2);
+          if (this.text.length <= index)
+            return -1;
+          var code = codePointAt(this.text[Math.floor(position / 2)], 0);
+          if (position % 2 === 0)
+            return code & 255;
+          else
+            return code / 256 >>> 0;
+        };
+        TauFile.prototype.put_byte = function(byte, position) {
+          var index = position === "end_of_stream" ? this.text.length : Math.floor(position / 2);
+          if (this.text.length < index)
+            return null;
+          var code = this.text.length === index ? -1 : codePointAt(this.text[Math.floor(position / 2)], 0);
+          if (position % 2 === 0) {
+            code = code / 256 >>> 0;
+            code = (code & 255) << 8 | byte & 255;
+          } else {
+            code = code & 255;
+            code = (byte & 255) << 8 | code & 255;
+          }
+          if (this.text.length === index)
+            this.text += fromCodePoint(code);
+          else
+            this.text = this.text.substring(0, index) + fromCodePoint(code) + this.text.substring(index + 1);
+          return true;
+        };
+        TauFile.prototype.flush = function() {
+          return true;
+        };
+        TauFile.prototype.close = function() {
+          this.modified = Date.now() / 1e3;
+          return true;
+        };
+        TauFile.prototype.size = function() {
+          return this.text.length;
+        };
+        function TauDirectory(name, parent) {
+          this.name = name;
+          this.parent = parent;
+          this.files = {};
+          this.length = 0;
+          this.created = Date.now() / 1e3;
+          this.modified = this.created;
+        }
+        TauDirectory.prototype.lookup = function(file) {
+          if (this.files.hasOwnProperty(file))
+            return this.files[file];
+          return null;
+        };
+        TauDirectory.prototype.push = function(name, file) {
+          if (!this.files.hasOwnProperty(name))
+            this.length++;
+          this.files[name] = file;
+          this.modified = Date.now() / 1e3;
+        };
+        TauDirectory.prototype.remove = function(name) {
+          if (this.files.hasOwnProperty(name)) {
+            this.length--;
+            delete this.files[name];
+            this.modified = Date.now() / 1e3;
+          }
+        };
+        TauDirectory.prototype.empty = function() {
+          return this.length === 0;
+        };
+        TauDirectory.prototype.size = function() {
+          return 4096;
+        };
+        tau_file_system = {
+          // Current files
+          files: new TauDirectory("/", "/", null),
+          // Open file
+          open: function(path, type, mode) {
+            var dirs = path.replace(/\/$/, "").split("/");
+            var dir = tau_file_system.files;
+            var name = dirs[dirs.length - 1];
+            for (var i2 = 1; i2 < dirs.length - 1; i2++) {
+              dir = dir.lookup(dirs[i2]);
+              if (!pl2.type.is_directory(dir))
+                return null;
+            }
+            var file = dir.lookup(name);
+            if (file === null) {
+              if (mode === "read")
+                return null;
+              file = new TauFile(name, type, dir);
+              dir.push(name, file);
+            } else if (!pl2.type.is_file(file)) {
+              return null;
+            }
+            if (mode === "write")
+              file.text = "";
+            return file;
+          },
+          // Get item
+          get: function(path) {
+            var dirs = path.replace(/\/$/, "").split("/");
+            var file = tau_file_system.files;
+            for (var i2 = 1; i2 < dirs.length; i2++)
+              if (pl2.type.is_directory(file))
+                file = file.lookup(dirs[i2]);
+              else
+                return null;
+            return file;
+          }
+        };
+        tau_user_input = {
+          buffer: "",
+          get: function(length, _) {
+            var text;
+            while (tau_user_input.buffer.length < length) {
+              text = window.prompt();
+              if (text.length === 0)
+                return "end_of_stream";
+              if (text) {
+                tau_user_input.buffer += text;
+              }
+            }
+            text = tau_user_input.buffer.substr(0, length);
+            tau_user_input.buffer = tau_user_input.buffer.substr(length);
+            return text;
+          },
+          eof: function(_) {
+            return false;
+          }
+        };
+        tau_user_output = {
+          put: function(text, _) {
+            console.log(text);
+            return true;
+          },
+          flush: function() {
+            return true;
+          }
+        };
+        tau_user_error = {
+          put: function(text, _) {
+            (console.error || console.log)(text);
+            return true;
+          },
+          flush: function() {
+            return true;
+          }
+        };
+        nodejs_file_system = {
+          // Open file
+          open: function(path, type, mode) {
+            var fd, fs = __require("fs");
+            if (mode === "read" && !fs.existsSync(path))
+              return null;
+            try {
+              fd = fs.openSync(path, mode[0]);
+            } catch (ex) {
+              return false;
+            }
+            return {
+              get: function(length, position) {
+                var buffer = new Buffer(length);
+                fs.readSync(fd, buffer, 0, length, position);
+                var end_of_file = true;
+                var text = buffer.toString();
+                for (var i2 = 0; i2 < length && end_of_file; i2++)
+                  end_of_file = text[i2] === "\0";
+                return end_of_file ? "end_of_stream" : buffer.toString();
+              },
+              eof: function(position) {
+                var stats = fs.statSync(path);
+                return position === stats["size"];
+              },
+              put: function(text, position) {
+                var buffer = Buffer.from(text);
+                if (position === "end_of_stream")
+                  fs.writeSync(fd, buffer);
+                else if (position === "past_end_of_stream")
+                  return null;
+                else
+                  fs.writeSync(fd, buffer, 0, buffer.length, position);
+                return true;
+              },
+              get_byte: function(position) {
+                try {
+                  var buffer = Buffer.alloc(1);
+                  var bytesRead = fs.readSync(fd, buffer, 0, 1, position);
+                  var end_of_file = bytesRead < 1;
+                  return end_of_file ? "end_of_stream" : buffer.readUInt8(0);
+                } catch (ex) {
+                  return "end_of_stream";
+                }
+              },
+              put_byte: function(byte, position) {
+                var buffer = Buffer.from([byte]);
+                if (position === "end_of_stream")
+                  fs.writeSync(fd, buffer);
+                else if (position === "past_end_of_stream")
+                  return null;
+                else
+                  fs.writeSync(fd, buffer, 0, buffer.length, position);
+                return true;
+              },
+              flush: function() {
+                return true;
+              },
+              close: function() {
+                fs.closeSync(fd);
+                return true;
+              }
+            };
+          }
+        };
+        nodejs_user_input = {
+          buffer: "",
+          get: function(length, _) {
+            var text;
+            var readlineSync = __require("readline-sync");
+            while (nodejs_user_input.buffer.length < length)
+              nodejs_user_input.buffer += readlineSync.question("", { keepWhitespace: true }) + "\n";
+            text = nodejs_user_input.buffer.substr(0, length);
+            nodejs_user_input.buffer = nodejs_user_input.buffer.substr(length);
+            return text;
+          },
+          eof: function(length) {
+            return false;
+          }
+        };
+        nodejs_user_output = {
+          put: function(text, _) {
+            process.stdout.write(text);
+            return true;
+          },
+          flush: function() {
+            return true;
+          }
+        };
+        nodejs_user_error = {
+          put: function(text, _) {
+            process.stderr.write(text);
+            return true;
+          },
+          flush: function() {
+            return true;
+          }
+        };
+        var indexOf;
+        if (!Array.prototype.indexOf) {
+          indexOf = function(array, elem) {
+            var len = array.length;
+            for (var i2 = 0; i2 < len; i2++) {
+              if (elem === array[i2]) return i2;
+            }
+            return -1;
+          };
+        } else {
+          indexOf = function(array, elem) {
+            return array.indexOf(elem);
+          };
+        }
+        var reduce = function(array, fn) {
+          if (array.length === 0) return void 0;
+          var elem = array[0];
+          var len = array.length;
+          for (var i2 = 1; i2 < len; i2++) {
+            elem = fn(elem, array[i2]);
+          }
+          return elem;
+        };
+        var map;
+        if (!Array.prototype.map) {
+          map = function(array, fn) {
+            var a = [];
+            var len = array.length;
+            for (var i2 = 0; i2 < len; i2++) {
+              a.push(fn(array[i2]));
+            }
+            return a;
+          };
+        } else {
+          map = function(array, fn) {
+            return array.map(fn);
+          };
+        }
+        var filter;
+        if (!Array.prototype.filter) {
+          filter = function(array, fn) {
+            var a = [];
+            var len = array.length;
+            for (var i2 = 0; i2 < len; i2++) {
+              if (fn(array[i2]))
+                a.push(array[i2]);
+            }
+            return a;
+          };
+        } else {
+          filter = function(array, fn) {
+            return array.filter(fn);
+          };
+        }
+        var codePointAt;
+        if (!String.prototype.codePointAt) {
+          codePointAt = function(str, i2) {
+            return str.charCodeAt(i2);
+          };
+        } else {
+          codePointAt = function(str, i2) {
+            return str.codePointAt(i2);
+          };
+        }
+        var fromCodePoint;
+        if (!String.fromCodePoint) {
+          fromCodePoint = function() {
+            return String.fromCharCode.apply(null, arguments);
+          };
+        } else {
+          fromCodePoint = function() {
+            return String.fromCodePoint.apply(null, arguments);
+          };
+        }
+        var stringLength;
+        var regexAstralSymbols = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+        if (Array.from)
+          stringLength = function(str) {
+            return Array.from(str).length;
+          };
+        else
+          stringLength = function(str) {
+            return str.replace(regexAstralSymbols, "_").length;
+          };
+        var ERROR = 0;
+        var SUCCESS = 1;
+        var regex_escape = /(\\a)|(\\b)|(\\d)|(\\e)|(\\f)|(\\n)|(\\r)|(\\s)|(\\t)|(\\v)|\\x([0-9a-fA-F]+)\\|\\([0-7]+)\\|(\\\\)|(\\')|('')|(\\")|(\\`)|(\\.)|(.)/g;
+        var escape_map = { "\\a": 7, "\\b": 8, "\\d": 127, "\\e": 27, "\\f": 12, "\\n": 10, "\\r": 13, "\\s": 32, "\\t": 9, "\\v": 11 };
+        function escape(str) {
+          var stack = [];
+          var _error = false;
+          str.replace(regex_escape, function(match, a, b, d, e, f, n, r, s, t, v, hex, octal, back, single, dsingle, double, backquote, error, char) {
+            switch (true) {
+              case hex !== void 0:
+                stack.push(parseInt(hex, 16));
+                return "";
+              case octal !== void 0:
+                stack.push(parseInt(octal, 8));
+                return "";
+              case back !== void 0:
+              case single !== void 0:
+              case dsingle !== void 0:
+              case double !== void 0:
+              case backquote !== void 0:
+                stack.push(codePointAt(match.substr(1), 0));
+                return "";
+              case char !== void 0:
+                stack.push(codePointAt(char, 0));
+                return "";
+              case error !== void 0:
+                _error = true;
+              default:
+                stack.push(escape_map[match]);
+                return "";
+            }
+          });
+          if (_error)
+            return null;
+          return stack;
+        }
+        function escapeAtom(str, quote) {
+          var atom = "";
+          if (str === "\\") return null;
+          if (str.length < 2) return str;
+          try {
+            str = str.replace(/((?:\\\\)+)|\\([0-7]+)\\/g, function(match, g1, g2) {
+              return g1 || fromCodePoint(parseInt(g2, 8));
+            });
+            str = str.replace(/((?:\\\\)+)|\\x([0-9a-fA-F]+)\\/g, function(match, g1, g2) {
+              return g1 || fromCodePoint(parseInt(g2, 16));
+            });
+            str = str.replace(/((?:\\\\)+)|\\u([0-9a-fA-F]{4})/g, function(match, g1, g2) {
+              return g1 || fromCodePoint(parseInt(g2, 16));
+            });
+          } catch (error) {
+            return null;
+          }
+          for (var i2 = 0; i2 < str.length; i2++) {
+            var a = str.charAt(i2);
+            var b = str.charAt(i2 + 1);
+            if (a === quote && b === quote) {
+              i2++;
+              atom += quote;
+            } else if (a === "\\") {
+              if (["a", "b", "f", "n", "r", "t", "v", "'", '"', "\\", "a", "\b", "\f", "\n", "\r", "	", "\v"].indexOf(b) !== -1) {
+                i2 += 1;
+                switch (b) {
+                  case "a":
+                    atom += "a";
+                    break;
+                  case "b":
+                    atom += "\b";
+                    break;
+                  case "f":
+                    atom += "\f";
+                    break;
+                  case "n":
+                    atom += "\n";
+                    break;
+                  case "r":
+                    atom += "\r";
+                    break;
+                  case "t":
+                    atom += "	";
+                    break;
+                  case "v":
+                    atom += "\v";
+                    break;
+                  case "'":
+                    atom += "'";
+                    break;
+                  case '"':
+                    atom += '"';
+                    break;
+                  case "\\":
+                    atom += "\\";
+                    break;
+                }
+              } else {
+                return null;
+              }
+            } else {
+              atom += a;
+            }
+          }
+          return atom;
+        }
+        function redoEscape(str) {
+          var atom = "";
+          for (var i2 = 0; i2 < str.length; i2++) {
+            switch (str.charAt(i2)) {
+              case "'":
+                atom += "\\'";
+                break;
+              case "\\":
+                atom += "\\\\";
+                break;
+              //case '\a': atom += '\\a'; break;
+              case "\b":
+                atom += "\\b";
+                break;
+              case "\f":
+                atom += "\\f";
+                break;
+              case "\n":
+                atom += "\\n";
+                break;
+              case "\r":
+                atom += "\\r";
+                break;
+              case "	":
+                atom += "\\t";
+                break;
+              case "\v":
+                atom += "\\v";
+                break;
+              default:
+                atom += str.charAt(i2);
+                break;
+            }
+          }
+          return atom;
+        }
+        function convertNum(num) {
+          var n = num.substr(2);
+          switch (num.substr(0, 2).toLowerCase()) {
+            case "0x":
+              return parseInt(n, 16);
+            case "0b":
+              return parseInt(n, 2);
+            case "0o":
+              return parseInt(n, 8);
+            case "0'":
+              return escape(n)[0];
+            default:
+              return parseFloat(num);
+          }
+        }
+        function is_graphic_token(string) {
+          return /^[#\$\&\*\+\-\.\/\:\<\=\>\?\@\^\~\\]+/.test(string);
+        }
+        var rules = {
+          whitespace: /^\s*(?:(?:%.*)|(?:\/\*(?:\n|\r|.)*?(?:\*\/|$))|(?:\s+))\s*/,
+          variable: /^(?:[A-Z_][a-zA-Z0-9_]*)/,
+          atom: /^(\!|,|;|[a-z][0-9a-zA-Z_]*|[#\$\&\*\+\-\.\/\:\<\=\>\?\@\^\~\\]+|'(?:(?:'')|(?:\\\\)|(?:\\')|[^'])*')/,
+          number: /^(?:0o[0-7]+|0x[0-9a-fA-F]+|0b[01]+|0'(?:''|\\[abdefnrstv\\'"`]|\\x?\d+\\|[^\\])|\d+(?:\.\d+(?:[eE][+-]?\d+)?)?)/,
+          string: /^(?:"([^"]|""|\\")*"|`([^`]|``|\\`)*`)/,
+          l_brace: /^(?:\[)/,
+          r_brace: /^(?:\])/,
+          l_bracket: /^(?:\{)/,
+          r_bracket: /^(?:\})/,
+          bar: /^(?:\|)/,
+          l_paren: /^(?:\()/,
+          r_paren: /^(?:\))/
+        };
+        function replace(thread, text) {
+          if (thread.get_flag("char_conversion").id === "on") {
+            return text.replace(/./g, function(char) {
+              return thread.get_char_conversion(char);
+            });
+          }
+          return text;
+        }
+        function Tokenizer(thread) {
+          this.thread = thread;
+          this.text = "";
+          this.tokens = [];
+        }
+        Tokenizer.prototype.set_last_tokens = function(tokens) {
+          return this.tokens = tokens;
+        };
+        Tokenizer.prototype.new_text = function(text) {
+          this.text = text;
+          this.tokens = [];
+        };
+        Tokenizer.prototype.get_tokens = function(init) {
+          var text;
+          var len = 0;
+          var line = 0;
+          var start = 0;
+          var tokens = [];
+          var last_is_blank;
+          if (init) {
+            var token = this.tokens[init - 1];
+            len = token.len;
+            text = replace(this.thread, this.text.substr(token.len));
+            line = token.line;
+            start = token.start;
+          } else
+            text = this.text;
+          if (/^\s*$/.test(text))
+            return null;
+          while (text !== "") {
+            var matches = [];
+            last_is_blank = false;
+            if (/^\n/.exec(text) !== null) {
+              line++;
+              start = 0;
+              len++;
+              text = text.replace(/\n/, "");
+              last_is_blank = true;
+              continue;
+            }
+            for (var rule in rules) {
+              if (rules.hasOwnProperty(rule)) {
+                var matchs = rules[rule].exec(text);
+                if (matchs) {
+                  matches.push({
+                    value: matchs[0],
+                    name: rule,
+                    matches: matchs
+                  });
+                }
+              }
+            }
+            if (!matches.length)
+              return this.set_last_tokens([{ value: text, matches: [], name: "lexical", line, start }]);
+            var token = reduce(matches, function(a, b) {
+              return a.value.length >= b.value.length ? a : b;
+            });
+            token.start = start;
+            token.line = line;
+            text = text.replace(token.value, "");
+            start += token.value.length;
+            len += token.value.length;
+            var nl = (token.value.match(/\n/g) || []).length;
+            line += nl;
+            if (nl > 0)
+              start = token.value.length - token.value.lastIndexOf("\n") - 1;
+            token.line_count = line;
+            token.line_position = start;
+            switch (token.name) {
+              case "atom":
+                token.raw = token.value;
+                if (token.value.charAt(0) === "'") {
+                  token.value = escapeAtom(token.value.substring(1, token.value.length - 1), "'");
+                  if (token.value === null) {
+                    token.name = "lexical";
+                    token.value = token.raw;
+                    token.error = "unknown_escape_sequence";
+                  }
+                }
+                break;
+              case "number":
+                var substr = token.value.substring(0, 2);
+                token.raw = token.value;
+                token.float = substr !== "0x" && substr !== "0'" && token.value.match(/[.eE]/) !== null;
+                token.value = convertNum(token.value);
+                token.blank = last_is_blank;
+                if (!token.float && pl2.flag.bounded.value.indicator === "true/0" && token.value > pl2.flag.max_integer.value.value) {
+                  token.name = "lexical";
+                  token.value = token.raw;
+                  token.error = "int_overflow";
+                }
+                break;
+              case "string":
+                var del = token.value.charAt(0);
+                token.raw = token.value;
+                token.value = escapeAtom(token.value.substring(1, token.value.length - 1), del);
+                if (token.value === null) {
+                  token.name = "lexical";
+                  token.value = token.raw;
+                  token.error = "unknown_escape_sequence";
+                }
+                break;
+              case "whitespace":
+                var last = tokens[tokens.length - 1];
+                if (last) last.space = true;
+                last_is_blank = true;
+                continue;
+              case "r_bracket":
+                if (tokens.length > 0 && tokens[tokens.length - 1].name === "l_bracket") {
+                  token = tokens.pop();
+                  token.name = "atom";
+                  token.value = "{}";
+                  token.raw = "{}";
+                  token.space = false;
+                }
+                break;
+              case "r_brace":
+                if (tokens.length > 0 && tokens[tokens.length - 1].name === "l_brace") {
+                  token = tokens.pop();
+                  token.name = "atom";
+                  token.value = "[]";
+                  token.raw = "[]";
+                  token.space = false;
+                }
+                break;
+            }
+            token.len = len;
+            tokens.push(token);
+            last_is_blank = false;
+          }
+          var t = this.set_last_tokens(tokens);
+          return t.length === 0 ? null : t;
+        };
+        function parseExpr(thread, tokens, start, priority, toplevel) {
+          if (!tokens[start]) return { type: ERROR, value: pl2.error.syntax(tokens[start - 1], "expression expected", true) };
+          var error;
+          if (priority === "0") {
+            var token = tokens[start];
+            switch (token.name) {
+              case "number":
+                return { type: SUCCESS, len: start + 1, value: new pl2.type.Num(token.value, token.float) };
+              case "variable":
+                return { type: SUCCESS, len: start + 1, value: new pl2.type.Var(token.value) };
+              case "string":
+                var str;
+                switch (thread.get_flag("double_quotes").id) {
+                  case "atom":
+                    ;
+                    str = new Term(token.value, []);
+                    break;
+                  case "codes":
+                    str = new Term("[]", []);
+                    for (var i2 = token.value.length - 1; i2 >= 0; i2--)
+                      str = new Term(".", [new pl2.type.Num(codePointAt(token.value, i2), false), str]);
+                    break;
+                  case "chars":
+                    str = new Term("[]", []);
+                    for (var i2 = token.value.length - 1; i2 >= 0; i2--)
+                      str = new Term(".", [new pl2.type.Term(token.value.charAt(i2), []), str]);
+                    break;
+                }
+                return { type: SUCCESS, len: start + 1, value: str };
+              case "l_paren":
+                var expr = parseExpr(thread, tokens, start + 1, thread.__get_max_priority(), true);
+                if (expr.type !== SUCCESS) return expr;
+                if (tokens[expr.len] && tokens[expr.len].name === "r_paren") {
+                  expr.len++;
+                  return expr;
+                }
+                return { type: ERROR, derived: true, value: pl2.error.syntax(tokens[expr.len] ? tokens[expr.len] : tokens[expr.len - 1], ") or operator expected", !tokens[expr.len]) };
+              case "l_bracket":
+                var expr = parseExpr(thread, tokens, start + 1, thread.__get_max_priority(), true);
+                if (expr.type !== SUCCESS) return expr;
+                if (tokens[expr.len] && tokens[expr.len].name === "r_bracket") {
+                  expr.len++;
+                  expr.value = new Term("{}", [expr.value]);
+                  return expr;
+                }
+                return { type: ERROR, derived: true, value: pl2.error.syntax(tokens[expr.len] ? tokens[expr.len] : tokens[expr.len - 1], "} or operator expected", !tokens[expr.len]) };
+            }
+            var result = parseTerm(thread, tokens, start, toplevel);
+            if (result.type === SUCCESS || result.derived)
+              return result;
+            result = parseList(thread, tokens, start);
+            if (result.type === SUCCESS || result.derived)
+              return result;
+            return { type: ERROR, derived: false, value: pl2.error.syntax(tokens[start], token.error || "unexpected token") };
+          }
+          var max_priority = thread.__get_max_priority();
+          var next_priority = thread.__get_next_priority(priority);
+          var aux_start = start;
+          if (tokens[start].name === "atom" && tokens[start + 1] && (tokens[start].space || tokens[start + 1].name !== "l_paren")) {
+            var token = tokens[start++];
+            var classes = thread.__lookup_operator_classes(priority, token.value);
+            if (classes && classes.indexOf("fy") > -1) {
+              var expr = parseExpr(thread, tokens, start, priority, toplevel);
+              if (expr.type !== ERROR) {
+                if (token.value === "-" && !token.space && pl2.type.is_number(expr.value)) {
+                  return {
+                    value: new pl2.type.Num(-expr.value.value, expr.value.is_float),
+                    len: expr.len,
+                    type: SUCCESS
+                  };
+                } else {
+                  return {
+                    value: new pl2.type.Term(token.value, [expr.value]),
+                    len: expr.len,
+                    type: SUCCESS
+                  };
+                }
+              } else {
+                error = expr;
+              }
+            } else if (classes && classes.indexOf("fx") > -1) {
+              var expr = parseExpr(thread, tokens, start, next_priority, toplevel);
+              if (expr.type !== ERROR) {
+                return {
+                  value: new pl2.type.Term(token.value, [expr.value]),
+                  len: expr.len,
+                  type: SUCCESS
+                };
+              } else {
+                error = expr;
+              }
+            }
+          }
+          start = aux_start;
+          var expr = parseExpr(thread, tokens, start, next_priority, toplevel);
+          if (expr.type === SUCCESS) {
+            start = expr.len;
+            var token = tokens[start];
+            if (tokens[start] && (tokens[start].name === "atom" && thread.__lookup_operator_classes(priority, token.value) || tokens[start].name === "bar" && thread.__lookup_operator_classes(priority, "|"))) {
+              var next_priority_lt = next_priority;
+              var next_priority_eq = priority;
+              var classes = thread.__lookup_operator_classes(priority, token.value);
+              if (classes.indexOf("xf") > -1) {
+                return {
+                  value: new pl2.type.Term(token.value, [expr.value]),
+                  len: ++expr.len,
+                  type: SUCCESS
+                };
+              } else if (classes.indexOf("xfx") > -1) {
+                var expr2 = parseExpr(thread, tokens, start + 1, next_priority_lt, toplevel);
+                if (expr2.type === SUCCESS) {
+                  return {
+                    value: new pl2.type.Term(token.value, [expr.value, expr2.value]),
+                    len: expr2.len,
+                    type: SUCCESS
+                  };
+                } else {
+                  expr2.derived = true;
+                  return expr2;
+                }
+              } else if (classes.indexOf("xfy") > -1) {
+                var expr2 = parseExpr(thread, tokens, start + 1, next_priority_eq, toplevel);
+                if (expr2.type === SUCCESS) {
+                  return {
+                    value: new pl2.type.Term(token.value, [expr.value, expr2.value]),
+                    len: expr2.len,
+                    type: SUCCESS
+                  };
+                } else {
+                  expr2.derived = true;
+                  return expr2;
+                }
+              } else if (expr.type !== ERROR) {
+                while (true) {
+                  start = expr.len;
+                  var token = tokens[start];
+                  if (token && token.name === "atom" && thread.__lookup_operator_classes(priority, token.value)) {
+                    var classes = thread.__lookup_operator_classes(priority, token.value);
+                    if (classes.indexOf("yf") > -1) {
+                      expr = {
+                        value: new pl2.type.Term(token.value, [expr.value]),
+                        len: ++start,
+                        type: SUCCESS
+                      };
+                    } else if (classes.indexOf("yfx") > -1) {
+                      var expr2 = parseExpr(thread, tokens, ++start, next_priority_lt, toplevel);
+                      if (expr2.type === ERROR) {
+                        expr2.derived = true;
+                        return expr2;
+                      }
+                      start = expr2.len;
+                      expr = {
+                        value: new pl2.type.Term(token.value, [expr.value, expr2.value]),
+                        len: start,
+                        type: SUCCESS
+                      };
+                    } else {
+                      break;
+                    }
+                  } else {
+                    break;
+                  }
+                }
+              }
+            } else {
+              error = { type: ERROR, value: pl2.error.syntax(tokens[expr.len - 1], "operator expected") };
+            }
+            return expr;
+          }
+          return expr;
+        }
+        function parseTerm(thread, tokens, start, toplevel) {
+          if (!tokens[start] || tokens[start].name === "atom" && tokens[start].raw === "." && !toplevel && (tokens[start].space || !tokens[start + 1] || tokens[start + 1].name !== "l_paren"))
+            return { type: ERROR, derived: false, value: pl2.error.syntax(tokens[start - 1], "unfounded token") };
+          var atom = tokens[start];
+          var exprs = [];
+          if (tokens[start].name === "atom" && tokens[start].raw !== ",") {
+            start++;
+            if (tokens[start - 1].space) return { type: SUCCESS, len: start, value: new pl2.type.Term(atom.value, exprs) };
+            if (tokens[start] && tokens[start].name === "l_paren") {
+              if (tokens[start + 1] && tokens[start + 1].name === "r_paren")
+                return { type: ERROR, derived: true, value: pl2.error.syntax(tokens[start + 1], "argument expected") };
+              var expr = parseExpr(thread, tokens, ++start, "999", true);
+              if (expr.type === ERROR) {
+                if (expr.derived)
+                  return expr;
+                else
+                  return { type: ERROR, derived: true, value: pl2.error.syntax(tokens[start] ? tokens[start] : tokens[start - 1], "argument expected", !tokens[start]) };
+              }
+              exprs.push(expr.value);
+              start = expr.len;
+              while (tokens[start] && tokens[start].name === "atom" && tokens[start].value === ",") {
+                expr = parseExpr(thread, tokens, start + 1, "999", true);
+                if (expr.type === ERROR) {
+                  if (expr.derived)
+                    return expr;
+                  else
+                    return { type: ERROR, derived: true, value: pl2.error.syntax(tokens[start + 1] ? tokens[start + 1] : tokens[start], "argument expected", !tokens[start + 1]) };
+                }
+                exprs.push(expr.value);
+                start = expr.len;
+              }
+              if (tokens[start] && tokens[start].name === "r_paren") start++;
+              else return { type: ERROR, derived: true, value: pl2.error.syntax(tokens[start] ? tokens[start] : tokens[start - 1], ", or ) expected", !tokens[start]) };
+            }
+            return { type: SUCCESS, len: start, value: new pl2.type.Term(atom.value, exprs) };
+          }
+          return { type: ERROR, derived: false, value: pl2.error.syntax(tokens[start], "term expected") };
+        }
+        function parseList(thread, tokens, start) {
+          if (!tokens[start])
+            return { type: ERROR, derived: false, value: pl2.error.syntax(tokens[start - 1], "[ expected") };
+          if (tokens[start] && tokens[start].name === "l_brace") {
+            var expr = parseExpr(thread, tokens, ++start, "999", true);
+            var exprs = [expr.value];
+            var cons = void 0;
+            if (expr.type === ERROR) {
+              if (tokens[start] && tokens[start].name === "r_brace") {
+                return { type: SUCCESS, len: start + 1, value: new pl2.type.Term("[]", []) };
+              }
+              return { type: ERROR, derived: true, value: pl2.error.syntax(tokens[start], "] expected") };
+            }
+            start = expr.len;
+            while (tokens[start] && tokens[start].name === "atom" && tokens[start].value === ",") {
+              expr = parseExpr(thread, tokens, start + 1, "999", true);
+              if (expr.type === ERROR) {
+                if (expr.derived)
+                  return expr;
+                else
+                  return { type: ERROR, derived: true, value: pl2.error.syntax(tokens[start + 1] ? tokens[start + 1] : tokens[start], "argument expected", !tokens[start + 1]) };
+              }
+              exprs.push(expr.value);
+              start = expr.len;
+            }
+            var bar = false;
+            if (tokens[start] && tokens[start].name === "bar") {
+              bar = true;
+              expr = parseExpr(thread, tokens, start + 1, "999", true);
+              if (expr.type === ERROR) {
+                if (expr.derived)
+                  return expr;
+                else
+                  return { type: ERROR, derived: true, value: pl2.error.syntax(tokens[start + 1] ? tokens[start + 1] : tokens[start], "argument expected", !tokens[start + 1]) };
+              }
+              cons = expr.value;
+              start = expr.len;
+            }
+            if (tokens[start] && tokens[start].name === "r_brace")
+              return { type: SUCCESS, len: start + 1, value: arrayToList(exprs, cons) };
+            else
+              return { type: ERROR, derived: true, value: pl2.error.syntax(tokens[start] ? tokens[start] : tokens[start - 1], bar ? "] expected" : ", or | or ] expected", !tokens[start]) };
+          }
+          return { type: ERROR, derived: false, value: pl2.error.syntax(tokens[start], "list expected") };
+        }
+        function parseRule(thread, tokens, start) {
+          var line = tokens[start].line;
+          var expr = parseExpr(thread, tokens, start, thread.__get_max_priority(), false);
+          var rule = null;
+          var obj;
+          if (expr.type !== ERROR) {
+            start = expr.len;
+            if (tokens[start] && tokens[start].name === "atom" && tokens[start].raw === ".") {
+              start++;
+              if (pl2.type.is_term(expr.value)) {
+                if (expr.value.indicator === ":-/2") {
+                  rule = new pl2.type.Rule(expr.value.args[0], body_conversion(expr.value.args[1]));
+                  obj = {
+                    value: rule,
+                    len: start,
+                    type: SUCCESS
+                  };
+                } else if (expr.value.indicator === "-->/2") {
+                  rule = new pl2.type.Rule(expr.value.args[0], body_conversion(expr.value.args[1]));
+                  rule = rule_to_dcg(rule, thread);
+                  rule.body = body_conversion(rule.body);
+                  if (!pl2.type.is_rule(rule))
+                    return {
+                      value: rule,
+                      len: start,
+                      type: ERROR
+                    };
+                  obj = {
+                    value: rule,
+                    len: start,
+                    type: pl2.type.is_rule(rule) ? SUCCESS : ERROR
+                  };
+                } else {
+                  rule = new pl2.type.Rule(expr.value, null);
+                  obj = {
+                    value: rule,
+                    len: start,
+                    type: SUCCESS
+                  };
+                }
+                if (rule) {
+                  var singleton = rule.singleton_variables();
+                  if (singleton.length > 0)
+                    thread.throw_warning(pl2.warning.singleton(singleton, rule.head.indicator, line));
+                }
+                return obj;
+              } else {
+                return { type: ERROR, value: pl2.error.syntax(tokens[start], "callable expected") };
+              }
+            } else {
+              return { type: ERROR, value: pl2.error.syntax(tokens[start] ? tokens[start] : tokens[start - 1], ". or operator expected") };
+            }
+          }
+          return expr;
+        }
+        function parseProgram(thread, string, options) {
+          var opts = {};
+          options = options ? options : {};
+          opts.success = options.success ? options.success : function() {
+          };
+          opts.error = options.error ? options.error : function() {
+          };
+          opts.from = options.from ? options.from : "$tau-js";
+          opts.reconsult = options.reconsult !== void 0 ? options.reconsult : true;
+          opts.reconsulted = options.reconsulted === void 0 ? {} : options.reconsulted;
+          opts.context_module = options.context_module === void 0 ? "user" : options.context_module;
+          opts.initialization = options.initialization === void 0 ? [] : options.initialization;
+          opts.current_token = options.current_token === void 0 ? 0 : options.current_token;
+          opts.tokenizer = options.tokenizer === void 0 ? null : options.tokenizer;
+          opts.tokens = options.tokens === void 0 ? null : options.tokens;
+          opts.string = string;
+          opts.term_expansion = false;
+          var reconsulted = opts.reconsulted;
+          var tokenizer = opts.tokenizer;
+          var tokens = opts.tokens;
+          if (tokenizer === null) {
+            tokenizer = new Tokenizer(thread);
+            tokenizer.new_text(string);
+            opts.tokenizer = tokenizer;
+            tokens = tokenizer.get_tokens(0);
+            opts.tokens = tokens;
+          }
+          var n = opts.current_token;
+          while (tokens !== null && tokens[n]) {
+            var expr = parseRule(thread, tokens, n);
+            opts.current_token = expr.len;
+            if (expr.type === ERROR) {
+              if (opts.error !== void 0)
+                opts.error(new Term("throw", [expr.value]));
+              return;
+            } else {
+              var context_module = opts.context_module;
+              var term_expansion = thread.session.modules[context_module].rules["term_expansion/2"];
+              if (term_expansion && term_expansion.length > 0) {
+                opts.term_expansion = true;
+                var n_thread = new Thread(thread.session);
+                var term = expr.value.body ? new Term(":-", [expr.value.head, expr.value.body]) : expr.value.head;
+                thread.session.renamed_variables = {};
+                term = term.rename(thread.session);
+                n_thread.query(context_module + ":term_expansion(" + term.toString({ quoted: true }) + ", X).");
+                n_thread.answer(/* @__PURE__ */ (function(thread2, opts2, reconsulted2, expr2) {
+                  return function(answer) {
+                    if (answer && !pl2.type.is_error(answer) && pl2.type.is_term(answer.links["X"])) {
+                      var term2 = answer.links["X"];
+                      var rule = term2.indicator === ":-/2" ? new Rule(term2.args[0], term2.args[1]) : new Rule(term2, null);
+                      parseProgramExpansion(thread2, opts2, reconsulted2, { value: rule, len: expr2.len, type: expr2.type });
+                    } else {
+                      parseProgramExpansion(thread2, opts2, reconsulted2, expr2);
+                    }
+                  };
+                })(thread, opts, reconsulted, expr));
+                return;
+              } else {
+                opts.term_expansion = false;
+                var async = parseProgramExpansion(thread, opts, reconsulted, expr);
+                if (async)
+                  return;
+                n = expr.len;
+              }
+            }
+          }
+          var callback = opts.success;
+          var nthread = new Thread(thread.session);
+          for (var i2 = opts.initialization.length - 1; i2 > 0; i2--) {
+            var next_callback = /* @__PURE__ */ (function(init, callback2) {
+              return function(answer) {
+                if (answer === null) {
+                  nthread.answer();
+                } else if (pl2.type.is_error(answer)) {
+                  opts.error(answer);
+                } else {
+                  nthread.add_goal(init);
+                  nthread.answer(callback2);
+                }
+              };
+            })(opts.initialization[i2], callback);
+            callback = next_callback;
+          }
+          if (opts.initialization.length > 0) {
+            nthread.add_goal(opts.initialization[0]);
+            nthread.answer(callback);
+          } else {
+            callback();
+          }
+        }
+        function parseGoalExpansion(thread, options, expr) {
+          var n_thread = new Thread(thread.session);
+          n_thread.__goal_expansion = true;
+          var varterm = thread.next_free_variable();
+          var varhead = thread.next_free_variable();
+          var goal = varhead + " = " + expr.value.head + ", goal_expansion(" + expr.value.body.toString({
+            quoted: true
+          }) + ", " + varterm.toString({
+            quoted: true
+          }) + ").";
+          n_thread.query(goal);
+          n_thread.answer(function(answer) {
+            if (answer && !pl2.type.is_error(answer) && answer.links[varterm]) {
+              expr.value.head = answer.links[varhead];
+              expr.value.body = body_conversion(answer.links[varterm]);
+              parseGoalExpansion(thread, options, expr);
+            } else {
+              thread.add_rule(expr.value, options);
+              parseProgram(thread, options.string, options);
+            }
+          });
+        }
+        function parseQueryExpansion(thread, term, options) {
+          var n_thread = new Thread(thread.session);
+          n_thread.__goal_expansion = true;
+          var varterm = thread.next_free_variable();
+          var goal = "goal_expansion(" + term.toString({
+            quoted: true
+          }) + ", " + varterm.toString({
+            quoted: true
+          }) + ").";
+          n_thread.query(goal);
+          var variables = n_thread.head_point().substitution.domain();
+          n_thread.answer(function(answer) {
+            if (answer && !pl2.type.is_error(answer) && answer.links[varterm]) {
+              for (var i2 = 0; i2 < variables.length; i2++) {
+                if (variables[i2] !== varterm.id && answer.links[variables[i2]]) {
+                  var subs = new Substitution();
+                  subs.links[answer.links[variables[i2]]] = variables[i2];
+                  answer.links[varterm] = answer.links[varterm].apply(subs);
+                }
+              }
+              parseQueryExpansion(thread, body_conversion(answer.links[varterm]), options);
+            } else {
+              thread.add_goal(term);
+              options.success(term);
+              parseQuery(thread, options.string, options);
+            }
+          });
+        }
+        function parseProgramExpansion(thread, options, reconsulted, expr) {
+          var async = options.term_expansion === true;
+          if (expr.value.body === null && expr.value.head.indicator === "?-/1") {
+            async = true;
+            var n_thread = new Thread(thread.session);
+            n_thread.add_goal(expr.value.head.args[0]);
+            n_thread.answer(function(answer) {
+              if (pl2.type.is_error(answer)) {
+                thread.throw_warning(answer.args[0]);
+              } else if (answer === false || answer === null) {
+                thread.throw_warning(pl2.warning.failed_goal(expr.value.head.args[0], expr.len));
+              }
+              parseProgram(thread, options.string, options);
+            });
+          } else if (expr.value.body === null && expr.value.head.indicator === ":-/1") {
+            var result = thread.run_directive(expr.value.head.args[0], options);
+            async = async || result === true;
+            if (async)
+              parseProgram(thread, options.string, options);
+          } else {
+            var context_module = options.context_module;
+            var indicator2 = expr.value.head.indicator;
+            if (expr.value.head.indicator === ":/2") {
+              context_module = expr.value.head.args[0].id;
+              indicator2 = expr.value.head.args[1].indicator;
+            }
+            if (!reconsulted.hasOwnProperty(context_module))
+              reconsulted[context_module] = {};
+            if (options.reconsult !== false && reconsulted[context_module][indicator2] !== true && !thread.is_multifile_predicate(indicator2)) {
+              var get_module = thread.session.modules[context_module];
+              if (context_module !== "system" && get_module && get_module.rules[indicator2]) {
+                get_module.rules[indicator2] = filter(get_module.rules[indicator2], function(rule) {
+                  return rule.dynamic;
+                });
+                get_module.update_indices_predicate(indicator2);
+              }
+              reconsulted[context_module][indicator2] = true;
+            }
+            var goal_expansion = thread.session.modules.user.rules["goal_expansion/2"];
+            if (expr.value.body !== null && goal_expansion && goal_expansion.length > 0) {
+              async = true;
+              thread.session.renamed_variables = {};
+              var origin = {
+                head: function() {
+                  return expr.value.head;
+                },
+                term: function() {
+                  return expr.value.body;
+                },
+                set: function(h, p) {
+                  expr.value.head = h;
+                  expr.value.body = p;
+                }
+              };
+              parseGoalExpansion(thread, options, expr, body_conversion(expr.value.body), origin.set, origin);
+            } else {
+              thread.add_rule(expr.value, options);
+              if (async)
+                parseProgram(thread, options.string, options);
+            }
+          }
+          return async;
+        }
+        function parseQuery(thread, string, options) {
+          var opts = {};
+          var callback = typeof options === "function" ? options : function() {
+          };
+          options = options === void 0 || typeof options === "function" ? {} : options;
+          opts.success = options.success === void 0 ? callback : options.success;
+          opts.error = options.error === void 0 ? callback : options.error;
+          opts.tokenizer = options.tokenizer === void 0 ? null : options.tokenizer;
+          opts.current_token = options.current_token === void 0 ? 0 : options.current_token;
+          opts.string = string;
+          var tokenizer = opts.tokenizer;
+          var n = opts.current_token;
+          if (tokenizer === null) {
+            tokenizer = new Tokenizer(thread);
+            opts.tokenizer = tokenizer;
+            tokenizer.new_text(string);
+          }
+          do {
+            var tokens = tokenizer.get_tokens(n);
+            if (tokens === null)
+              break;
+            var expr = parseExpr(thread, tokens, 0, thread.__get_max_priority(), false);
+            if (expr.type !== ERROR) {
+              var expr_position = expr.len;
+              n = expr.len + 1;
+              opts.current_token = n;
+              if (tokens[expr_position] && tokens[expr_position].name === "atom" && tokens[expr_position].raw === ".") {
+                expr.value = body_conversion(expr.value);
+                var goal_expansion = thread.session.modules.user.rules["goal_expansion/2"];
+                if (!thread.__goal_expansion && goal_expansion && goal_expansion.length > 0) {
+                  parseQueryExpansion(thread, expr.value, opts);
+                  return;
+                } else {
+                  thread.add_goal(expr.value);
+                  opts.success(expr.value);
+                }
+              } else {
+                var token = tokens[expr_position];
+                opts.error(
+                  new Term("throw", [
+                    pl2.error.syntax(
+                      token ? token : tokens[expr_position - 1],
+                      token && token.error ? token.error : ". or operator expected",
+                      !token
+                    )
+                  ])
+                );
+                return;
+              }
+            } else {
+              opts.error(new Term("throw", [expr.value]));
+              return;
+            }
+          } while (true);
+        }
+        function rule_to_dcg(rule, thread) {
+          thread.session.renamed_variables = {};
+          rule = rule.rename(thread);
+          var begin = thread.next_free_variable();
+          var dcg = body_to_dcg(rule.body, begin, thread);
+          if (dcg.error)
+            return dcg.value;
+          rule.body = dcg.value;
+          if (rule.head.indicator === ",/2") {
+            var terminals = rule.head.args[1];
+            rule.head = rule.head.args[0];
+            var last = thread.next_free_variable();
+            var pointer = terminals;
+            if (!pl2.type.is_list(pointer)) {
+              return pl2.error.type("list", pointer, "DCG/0");
+            }
+            if (pointer.indicator === "[]/0") {
+              terminals = dcg.variable;
+            } else {
+              while (pointer.indicator === "./2" && pl2.type.is_list(pointer) && pointer.args[1].indicator !== "[]/0") {
+                pointer = pointer.args[1];
+              }
+              if (pl2.type.is_variable(pointer))
+                return pl2.error.instantiation("DCG/0");
+              else if (!pl2.type.is_list(pointer))
+                return pl2.error.type("list", terminals, "DCG/0");
+              pointer.args[1] = dcg.variable;
+            }
+            rule.body = new Term(",", [rule.body, new Term("=", [last, terminals])]);
+            rule.head = new Term(rule.head.id, rule.head.args.concat([begin, last]));
+          } else {
+            var first_assign = rule.body;
+            if (pl2.type.is_term(first_assign) && first_assign.indicator === ",/2")
+              first_assign = first_assign.args[0];
+            if (pl2.type.is_term(first_assign) && first_assign.indicator === "=/2" && pl2.type.is_variable(first_assign.args[0]) && first_assign.args[0] === begin) {
+              begin = first_assign.args[1];
+              rule.body = rule.body.replace(null);
+            }
+            if (rule.head.indicator === ":/2")
+              rule.head = new Term(":", [
+                new Term(rule.head.args[0].id, []),
+                new Term(rule.head.args[1].id, rule.head.args[1].args.concat([begin, dcg.variable]))
+              ]);
+            else
+              rule.head = new Term(rule.head.id, rule.head.args.concat([begin, dcg.variable]));
+          }
+          return rule;
+        }
+        function body_to_dcg(expr, last, thread) {
+          var free;
+          if (pl2.type.is_term(expr) && expr.indicator === "!/0") {
+            free = thread.next_free_variable();
+            return {
+              value: new Term(",", [expr, new Term("=", [last, free])]),
+              variable: free,
+              error: false
+            };
+          } else if (pl2.type.is_term(expr) && expr.indicator === ":/2") {
+            var right = body_to_dcg(expr.args[1], last, thread);
+            if (right.error) return right;
+            return {
+              value: new Term(":", [expr.args[0], right.value]),
+              variable: right.variable,
+              error: false
+            };
+          } else if (pl2.type.is_term(expr) && expr.indicator === "\\+/1") {
+            var left = body_to_dcg(expr.args[0], last, thread);
+            if (left.error) return left;
+            free = thread.next_free_variable();
+            return {
+              value: new Term(",", [new Term(expr.id, [left.value]), new Term("=", [last, free])]),
+              variable: free,
+              error: false
+            };
+          } else if (pl2.type.is_term(expr) && (expr.indicator === ",/2" || expr.indicator === "->/2")) {
+            var left = body_to_dcg(expr.args[0], last, thread);
+            if (left.error) return left;
+            var right = body_to_dcg(expr.args[1], left.variable, thread);
+            if (right.error) return right;
+            return {
+              value: new Term(expr.id, [left.value, right.value]),
+              variable: right.variable,
+              error: false
+            };
+          } else if (pl2.type.is_term(expr) && expr.indicator === ";/2") {
+            var left = body_to_dcg(expr.args[0], last, thread);
+            if (left.error) return left;
+            var right = body_to_dcg(expr.args[1], last, thread);
+            if (right.error) return right;
+            return {
+              value: new Term(",", [new Term(";", [left.value, right.value]), new Term("=", [left.variable, right.variable])]),
+              variable: right.variable,
+              error: false
+            };
+          } else if (pl2.type.is_term(expr) && expr.indicator === "{}/1") {
+            free = thread.next_free_variable();
+            return {
+              value: new Term(",", [expr.args[0], new Term("=", [last, free])]),
+              variable: free,
+              error: false
+            };
+          } else if (pl2.type.is_empty_list(expr)) {
+            return {
+              value: new Term("true", []),
+              variable: last,
+              error: false
+            };
+          } else if (pl2.type.is_list(expr)) {
+            free = thread.next_free_variable();
+            var pointer = expr;
+            var prev;
+            while (pointer.indicator === "./2") {
+              prev = pointer;
+              pointer = pointer.args[1];
+            }
+            if (pl2.type.is_variable(pointer)) {
+              return {
+                value: pl2.error.instantiation("DCG/0"),
+                variable: last,
+                error: true
+              };
+            } else if (!pl2.type.is_empty_list(pointer)) {
+              return {
+                value: pl2.error.type("list", expr, "DCG/0"),
+                variable: last,
+                error: true
+              };
+            } else {
+              prev.args[1] = free;
+              return {
+                value: new Term("=", [last, expr]),
+                variable: free,
+                error: false
+              };
+            }
+          } else if (pl2.type.is_callable(expr)) {
+            free = thread.next_free_variable();
+            expr = new Term(expr.id, expr.args.concat([last, free]));
+            return {
+              value: expr,
+              variable: free,
+              error: false
+            };
+          } else {
+            return {
+              value: pl2.error.type("callable", expr, "DCG/0"),
+              variable: last,
+              error: true
+            };
+          }
+        }
+        function body_conversion(expr) {
+          if (pl2.type.is_variable(expr))
+            return new Term("call", [expr]);
+          else if (pl2.type.is_term(expr) && [",/2", ";/2", "->/2"].indexOf(expr.indicator) !== -1)
+            return new Term(expr.id, [body_conversion(expr.args[0]), body_conversion(expr.args[1])]);
+          else if (pl2.type.is_term(expr) && expr.indicator === ":/2") {
+            var body = body_conversion(expr.args[1]);
+            return new Term(":", [expr.args[0], body]);
+          }
+          return expr;
+        }
+        function arrayToList(array, cons) {
+          var list = cons ? cons : new Term("[]", []);
+          for (var i2 = array.length - 1; i2 >= 0; i2--)
+            list = new Term(".", [array[i2], list]);
+          return list;
+        }
+        function difference(xs, ys) {
+          var zs = [];
+          for (var i2 = 0; i2 < xs.length; i2++) {
+            if (indexOf(zs, xs[i2]) === -1 && indexOf(ys, xs[i2]) === -1)
+              zs.push(xs[i2]);
+          }
+          return zs;
+        }
+        function remove(array, element) {
+          for (var i2 = array.length - 1; i2 >= 0; i2--) {
+            if (array[i2] === element) {
+              array.splice(i2, 1);
+            }
+          }
+        }
+        function nub(array) {
+          var seen = {};
+          var unique = [];
+          for (var i2 = 0; i2 < array.length; i2++) {
+            if (!(array[i2] in seen)) {
+              unique.push(array[i2]);
+              seen[array[i2]] = true;
+            }
+          }
+          return unique;
+        }
+        function retract(thread, point, indicator2, rule, get_module) {
+          if (get_module.rules[indicator2]) {
+            for (var i2 = 0; i2 < get_module.rules[indicator2].length; i2++) {
+              if (get_module.rules[indicator2][i2] === rule) {
+                get_module.rules[indicator2].splice(i2, 1);
+                get_module.update_indices_predicate(indicator2);
+                thread.success(point);
+                break;
+              }
+            }
+          }
+        }
+        function callN(n) {
+          return function(thread, point, atom) {
+            var closure = atom.args[0], args = atom.args.slice(1, n);
+            var module_atom;
+            if (pl2.type.is_term(closure) && closure.indicator === ":/2") {
+              if (!pl2.type.is_atom(closure.args[0])) {
+                thread.throw_error(pl2.error.type("module", closure.args[0], atom.indicator));
+                return;
+              }
+              module_atom = closure.args[0];
+              closure = closure.args[1];
+            }
+            if (pl2.type.is_variable(closure)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(closure)) {
+              thread.throw_error(pl2.error.type("callable", closure, atom.indicator));
+            } else {
+              var goal = body_conversion(new Term(closure.id, closure.args.concat(args)));
+              if (!pl2.type.is_callable(goal)) {
+                thread.throw_error(pl2.error.type("callable", goal, atom.indicator));
+                return;
+              }
+              if (module_atom)
+                goal = new Term(":", [module_atom, goal]);
+              thread.prepend([new State(point.goal.replace(goal), point.substitution, point)]);
+            }
+          };
+        }
+        function str_indicator(str) {
+          for (var i2 = str.length - 1; i2 >= 0; i2--)
+            if (str.charAt(i2) === "/")
+              return new Term("/", [new Term(str.substring(0, i2)), new Num(parseInt(str.substring(i2 + 1)), false)]);
+        }
+        function gcd(a, b) {
+          if (b === 0)
+            return a;
+          return Math.abs(gcd(b, a % b));
+        }
+        function Var(id) {
+          this.id = id;
+          this.ground = false;
+        }
+        function Num(value, is_float) {
+          this.is_float = is_float !== void 0 ? is_float : Math.trunc(value) !== value;
+          this.value = this.is_float ? value : Math.trunc(value);
+          this.index = this.value;
+          this.ground = true;
+        }
+        var term_ref = 0;
+        function Term(id, args, ref) {
+          term_ref++;
+          this.ref = ref || term_ref;
+          this.id = id;
+          this.args = args || [];
+          this.indicator = id + "/" + this.args.length;
+          this.index = this.indicator;
+          this.ground = true;
+          for (var i2 = 0; i2 < this.args.length; i2++) {
+            if (this.args[i2].hasOwnProperty("ground") && this.args[i2].ground === false) {
+              this.ground = false;
+              break;
+            }
+          }
+        }
+        var stream_ref = 0;
+        function Stream(stream, mode, alias, type, reposition, eof_action) {
+          this.id = stream_ref++;
+          this.stream = stream;
+          this.mode = mode;
+          this.alias = alias;
+          this.type = type !== void 0 ? type : "text";
+          this.reposition = reposition !== void 0 ? reposition : true;
+          this.eof_action = eof_action !== void 0 ? eof_action : "eof_code";
+          this.position = this.mode === "append" ? "end_of_stream" : 0;
+          this.output = this.mode === "write" || this.mode === "append";
+          this.input = this.mode === "read";
+          this.line_position = 0;
+          this.line_count = 1;
+          this.char_count = 0;
+        }
+        function Substitution(links, attrs) {
+          links = links || {};
+          attrs = attrs || {};
+          this.links = links;
+          this.attrs = attrs;
+        }
+        function State(goal, subs, parent) {
+          subs = subs || new Substitution();
+          parent = parent || null;
+          this.goal = goal;
+          this.substitution = subs;
+          this.parent = parent;
+        }
+        function Rule(head, body, dynamic) {
+          this.head = head;
+          this.body = body;
+          this.dynamic = dynamic ? dynamic : false;
+        }
+        function Session(limit) {
+          limit = typeof limit === "number" && limit > 0 ? limit : null;
+          this.rename = 0;
+          this.modules = {};
+          this.modules.user = new Module("user", {}, "all", {
+            session: this,
+            dependencies: ["system"]
+          });
+          this.modules.system = pl2.modules.system;
+          this.rules = this.modules.user.rules;
+          this.total_threads = 0;
+          this.renamed_variables = {};
+          this.public_predicates = this.modules.user.public_predicates;
+          this.multifile_predicates = this.modules.user.multifile_predicates;
+          this.limit = limit;
+          this.streams = {
+            "user_input": new Stream(
+              nodejs_flag ? nodejs_user_input : tau_user_input,
+              "read",
+              "user_input",
+              "text",
+              false,
+              "reset"
+            ),
+            "user_output": new Stream(
+              nodejs_flag ? nodejs_user_output : tau_user_output,
+              "append",
+              "user_output",
+              "text",
+              false,
+              "reset"
+            ),
+            "user_error": new Stream(
+              nodejs_flag ? nodejs_user_error : tau_user_error,
+              "append",
+              "user_error",
+              "text",
+              false,
+              "reset"
+            )
+          };
+          this.file_system = nodejs_flag ? nodejs_file_system : tau_file_system;
+          this.standard_input = this.streams["user_input"];
+          this.standard_output = this.streams["user_output"];
+          this.standard_error = this.streams["user_error"];
+          this.current_input = this.streams["user_input"];
+          this.current_output = this.streams["user_output"];
+          this.working_directory = "/";
+          this.format_success = function(state) {
+            return state.substitution;
+          };
+          this.format_error = function(state) {
+            return state.goal;
+          };
+          this.flag = {
+            bounded: pl2.flag.bounded.value,
+            max_integer: pl2.flag.max_integer.value,
+            min_integer: pl2.flag.min_integer.value,
+            integer_rounding_function: pl2.flag.integer_rounding_function.value,
+            char_conversion: pl2.flag.char_conversion.value,
+            debug: pl2.flag.debug.value,
+            max_arity: pl2.flag.max_arity.value,
+            unknown: pl2.flag.unknown.value,
+            double_quotes: pl2.flag.double_quotes.value,
+            occurs_check: pl2.flag.occurs_check.value,
+            dialect: pl2.flag.dialect.value,
+            version_data: pl2.flag.version_data.value,
+            nodejs: pl2.flag.nodejs.value,
+            argv: pl2.flag.argv.value
+          };
+          this.__loaded_modules = [];
+          this.__char_conversion = {};
+          this.__operators = {
+            1200: { ":-": ["fx", "xfx"], "-->": ["xfx"], "?-": ["fx"] },
+            1150: { "meta_predicate": ["fx"] },
+            1100: { ";": ["xfy"] },
+            1050: { "->": ["xfy"], "*->": ["xfy"] },
+            1e3: { ",": ["xfy"] },
+            900: { "\\+": ["fy"] },
+            700: {
+              "=": ["xfx"],
+              "\\=": ["xfx"],
+              "==": ["xfx"],
+              "\\==": ["xfx"],
+              "@<": ["xfx"],
+              "@=<": ["xfx"],
+              "@>": ["xfx"],
+              "@>=": ["xfx"],
+              "=..": ["xfx"],
+              "is": ["xfx"],
+              "=:=": ["xfx"],
+              "=\\=": ["xfx"],
+              "<": ["xfx"],
+              "=<": ["xfx"],
+              ">": ["xfx"],
+              ">=": ["xfx"]
+            },
+            600: { ":": ["xfy"] },
+            500: { "+": ["yfx"], "-": ["yfx"], "/\\": ["yfx"], "\\/": ["yfx"] },
+            400: {
+              "*": ["yfx"],
+              "/": ["yfx"],
+              "//": ["yfx"],
+              "rem": ["yfx"],
+              "mod": ["yfx"],
+              "<<": ["yfx"],
+              ">>": ["yfx"],
+              "div": ["yfx"]
+            },
+            200: { "**": ["xfx"], "^": ["xfy"], "-": ["fy"], "+": ["fy"], "\\": ["fy"] }
+          };
+          this.thread = new Thread(this);
+        }
+        function Thread(session) {
+          this.epoch = Date.now();
+          this.session = session;
+          this.session.total_threads++;
+          this.format_success = session.format_success;
+          this.format_error = session.format_error;
+          this.total_steps = 0;
+          this.cpu_time = 0;
+          this.points = [];
+          this.debugger = false;
+          this.debugger_states = [];
+          this.level = new Term("top_level");
+          this.current_limit = this.session.limit;
+          this.has_limit = this.session.limit !== null;
+          this.warnings = [];
+          this.__calls = [];
+          this.__goal_expansion = false;
+          this.__stacks = {};
+        }
+        function Module(id, rules2, exports2, options) {
+          options = options === void 0 ? {} : options;
+          options.public_predicates = options.public_predicates === void 0 ? {} : options.public_predicates;
+          options.multifile_predicates = options.multifile_predicates === void 0 ? {} : options.multifile_predicates;
+          options.meta_predicates = options.meta_predicates === void 0 ? {} : options.meta_predicates;
+          options.session = options.session === void 0 ? null : options.session;
+          options.dependencies = options.dependencies === void 0 ? [] : options.dependencies;
+          this.id = id;
+          this.rules = rules2;
+          this.indexed_clauses = {};
+          this.non_indexable_clauses = {};
+          this.public_predicates = options.public_predicates;
+          this.multifile_predicates = options.multifile_predicates;
+          this.meta_predicates = options.meta_predicates;
+          this.src_predicates = {};
+          this.dependencies = options.dependencies;
+          this.exports = exports2;
+          this.is_library = options.session === null;
+          this.modules = {};
+          if (options.session) {
+            options.session.modules[id] = this;
+            for (var i2 = 0; i2 < options.dependencies.length; i2++) {
+              var lib = options.dependencies[i2];
+              if (!options.session.modules.hasOwnProperty(lib))
+                options.session.modules[lib] = pl2.modules[lib];
+            }
+          } else {
+            pl2.modules[id] = this;
+          }
+          if (exports2 !== "all") {
+            for (var i2 = 0; i2 < exports2.length; i2++) {
+              this.public_predicates[exports2[i2]] = options.public_predicates.hasOwnProperty(exports2[i2]) && options.public_predicates[exports2[i2]] === true;
+            }
+          }
+          this.update_indices_clauses();
+        }
+        Module.prototype.exports_predicate = function(indicator2) {
+          return this.exports === "all" || indexOf(this.exports, indicator2) !== -1;
+        };
+        Module.prototype.is_public_predicate = function(indicator2) {
+          return !this.public_predicates.hasOwnProperty(indicator2) || this.public_predicates[indicator2] === true;
+        };
+        Module.prototype.is_multifile_predicate = function(indicator2) {
+          return this.multifile_predicates.hasOwnProperty(indicator2) && this.multifile_predicates[indicator2] === true;
+        };
+        Module.prototype.is_meta_predicate = function(indicator2) {
+          if (this.meta_predicates.hasOwnProperty(indicator2))
+            return this.meta_predicates[indicator2];
+          return null;
+        };
+        Module.prototype.update_indices_clauses = function() {
+          this.indexed_clauses = {};
+          this.non_indexable_clauses = {};
+          for (var indicator2 in this.rules)
+            this.update_indices_predicate(indicator2);
+        };
+        Module.prototype.update_indices_predicate = function(indicator2) {
+          this.indexed_clauses[indicator2] = {};
+          this.non_indexable_clauses[indicator2] = [];
+          if (!Array.isArray(this.rules[indicator2]))
+            return;
+          for (var i2 = 0; i2 < this.rules[indicator2].length; i2++) {
+            var clause = this.rules[indicator2][i2];
+            this.add_index_predicate(clause);
+          }
+        };
+        Module.prototype.add_index_predicate = function(clause) {
+          var indicator2 = clause.head.indicator;
+          var index = clause.head.args.length > 0 ? clause.head.args[0].index : void 0;
+          if (index) {
+            if (!this.indexed_clauses.hasOwnProperty(indicator2))
+              this.indexed_clauses[indicator2] = {};
+            if (!this.indexed_clauses[indicator2].hasOwnProperty(index)) {
+              this.indexed_clauses[indicator2][index] = [];
+              if (this.non_indexable_clauses.hasOwnProperty(indicator2))
+                for (var j = 0; j < this.non_indexable_clauses[indicator2].length; j++)
+                  this.indexed_clauses[indicator2][index].push(this.non_indexable_clauses[indicator2][j]);
+            }
+            this.indexed_clauses[indicator2][index].push(clause);
+          } else {
+            if (!this.non_indexable_clauses.hasOwnProperty(indicator2))
+              this.non_indexable_clauses[indicator2] = [];
+            this.non_indexable_clauses[indicator2].push(clause);
+            for (var index in this.indexed_clauses[indicator2])
+              this.indexed_clauses[indicator2][index].push(clause);
+          }
+        };
+        Var.prototype.unify = function(obj, occurs_check) {
+          if (occurs_check && indexOf(obj.variables(), this.id) !== -1 && !pl2.type.is_variable(obj))
+            return null;
+          var links = {};
+          links[this.id] = obj;
+          return new Substitution(links);
+        };
+        Num.prototype.unify = function(obj, occurs_check) {
+          if (pl2.type.is_number(obj) && this.value === obj.value && this.is_float === obj.is_float)
+            return new Substitution();
+          return null;
+        };
+        Term.prototype.unify = function(obj, occurs_check) {
+          if (!pl2.type.is_term(obj) && obj.unify !== void 0) {
+            return obj.unify(this, occurs_check);
+          } else if (pl2.type.is_term(obj) && this.indicator === obj.indicator) {
+            var subs = new Substitution();
+            for (var i2 = 0; i2 < this.args.length; i2++) {
+              var mgu = pl2.unify(this.args[i2].apply(subs), obj.args[i2].apply(subs), occurs_check);
+              if (mgu === null)
+                return null;
+              for (var x in mgu.links)
+                subs.links[x] = mgu.links[x];
+              subs = subs.apply(mgu);
+            }
+            return subs;
+          }
+          return null;
+        };
+        Stream.prototype.unify = function(obj, _occurs_check) {
+          if (pl2.type.is_stream(obj) && this.id === obj.id)
+            return new Substitution();
+          return null;
+        };
+        Stream.prototype.compare = function(obj) {
+          if (this.id < obj.id)
+            return -1;
+          else if (this.id === obj.id)
+            return 0;
+          else
+            return 1;
+        };
+        Var.prototype.toString = function(options) {
+          options = options === void 0 ? {} : options;
+          if (options.variable_names) {
+            var pointer = options.variable_names;
+            while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+              var head = pointer.args[0];
+              if (pl2.type.is_term(head) && head.indicator === "=/2" && pl2.type.is_variable(head.args[1]) && head.args[1].id === this.id && pl2.type.is_atom(head.args[0]))
+                return head.args[0].id;
+              pointer = pointer.args[1];
+            }
+          }
+          return this.id;
+        };
+        Num.prototype.toString = function(_) {
+          var str = this.value.toString();
+          var e = str.indexOf("e");
+          if (e !== -1) {
+            if (str.indexOf(".") !== -1)
+              return str;
+            else
+              return str.replace("e", ".0e");
+          }
+          return this.is_float && indexOf(str, ".") === -1 ? this.value + ".0" : str;
+        };
+        Term.prototype.toString = function(options, priority, from) {
+          options = !options ? {} : options;
+          options.quoted = options.quoted === void 0 ? false : options.quoted;
+          options.ignore_ops = options.ignore_ops === void 0 ? false : options.ignore_ops;
+          options.numbervars = options.numbervars === void 0 ? false : options.numbervars;
+          options.variable_names = options.variable_names === void 0 ? false : options.variable_names;
+          priority = priority === void 0 ? { priority: 1200, class: "", indicator: "" } : priority;
+          from = from === void 0 ? "" : from;
+          var arg_priority = { priority: 999, class: "", indicator: "" };
+          if (options.numbervars && this.indicator === "$VAR/1" && pl2.type.is_integer(this.args[0]) && this.args[0].value >= 0) {
+            var i2 = this.args[0].value;
+            var number = Math.floor(i2 / 26);
+            var letter = i2 % 26;
+            return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[letter] + (number !== 0 ? number : "");
+          }
+          switch (this.indicator) {
+            case "[]/0":
+            case "{}/0":
+            case "!/0":
+              return this.id;
+            case "{}/1":
+              if (options.ignore_ops === false) {
+                return "{" + this.args[0].toString(options) + "}";
+              } else {
+                return "{}(" + this.args[0].toString(options) + ")";
+              }
+            case "./2":
+              if (options.ignore_ops === false) {
+                var list = "[" + this.args[0].toString(options, arg_priority);
+                var pointer = this.args[1];
+                while (pointer.indicator === "./2") {
+                  list += "," + pointer.args[0].toString(options, arg_priority);
+                  pointer = pointer.args[1];
+                }
+                if (pointer.indicator !== "[]/0") {
+                  list += "|" + pointer.toString(options, arg_priority);
+                }
+                list += "]";
+                return list;
+              }
+            default:
+              var id = this.id;
+              var operator = options.session ? options.session.lookup_operator(this.id, this.args.length) : null;
+              if (options.session === void 0 || options.ignore_ops || operator === null) {
+                if (options.quoted && (!/^(!|[a-z][0-9a-zA-Z_]*|[#\$\&\*\+\-\.\/\:\<\=\>\?\@\^\~\\]+)$/.test(id) && id !== "{}" && id !== "[]" || indexOf([".", ",", ";"], id) !== -1 || id.substring(0, 2) === "/*"))
+                  id = "'" + redoEscape(id) + "'";
+                if (this.args.length === 0 && is_graphic_token(this.id) && priority.indicator !== "")
+                  return "(" + id + ")";
+                return id + (this.args.length > 0 ? "(" + map(
+                  this.args,
+                  function(x) {
+                    return x.toString(options, arg_priority);
+                  }
+                ).join(",") + ")" : "");
+              } else {
+                var priority_op = parseInt(operator.priority);
+                var priority_arg = parseInt(priority.priority);
+                var cond = priority_op > priority_arg || priority_op === priority_arg && (operator.class === "xfx" || operator.class === "xfy" && this.indicator !== priority.indicator || operator.class === "yfx" && this.indicator !== priority.indicator || this.indicator === priority.indicator && operator.class === "yfx" && from === "right" || this.indicator === priority.indicator && operator.class === "xfy" && from === "left" || this.indicator === priority.indicator && operator.class === "xf" && from === "left" || this.indicator === priority.indicator && operator.class === "fx" && from === "right");
+                operator.indicator = this.indicator;
+                var lpar = cond ? "(" : "";
+                var rpar = cond ? ")" : "";
+                var space = !(is_graphic_token(this.id) || this.id === "," || this.id === ";") || operator.class.length === 2 || operator.class.length === 3 && pl2.type.is_number(this.args[1]) && this.args[1].value < 0 ? " " : "";
+                if (this.args.length === 0) {
+                  return lpar + this.id + rpar;
+                } else if (["fy", "fx"].indexOf(operator.class) !== -1) {
+                  return lpar + id + space + this.args[0].toString(options, operator, "right") + rpar;
+                } else if (["yf", "xf"].indexOf(operator.class) !== -1) {
+                  return lpar + this.args[0].toString(options, operator, "left") + space + id + rpar;
+                } else {
+                  return lpar + this.args[0].toString(options, operator, "left") + space + this.id + space + this.args[1].toString(options, operator, "right") + rpar;
+                }
+              }
+          }
+        };
+        Stream.prototype.toString = function(_) {
+          return "<stream>(" + this.id + ")";
+        };
+        Substitution.prototype.toString = function(options) {
+          var str = "{";
+          for (var link in this.links) {
+            if (!this.links.hasOwnProperty(link)) continue;
+            if (str !== "{") {
+              str += ", ";
+            }
+            str += link + "/" + this.links[link].toString(options);
+          }
+          str += "}";
+          return str;
+        };
+        State.prototype.toString = function(options) {
+          if (this.goal === null) {
+            return "<" + this.substitution.toString(options) + ">";
+          } else {
+            return "<" + this.goal.toString(options) + ", " + this.substitution.toString(options) + ">";
+          }
+        };
+        Rule.prototype.toString = function(options) {
+          if (!this.body) {
+            return this.head.toString(options) + ".";
+          } else {
+            return this.head.toString(options, 1200, "left") + " :- " + this.body.toString(options, 1200, "right") + ".";
+          }
+        };
+        Session.prototype.toString = function(options) {
+          var str = "";
+          for (var prop in this.modules) {
+            if (this.modules.hasOwnProperty(prop) && this.modules[prop].is_library)
+              str += ":- use_module(library(" + this.modules[prop] + ")).\n";
+          }
+          str += "\n";
+          for (var key in this.modules.user.rules) {
+            if (!this.modules.user.rules.hasOwnProperty(key)) continue;
+            for (i = 0; i < this.modules.user.rules[key].length; i++) {
+              str += this.modules.user.rules[key][i].toString(options);
+              str += "\n";
+            }
+          }
+          return str;
+        };
+        Var.prototype.clone = function() {
+          return new Var(this.id);
+        };
+        Num.prototype.clone = function() {
+          return new Num(this.value, this.is_float);
+        };
+        Term.prototype.clone = function() {
+          var term = new Term(this.id, map(this.args, function(arg) {
+            return arg.clone();
+          }));
+          if (this.definition_module)
+            term.definition_module = this.definition_module;
+          return term;
+        };
+        Stream.prototype.clone = function() {
+          return new Stream(this.stream, this.mode, this.alias, this.type, this.reposition, this.eof_action);
+        };
+        Substitution.prototype.clone = function() {
+          var links = {};
+          var attrs = {};
+          for (var link in this.links) {
+            if (!this.links.hasOwnProperty(link)) continue;
+            links[link] = this.links[link].clone();
+          }
+          for (var attr in this.attrs) {
+            if (!this.attrs.hasOwnProperty(attrs)) continue;
+            attrs[attr] = {};
+            for (var m in this.attrs[attr]) {
+              if (!this.attrs[attr].hasOwnProperty(m)) continue;
+              attrs[attr][m] = this.attrs[attr][m].clone();
+            }
+          }
+          return new Substitution(links, attrs);
+        };
+        State.prototype.clone = function() {
+          return new State(this.goal.clone(), this.substitution.clone(), this.parent);
+        };
+        Rule.prototype.clone = function() {
+          return new Rule(this.head.clone(), this.body !== null ? this.body.clone() : null);
+        };
+        Var.prototype.equals = function(obj) {
+          return pl2.type.is_variable(obj) && this.id === obj.id;
+        };
+        Num.prototype.equals = function(obj) {
+          return pl2.type.is_number(obj) && this.value === obj.value && this.is_float === obj.is_float;
+        };
+        Term.prototype.equals = function(obj) {
+          if (!pl2.type.is_term(obj) || this.indicator !== obj.indicator) {
+            return false;
+          }
+          for (var i2 = 0; i2 < this.args.length; i2++) {
+            if (!this.args[i2].equals(obj.args[i2])) {
+              return false;
+            }
+          }
+          return true;
+        };
+        Stream.prototype.equals = function(obj) {
+          return pl2.type.is_stream(obj) && this.id === obj.id;
+        };
+        Substitution.prototype.equals = function(obj) {
+          var link;
+          if (!pl2.type.is_substitution(obj)) {
+            return false;
+          }
+          for (link in this.links) {
+            if (!this.links.hasOwnProperty(link)) continue;
+            if (!obj.links[link] || !this.links[link].equals(obj.links[link])) {
+              return false;
+            }
+          }
+          for (link in obj.links) {
+            if (!obj.links.hasOwnProperty(link)) continue;
+            if (!this.links[link]) {
+              return false;
+            }
+          }
+          return true;
+        };
+        State.prototype.equals = function(obj) {
+          return pl2.type.is_state(obj) && this.goal.equals(obj.goal) && this.substitution.equals(obj.substitution) && this.parent === obj.parent;
+        };
+        Rule.prototype.equals = function(obj) {
+          return pl2.type.is_rule(obj) && this.head.equals(obj.head) && (this.body === null && obj.body === null || this.body !== null && this.body.equals(obj.body));
+        };
+        Var.prototype.rename = function(thread) {
+          return thread.get_free_variable(this);
+        };
+        Num.prototype.rename = function(_) {
+          return this;
+        };
+        Term.prototype.rename = function(thread) {
+          if (this.ground)
+            return new Term(this.id, this.args);
+          if (this.indicator === "./2") {
+            var arr = [];
+            var pointer = this;
+            while (pointer.indicator === "./2" && !pointer.ground) {
+              var app = pointer.args[0].rename(thread);
+              arr.push(app);
+              pointer = pointer.args[1];
+            }
+            var list = pointer.rename(thread);
+            for (var i2 = arr.length - 1; i2 >= 0; i2--)
+              list = new Term(".", [arr[i2], list]);
+            return list;
+          }
+          var args = [];
+          for (var i2 = 0; i2 < this.args.length; i2++) {
+            var app = this.args[i2].rename(thread);
+            args.push(app);
+          }
+          return new Term(this.id, args);
+        };
+        Stream.prototype.rename = function(thread) {
+          return this;
+        };
+        Rule.prototype.rename = function(thread) {
+          return new Rule(this.head.rename(thread), this.body !== null ? this.body.rename(thread) : null);
+        };
+        Var.prototype.is_rename = function(obj, links) {
+          links = links || {};
+          if (!pl2.type.is_variable(obj) || links.hasOwnProperty(this.id) && links[this.id] !== obj.id || links.hasOwnProperty(obj.id) && links[obj.id] !== this.id)
+            return false;
+          links[this.id] = obj.id;
+          links[obj.id] = this.id;
+          return true;
+        };
+        Num.prototype.is_rename = function(obj, _links) {
+          return this.equals(obj);
+        };
+        Term.prototype.is_rename = function(obj, links) {
+          links = links || {};
+          if (!pl2.type.is_term(obj) || this.indicator !== obj.indicator)
+            return false;
+          for (var i2 = 0; i2 < this.args.length; i2++) {
+            if (!pl2.is_rename(this.args[i2], obj.args[i2], links))
+              return false;
+          }
+          return true;
+        };
+        Stream.prototype.is_rename = function(obj, _links) {
+          return this.equals(obj);
+        };
+        Var.prototype.variables = function() {
+          return [this.id];
+        };
+        Num.prototype.variables = function() {
+          return [];
+        };
+        Term.prototype.variables = function() {
+          if (this.ground)
+            return [];
+          return [].concat.apply([], map(this.args, function(arg) {
+            return arg.variables();
+          }));
+        };
+        Stream.prototype.variables = function() {
+          return [];
+        };
+        Rule.prototype.variables = function() {
+          if (this.body === null) {
+            return this.head.variables();
+          } else {
+            return this.head.variables().concat(this.body.variables());
+          }
+        };
+        Var.prototype.apply = function(subs) {
+          if (subs.lookup(this.id)) {
+            return subs.lookup(this.id);
+          }
+          return this;
+        };
+        Num.prototype.apply = function(_) {
+          return this;
+        };
+        Term.prototype.apply = function(subs) {
+          if (this.ground)
+            return this;
+          if (this.indicator === "./2") {
+            var arr = [];
+            var pointer = this;
+            while (pointer.indicator === "./2" && !pointer.ground) {
+              var app = pointer.args[0].apply(subs);
+              arr.push(app);
+              pointer = pointer.args[1];
+            }
+            var list = pointer.apply(subs);
+            for (var i2 = arr.length - 1; i2 >= 0; i2--)
+              list = new Term(".", [arr[i2], list]);
+            return list;
+          }
+          var args = [];
+          for (var i2 = 0; i2 < this.args.length; i2++) {
+            var app = this.args[i2].apply(subs);
+            args.push(app);
+          }
+          return new Term(this.id, args, this.ref);
+        };
+        Stream.prototype.apply = function(_) {
+          return this;
+        };
+        Rule.prototype.apply = function(subs) {
+          return new Rule(this.head.apply(subs), this.body !== null ? this.body.apply(subs) : null);
+        };
+        Substitution.prototype.apply = function(subs) {
+          var link, links = {}, attr, attrs = {}, m;
+          for (link in this.links) {
+            if (!this.links.hasOwnProperty(link)) continue;
+            links[link] = this.links[link].apply(subs);
+          }
+          for (attr in this.attrs) {
+            if (!this.attrs.hasOwnProperty(attr)) continue;
+            attrs[attr] = {};
+            for (m in this.attrs[attr]) {
+              if (!this.attrs[attr].hasOwnProperty(m)) continue;
+              attrs[attr][m] = this.attrs[attr][m].apply(subs);
+            }
+          }
+          return new Substitution(links, attrs);
+        };
+        Term.prototype.select = function() {
+          var pointer = this;
+          while (pl2.type.is_term(pointer) && pointer.indicator === ",/2")
+            pointer = pointer.args[0];
+          return pointer;
+        };
+        Term.prototype.replace = function(expr) {
+          if (this.indicator === ",/2") {
+            if (this.args[0].indicator === ",/2") {
+              return new Term(",", [this.args[0].replace(expr), this.args[1]]);
+            } else {
+              return expr === null ? this.args[1] : new Term(",", [expr, this.args[1]]);
+            }
+          } else {
+            return expr;
+          }
+        };
+        Term.prototype.search = function(expr) {
+          if (this == expr || this.ref === expr.ref)
+            return true;
+          for (var i2 = 0; i2 < this.args.length; i2++)
+            if (pl2.type.is_term(this.args[i2]) && this.args[i2].search(expr))
+              return true;
+          return false;
+        };
+        Session.prototype.push_global_stack = function(stack, value) {
+          return this.thread.push_global_stack(stack, value);
+        };
+        Thread.prototype.push_global_stack = function(stack, value) {
+          if (!this.__stacks.hasOwnProperty(stack))
+            this.__stacks[stack] = [];
+          this.__stacks[stack].push(value);
+        };
+        Session.prototype.flush_global_stack = function(stack, tail) {
+          return this.thread.push_global_stack(stack, tail);
+        };
+        Thread.prototype.flush_global_stack = function(stack, tail) {
+          var list = tail || new Term("[]", []);
+          if (this.__stacks.hasOwnProperty(stack)) {
+            while (this.__stacks[stack].length > 0)
+              list = new Term(".", [this.__stacks[stack].pop(), list]);
+            delete this.__stacks[stack];
+          }
+          return list;
+        };
+        Session.prototype.setMaxInferences = function(max) {
+          this.limit = typeof max === "number" && max > 0 ? max : null;
+        };
+        Thread.prototype.setMaxInferences = function(max) {
+          this.session.setMaxInferences(max);
+          this.current_limit = this.session.limit;
+          this.has_limit = this.session.limit !== null;
+        };
+        Session.prototype.format_answer = function(answer, options) {
+          return this.thread.format_answer(answer, options);
+        };
+        Thread.prototype.format_answer = function(answer, options) {
+          return pl2.format_answer(answer, this, options);
+        };
+        Session.prototype.get_current_input = function() {
+          return this.current_input;
+        };
+        Thread.prototype.get_current_input = function() {
+          return this.session.get_current_input();
+        };
+        Session.prototype.get_current_output = function() {
+          return this.current_output;
+        };
+        Thread.prototype.get_current_output = function() {
+          return this.session.get_current_output();
+        };
+        Session.prototype.set_current_input = function(input) {
+          this.current_input = input;
+        };
+        Thread.prototype.set_current_input = function(input) {
+          return this.session.set_current_input(input);
+        };
+        Session.prototype.set_current_output = function(output) {
+          this.current_output = output;
+        };
+        Thread.prototype.set_current_output = function(output) {
+          return this.session.set_current_output(output);
+        };
+        Session.prototype.get_stream_by_alias = function(alias) {
+          return this.streams[alias];
+        };
+        Thread.prototype.get_stream_by_alias = function(alias) {
+          return this.session.get_stream_by_alias(alias);
+        };
+        Session.prototype.file_system_open = function(path, type, mode) {
+          if (this.get_flag("nodejs").indicator === "false/0")
+            path = this.absolute_file_name(path);
+          return this.file_system.open(path, type, mode);
+        };
+        Thread.prototype.file_system_open = function(path, type, mode) {
+          return this.session.file_system_open(path, type, mode);
+        };
+        Session.prototype.absolute_file_name = function(filename) {
+          var absolute;
+          if (this.get_flag("nodejs").indicator === "true/0") {
+            var path = __require("path");
+            absolute = filename;
+            for (var prop in process.env) {
+              if (!process.env.hasOwnProperty(prop))
+                continue;
+              absolute = absolute.replace(new RegExp("\\$" + prop, "g"), process.env[prop]);
+            }
+            return path.resolve(absolute);
+          } else {
+            var cwd = this.working_directory;
+            if (filename[0] === "/")
+              absolute = filename;
+            else
+              absolute = cwd + (cwd[cwd.length - 1] === "/" ? filename : "/" + filename);
+            absolute = absolute.replace(/\/\.\//g, "/");
+            var dirs = absolute.split("/");
+            var dirs2 = [];
+            for (var i2 = 0; i2 < dirs.length; i2++) {
+              if (dirs[i2] !== "..") {
+                dirs2.push(dirs[i2]);
+              } else {
+                if (dirs2.length !== 0)
+                  dirs2.pop();
+              }
+            }
+            absolute = dirs2.join("/").replace(/\/\.$/, "/");
+          }
+          return absolute;
+        };
+        Thread.prototype.absolute_file_name = function(path, cwd) {
+          return this.session.absolute_file_name(path, cwd);
+        };
+        Session.prototype.get_char_conversion = function(char) {
+          return this.__char_conversion[char] || char;
+        };
+        Thread.prototype.get_char_conversion = function(char) {
+          return this.session.get_char_conversion(char);
+        };
+        Session.prototype.parse = function(string) {
+          return this.thread.parse(string);
+        };
+        Thread.prototype.parse = function(string) {
+          var tokenizer = new Tokenizer(this);
+          tokenizer.new_text(string);
+          var tokens = tokenizer.get_tokens();
+          if (tokens === null)
+            return false;
+          var expr = parseExpr(this, tokens, 0, this.__get_max_priority(), false);
+          if (expr.len !== tokens.length)
+            return false;
+          return { value: expr.value, expr, tokens };
+        };
+        Session.prototype.get_flag = function(flag) {
+          return this.flag[flag];
+        };
+        Thread.prototype.get_flag = function(flag) {
+          return this.session.get_flag(flag);
+        };
+        Session.prototype.add_rule = function(rule, options) {
+          return this.thread.add_rule(rule, options);
+        };
+        Thread.prototype.add_rule = function(rule, options) {
+          options = options ? options : {};
+          options.from = options.from ? options.from : "$tau-js";
+          var module_id, get_module;
+          if (pl2.type.is_term(rule.head) && rule.head.indicator === ":/2") {
+            if (!pl2.type.is_atom(rule.head.args[0])) {
+              this.throw_warning(pl2.error.type("module", rule.head.args[0], "top_level/0"));
+              return;
+            }
+            module_id = rule.head.args[0].id;
+            rule.head = rule.head.args[1];
+          }
+          if (module_id) {
+            get_module = this.session.modules[module_id];
+            if (!pl2.type.is_module(get_module)) {
+              get_module = new Module(module_id, {}, "all", { session: this.session });
+              this.session.modules[module_id] = get_module;
+            }
+          } else {
+            get_module = this.session.modules[options.context_module];
+          }
+          get_module.src_predicates[rule.head.indicator] = options.from;
+          if (!get_module.rules.hasOwnProperty(rule.head.indicator)) {
+            get_module.rules[rule.head.indicator] = [];
+          }
+          get_module.rules[rule.head.indicator].push(rule);
+          if (!get_module.public_predicates.hasOwnProperty(rule.head.indicator))
+            get_module.public_predicates[rule.head.indicator] = false;
+          get_module.add_index_predicate(rule);
+          return true;
+        };
+        Session.prototype.run_directive = function(directive, options) {
+          return this.thread.run_directive(directive, options);
+        };
+        Thread.prototype.run_directive = function(directive, options) {
+          if (pl2.type.is_directive(directive)) {
+            if (pl2.directive[directive.indicator])
+              return pl2.directive[directive.indicator](this, directive, options);
+            else
+              return pl2.directive[directive.id + "/*"](this, directive, options);
+          }
+          return false;
+        };
+        Session.prototype.__get_max_priority = function() {
+          return "1200";
+        };
+        Thread.prototype.__get_max_priority = function() {
+          return this.session.__get_max_priority();
+        };
+        Session.prototype.__get_next_priority = function(priority) {
+          var max = 0;
+          priority = parseInt(priority);
+          for (var key in this.__operators) {
+            if (!this.__operators.hasOwnProperty(key)) continue;
+            var n = parseInt(key);
+            if (n > max && n < priority) max = n;
+          }
+          return max.toString();
+        };
+        Thread.prototype.__get_next_priority = function(priority) {
+          return this.session.__get_next_priority(priority);
+        };
+        Session.prototype.__lookup_operator_classes = function(priority, operator) {
+          if (this.__operators.hasOwnProperty(priority) && this.__operators[priority][operator] instanceof Array) {
+            return this.__operators[priority][operator] || false;
+          }
+          return false;
+        };
+        Thread.prototype.__lookup_operator_classes = function(priority, operator) {
+          return this.session.__lookup_operator_classes(priority, operator);
+        };
+        Session.prototype.lookup_operator = function(name, arity) {
+          for (var p in this.__operators)
+            if (this.__operators[p][name]) {
+              for (var i2 = 0; i2 < this.__operators[p][name].length; i2++)
+                if (this.__operators[p][name][i2].length === arity + 1)
+                  return { priority: p, class: this.__operators[p][name][i2] };
+            }
+          return null;
+        };
+        Thread.prototype.lookup_operator = function(name, arity) {
+          return this.session.lookup_operator(name, arity);
+        };
+        Session.prototype.throw_warning = function(warning) {
+          this.thread.throw_warning(warning);
+        };
+        Thread.prototype.throw_warning = function(warning) {
+          this.warnings.push(warning);
+        };
+        Session.prototype.get_warnings = function() {
+          return this.thread.get_warnings();
+        };
+        Thread.prototype.get_warnings = function() {
+          return this.warnings;
+        };
+        Session.prototype.add_goal = function(goal, unique) {
+          this.thread.add_goal(goal, unique);
+        };
+        Thread.prototype.add_goal = function(goal, unique, parent) {
+          parent = parent ? parent : null;
+          if (unique === true)
+            this.points = [];
+          var vars = goal.variables();
+          var links = {};
+          for (var i2 = 0; i2 < vars.length; i2++)
+            links[vars[i2]] = new Var(vars[i2]);
+          this.points.push(new State(goal, new Substitution(links), parent));
+        };
+        Session.prototype.consult = function(program, options) {
+          return this.thread.consult(program, options);
+        };
+        Thread.prototype.consult = function(program, options) {
+          var string = "", success = false;
+          var opts = {};
+          var callback = typeof options === "function" ? options : function() {
+          };
+          options = options === void 0 || typeof options === "function" ? {} : options;
+          opts.context_module = options.context_module === void 0 ? "user" : options.context_module;
+          opts.text = options.text === void 0 ? true : options.text;
+          opts.html = options.html === void 0 ? true : options.html;
+          opts.url = options.url === void 0 ? true : options.url;
+          opts.file = options.file === void 0 ? true : options.file;
+          opts.script = options.script === void 0 ? true : options.script;
+          opts.success = options.success === void 0 ? callback : options.success;
+          opts.error = options.error === void 0 ? callback : options.error;
+          if (typeof program === "string") {
+            string = program;
+            if (opts.script && this.get_flag("nodejs").indicator === "false/0" && program != "" && document.getElementById(string)) {
+              var script = document.getElementById(string);
+              var type = script.getAttribute("type");
+              if (type !== null && type.replace(/ /g, "").toLowerCase() === "text/prolog") {
+                string = script.text;
+                success = true;
+              }
+            }
+            if (!success && opts.file && this.get_flag("nodejs").indicator === "true/0") {
+              var fs = __require("fs");
+              var thread = this;
+              fs.readFile(program, function(error, data) {
+                if (error) {
+                  opts.file = false;
+                  thread.consult(program, opts);
+                } else {
+                  parseProgram(thread, data.toString(), opts);
+                }
+              });
+              return;
+            }
+            if (!success && this.get_flag("nodejs").indicator === "false/0" && opts.url && program !== "" && !/\s/.test(program)) {
+              try {
+                var xhttp = new XMLHttpRequest();
+                var thread = this;
+                xhttp.onreadystatechange = function() {
+                  if (this.readyState == 4) {
+                    if (this.status == 200) {
+                      string = xhttp.responseText;
+                      success = true;
+                      parseProgram(thread, string, opts);
+                    } else {
+                      opts.url = false;
+                      thread.consult(program, opts);
+                    }
+                  }
+                };
+                xhttp.open("GET", program, true);
+                xhttp.send();
+                return;
+              } catch (ex) {
+                opts.error(ex);
+                return;
+              }
+            }
+            if (!success && opts.text) {
+              success = true;
+            }
+          } else if (opts.html && program.nodeName) {
+            switch (program.nodeName.toLowerCase()) {
+              case "input":
+              case "textarea":
+                string = program.value;
+                success = true;
+                break;
+              default:
+                string = program.innerHTML;
+                success = true;
+                break;
+            }
+          } else {
+            opts.error(pl2.error.existence("source_sink", new Term(string), "top_level/0"));
+          }
+          this.warnings = [];
+          parseProgram(this, string, opts);
+        };
+        Session.prototype.query = function(string, options) {
+          return this.thread.query(string, options);
+        };
+        Thread.prototype.query = function(string, options) {
+          this.points = [];
+          this.debugger_states = [];
+          this.level = new Term("top_level");
+          return parseQuery(this, string, options);
+        };
+        Session.prototype.head_point = function() {
+          return this.thread.head_point();
+        };
+        Thread.prototype.head_point = function() {
+          return this.points[this.points.length - 1];
+        };
+        Session.prototype.get_free_variable = function(variable) {
+          return this.thread.get_free_variable(variable);
+        };
+        Thread.prototype.get_free_variable = function(variable) {
+          var variables = [];
+          if (variable.id === "_" || this.session.renamed_variables[variable.id] === void 0) {
+            this.session.rename++;
+            if (this.current_point)
+              variables = this.current_point.substitution.domain();
+            while (indexOf(variables, pl2.format_variable(this.session.rename, variable.id)) !== -1) {
+              this.session.rename++;
+            }
+            if (variable.id === "_") {
+              return new Var(pl2.format_variable(this.session.rename, variable.id));
+            } else {
+              this.session.renamed_variables[variable.id] = pl2.format_variable(this.session.rename, variable.id);
+            }
+          }
+          return new Var(this.session.renamed_variables[variable.id]);
+        };
+        Session.prototype.next_free_variable = function() {
+          return this.thread.next_free_variable();
+        };
+        Thread.prototype.next_free_variable = function() {
+          this.session.rename++;
+          var variables = [];
+          if (this.current_point)
+            variables = this.current_point.substitution.domain();
+          while (indexOf(variables, pl2.format_variable(this.session.rename)) !== -1) {
+            this.session.rename++;
+          }
+          return new Var(pl2.format_variable(this.session.rename));
+        };
+        Session.prototype.is_public_predicate = function(indicator2, module_id) {
+          module_id = module_id === void 0 ? "user" : module_id;
+          return pl2.type.is_module(this.modules[module_id]) && this.modules[module_id].is_public_predicate(indicator2);
+        };
+        Thread.prototype.is_public_predicate = function(indicator2, module_id) {
+          return this.session.is_public_predicate(indicator2, module_id);
+        };
+        Session.prototype.is_multifile_predicate = function(indicator2, module_id) {
+          module_id = module_id === void 0 ? "user" : module_id;
+          return pl2.type.is_module(this.modules[module_id]) && this.modules[module_id].is_multifile_predicate(indicator2);
+        };
+        Thread.prototype.is_multifile_predicate = function(indicator2, module_id) {
+          return this.session.is_multifile_predicate(indicator2, module_id);
+        };
+        Session.prototype.is_meta_predicate = function(indicator2, module_id) {
+          module_id = module_id === void 0 ? "user" : module_id;
+          if (pl2.type.is_module(this.modules[module_id]))
+            return this.modules[module_id].is_meta_predicate(indicator2);
+          return null;
+        };
+        Thread.prototype.is_meta_predicate = function(indicator2, module_id) {
+          return this.session.is_meta_predicate(indicator2, module_id);
+        };
+        Session.prototype.prepend = function(states) {
+          return this.thread.prepend(states);
+        };
+        Thread.prototype.prepend = function(states) {
+          for (var i2 = states.length - 1; i2 >= 0; i2--)
+            this.points.push(states[i2]);
+        };
+        Session.prototype.success = function(point, parent) {
+          return this.thread.success(point, parent);
+        };
+        Thread.prototype.success = function(point, parent) {
+          var parent = typeof parent === "undefined" ? point : parent;
+          this.prepend([new State(point.goal.replace(null), point.substitution, parent)]);
+        };
+        Session.prototype.throw_error = function(error) {
+          return this.thread.throw_error(error);
+        };
+        Thread.prototype.throw_error = function(error) {
+          if (pl2.type.is_variable(error))
+            error = pl2.error.instantiation(this.level.indicator);
+          var state = new State(
+            new Term("throw", [error]),
+            new Substitution(),
+            null
+          );
+          state.error = true;
+          this.prepend([state]);
+        };
+        Session.prototype.lookup_module = function(atom, context_module) {
+          return this.thread.lookup_module(atom, context_module);
+        };
+        Thread.prototype.lookup_module = function(atom, context_module) {
+          var get_module = this.session.modules[context_module];
+          if (!pl2.type.is_module(get_module))
+            get_module = this.session.modules.user;
+          if (get_module.rules.hasOwnProperty(atom.indicator) && (get_module.exports_predicate(atom.indicator) || get_module.rules.hasOwnProperty(this.level.indicator) || context_module === get_module.id))
+            return get_module;
+          get_module.modules.system = pl2.modules.system;
+          get_module.modules.user = this.session.modules.user;
+          for (var prop in get_module.modules) {
+            if (!this.session.modules.hasOwnProperty(prop))
+              continue;
+            var get_module = this.session.modules[prop];
+            if (get_module.rules.hasOwnProperty(atom.indicator) && (get_module.exports_predicate(atom.indicator) || get_module.rules.hasOwnProperty(this.level.indicator) || context_module === get_module.id))
+              return get_module;
+          }
+          return null;
+        };
+        Session.prototype.expand_meta_predicate = function(atom, definition_module, context_module) {
+          return this.thread.expand_meta_predicate(atom, definition_module, context_module);
+        };
+        Thread.prototype.expand_meta_predicate = function(atom, definition_module, context_module) {
+          var get_module = this.session.modules[definition_module];
+          if (!get_module)
+            return;
+          var meta = get_module.is_meta_predicate(atom.indicator);
+          if (!meta)
+            return;
+          for (var i2 = 0; i2 < meta.args.length; i2++) {
+            if (pl2.type.is_integer(meta.args[i2]) || pl2.type.is_atom(meta.args[i2]) && indexOf([":"], meta.args[i2].id) !== -1) {
+              if (!pl2.type.is_term(atom.args[i2]) || atom.args[i2].indicator !== ":/2") {
+                atom.args[i2] = new Term(":", [new Term(context_module), atom.args[i2]]);
+              }
+            } else if (pl2.type.is_atom(meta.args[i2]) && meta.args[i2].id === "^") {
+              var pointer_last = atom;
+              var pointer_index = i2;
+              var pointer = atom.args[i2];
+              while (pl2.type.is_term(pointer) && pointer.indicator === "^/2") {
+                pointer_last = pointer;
+                pointer_index = 1;
+                pointer = pointer.args[1];
+              }
+              if (!pl2.type.is_term(pointer) || pointer.indicator !== ":/2") {
+                pointer_last.args[pointer_index] = new Term(":", [new Term(context_module), pointer]);
+              }
+            }
+          }
+        };
+        Session.prototype.step = function() {
+          return this.thread.step();
+        };
+        Thread.prototype.step = function() {
+          if (this.points.length === 0) {
+            return;
+          }
+          var asyn = false;
+          var point = this.points.pop();
+          this.current_point = point;
+          if (this.debugger)
+            this.debugger_states.push(point);
+          var atom = pl2.type.is_term(point.goal) ? point.goal.select() : point.goal;
+          if (pl2.type.is_term(atom) && (atom.indicator !== ":/2" || pl2.type.is_term(atom.args[1]))) {
+            var context_module = null;
+            var states = [];
+            if (atom !== null) {
+              this.total_steps++;
+              var level = point;
+              while (level.parent !== null && level.parent.goal.search(atom))
+                level = level.parent;
+              if (level.parent === null) {
+                this.level = new Term("top_level");
+              } else {
+                this.level = level.parent.goal.select();
+                if (this.level.indicator === ":/2")
+                  this.level = this.level.args[1];
+              }
+              if (pl2.type.is_term(atom) && atom.indicator === ":/2") {
+                context_module = atom.args[0];
+                atom = atom.args[1];
+                if (!pl2.type.is_atom(context_module)) {
+                  this.throw_error(pl2.error.type("module", context_module, this.level.indicator));
+                  return;
+                }
+                context_module = context_module.id;
+              } else {
+                if (this.level.definition_module) {
+                  context_module = this.level.definition_module;
+                } else {
+                  context_module = "user";
+                }
+              }
+              atom.context_module = context_module;
+              if (atom.indicator === ",/2") {
+                this.prepend([new State(
+                  point.goal.replace(new Term(",", [
+                    new Term(":", [new Term(context_module), atom.args[0]]),
+                    new Term(":", [new Term(context_module), atom.args[1]])
+                  ])),
+                  point.substitution,
+                  point
+                )]);
+                return;
+              }
+              this.__call_indicator = atom.indicator;
+              var get_module = this.lookup_module(atom, context_module);
+              atom.definition_module = pl2.type.is_module(get_module) ? get_module.id : "user";
+              this.expand_meta_predicate(atom, atom.definition_module, context_module);
+              var clauses = null;
+              if (get_module && atom.args.length > 0 && atom.args[0].index && get_module.indexed_clauses.hasOwnProperty(atom.indicator) && get_module.indexed_clauses[atom.indicator].hasOwnProperty(atom.args[0].index))
+                clauses = get_module.indexed_clauses[atom.indicator][atom.args[0].index];
+              else
+                clauses = get_module === null ? null : get_module.rules[atom.indicator];
+              if (clauses === null) {
+                if (!this.session.modules.user.rules.hasOwnProperty(atom.indicator)) {
+                  if (this.get_flag("unknown").id === "error") {
+                    this.throw_error(pl2.error.existence("procedure", atom.indicator, this.level.indicator));
+                  } else if (this.get_flag("unknown").id === "warning") {
+                    this.throw_warning("unknown procedure " + atom.indicator + " (from " + this.level.indicator + ")");
+                  }
+                }
+              } else if (clauses instanceof Function) {
+                asyn = clauses(this, point, atom);
+              } else {
+                if (this.__goal_expansion && atom.indicator === "goal_expansion/2")
+                  clauses = clauses.concat(pl2.builtin.rules["goal_expansion/2"]);
+                for (var i2 = 0; i2 < clauses.length; i2++) {
+                  this.session.renamed_variables = {};
+                  var clause = clauses[i2].rename(this);
+                  var occurs_check = this.get_flag("occurs_check").indicator === "true/0";
+                  var mgu = pl2.unify(atom, clause.head, occurs_check);
+                  if (mgu !== null) {
+                    var state = new State();
+                    state.goal = point.goal.replace(clause.body);
+                    if (state.goal !== null)
+                      state.goal = state.goal.apply(mgu);
+                    state.substitution = point.substitution.apply(mgu);
+                    state.parent = point;
+                    states.push(state);
+                  }
+                }
+                this.prepend(states);
+              }
+            }
+          } else {
+            var term = pl2.type.is_term(atom) && atom.indicator === ":/2" ? atom.args[1] : atom;
+            if (pl2.type.is_variable(term))
+              this.throw_error(pl2.error.instantiation(this.level.indicator));
+            else
+              this.throw_error(pl2.error.type("callable", term, this.level.indicator));
+          }
+          return asyn;
+        };
+        Session.prototype.answer = function(options) {
+          return this.thread.answer(options);
+        };
+        Thread.prototype.answer = function(options) {
+          var opts = {};
+          options = options || function() {
+          };
+          if (typeof options === "function") {
+            opts = {
+              success: options,
+              error: options,
+              fail: options,
+              limit: options
+            };
+          } else {
+            opts.success = options.success === void 0 ? function() {
+            } : options.success;
+            opts.error = options.error === void 0 ? function() {
+            } : options.error;
+            opts.fail = options.fail === void 0 ? function() {
+            } : options.fail;
+            opts.limit = options.limit === void 0 ? function() {
+            } : options.limit;
+          }
+          this.__calls.push(opts);
+          if (this.__calls.length > 1) {
+            return;
+          }
+          this.again();
+        };
+        Session.prototype.answers = function(callback, max, after) {
+          return this.thread.answers(callback, max, after);
+        };
+        Thread.prototype.answers = function(callback, max, after) {
+          var answers = max === void 0 ? 1e3 : max;
+          var thread = this;
+          if (answers <= 0) {
+            if (after)
+              after();
+            return;
+          }
+          this.answer(function(answer) {
+            callback(answer);
+            if (answer !== false) {
+              setTimeout(function() {
+                thread.answers(callback, answers - 1, after);
+              }, 0);
+            } else if (after) {
+              after();
+            }
+          });
+        };
+        Session.prototype.again = function(reset_limit) {
+          return this.thread.again(reset_limit);
+        };
+        Thread.prototype.again = function(reset_limit) {
+          while (this.__calls.length > 0) {
+            this.warnings = [];
+            if (reset_limit !== false)
+              this.current_limit = this.session.limit;
+            while ((!this.has_limit || this.current_limit > 0) && this.points.length > 0 && this.head_point().goal !== null && !pl2.type.is_error_state(this.head_point())) {
+              if (this.has_limit)
+                this.current_limit--;
+              var t0 = Date.now();
+              var asyn = this.step();
+              var t1 = Date.now();
+              this.cpu_time += t1 - t0;
+              if (asyn === true)
+                return;
+            }
+            var call = this.__calls.shift();
+            if (this.has_limit && this.current_limit <= 0) {
+              (function(call2) {
+                return setTimeout(function() {
+                  call2.limit(null);
+                }, 0);
+              })(call);
+            } else if (this.points.length === 0) {
+              (function(call2) {
+                return setTimeout(function() {
+                  call2.fail(false);
+                }, 0);
+              })(call);
+            } else if (pl2.type.is_error(this.head_point().goal)) {
+              var error = this.format_error(this.points.pop());
+              this.points = [];
+              (function(error2, call2) {
+                return setTimeout(function() {
+                  call2.error(error2);
+                }, 0);
+              })(error, call);
+            } else {
+              if (this.debugger)
+                this.debugger_states.push(this.head_point());
+              var answer = this.format_success(this.points.pop());
+              (function(answer2, call2) {
+                return setTimeout(function() {
+                  call2.success(answer2);
+                }, 0);
+              })(answer, call);
+            }
+          }
+        };
+        Session.prototype.unfold = function(rule) {
+          if (rule.body === null)
+            return false;
+          var head = rule.head;
+          var body = rule.body;
+          var atom = body.select();
+          var thread = new Thread(this);
+          var unfolded = [];
+          thread.add_goal(atom);
+          thread.step();
+          for (var i2 = thread.points.length - 1; i2 >= 0; i2--) {
+            var point = thread.points[i2];
+            var head2 = head.apply(point.substitution);
+            var body2 = body.replace(point.goal);
+            if (body2 !== null)
+              body2 = body2.apply(point.substitution);
+            unfolded.push(new Rule(head2, body2));
+          }
+          var rules2 = this.modules.user.rules[head.indicator];
+          var index = indexOf(rules2, rule);
+          if (unfolded.length > 0 && index !== -1) {
+            rules2.splice.apply(rules2, [index, 1].concat(unfolded));
+            return true;
+          }
+          return false;
+        };
+        Thread.prototype.unfold = function(rule) {
+          return this.session.unfold(rule);
+        };
+        Var.prototype.interpret = function(thread) {
+          return pl2.error.instantiation(thread.level.indicator);
+        };
+        Num.prototype.interpret = function(thread) {
+          return this;
+        };
+        Term.prototype.interpret = function(thread) {
+          if (pl2.type.is_unitary_list(this)) {
+            return this.args[0].interpret(thread);
+          } else {
+            return pl2.operate(thread, this);
+          }
+        };
+        Var.prototype.compare = function(obj) {
+          if (this.id < obj.id) {
+            return -1;
+          } else if (this.id > obj.id) {
+            return 1;
+          } else {
+            return 0;
+          }
+        };
+        Num.prototype.compare = function(obj) {
+          if (this.value === obj.value && this.is_float === obj.is_float) {
+            return 0;
+          } else if (this.value < obj.value || this.value === obj.value && this.is_float && !obj.is_float) {
+            return -1;
+          } else if (this.value > obj.value) {
+            return 1;
+          }
+        };
+        Term.prototype.compare = function(obj) {
+          if (this.args.length < obj.args.length || this.args.length === obj.args.length && this.id < obj.id) {
+            return -1;
+          } else if (this.args.length > obj.args.length || this.args.length === obj.args.length && this.id > obj.id) {
+            return 1;
+          } else {
+            for (var i2 = 0; i2 < this.args.length; i2++) {
+              var arg = pl2.compare(this.args[i2], obj.args[i2]);
+              if (arg !== 0) {
+                return arg;
+              }
+            }
+            return 0;
+          }
+        };
+        Substitution.prototype.lookup = function(variable) {
+          if (this.links[variable]) {
+            return this.links[variable];
+          } else {
+            return null;
+          }
+        };
+        Substitution.prototype.filter = function(predicate) {
+          var links = {};
+          for (var id in this.links) {
+            if (!this.links.hasOwnProperty(id)) continue;
+            var value = this.links[id];
+            if (predicate(id, value)) {
+              links[id] = value;
+            }
+          }
+          return new Substitution(links, this.attrs);
+        };
+        Substitution.prototype.exclude = function(variables) {
+          var links = {};
+          for (var variable in this.links) {
+            if (!this.links.hasOwnProperty(variable)) continue;
+            if (indexOf(variables, variable) === -1) {
+              links[variable] = this.links[variable];
+            }
+          }
+          return new Substitution(links, this.attrs);
+        };
+        Substitution.prototype.add = function(variable, value) {
+          this.links[variable] = value;
+        };
+        Substitution.prototype.domain = function(plain) {
+          var f = plain === true ? function(x2) {
+            return x2;
+          } : function(x2) {
+            return new Var(x2);
+          };
+          var vars = [];
+          for (var x in this.links)
+            vars.push(f(x));
+          return vars;
+        };
+        Substitution.prototype.get_attribute = function(variable, module2) {
+          if (this.attrs[variable])
+            return this.attrs[variable][module2];
+        };
+        Substitution.prototype.set_attribute = function(variable, module2, value) {
+          var subs = new Substitution(this.links);
+          for (var v in this.attrs) {
+            if (v === variable) {
+              subs.attrs[v] = {};
+              for (var m in this.attrs[v]) {
+                subs.attrs[v][m] = this.attrs[v][m];
+              }
+            } else {
+              subs.attrs[v] = this.attrs[v];
+            }
+          }
+          if (!subs.attrs[variable]) {
+            subs.attrs[variable] = {};
+          }
+          subs.attrs[variable][module2] = value;
+          return subs;
+        };
+        Substitution.prototype.has_attributes = function(variable) {
+          return this.attrs[variable] && this.attrs[variable] !== {};
+        };
+        Var.prototype.compile = function() {
+          return 'new pl.type.Var("' + this.id.toString() + '")';
+        };
+        Num.prototype.compile = function() {
+          return "new pl.type.Num(" + this.value.toString() + ", " + this.is_float.toString() + ")";
+        };
+        Term.prototype.compile = function() {
+          return 'new pl.type.Term("' + this.id.replace(/"/g, '\\"') + '", [' + map(this.args, function(arg) {
+            return arg.compile();
+          }) + "])";
+        };
+        Rule.prototype.compile = function() {
+          return "new pl.type.Rule(" + this.head.compile() + ", " + (this.body === null ? "null" : this.body.compile()) + ")";
+        };
+        Session.prototype.compile = function() {
+          var str, obj = [], rules2;
+          for (var _indicator in this.modules.user.rules) {
+            if (!this.modules.user.rules.hasOwnProperty(_indicator)) continue;
+            var indicator2 = this.modules.user.rules[_indicator];
+            rules2 = [];
+            str = '"' + _indicator + '": [';
+            for (var i2 = 0; i2 < indicator2.length; i2++) {
+              rules2.push(indicator2[i2].compile());
+            }
+            str += rules2.join();
+            str += "]";
+            obj.push(str);
+          }
+          return "{" + obj.join() + "};";
+        };
+        Module.prototype.compile = function() {
+          var length = 0;
+          var dependencies = 0;
+          var str = "var pl;\n";
+          str += "(function(pl) {\n";
+          str += '	var name = "' + this.id + '";\n';
+          str += "	var predicates = function() {\n";
+          str += "		return {\n";
+          for (var prop in this.rules) {
+            if (length > 0)
+              str += ",\n";
+            str += '			"' + prop + '": ';
+            if (typeof this.rules[prop] === "function") {
+              str += this.rules[prop];
+            } else {
+              str += "[\n";
+              for (var i2 = 0; i2 < this.rules[prop].length; i2++) {
+                str += "				" + this.rules[prop][i2].compile();
+                if (i2 < this.rules[prop].length - 1)
+                  str += ",";
+                str += "\n";
+              }
+              str += "			]";
+            }
+            length++;
+          }
+          str += "\n		};\n";
+          str += "	};\n";
+          str += "	var exports = [";
+          for (var i2 = 0; i2 < this.exports.length; i2++) {
+            if (i2 > 0)
+              str += ", ";
+            str += '"' + this.exports[i2] + '"';
+          }
+          str += "];\n";
+          str += "	var options = function() {\n";
+          str += "		return {\n";
+          str += "			dependencies: [";
+          for (var prop in this.modules) {
+            if (dependencies > 0)
+              str += ", ";
+            str += '"' + prop + '"';
+            dependencies++;
+          }
+          str += "]\n";
+          str += "		};\n";
+          str += "};\n";
+          str += "	if(typeof module !== 'undefined') {\n";
+          str += "		module.exports = function(p) {\n";
+          str += "			pl = p;\n";
+          str += "			new pl.type.Module(name, predicates(), exports, options());\n";
+          str += "		};\n";
+          str += "	} else {\n";
+          str += "		new pl.type.Module(name, predicates(), exports, options());\n";
+          str += "	}\n";
+          str += "})(pl);\n";
+          return str;
+        };
+        Var.prototype.toJavaScript = function() {
+          return this.toString();
+        };
+        Num.prototype.toJavaScript = function() {
+          return this.value;
+        };
+        Term.prototype.toJavaScript = function(options) {
+          if (this.args.length === 0 && this.indicator !== "[]/0") {
+            return this.toString(options);
+          } else if (pl2.type.is_list(this)) {
+            var all_obj = true;
+            var arr = [];
+            var obj = {};
+            var pointer = this;
+            var value;
+            while (pointer.indicator === "./2") {
+              value = pointer.args[0].toJavaScript(options);
+              arr.push(value);
+              all_obj = all_obj && pl2.type.is_term(pointer.args[0]) && pointer.args[0].indicator === "-/2" && pl2.type.is_atom(pointer.args[0].args[0]);
+              if (all_obj)
+                obj[pointer.args[0].args[0].id] = pointer.args[0].args[1].toJavaScript(options);
+              pointer = pointer.args[1];
+            }
+            if (pointer.indicator === "[]/0")
+              return all_obj && arr.length > 0 ? obj : arr;
+          }
+          return this.toString(options);
+        };
+        Rule.prototype.singleton_variables = function(include_named) {
+          include_named = include_named || false;
+          var variables = this.head.variables();
+          var count = {};
+          var singleton = [];
+          if (this.body !== null)
+            variables = variables.concat(this.body.variables());
+          for (var i2 = 0; i2 < variables.length; i2++) {
+            if (count[variables[i2]] === void 0)
+              count[variables[i2]] = 0;
+            count[variables[i2]]++;
+          }
+          for (var key in count) {
+            if (!count.hasOwnProperty(key))
+              continue;
+            if (count[key] === 1) {
+              var charcode = codePointAt(key, 1);
+              if (!include_named || key === "_") {
+                if (key === "_" || key[0] === "_" && (charcode === 95 || charcode >= 65 && charcode <= 90))
+                  continue;
+              }
+              singleton.push(key);
+            }
+          }
+          return singleton;
+        };
+        var nodejs_flag = typeof process !== "undefined" && !process.browser;
+        var nodejs_arguments = nodejs_flag ? arrayToList(map(process.argv.slice(1), function(arg) {
+          return new Term(arg);
+        })) : new Term("[]", []);
+        var pl2 = {
+          // Environment
+          __env: globalThis,
+          // Modules
+          modules: {},
+          // Version
+          version,
+          // Parser
+          parser: {
+            tokenizer: Tokenizer,
+            expression: parseExpr
+          },
+          // Utils
+          utils: {
+            // String to indicator
+            str_indicator,
+            // Code point at
+            codePointAt,
+            // From code point
+            fromCodePoint,
+            // Length of string
+            stringLength
+          },
+          // Statistics
+          statistics: {
+            // Number of created terms
+            getCountTerms: function() {
+              return term_ref;
+            }
+          },
+          // JavaScript to Prolog
+          fromJavaScript: {
+            // Type testing
+            test: {
+              // Boolean
+              boolean: function(obj, tobj) {
+                return obj === true || obj === false;
+              },
+              // Number
+              number: function(obj, tobj) {
+                return typeof obj === "number";
+              },
+              // String
+              string: function(obj, tobj) {
+                return typeof obj === "string";
+              },
+              // List
+              list: function(obj, tobj) {
+                return obj instanceof Array;
+              },
+              // Variable
+              variable: function(obj, tobj) {
+                return obj === void 0;
+              },
+              // Object
+              object: function(obj, tobj) {
+                tobj = tobj === void 0 ? false : tobj;
+                return tobj && !(obj instanceof Array) && typeof obj === "object";
+              },
+              // Any
+              any: function(_, tobj) {
+                return true;
+              }
+            },
+            // Function conversion
+            conversion: {
+              // Bolean
+              boolean: function(obj, tobj) {
+                return new Term(obj ? "true" : "false", []);
+              },
+              // Number
+              number: function(obj, tobj) {
+                return new Num(obj, obj % 1 !== 0);
+              },
+              // String
+              string: function(obj, tobj) {
+                return new Term(obj, []);
+              },
+              // List
+              list: function(obj, tobj) {
+                tobj = tobj === void 0 ? false : tobj;
+                var arr = [];
+                var elem;
+                for (var i2 = 0; i2 < obj.length; i2++) {
+                  elem = pl2.fromJavaScript.apply(obj[i2], tobj);
+                  if (elem === void 0)
+                    return void 0;
+                  arr.push(elem);
+                }
+                return arrayToList(arr);
+              },
+              // Variable
+              variable: function(obj, tobj) {
+                return new Var("_");
+              },
+              // Object
+              object: function(obj, tobj) {
+                tobj = tobj === void 0 ? false : tobj;
+                var list = new Term("[]", []);
+                var arr = [];
+                for (var prop in obj) {
+                  if (!obj.hasOwnProperty(prop)) continue;
+                  arr.push(new Term("-", [
+                    pl2.fromJavaScript.apply(prop, tobj),
+                    pl2.fromJavaScript.apply(obj[prop], tobj)
+                  ]));
+                }
+                return arrayToList(arr);
+              },
+              // Any
+              any: function(obj, tobj) {
+                return void 0;
+              }
+            },
+            // Transform object
+            apply: function(obj, tobj) {
+              tobj = tobj === void 0 ? false : tobj;
+              for (var i2 in pl2.fromJavaScript.test)
+                if (i2 !== "any" && pl2.fromJavaScript.test[i2](obj, tobj))
+                  return pl2.fromJavaScript.conversion[i2](obj, tobj);
+              return pl2.fromJavaScript.conversion.any(obj, tobj);
+            }
+          },
+          // Types
+          type: {
+            // Objects
+            Var,
+            Num,
+            Term,
+            Rule,
+            State,
+            Stream,
+            Module,
+            Thread,
+            Session,
+            Substitution,
+            File: TauFile,
+            Directory: TauDirectory,
+            // Order
+            order: [Var, Num, Term, Stream],
+            // Compare types
+            compare: function(x, y) {
+              var ord_x = indexOf(pl2.type.order, x.constructor);
+              var ord_y = indexOf(pl2.type.order, y.constructor);
+              if (ord_x < ord_y) {
+                return -1;
+              } else if (ord_x > ord_y) {
+                return 1;
+              } else {
+                if (x.constructor === Num) {
+                  if (x.is_float && y.is_float)
+                    return 0;
+                  else if (x.is_float)
+                    return -1;
+                  else if (y.is_float)
+                    return 1;
+                }
+                return 0;
+              }
+            },
+            // Is a substitution
+            is_substitution: function(obj) {
+              return obj instanceof Substitution;
+            },
+            // Is a state
+            is_state: function(obj) {
+              return obj instanceof State;
+            },
+            // Is a rule
+            is_rule: function(obj) {
+              return obj instanceof Rule;
+            },
+            // Is a variable
+            is_variable: function(obj) {
+              return obj instanceof Var;
+            },
+            // Is a stream
+            is_stream: function(obj) {
+              return obj instanceof Stream;
+            },
+            // Is an anonymous variable
+            is_anonymous_var: function(obj) {
+              return obj instanceof Var && obj.id === "_";
+            },
+            // Is a callable term
+            is_callable: function(obj) {
+              return obj instanceof Term && (indexOf([",/2", ";/2", "->/2"], obj.indicator) === -1 || pl2.type.is_callable(obj.args[0]) && pl2.type.is_callable(obj.args[1])) || obj instanceof Var;
+            },
+            // Is a number
+            is_number: function(obj) {
+              return obj instanceof Num;
+            },
+            // Is an integer
+            is_integer: function(obj) {
+              return obj instanceof Num && !obj.is_float;
+            },
+            // Is a float
+            is_float: function(obj) {
+              return obj instanceof Num && obj.is_float;
+            },
+            // Is a term
+            is_term: function(obj) {
+              return obj instanceof Term;
+            },
+            // Is an atom
+            is_atom: function(obj) {
+              return obj instanceof Term && obj.args.length === 0;
+            },
+            // Is a ground term
+            is_ground: function(obj) {
+              if (obj instanceof Var) return false;
+              if (obj instanceof Term) {
+                for (var i2 = 0; i2 < obj.args.length; i2++)
+                  if (!pl2.type.is_ground(obj.args[i2]))
+                    return false;
+              }
+              return true;
+            },
+            // Is atomic
+            is_atomic: function(obj) {
+              return obj instanceof Term && obj.args.length === 0 || obj instanceof Num;
+            },
+            // Is compound
+            is_compound: function(obj) {
+              return obj instanceof Term && obj.args.length > 0;
+            },
+            // Is a list
+            is_list: function(obj) {
+              return obj instanceof Term && (obj.indicator === "[]/0" || obj.indicator === "./2");
+            },
+            // Is an empty list
+            is_empty_list: function(obj) {
+              return obj instanceof Term && obj.indicator === "[]/0";
+            },
+            // Is a non empty list
+            is_non_empty_list: function(obj) {
+              return obj instanceof Term && obj.indicator === "./2";
+            },
+            // Is a fully list
+            is_fully_list: function(obj) {
+              while (obj instanceof Term && obj.indicator === "./2") {
+                obj = obj.args[1];
+              }
+              return obj instanceof Var || obj instanceof Term && obj.indicator === "[]/0";
+            },
+            // Is a instantiated list
+            is_instantiated_list: function(obj) {
+              while (obj instanceof Term && obj.indicator === "./2") {
+                obj = obj.args[1];
+              }
+              return obj instanceof Term && obj.indicator === "[]/0";
+            },
+            // Is an unitary list
+            is_unitary_list: function(obj) {
+              return obj instanceof Term && obj.indicator === "./2" && obj.args[1] instanceof Term && obj.args[1].indicator === "[]/0";
+            },
+            // Is a character
+            is_character: function(obj) {
+              return obj instanceof Term && obj.args.length === 0 && (obj.id.length === 1 || obj.id.length > 0 && obj.id.length <= 2 && codePointAt(obj.id, 0) >= 65536);
+            },
+            // Is a in_character
+            is_in_character: function(obj) {
+              return obj instanceof Term && (obj.indicator === "end_of_file/0" || obj.id.length === 1 || obj.id.length > 0 && obj.id.length <= 2 && codePointAt(obj.id, 0) >= 65536);
+            },
+            // Is a character_code
+            is_character_code: function(obj) {
+              return obj instanceof Num && !obj.is_float && obj.value >= 0 && obj.value <= 1114111;
+            },
+            // Is a in_character_code
+            is_in_character_code: function(obj) {
+              return obj instanceof Num && !obj.is_float && obj.value >= -1 && obj.value <= 1114111;
+            },
+            // Is a byte
+            is_byte: function(obj) {
+              return obj instanceof Num && !obj.is_float && obj.value >= 0 && obj.value <= 255;
+            },
+            // Is a in_byte
+            is_in_byte: function(obj) {
+              return obj instanceof Num && !obj.is_float && obj.value >= -1 && obj.value <= 255;
+            },
+            // Is an operator
+            is_operator: function(obj) {
+              return obj instanceof Term && pl2.arithmetic.evaluation[obj.indicator];
+            },
+            // Is a directive
+            is_directive: function(obj) {
+              return obj instanceof Term && (pl2.directive[obj.indicator] !== void 0 || pl2.directive[obj.id + "/*"] !== void 0);
+            },
+            // Is a built-in predicate
+            is_builtin: function(obj) {
+              return obj instanceof Term && pl2.builtin.rules.hasOwnProperty(obj.indicator) && obj.indicator !== "goal_expansion/2";
+            },
+            // Is an error
+            is_error: function(obj) {
+              return obj instanceof Term && obj.indicator === "throw/1";
+            },
+            // Is an error state
+            is_error_state: function(obj) {
+              return pl2.type.is_state(obj) && obj.error && obj.error === true;
+            },
+            // Is a predicate indicator
+            is_predicate_indicator: function(obj) {
+              return obj instanceof Term && obj.indicator === "//2" && obj.args[0] instanceof Term && obj.args[0].args.length === 0 && obj.args[1] instanceof Num && obj.args[1].is_float === false;
+            },
+            // Is a flag
+            is_flag: function(obj) {
+              return obj instanceof Term && obj.args.length === 0 && pl2.flag[obj.id] !== void 0;
+            },
+            // Is a valid value for a flag
+            is_value_flag: function(flag, obj) {
+              if (!pl2.type.is_flag(flag)) return false;
+              for (var value in pl2.flag[flag.id].allowed) {
+                if (!pl2.flag[flag.id].allowed.hasOwnProperty(value)) continue;
+                if (pl2.flag[flag.id].allowed[value].equals(obj)) return true;
+              }
+              return false;
+            },
+            // Is a io mode
+            is_io_mode: function(obj) {
+              return pl2.type.is_atom(obj) && ["read", "write", "append"].indexOf(obj.id) !== -1;
+            },
+            // Is a stream option
+            is_stream_option: function(obj) {
+              return pl2.type.is_term(obj) && (obj.indicator === "alias/1" && pl2.type.is_atom(obj.args[0]) || obj.indicator === "reposition/1" && pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "true" || obj.args[0].id === "false") || obj.indicator === "type/1" && pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "text" || obj.args[0].id === "binary") || obj.indicator === "eof_action/1" && pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "error" || obj.args[0].id === "eof_code" || obj.args[0].id === "reset"));
+            },
+            // Is a stream position
+            is_stream_position: function(obj) {
+              return pl2.type.is_term(obj) && (obj.indicator === "end_of_stream/0" || obj.indicator === "past_end_of_stream/0" || obj.indicator === "position/3" && pl2.type.is_integer(obj.args[0]) && pl2.type.is_integer(obj.args[1]) && pl2.type.is_integer(obj.args[2]));
+            },
+            // Is a stream property
+            is_stream_property: function(obj) {
+              return pl2.type.is_term(obj) && (obj.indicator === "input/0" || obj.indicator === "output/0" || obj.indicator === "alias/1" && (pl2.type.is_variable(obj.args[0]) || pl2.type.is_atom(obj.args[0])) || obj.indicator === "file_name/1" && (pl2.type.is_variable(obj.args[0]) || pl2.type.is_atom(obj.args[0])) || obj.indicator === "reposition/1" && (pl2.type.is_variable(obj.args[0]) || pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "true" || obj.args[0].id === "false")) || obj.indicator === "type/1" && (pl2.type.is_variable(obj.args[0]) || pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "text" || obj.args[0].id === "binary")) || obj.indicator === "mode/1" && (pl2.type.is_variable(obj.args[0]) || pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "read" || obj.args[0].id === "write" || obj.args[0].id === "append")) || obj.indicator === "eof_action/1" && (pl2.type.is_variable(obj.args[0]) || pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "error" || obj.args[0].id === "eof_code" || obj.args[0].id === "reset")) || obj.indicator === "end_of_stream/1" && (pl2.type.is_variable(obj.args[0]) || pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "at" || obj.args[0].id === "past" || obj.args[0].id === "not")) || obj.indicator === "position/1" && (pl2.type.is_variable(obj.args[0]) || pl2.type.is_term(obj.args[0]) && obj.args[0].indicator === "position/3" && (pl2.type.is_variable(obj.args[0].args[0]) || pl2.type.is_integer(obj.args[0].args[0])) && (pl2.type.is_variable(obj.args[0].args[1]) || pl2.type.is_integer(obj.args[0].args[1])) && (pl2.type.is_variable(obj.args[0].args[2]) || pl2.type.is_integer(obj.args[0].args[2]))));
+            },
+            // Is a streamable term
+            is_streamable: function(obj) {
+              return obj.__proto__.stream !== void 0;
+            },
+            // Is a read option
+            is_read_option: function(obj) {
+              return pl2.type.is_term(obj) && ["variables/1", "variable_names/1", "singletons/1"].indexOf(obj.indicator) !== -1;
+            },
+            // Is a write option
+            is_write_option: function(obj) {
+              return pl2.type.is_term(obj) && (obj.indicator === "quoted/1" && pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "true" || obj.args[0].id === "false") || obj.indicator === "ignore_ops/1" && pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "true" || obj.args[0].id === "false") || obj.indicator === "numbervars/1" && pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "true" || obj.args[0].id === "false") || obj.indicator === "variable_names/1" && pl2.type.is_fully_list(obj.args[0]));
+            },
+            // Is a close option
+            is_close_option: function(obj) {
+              return pl2.type.is_term(obj) && obj.indicator === "force/1" && pl2.type.is_atom(obj.args[0]) && (obj.args[0].id === "true" || obj.args[0].id === "false");
+            },
+            // Is a modifiable flag
+            is_modifiable_flag: function(obj) {
+              return pl2.type.is_flag(obj) && pl2.flag[obj.id].changeable;
+            },
+            // Is a module
+            is_module: function(obj) {
+              return obj instanceof Module;
+            },
+            // Is a virtual file
+            is_file: function(obj) {
+              return obj instanceof TauFile;
+            },
+            // Is a virtual directory
+            is_directory: function(obj) {
+              return obj instanceof TauDirectory;
+            },
+            // Is a predicate property
+            is_predicate_property: function(obj) {
+              return pl2.type.is_term(obj) && (obj.indicator === "built_in/0" || obj.indicator === "static/0" || obj.indicator === "dynamic/0" || obj.indicator === "native_code/0" || obj.indicator === "multifile/0" || obj.indicator === "meta_predicate/1");
+            },
+            // Is a meta-argument specifier
+            is_meta_argument_specifier: function(obj) {
+              return pl2.type.is_integer(obj) && obj.value >= 0 || pl2.type.is_atom(obj) && indexOf(["+", "-", "?", "*", "^", ":", "//"], obj.id) !== -1;
+            },
+            // Is a time property
+            is_time_property: function(obj) {
+              return pl2.type.is_term(obj) && obj.args.length === 1 && (pl2.type.is_variable(obj.args[0]) || pl2.type.is_integer(obj.args[0])) && indexOf(["year", "month", "day", "hours", "minutes", "seconds", "milliseconds", "weekday"], obj.id) !== -1;
+            }
+          },
+          // Arithmetic functions
+          arithmetic: {
+            // Evaluation
+            evaluation: {
+              "e/0": {
+                type_args: null,
+                type_result: true,
+                fn: function(_) {
+                  return Math.E;
+                }
+              },
+              "pi/0": {
+                type_args: null,
+                type_result: true,
+                fn: function(_) {
+                  return Math.PI;
+                }
+              },
+              "tau/0": {
+                type_args: null,
+                type_result: true,
+                fn: function(_) {
+                  return 2 * Math.PI;
+                }
+              },
+              "epsilon/0": {
+                type_args: null,
+                type_result: true,
+                fn: function(_) {
+                  return Number.EPSILON;
+                }
+              },
+              "+/1": {
+                type_args: null,
+                type_result: null,
+                fn: function(x, _) {
+                  return x;
+                }
+              },
+              "-/1": {
+                type_args: null,
+                type_result: null,
+                fn: function(x, _) {
+                  return -x;
+                }
+              },
+              "\\/1": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, _) {
+                  return ~x;
+                }
+              },
+              "abs/1": {
+                type_args: null,
+                type_result: null,
+                fn: function(x, _) {
+                  return Math.abs(x);
+                }
+              },
+              "sign/1": {
+                type_args: null,
+                type_result: null,
+                fn: function(x, _) {
+                  return Math.sign(x);
+                }
+              },
+              "float_integer_part/1": {
+                type_args: true,
+                type_result: false,
+                fn: function(x, _) {
+                  return parseInt(x);
+                }
+              },
+              "float_fractional_part/1": {
+                type_args: true,
+                type_result: true,
+                fn: function(x, _) {
+                  return x - parseInt(x);
+                }
+              },
+              "float/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, _) {
+                  return parseFloat(x);
+                }
+              },
+              "floor/1": {
+                type_args: true,
+                type_result: false,
+                fn: function(x, _) {
+                  return Math.floor(x);
+                }
+              },
+              "truncate/1": {
+                type_args: true,
+                type_result: false,
+                fn: function(x, _) {
+                  return parseInt(x);
+                }
+              },
+              "round/1": {
+                type_args: true,
+                type_result: false,
+                fn: function(x, _) {
+                  return Math.round(x);
+                }
+              },
+              "ceiling/1": {
+                type_args: true,
+                type_result: false,
+                fn: function(x, _) {
+                  return Math.ceil(x);
+                }
+              },
+              "sin/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, _) {
+                  return Math.sin(x);
+                }
+              },
+              "cos/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, _) {
+                  return Math.cos(x);
+                }
+              },
+              "tan/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, _) {
+                  return Math.tan(x);
+                }
+              },
+              "asin/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, thread) {
+                  return Math.abs(x) <= 1 ? Math.asin(x) : pl2.error.evaluation("undefined", thread.__call_indicator);
+                }
+              },
+              "acos/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, thread) {
+                  return Math.abs(x) <= 1 ? Math.acos(x) : pl2.error.evaluation("undefined", thread.__call_indicator);
+                }
+              },
+              "atan/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, _) {
+                  return Math.atan(x);
+                }
+              },
+              "atan2/2": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, y, thread) {
+                  return x === 0 && y === 0 ? pl2.error.evaluation("undefined", thread.__call_indicator) : Math.atan2(x, y);
+                }
+              },
+              "acosh/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, thread) {
+                  return x >= 1 ? Math.acosh(x) : pl2.error.evaluation("undefined", thread.__call_indicator);
+                }
+              },
+              "asinh/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, _) {
+                  return Math.asinh(x);
+                }
+              },
+              "atanh/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, thread) {
+                  return Math.abs(x) < 1 ? Math.atanh(x) : pl2.error.evaluation("undefined", thread.__call_indicator);
+                }
+              },
+              "cosh/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, _) {
+                  return Math.cosh(x);
+                }
+              },
+              "sinh/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, _) {
+                  return Math.sinh(x);
+                }
+              },
+              "tanh/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, _) {
+                  return Math.tanh(x);
+                }
+              },
+              "exp/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, _) {
+                  return Math.exp(x);
+                }
+              },
+              "sqrt/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, thread) {
+                  return x >= 0 ? Math.sqrt(x) : pl2.error.evaluation("undefined", thread.__call_indicator);
+                }
+              },
+              "log/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, thread) {
+                  return x > 0 ? Math.log(x) : pl2.error.evaluation("undefined", thread.__call_indicator);
+                }
+              },
+              "log/2": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, y, thread) {
+                  return x > 0 && y > 0 ? Math.log(y) / Math.log(x) : pl2.error.evaluation("undefined", thread.__call_indicator);
+                }
+              },
+              "log10/1": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, thread) {
+                  return x > 0 ? Math.log(x) / Math.log(10) : pl2.error.evaluation("undefined", thread.__call_indicator);
+                }
+              },
+              "+/2": {
+                type_args: null,
+                type_result: null,
+                fn: function(x, y, _) {
+                  return x + y;
+                }
+              },
+              "-/2": {
+                type_args: null,
+                type_result: null,
+                fn: function(x, y, _) {
+                  return x - y;
+                }
+              },
+              "*/2": {
+                type_args: null,
+                type_result: null,
+                fn: function(x, y, _) {
+                  return x * y;
+                }
+              },
+              "//2": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, y, thread) {
+                  return y ? x / y : pl2.error.evaluation("zero_divisor", thread.__call_indicator);
+                }
+              },
+              "///2": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, y, thread) {
+                  return y ? Math.trunc(x / y) : pl2.error.evaluation("zero_divisor", thread.__call_indicator);
+                }
+              },
+              "div/2": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, y, thread) {
+                  return y ? Math.floor(x / y) : pl2.error.evaluation("zero_divisor", thread.__call_indicator);
+                }
+              },
+              "**/2": {
+                type_args: null,
+                type_result: true,
+                fn: function(x, y, thread) {
+                  return x == 0 && y < 0 ? pl2.error.evaluation("zero_divisor", thread.__call_indicator) : Math.pow(x, y);
+                }
+              },
+              "^/2": {
+                type_args: null,
+                type_result: null,
+                fn: function(x, y, thread) {
+                  return x == 0 && y < 0 ? pl2.error.evaluation("zero_divisor", thread.__call_indicator) : Math.pow(x, y);
+                }
+              },
+              "<</2": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, y, _) {
+                  return x << y;
+                }
+              },
+              ">>/2": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, y, _) {
+                  return x >> y;
+                }
+              },
+              "/\\/2": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, y, _) {
+                  return x & y;
+                }
+              },
+              "\\//2": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, y, _) {
+                  return x | y;
+                }
+              },
+              "xor/2": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, y, _) {
+                  return x ^ y;
+                }
+              },
+              "rem/2": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, y, thread) {
+                  return y ? x % y : pl2.error.evaluation("zero_divisor", thread.__call_indicator);
+                }
+              },
+              "mod/2": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, y, thread) {
+                  return y ? x - Math.floor(x / y) * y : pl2.error.evaluation("zero_divisor", thread.__call_indicator);
+                }
+              },
+              "max/2": {
+                type_args: null,
+                type_result: null,
+                fn: function(x, y, _) {
+                  return Math.max(x, y);
+                }
+              },
+              "min/2": {
+                type_args: null,
+                type_result: null,
+                fn: function(x, y, _) {
+                  return Math.min(x, y);
+                }
+              },
+              "gcd/2": {
+                type_args: false,
+                type_result: false,
+                fn: function(x, y, _) {
+                  return gcd(x, y);
+                }
+              }
+            }
+          },
+          // Directives
+          directive: {
+            // dynamic/1
+            "dynamic/1": function(thread, atom, options) {
+              var indicators = atom.args[0];
+              if (!pl2.type.is_list(indicators))
+                indicators = arrayToList([indicators]);
+              var pointer = indicators;
+              while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                indicator = pointer.args[0];
+                if (pl2.type.is_variable(indicator)) {
+                  thread.throw_warning(pl2.error.instantiation(atom.indicator));
+                } else if (!pl2.type.is_compound(indicator) || indicator.indicator !== "//2") {
+                  thread.throw_warning(pl2.error.type("predicate_indicator", indicator, atom.indicator));
+                } else if (pl2.type.is_variable(indicator.args[0]) || pl2.type.is_variable(indicator.args[1])) {
+                  thread.throw_warning(pl2.error.instantiation(atom.indicator));
+                } else if (!pl2.type.is_atom(indicator.args[0])) {
+                  thread.throw_warning(pl2.error.type("atom", indicator.args[0], atom.indicator));
+                } else if (!pl2.type.is_integer(indicator.args[1])) {
+                  thread.throw_warning(pl2.error.type("integer", indicator.args[1], atom.indicator));
+                } else {
+                  var key = indicator.args[0].id + "/" + indicator.args[1].value;
+                  var get_module = thread.session.modules[options.context_module];
+                  get_module.public_predicates[key] = true;
+                  if (!get_module.rules[key])
+                    get_module.rules[key] = [];
+                }
+                pointer = pointer.args[1];
+              }
+              if (pl2.type.is_variable(pointer)) {
+                thread.throw_warning(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_term(pointer) || pointer.indicator !== "[]/0") {
+                thread.throw_warning(pl2.error.type("predicate_indicator", indicator, atom.indicator));
+              }
+            },
+            // dynamic/[2..]
+            "dynamic/*": function(thread, atom) {
+              for (var i2 = 0; i2 < atom.args.length; i2++) {
+                pl2.directive["dynamic/1"](thread, new Term("dynamic", [atom.args[i2]]));
+              }
+            },
+            // multifile/1
+            "multifile/1": function(thread, atom, options) {
+              var indicator2 = atom.args[0];
+              if (pl2.type.is_variable(indicator2)) {
+                thread.throw_warning(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_compound(indicator2) || indicator2.indicator !== "//2") {
+                thread.throw_warning(pl2.error.type("predicate_indicator", indicator2, atom.indicator));
+              } else if (pl2.type.is_variable(indicator2.args[0]) || pl2.type.is_variable(indicator2.args[1])) {
+                thread.throw_warning(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_atom(indicator2.args[0])) {
+                thread.throw_warning(pl2.error.type("atom", indicator2.args[0], atom.indicator));
+              } else if (!pl2.type.is_integer(indicator2.args[1])) {
+                thread.throw_warning(pl2.error.type("integer", indicator2.args[1], atom.indicator));
+              } else {
+                var predicate_indicator = atom.args[0].args[0].id + "/" + atom.args[0].args[1].value;
+                var get_module = thread.session.modules[options.context_module];
+                get_module.multifile_predicates[predicate_indicator] = true;
+                if (!get_module.rules.hasOwnProperty(predicate_indicator)) {
+                  get_module.rules[predicate_indicator] = [];
+                  get_module.public_predicates[predicate_indicator] = false;
+                }
+              }
+            },
+            // meta_predicate/1
+            "meta_predicate/1": function(thread, atom, options) {
+              var options = options === void 0 ? {} : options;
+              var head = atom.args[0];
+              if (pl2.type.is_variable(head)) {
+                thread.throw_warning(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_callable(head)) {
+                thread.throw_warning(pl2.error.type("callable", head, atom.indicator));
+              } else {
+                for (var i2 = 0; i2 < head.args.length; i2++) {
+                  var arg = head.args[i2];
+                  if (!pl2.type.is_meta_argument_specifier(arg)) {
+                    thread.throw_warning(pl2.error.type("meta_argument_specifier", arg, atom.indicator));
+                    return;
+                  }
+                }
+                thread.session.modules[options.context_module].meta_predicates[head.indicator] = head;
+              }
+            },
+            // set_prolog_flag
+            "set_prolog_flag/2": function(thread, atom) {
+              var flag = atom.args[0], value = atom.args[1];
+              if (pl2.type.is_variable(flag) || pl2.type.is_variable(value)) {
+                thread.throw_warning(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_atom(flag)) {
+                thread.throw_warning(pl2.error.type("atom", flag, atom.indicator));
+              } else if (!pl2.type.is_flag(flag)) {
+                thread.throw_warning(pl2.error.domain("prolog_flag", flag, atom.indicator));
+              } else if (!pl2.type.is_modifiable_flag(flag)) {
+                thread.throw_warning(pl2.error.permission("modify", "flag", flag, atom.indicator));
+              } else if (!pl2.type.is_value_flag(flag, value)) {
+                thread.throw_warning(pl2.error.domain("flag_value", new Term("+", [flag, value]), atom.indicator));
+              } else {
+                thread.session.flag[flag.id] = value;
+              }
+            },
+            // module/2
+            "module/2": function(thread, atom, options) {
+              var options = options === void 0 ? {} : options;
+              options.context_module = options.context_module === void 0 ? "user" : options.context_module;
+              var module_id = atom.args[0], exports2 = atom.args[1];
+              if (pl2.type.is_variable(module_id) || pl2.type.is_variable(exports2)) {
+                thread.throw_warning(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_atom(module_id)) {
+                thread.throw_warning(pl2.error.type("atom", module_id, atom.indicator));
+              } else if (!pl2.type.is_list(exports2)) {
+                thread.throw_warning(pl2.error.type("list", exports2, atom.indicator));
+              } else {
+                if (!pl2.type.is_module(thread.session.modules[module_id.indicator])) {
+                  var pointer = exports2;
+                  var indicators = [];
+                  while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                    var predicate = pointer.args[0];
+                    if (!pl2.type.is_predicate_indicator(predicate)) {
+                      thread.throw_warning(pl2.error.type("predicate_indicator", predicate, atom.indicator));
+                    } else {
+                      indicators.push(predicate.args[0].id + "/" + predicate.args[1].value);
+                    }
+                    pointer = pointer.args[1];
+                  }
+                  if (pl2.type.is_variable(pointer)) {
+                    thread.throw_warning(pl2.error.instantiation(atom.indicator));
+                  } else if (!pl2.type.is_empty_list(pointer)) {
+                    thread.throw_warning(pl2.error.type("list", exports2, atom.indicator));
+                  }
+                  var new_module = new Module(module_id.id, {}, indicators, {
+                    session: thread.session
+                  });
+                  thread.session.modules[module_id.id] = new_module;
+                  thread.session.modules[options.context_module].modules[module_id.id] = new_module;
+                  options.context_module = module_id.id;
+                } else {
+                  thread.throw_warning(pl2.error.permission("create", "module", module_id, atom.indicator));
+                }
+              }
+            },
+            // use_module/1
+            "use_module/1": function(thread, atom, options) {
+              var options = options === void 0 ? {} : options;
+              options.context_module = options.context_module === void 0 ? "user" : options.context_module;
+              var module_id = atom.args[0];
+              if (pl2.type.is_variable(module_id)) {
+                thread.throw_warning(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_term(module_id)) {
+                thread.throw_warning(pl2.error.type("term", module_id, atom.indicator));
+              } else {
+                if (module_id.indicator === "library/1") {
+                  var name = module_id.args[0].id;
+                  var get_module = pl2.modules[name];
+                  if (pl2.type.is_module(get_module)) {
+                    if (!thread.session.modules[options.context_module].modules.hasOwnProperty(name)) {
+                      thread.session.modules[name] = get_module;
+                      thread.session.modules[options.context_module].modules[name] = get_module;
+                      for (var i2 = 0; i2 < get_module.dependencies.length; i2++) {
+                        var term = new Term("use_module", [new Term("library", [new Term(get_module.dependencies[i2])])]);
+                        pl2.directive["use_module/1"](thread, term, {
+                          context_module: name
+                        });
+                      }
+                    }
+                  } else {
+                    thread.throw_warning(pl2.error.existence("module", module_id, atom.indicator));
+                  }
+                } else {
+                  var name = module_id.id;
+                  thread.consult(name, {
+                    context_module: options.context_module,
+                    text: false,
+                    success: function() {
+                      parseProgram(thread, options.string, options);
+                    },
+                    error: function() {
+                      options.error(pl2.error.existence("module", module_id, atom.indicator));
+                    }
+                  });
+                  return true;
+                }
+              }
+            },
+            // char_conversion/2
+            "char_conversion/2": function(thread, atom, options) {
+              var inchar = atom.args[0], outchar = atom.args[1];
+              if (pl2.type.is_variable(inchar) || pl2.type.is_variable(outchar)) {
+                thread.throw_warning(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_character(inchar)) {
+                thread.throw_warning(pl2.error.type("character", inchar, atom.indicator));
+              } else if (!pl2.type.is_character(outchar)) {
+                thread.throw_warning(pl2.error.type("character", outchar, atom.indicator));
+              } else {
+                if (inchar.id === outchar.id) {
+                  delete thread.session.__char_conversion[inchar.id];
+                } else {
+                  thread.session.__char_conversion[inchar.id] = outchar.id;
+                }
+                options.tokens = options.tokenizer.get_tokens(options.current_token);
+                options.current_token = 0;
+                return true;
+              }
+            },
+            // op/3
+            "op/3": function(thread, atom) {
+              var priority = atom.args[0], type = atom.args[1], operators = atom.args[2];
+              if (pl2.type.is_atom(operators))
+                operators = new Term(".", [operators, new Term("[]")]);
+              if (pl2.type.is_variable(priority) || pl2.type.is_variable(type) || pl2.type.is_variable(operators)) {
+                thread.throw_warning(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_integer(priority)) {
+                thread.throw_warning(pl2.error.type("integer", priority, atom.indicator));
+              } else if (!pl2.type.is_atom(type)) {
+                thread.throw_warning(pl2.error.type("atom", type, atom.indicator));
+              } else if (!pl2.type.is_list(operators)) {
+                thread.throw_warning(pl2.error.type("list", operators, atom.indicator));
+              } else if (pl2.type.is_empty_list(operators)) {
+                thread.throw_warning(pl2.error.permission("create", "operator", operators, atom.indicator));
+              } else {
+                var pointer = operators;
+                while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                  var operator = pointer.args[0];
+                  pointer = pointer.args[1];
+                  if (pl2.type.is_variable(operator)) {
+                    thread.throw_warning(pl2.error.instantiation(atom.indicator));
+                  } else if (!pl2.type.is_atom(operator)) {
+                    thread.throw_warning(pl2.error.type("atom", operator, atom.indicator));
+                  } else if (priority.value < 0 || priority.value > 1200) {
+                    thread.throw_warning(pl2.error.domain("operator_priority", priority, atom.indicator));
+                  } else if (operator.id === ",") {
+                    thread.throw_error(pl2.error.permission("modify", "operator", operator, atom.indicator));
+                  } else if (operator.id === "{}") {
+                    thread.throw_warning(pl2.error.permission("create", "operator", operator, atom.indicator));
+                  } else if (operator.id === "[]") {
+                    thread.throw_warning(pl2.error.permission("create", "operator", operator, atom.indicator));
+                  } else if (operator.id === "|" && priority.value !== 0 && (priority.value < 1001 || type.id.length !== 3)) {
+                    thread.throw_warning(pl2.error.permission("create", "operator", operator, atom.indicator));
+                  } else if (["fy", "fx", "yf", "xf", "xfx", "yfx", "xfy"].indexOf(type.id) === -1) {
+                    thread.throw_warning(pl2.error.domain("operator_specifier", type, atom.indicator));
+                  } else {
+                    var fix = { prefix: null, infix: null, postfix: null };
+                    for (var p in thread.session.__operators) {
+                      if (!thread.session.__operators.hasOwnProperty(p)) continue;
+                      var classes = thread.session.__operators[p][operator.id];
+                      if (classes) {
+                        if (indexOf(classes, "fx") !== -1) {
+                          fix.prefix = { priority: p, type: "fx" };
+                        }
+                        if (indexOf(classes, "fy") !== -1) {
+                          fix.prefix = { priority: p, type: "fy" };
+                        }
+                        if (indexOf(classes, "xf") !== -1) {
+                          fix.postfix = { priority: p, type: "xf" };
+                        }
+                        if (indexOf(classes, "yf") !== -1) {
+                          fix.postfix = { priority: p, type: "yf" };
+                        }
+                        if (indexOf(classes, "xfx") !== -1) {
+                          fix.infix = { priority: p, type: "xfx" };
+                        }
+                        if (indexOf(classes, "xfy") !== -1) {
+                          fix.infix = { priority: p, type: "xfy" };
+                        }
+                        if (indexOf(classes, "yfx") !== -1) {
+                          fix.infix = { priority: p, type: "yfx" };
+                        }
+                      }
+                    }
+                    var current_class;
+                    switch (type.id) {
+                      case "fy":
+                      case "fx":
+                        current_class = "prefix";
+                        break;
+                      case "yf":
+                      case "xf":
+                        current_class = "postfix";
+                        break;
+                      default:
+                        current_class = "infix";
+                        break;
+                    }
+                    if (fix.infix && current_class === "postfix" || fix.postfix && current_class === "infix") {
+                      thread.throw_warning(pl2.error.permission("create", "operator", operator, atom.indicator));
+                    } else {
+                      if (fix[current_class]) {
+                        remove(thread.session.__operators[fix[current_class].priority][operator.id], fix[current_class].type);
+                        if (thread.session.__operators[fix[current_class].priority][operator.id].length === 0) {
+                          delete thread.session.__operators[fix[current_class].priority][operator.id];
+                        }
+                      }
+                      if (priority.value > 0) {
+                        if (!thread.session.__operators[priority.value]) thread.session.__operators[priority.value.toString()] = {};
+                        if (!thread.session.__operators[priority.value][operator.id]) thread.session.__operators[priority.value][operator.id] = [];
+                        thread.session.__operators[priority.value][operator.id].push(type.id);
+                      }
+                    }
+                  }
+                }
+                if (pl2.type.is_variable(pointer)) {
+                  thread.throw_warning(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (!pl2.type.is_term(pointer) || pointer.indicator !== "[]/0") {
+                  thread.throw_warning(pl2.error.type("list", operators, atom.indicator));
+                  return;
+                }
+              }
+            },
+            // initialization/1
+            "initialization/1": function(thread, atom, options) {
+              var goal = atom.args[0];
+              options.initialization.push(goal);
+            }
+          },
+          // Flags
+          flag: {
+            // Bounded numbers
+            bounded: {
+              allowed: [new Term("true"), new Term("false")],
+              value: new Term("true"),
+              changeable: false
+            },
+            // Maximum integer
+            max_integer: {
+              allowed: [new Num(Number.MAX_SAFE_INTEGER)],
+              value: new Num(Number.MAX_SAFE_INTEGER),
+              changeable: false
+            },
+            // Minimum integer
+            min_integer: {
+              allowed: [new Num(Number.MIN_SAFE_INTEGER)],
+              value: new Num(Number.MIN_SAFE_INTEGER),
+              changeable: false
+            },
+            // Rounding function
+            integer_rounding_function: {
+              allowed: [new Term("down"), new Term("toward_zero")],
+              value: new Term("toward_zero"),
+              changeable: false
+            },
+            // Character conversion
+            char_conversion: {
+              allowed: [new Term("on"), new Term("off")],
+              value: new Term("on"),
+              changeable: true
+            },
+            // Debugger
+            debug: {
+              allowed: [new Term("on"), new Term("off")],
+              value: new Term("off"),
+              changeable: true
+            },
+            // Maximum arity of predicates
+            max_arity: {
+              allowed: [new Term("unbounded")],
+              value: new Term("unbounded"),
+              changeable: false
+            },
+            // Unkwnow predicates behavior
+            unknown: {
+              allowed: [new Term("error"), new Term("fail"), new Term("warning")],
+              value: new Term("error"),
+              changeable: true
+            },
+            // Double quotes behavior
+            double_quotes: {
+              allowed: [new Term("chars"), new Term("codes"), new Term("atom")],
+              value: new Term("chars"),
+              changeable: true
+            },
+            // Occurs check behavior
+            occurs_check: {
+              allowed: [new Term("false"), new Term("true")],
+              value: new Term("false"),
+              changeable: true
+            },
+            // Dialect
+            dialect: {
+              allowed: [new Term("tau")],
+              value: new Term("tau"),
+              changeable: false
+            },
+            // Version
+            version_data: {
+              allowed: [new Term("tau", [new Num(version.major, false), new Num(version.minor, false), new Num(version.patch, false), new Term(version.status)])],
+              value: new Term("tau", [new Num(version.major, false), new Num(version.minor, false), new Num(version.patch, false), new Term(version.status)]),
+              changeable: false
+            },
+            // NodeJS
+            nodejs: {
+              allowed: [new Term("true"), new Term("false")],
+              value: new Term(nodejs_flag ? "true" : "false"),
+              changeable: false
+            },
+            // Arguments
+            argv: {
+              allowed: [nodejs_arguments],
+              value: nodejs_arguments,
+              changeble: false
+            }
+          },
+          // Unify
+          unify: function(t1, t2, occurs_check) {
+            occurs_check = occurs_check === void 0 ? false : occurs_check;
+            var left = Array.isArray(t1) ? t1 : [t1];
+            var right = Array.isArray(t2) ? t2 : [t2];
+            if (left.length !== right.length)
+              return null;
+            var subs = new Substitution();
+            while (left.length > 0) {
+              var s = left.pop();
+              var t = right.pop();
+              if (pl2.type.is_variable(s))
+                s = s.apply(subs);
+              if (pl2.type.is_variable(t))
+                t = t.apply(subs);
+              if (s == t)
+                continue;
+              if (pl2.type.is_term(s) && pl2.type.is_term(t)) {
+                if (s.indicator !== t.indicator)
+                  return null;
+                for (var i2 = s.args.length - 1; i2 >= 0; i2--) {
+                  left.push(s.args[i2]);
+                  right.push(t.args[i2]);
+                }
+              } else if (pl2.type.is_number(s) && pl2.type.is_number(t)) {
+                if (s.value !== t.value || s.is_float !== t.is_float)
+                  return null;
+              } else if (pl2.type.is_variable(s)) {
+                t = t.apply(subs);
+                if (pl2.type.is_variable(t) && s.id === t.id)
+                  continue;
+                if (occurs_check === true && indexOf(t.variables(), s.id) !== -1)
+                  return null;
+                if (s.id !== "_")
+                  subs.add(s.id, t);
+              } else if (pl2.type.is_variable(t)) {
+                left.push(t);
+                right.push(s);
+              } else if (s.unify !== void 0) {
+                var user_subs = s.apply(subs).unify(t.apply(subs), occurs_check);
+                if (user_subs == null)
+                  return null;
+                for (var i2 in user_subs.links)
+                  subs.add(i2, user_subs.links[i2]);
+              } else {
+                return null;
+              }
+            }
+            return subs.apply(subs);
+          },
+          // Is rename
+          is_rename: function(obj1, obj2, links) {
+            links = links || {};
+            if (obj1.is_rename && obj2.is_rename)
+              return obj1.is_rename(obj2, links);
+            else if (obj1.equals && obj2.equals)
+              return obj1.equals(obj2);
+            else
+              return false;
+          },
+          // Compare
+          compare: function(obj1, obj2) {
+            var type = pl2.type.compare(obj1, obj2);
+            return type !== 0 ? type : obj1.compare(obj2);
+          },
+          // Arithmetic comparison
+          arithmetic_compare: function(thread, obj1, obj2) {
+            var expr1 = obj1.interpret(thread);
+            if (!pl2.type.is_number(expr1)) {
+              return expr1;
+            } else {
+              var expr2 = obj2.interpret(thread);
+              if (!pl2.type.is_number(expr2)) {
+                return expr2;
+              } else {
+                return expr1.value < expr2.value ? -1 : expr1.value > expr2.value ? 1 : 0;
+              }
+            }
+          },
+          // Operate
+          operate: function(thread, obj) {
+            if (pl2.type.is_operator(obj)) {
+              var op = pl2.type.is_operator(obj);
+              var args = [], value;
+              var type = false;
+              for (var i2 = 0; i2 < obj.args.length; i2++) {
+                value = obj.args[i2].interpret(thread);
+                if (!pl2.type.is_number(value)) {
+                  return value;
+                } else if (op.type_args !== null && value.is_float !== op.type_args) {
+                  return pl2.error.type(op.type_args ? "float" : "integer", value, thread.__call_indicator);
+                } else {
+                  args.push(value.value);
+                }
+                type = type || value.is_float;
+              }
+              args.push(thread);
+              value = pl2.arithmetic.evaluation[obj.indicator].fn.apply(this, args);
+              if (obj.indicator === "^/2" && !type && value !== parseInt(value, 10))
+                return pl2.error.type("float", new Num(args[0], false), thread.__call_indicator);
+              type = op.type_result === null ? type : op.type_result;
+              if (pl2.type.is_term(value)) {
+                return value;
+              } else if (value === Number.POSITIVE_INFINITY || value === Number.NEGATIVE_INFINITY) {
+                return pl2.error.evaluation("float_overflow", thread.__call_indicator);
+              } else if (type === false && thread.get_flag("bounded").id === "true" && (value > thread.get_flag("max_integer").value || value < thread.get_flag("min_integer").value)) {
+                return pl2.error.evaluation("int_overflow", thread.__call_indicator);
+              } else {
+                return new Num(value, type);
+              }
+            } else {
+              return pl2.error.type("evaluable", str_indicator(obj.indicator), thread.__call_indicator);
+            }
+          },
+          // Errors
+          error: {
+            // Existence error
+            existence: function(type, object, indicator2) {
+              if (typeof object === "string")
+                object = str_indicator(object);
+              return new Term("error", [new Term("existence_error", [new Term(type), object]), str_indicator(indicator2)]);
+            },
+            // Type error
+            type: function(expected, found, indicator2) {
+              return new Term("error", [new Term("type_error", [new Term(expected), found]), str_indicator(indicator2)]);
+            },
+            // Instantation error
+            instantiation: function(indicator2) {
+              return new Term("error", [new Term("instantiation_error"), str_indicator(indicator2)]);
+            },
+            // Uninstantation error
+            uninstantiation: function(found, indicator2) {
+              return new Term("error", [new Term("uninstantiation_error", [new Term(found)]), str_indicator(indicator2)]);
+            },
+            // Domain error
+            domain: function(expected, found, indicator2) {
+              return new Term("error", [new Term("domain_error", [new Term(expected), found]), str_indicator(indicator2)]);
+            },
+            // Representation error
+            representation: function(flag, indicator2) {
+              return new Term("error", [new Term("representation_error", [new Term(flag)]), str_indicator(indicator2)]);
+            },
+            // Permission error
+            permission: function(operation, type, found, indicator2) {
+              return new Term("error", [new Term("permission_error", [new Term(operation), new Term(type), found]), str_indicator(indicator2)]);
+            },
+            // Evaluation error
+            evaluation: function(error, indicator2) {
+              return new Term("error", [new Term("evaluation_error", [new Term(error)]), str_indicator(indicator2)]);
+            },
+            // Syntax error
+            syntax: function(token, expected, last) {
+              token = token || { value: "", line: 0, column: 0, matches: [""], start: 0 };
+              var position = last && token.matches.length > 0 ? token.start + token.matches[0].length : token.start;
+              var found = last ? new Term("token_not_found") : new Term("found", [new Term(token.value.toString())]);
+              var info = new Term(".", [new Term("line", [new Num(token.line + 1)]), new Term(".", [new Term("column", [new Num(position)]), new Term(".", [found, new Term("[]", [])])])]);
+              return new Term("error", [new Term("syntax_error", [new Term(expected)]), info]);
+            },
+            // Syntax error by predicate
+            syntax_by_predicate: function(expected, indicator2) {
+              return new Term("error", [new Term("syntax_error", [new Term(expected)]), str_indicator(indicator2)]);
+            }
+          },
+          // Warnings
+          warning: {
+            // Singleton variables
+            singleton: function(variables, rule, line) {
+              var list = new Term("[]");
+              for (var i2 = variables.length - 1; i2 >= 0; i2--)
+                list = new Term(".", [new Var(variables[i2]), list]);
+              return new Term("warning", [new Term("singleton_variables", [list, str_indicator(rule)]), new Term(".", [new Term("line", [new Num(line, false)]), new Term("[]")])]);
+            },
+            // Failed goal
+            failed_goal: function(goal, line) {
+              return new Term("warning", [new Term("failed_goal", [goal]), new Term(".", [new Term("line", [new Num(line, false)]), new Term("[]")])]);
+            }
+          },
+          // Format of renamed variables
+          format_variable: function(id, variable) {
+            var charcode = variable && variable.length > 0 ? codePointAt(variable, 1) : 0;
+            if (variable === "_" || variable && variable[0] === "_" && (charcode === 95 || charcode >= 65 && charcode <= 90))
+              return "__" + id;
+            return "_" + id;
+          },
+          // Format of computed answers
+          format_answer: function(answer, thread, options) {
+            if (thread instanceof Session)
+              thread = thread.thread;
+            var options = options ? options : {};
+            options.session = thread ? thread.session : void 0;
+            if (pl2.type.is_error(answer)) {
+              return "uncaught exception: " + answer.args[0].toString(options);
+            } else if (answer === false) {
+              return "false";
+            } else if (answer === null) {
+              return "limit exceeded";
+            } else {
+              var i2 = 0;
+              var str = "";
+              if (pl2.type.is_substitution(answer)) {
+                var dom = answer.domain(true);
+                for (var link in answer.links) {
+                  if (!answer.links.hasOwnProperty(link)) continue;
+                  if (pl2.type.is_variable(answer.links[link])) {
+                    var links = {};
+                    links[answer.links[link].id] = new Var(link);
+                    answer = answer.apply(new Substitution(links));
+                  }
+                }
+                answer = answer.filter(function(id, value) {
+                  return !pl2.type.is_variable(value) || pl2.type.is_variable(value) && answer.has_attributes(id) || indexOf(dom, value.id) !== -1 && id !== value.id;
+                });
+              }
+              for (var link in answer.links) {
+                if (!answer.links.hasOwnProperty(link))
+                  continue;
+                if (pl2.type.is_variable(answer.links[link]) && link === answer.links[link].id) {
+                  var attrs = answer.attrs[link];
+                  for (var module2 in attrs) {
+                    if (!attrs.hasOwnProperty(module2))
+                      continue;
+                    i2++;
+                    if (str !== "")
+                      str += ", ";
+                    str += "put_attr(" + link + ", " + module2 + ", " + attrs[module2].toString(options) + ")";
+                  }
+                } else {
+                  i2++;
+                  if (str !== "")
+                    str += ", ";
+                  str += link.toString(options) + " = " + answer.links[link].toString(options, { priority: "700", class: "xfx", indicator: "=/2" }, "right");
+                }
+              }
+              if (i2 === 0) {
+                return "true";
+              } else {
+                return str;
+              }
+            }
+          },
+          // Flatten default errors
+          flatten_error: function(error) {
+            if (!pl2.type.is_error(error)) return null;
+            error = error.args[0];
+            var obj = {};
+            obj.type = error.args[0].id;
+            obj.thrown = obj.type === "syntax_error" ? null : error.args[1].id;
+            obj.expected = null;
+            obj.found = null;
+            obj.representation = null;
+            obj.existence = null;
+            obj.existence_type = null;
+            obj.line = null;
+            obj.column = null;
+            obj.permission_operation = null;
+            obj.permission_type = null;
+            obj.evaluation_type = null;
+            if (obj.type === "type_error" || obj.type === "domain_error") {
+              obj.expected = error.args[0].args[0].id;
+              obj.found = error.args[0].args[1].toString();
+            } else if (obj.type === "syntax_error") {
+              if (error.args[1].indicator === "./2") {
+                obj.expected = error.args[0].args[0].id;
+                obj.found = error.args[1].args[1].args[1].args[0];
+                obj.found = obj.found.id === "token_not_found" ? obj.found.id : obj.found.args[0].id;
+                obj.line = error.args[1].args[0].args[0].value;
+                obj.column = error.args[1].args[1].args[0].args[0].value;
+              } else {
+                obj.thrown = error.args[1].id;
+              }
+            } else if (obj.type === "permission_error") {
+              obj.found = error.args[0].args[2].toString();
+              obj.permission_operation = error.args[0].args[0].id;
+              obj.permission_type = error.args[0].args[1].id;
+            } else if (obj.type === "evaluation_error") {
+              obj.evaluation_type = error.args[0].args[0].id;
+            } else if (obj.type === "representation_error") {
+              obj.representation = error.args[0].args[0].id;
+            } else if (obj.type === "existence_error") {
+              obj.existence = error.args[0].args[1].toString();
+              obj.existence_type = error.args[0].args[0].id;
+            }
+            return obj;
+          },
+          // Create new session
+          create: function(limit) {
+            return new pl2.type.Session(limit);
+          }
+        };
+        pl2.builtin = new Module("system", {
+          // TERM AND GOAL EXPANSION
+          // goal_expansion/2
+          "goal_expansion/2": [
+            new Rule(new Term("goal_expansion", [new Term(",", [new Var("X"), new Var("Y")]), new Term(",", [new Var("X_"), new Var("Y_")])]), new Term(";", [new Term(",", [new Term("goal_expansion", [new Var("X"), new Var("X_")]), new Term(";", [new Term("goal_expansion", [new Var("Y"), new Var("Y_")]), new Term("=", [new Var("Y_"), new Var("Y")])])]), new Term(",", [new Term("=", [new Var("X"), new Var("X_")]), new Term("goal_expansion", [new Var("Y"), new Var("Y_")])])])),
+            new Rule(new Term("goal_expansion", [new Term(";", [new Var("X"), new Var("Y")]), new Term(";", [new Var("X_"), new Var("Y_")])]), new Term(";", [new Term(",", [new Term("goal_expansion", [new Var("X"), new Var("X_")]), new Term(";", [new Term("goal_expansion", [new Var("Y"), new Var("Y_")]), new Term("=", [new Var("Y_"), new Var("Y")])])]), new Term(",", [new Term("=", [new Var("X"), new Var("X_")]), new Term("goal_expansion", [new Var("Y"), new Var("Y_")])])])),
+            new Rule(new Term("goal_expansion", [new Term("->", [new Var("X"), new Var("Y")]), new Term("->", [new Var("X_"), new Var("Y_")])]), new Term(";", [new Term(",", [new Term("goal_expansion", [new Var("X"), new Var("X_")]), new Term(";", [new Term("goal_expansion", [new Var("Y"), new Var("Y_")]), new Term("=", [new Var("Y_"), new Var("Y")])])]), new Term(",", [new Term("=", [new Var("X"), new Var("X_")]), new Term("goal_expansion", [new Var("Y"), new Var("Y_")])])])),
+            new Rule(new Term("goal_expansion", [new Term("catch", [new Var("X"), new Var("Y"), new Var("Z")]), new Term("catch", [new Var("X_"), new Var("Y"), new Var("Z_")])]), new Term(";", [new Term(",", [new Term("goal_expansion", [new Var("X"), new Var("X_")]), new Term(";", [new Term("goal_expansion", [new Var("Z"), new Var("Z_")]), new Term("=", [new Var("Z_"), new Var("Z")])])]), new Term(",", [new Term("=", [new Var("X_"), new Var("X")]), new Term("goal_expansion", [new Var("Z"), new Var("Z_")])])])),
+            new Rule(new Term("goal_expansion", [new Term("\\+", [new Var("X")]), new Term("\\+", [new Var("X_")])]), new Term(",", [new Term("nonvar", [new Var("X")]), new Term("goal_expansion", [new Var("X"), new Var("X_")])])),
+            new Rule(new Term("goal_expansion", [new Term("once", [new Var("X")]), new Term("once", [new Var("X_")])]), new Term(",", [new Term("nonvar", [new Var("X")]), new Term("goal_expansion", [new Var("X"), new Var("X_")])])),
+            new Rule(new Term("goal_expansion", [new Term("findall", [new Var("X"), new Var("Y"), new Var("Z")]), new Term("findall", [new Var("X"), new Var("Y_"), new Var("Z")])]), new Term("goal_expansion", [new Var("Y"), new Var("Y_")])),
+            new Rule(new Term("goal_expansion", [new Term("setof", [new Var("X"), new Var("Y"), new Var("Z")]), new Term("findall", [new Var("X"), new Var("Y_"), new Var("Z")])]), new Term("goal_expansion", [new Var("Y"), new Var("Y_")])),
+            new Rule(new Term("goal_expansion", [new Term("bagof", [new Var("X"), new Var("Y"), new Var("Z")]), new Term("findall", [new Var("X"), new Var("Y_"), new Var("Z")])]), new Term("goal_expansion", [new Var("Y"), new Var("Y_")])),
+            new Rule(new Term("goal_expansion", [new Term("call", [new Var("X")]), new Term("call", [new Var("X_")])]), new Term(",", [new Term("nonvar", [new Var("X")]), new Term("goal_expansion", [new Var("X"), new Var("X_")])])),
+            new Rule(new Term("goal_expansion", [new Term("call", [new Var("X"), new Var("A1")]), new Term("call", [new Var("F_")])]), new Term(",", [new Term("=..", [new Var("F"), new Term(".", [new Var("X"), new Term(".", [new Var("A1"), new Term("[]", [])])])]), new Term("goal_expansion", [new Var("F"), new Var("F_")])])),
+            new Rule(new Term("goal_expansion", [new Term("call", [new Var("X"), new Var("A1"), new Var("A2")]), new Term("call", [new Var("F_")])]), new Term(",", [new Term("=..", [new Var("F"), new Term(".", [new Var("X"), new Term(".", [new Var("A1"), new Term(".", [new Var("A2"), new Term("[]", [])])])])]), new Term("goal_expansion", [new Var("F"), new Var("F_")])])),
+            new Rule(new Term("goal_expansion", [new Term("call", [new Var("X"), new Var("A1"), new Var("A2"), new Var("A3")]), new Term("call", [new Var("F_")])]), new Term(",", [new Term("=..", [new Var("F"), new Term(".", [new Var("X"), new Term(".", [new Var("A1"), new Term(".", [new Var("A2"), new Term(".", [new Var("A3"), new Term("[]", [])])])])])]), new Term("goal_expansion", [new Var("F"), new Var("F_")])])),
+            new Rule(new Term("goal_expansion", [new Term("call", [new Var("X"), new Var("A1"), new Var("A2"), new Var("A3"), new Var("A4")]), new Term("call", [new Var("F_")])]), new Term(",", [new Term("=..", [new Var("F"), new Term(".", [new Var("X"), new Term(".", [new Var("A1"), new Term(".", [new Var("A2"), new Term(".", [new Var("A3"), new Term(".", [new Var("A4"), new Term("[]", [])])])])])])]), new Term("goal_expansion", [new Var("F"), new Var("F_")])])),
+            new Rule(new Term("goal_expansion", [new Term("call", [new Var("X"), new Var("A1"), new Var("A2"), new Var("A3"), new Var("A4"), new Var("A5")]), new Term("call", [new Var("F_")])]), new Term(",", [new Term("=..", [new Var("F"), new Term(".", [new Var("X"), new Term(".", [new Var("A1"), new Term(".", [new Var("A2"), new Term(".", [new Var("A3"), new Term(".", [new Var("A4"), new Term(".", [new Var("A5"), new Term("[]", [])])])])])])])]), new Term("goal_expansion", [new Var("F"), new Var("F_")])])),
+            new Rule(new Term("goal_expansion", [new Term("call", [new Var("X"), new Var("A1"), new Var("A2"), new Var("A3"), new Var("A4"), new Var("A5"), new Var("A6")]), new Term("call", [new Var("F_")])]), new Term(",", [new Term("=..", [new Var("F"), new Term(".", [new Var("X"), new Term(".", [new Var("A1"), new Term(".", [new Var("A2"), new Term(".", [new Var("A3"), new Term(".", [new Var("A4"), new Term(".", [new Var("A5"), new Term(".", [new Var("A6"), new Term("[]", [])])])])])])])])]), new Term("goal_expansion", [new Var("F"), new Var("F_")])])),
+            new Rule(new Term("goal_expansion", [new Term("call", [new Var("X"), new Var("A1"), new Var("A2"), new Var("A3"), new Var("A4"), new Var("A5"), new Var("A6"), new Var("A7")]), new Term("call", [new Var("F_")])]), new Term(",", [new Term("=..", [new Var("F"), new Term(".", [new Var("X"), new Term(".", [new Var("A1"), new Term(".", [new Var("A2"), new Term(".", [new Var("A3"), new Term(".", [new Var("A4"), new Term(".", [new Var("A5"), new Term(".", [new Var("A6"), new Term(".", [new Var("A7"), new Term("[]", [])])])])])])])])])]), new Term("goal_expansion", [new Var("F"), new Var("F_")])]))
+          ],
+          // SYSTEM PREDICATES ($)
+          // '$push_global_stack'/2
+          "$push_global_stack/2": function(thread, point, atom) {
+            var stack = atom.args[0], value = atom.args[1];
+            if (!pl2.type.is_variable(stack)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else {
+              thread.push_global_stack(stack.id, value);
+              thread.success(point);
+            }
+          },
+          // '$flush_global_stack'/3
+          "$flush_global_stack/3": function(thread, point, atom) {
+            var stack = atom.args[0], list = atom.args[1], tail = atom.args[2];
+            if (!pl2.type.is_variable(stack)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else {
+              var values = thread.flush_global_stack(stack.id, tail);
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [list, values])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // '$free_variable_set'/3
+          "$free_variable_set/3": function(thread, point, atom) {
+            var goal_in = atom.args[0], goal_out = atom.args[1], vars = atom.args[2];
+            var bv = [];
+            var pointer = goal_in;
+            while (pl2.type.is_term(pointer) && pointer.indicator === "^/2") {
+              bv = bv.concat(pointer.args[0].variables());
+              pointer = pointer.args[1];
+            }
+            var gv = pointer.variables();
+            var fv = arrayToList(map(difference(gv, bv), function(v) {
+              return new Var(v);
+            }));
+            thread.prepend([
+              new State(
+                point.goal.replace(new Term(",", [
+                  new Term("=", [goal_out, pointer]),
+                  new Term("=", [vars, fv])
+                ])),
+                point.substitution,
+                point
+              )
+            ]);
+          },
+          // '$member'/2
+          "$member/2": [
+            new pl2.type.Rule(new pl2.type.Term("$member", [new pl2.type.Var("X"), new pl2.type.Term(".", [new pl2.type.Var("X"), new pl2.type.Var("_")])]), null),
+            new pl2.type.Rule(new pl2.type.Term("$member", [new pl2.type.Var("X"), new pl2.type.Term(".", [new pl2.type.Var("_"), new pl2.type.Var("Xs")])]), new pl2.type.Term("$member", [new pl2.type.Var("X"), new pl2.type.Var("Xs")]))
+          ],
+          // '$bind_bagof_keys/2'/2
+          "$bind_bagof_keys/2": [
+            new pl2.type.Rule(new pl2.type.Term("$bind_bagof_keys", [new pl2.type.Term("[]", []), new pl2.type.Var("_")]), null),
+            new pl2.type.Rule(new pl2.type.Term("$bind_bagof_keys", [new pl2.type.Term(".", [new pl2.type.Term("-", [new pl2.type.Var("Key"), new pl2.type.Var("_")]), new pl2.type.Var("Bag")]), new pl2.type.Var("Vars")]), new pl2.type.Term(",", [new pl2.type.Term("term_variables", [new pl2.type.Var("Key"), new pl2.type.Var("Vars"), new pl2.type.Var("_")]), new pl2.type.Term("$bind_bagof_keys", [new pl2.type.Var("Bag"), new pl2.type.Var("Vars")])]))
+          ],
+          // '$findall'/4
+          "$findall/4": [
+            new pl2.type.Rule(new pl2.type.Term("$findall", [new pl2.type.Var("Template0"), new pl2.type.Var("Goal0"), new pl2.type.Var("Instances"), new pl2.type.Var("Tail")]), new pl2.type.Term(";", [new pl2.type.Term(",", [new pl2.type.Term("copy_term", [new pl2.type.Term("-", [new pl2.type.Var("Template0"), new pl2.type.Var("Goal0")]), new pl2.type.Term("-", [new pl2.type.Var("Template1"), new pl2.type.Var("Goal1")])]), new pl2.type.Term(",", [new pl2.type.Term("call", [new pl2.type.Var("Goal1")]), new pl2.type.Term(",", [new pl2.type.Term("copy_term", [new pl2.type.Var("Template1"), new pl2.type.Var("Template2")]), new pl2.type.Term(",", [new pl2.type.Term("$push_global_stack", [new pl2.type.Var("Var"), new pl2.type.Var("Template2")]), new pl2.type.Term("false", [])])])])]), new pl2.type.Term("$flush_global_stack", [new pl2.type.Var("Var"), new pl2.type.Var("Instances"), new pl2.type.Var("Tail")])]))
+          ],
+          // '$bagof'/3
+          "$bagof/3": [
+            new pl2.type.Rule(new pl2.type.Term("$bagof", [new pl2.type.Var("Template"), new pl2.type.Var("Goal0"), new pl2.type.Var("Answer")]), new pl2.type.Term(",", [new pl2.type.Term("$free_variable_set", [new pl2.type.Term("^", [new pl2.type.Var("Template"), new pl2.type.Var("Goal0")]), new pl2.type.Var("Goal1"), new pl2.type.Var("FV")]), new pl2.type.Term(",", [new pl2.type.Term("findall", [new pl2.type.Term("-", [new pl2.type.Var("FV"), new pl2.type.Var("Template")]), new pl2.type.Var("Goal1"), new pl2.type.Var("Answers"), new pl2.type.Term("[]", [])]), new pl2.type.Term(",", [new pl2.type.Term("$bind_bagof_keys", [new pl2.type.Var("Answers"), new pl2.type.Var("_")]), new pl2.type.Term(",", [new pl2.type.Term("keygroup", [new pl2.type.Var("Answers"), new pl2.type.Var("KeyGroups")]), new pl2.type.Term(",", [new pl2.type.Term("keysort", [new pl2.type.Var("KeyGroups"), new pl2.type.Var("KeySorted")]), new pl2.type.Term("$member", [new pl2.type.Term("-", [new pl2.type.Var("FV"), new pl2.type.Var("Answer")]), new pl2.type.Var("KeySorted")])])])])])]))
+          ],
+          // '$setof'/3
+          "$setof/3": [
+            new pl2.type.Rule(new pl2.type.Term("$setof", [new pl2.type.Var("Template"), new pl2.type.Var("Goal0"), new pl2.type.Var("Answer")]), new pl2.type.Term(",", [new pl2.type.Term("$free_variable_set", [new pl2.type.Term("^", [new pl2.type.Var("Template"), new pl2.type.Var("Goal0")]), new pl2.type.Var("Goal1"), new pl2.type.Var("FV")]), new pl2.type.Term(",", [new pl2.type.Term("findall", [new pl2.type.Term("-", [new pl2.type.Var("FV"), new pl2.type.Var("Template")]), new pl2.type.Var("Goal1"), new pl2.type.Var("Answers"), new pl2.type.Term("[]", [])]), new pl2.type.Term(",", [new pl2.type.Term("$bind_bagof_keys", [new pl2.type.Var("Answers"), new pl2.type.Var("_")]), new pl2.type.Term(",", [new pl2.type.Term("keygroup", [new pl2.type.Var("Answers"), new pl2.type.Var("KeyGroups")]), new pl2.type.Term(",", [new pl2.type.Term("keysort", [new pl2.type.Var("KeyGroups"), new pl2.type.Var("KeySorted")]), new pl2.type.Term(",", [new pl2.type.Term("$member", [new pl2.type.Term("-", [new pl2.type.Var("FV"), new pl2.type.Var("Unsorted")]), new pl2.type.Var("KeySorted")]), new pl2.type.Term("sort", [new pl2.type.Var("Unsorted"), new pl2.type.Var("Answer")])])])])])])]))
+          ],
+          // '$if/3'
+          "$if/3": [
+            new pl2.type.Rule(new pl2.type.Term("$if", [new pl2.type.Var("If"), new pl2.type.Var("Then"), new pl2.type.Var("Else")]), new pl2.type.Term(";", [new pl2.type.Term(",", [new pl2.type.Term("call", [new pl2.type.Var("If")]), new pl2.type.Term(",", [new pl2.type.Term("$push_global_stack", [new pl2.type.Var("Stack"), new pl2.type.Var("_")]), new pl2.type.Term("call", [new pl2.type.Var("Then")])])]), new pl2.type.Term(",", [new pl2.type.Term("$flush_global_stack", [new pl2.type.Var("Stack"), new pl2.type.Term("[]", []), new pl2.type.Term("[]", [])]), new pl2.type.Term("call", [new pl2.type.Var("Else")])])]))
+          ],
+          // ATTRIBUTED VARIABLES
+          //put_attr/3
+          "put_attr/3": function(thread, point, atom) {
+            var variable = atom.args[0], module2 = atom.args[1], value = atom.args[2];
+            if (!pl2.type.is_variable(variable)) {
+              thread.throw_error(pl2.error.type("variable", variable, atom.indicator));
+            } else if (!pl2.type.is_atom(module2)) {
+              thread.throw_error(pl2.error.type("atom", module2, atom.indicator));
+            } else {
+              var subs = point.substitution.set_attribute(variable.id, module2, value);
+              thread.prepend([new State(point.goal.replace(null), subs, point)]);
+            }
+          },
+          // get_attr/3
+          "get_attr/3": function(thread, point, atom) {
+            var variable = atom.args[0], module2 = atom.args[1], value = atom.args[2];
+            if (!pl2.type.is_variable(variable)) {
+              thread.throw_error(pl2.error.type("variable", variable, atom.indicator));
+            } else if (!pl2.type.is_atom(module2)) {
+              thread.throw_error(pl2.error.type("atom", module2, atom.indicator));
+            } else {
+              var attr = point.substitution.get_attribute(variable.id, module2);
+              if (attr) {
+                thread.prepend([new State(
+                  point.goal.replace(new Term("=", [value, attr])),
+                  point.substitution,
+                  point
+                )]);
+              }
+            }
+          },
+          // INPUT AND OUTPUT
+          // op/3
+          "op/3": function(thread, point, atom) {
+            var priority = atom.args[0], type = atom.args[1], operators = atom.args[2];
+            if (pl2.type.is_atom(operators))
+              operators = new Term(".", [operators, new Term("[]")]);
+            if (pl2.type.is_variable(priority) || pl2.type.is_variable(type) || pl2.type.is_variable(operators)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_integer(priority)) {
+              thread.throw_error(pl2.error.type("integer", priority, atom.indicator));
+            } else if (!pl2.type.is_atom(type)) {
+              thread.throw_error(pl2.error.type("atom", type, atom.indicator));
+            } else if (!pl2.type.is_list(operators)) {
+              thread.throw_error(pl2.error.type("list", operators, atom.indicator));
+            } else if (pl2.type.is_empty_list(operators)) {
+              thread.throw_error(pl2.error.permission("create", "operator", operators, atom.indicator));
+            } else {
+              var pointer = operators;
+              while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                var operator = pointer.args[0];
+                pointer = pointer.args[1];
+                if (pl2.type.is_variable(operator)) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (!pl2.type.is_atom(operator)) {
+                  thread.throw_error(pl2.error.type("atom", operator, atom.indicator));
+                  return;
+                } else if (priority.value < 0 || priority.value > 1200) {
+                  thread.throw_error(pl2.error.domain("operator_priority", priority, atom.indicator));
+                  return;
+                } else if (operator.id === ",") {
+                  thread.throw_error(pl2.error.permission("modify", "operator", operator, atom.indicator));
+                  return;
+                } else if (operator.id === "{}") {
+                  thread.throw_error(pl2.error.permission("create", "operator", operator, atom.indicator));
+                  return;
+                } else if (operator.id === "[]") {
+                  thread.throw_error(pl2.error.permission("create", "operator", operator, atom.indicator));
+                  return;
+                } else if (operator.id === "|" && priority.value !== 0 && (priority.value < 1001 || type.id.length !== 3)) {
+                  thread.throw_error(pl2.error.permission("create", "operator", operator, atom.indicator));
+                  return;
+                } else if (["fy", "fx", "yf", "xf", "xfx", "yfx", "xfy"].indexOf(type.id) === -1) {
+                  thread.throw_error(pl2.error.domain("operator_specifier", type, atom.indicator));
+                  return;
+                } else {
+                  var fix = { prefix: null, infix: null, postfix: null };
+                  for (var p in thread.session.__operators) {
+                    if (!thread.session.__operators.hasOwnProperty(p)) continue;
+                    var classes = thread.session.__operators[p][operator.id];
+                    if (classes) {
+                      if (indexOf(classes, "fx") !== -1) {
+                        fix.prefix = { priority: p, type: "fx" };
+                      }
+                      if (indexOf(classes, "fy") !== -1) {
+                        fix.prefix = { priority: p, type: "fy" };
+                      }
+                      if (indexOf(classes, "xf") !== -1) {
+                        fix.postfix = { priority: p, type: "xf" };
+                      }
+                      if (indexOf(classes, "yf") !== -1) {
+                        fix.postfix = { priority: p, type: "yf" };
+                      }
+                      if (indexOf(classes, "xfx") !== -1) {
+                        fix.infix = { priority: p, type: "xfx" };
+                      }
+                      if (indexOf(classes, "xfy") !== -1) {
+                        fix.infix = { priority: p, type: "xfy" };
+                      }
+                      if (indexOf(classes, "yfx") !== -1) {
+                        fix.infix = { priority: p, type: "yfx" };
+                      }
+                    }
+                  }
+                  var current_class;
+                  switch (type.id) {
+                    case "fy":
+                    case "fx":
+                      current_class = "prefix";
+                      break;
+                    case "yf":
+                    case "xf":
+                      current_class = "postfix";
+                      break;
+                    default:
+                      current_class = "infix";
+                      break;
+                  }
+                  if (fix.infix && current_class === "postfix" || fix.postfix && current_class === "infix") {
+                    thread.throw_error(pl2.error.permission("create", "operator", operator, atom.indicator));
+                    return;
+                  } else {
+                    if (fix[current_class]) {
+                      remove(thread.session.__operators[fix[current_class].priority][operator.id], fix[current_class].type);
+                      if (thread.session.__operators[fix[current_class].priority][operator.id].length === 0) {
+                        delete thread.session.__operators[fix[current_class].priority][operator.id];
+                      }
+                    }
+                    if (priority.value > 0) {
+                      if (!thread.session.__operators[priority.value]) thread.session.__operators[priority.value.toString()] = {};
+                      if (!thread.session.__operators[priority.value][operator.id]) thread.session.__operators[priority.value][operator.id] = [];
+                      thread.session.__operators[priority.value][operator.id].push(type.id);
+                    }
+                  }
+                }
+              }
+              if (pl2.type.is_variable(pointer)) {
+                thread.throw_error(pl2.error.instantiation(atom.indicator));
+                return;
+              } else if (!pl2.type.is_term(pointer) || pointer.indicator !== "[]/0") {
+                thread.throw_error(pl2.error.type("list", operators, atom.indicator));
+                return;
+              } else {
+                thread.success(point);
+              }
+            }
+          },
+          // current_op/3
+          "current_op/3": function(thread, point, atom) {
+            var priority = atom.args[0], specifier = atom.args[1], operator = atom.args[2];
+            var points = [];
+            if (!pl2.type.is_variable(priority) && !pl2.type.is_integer(priority)) {
+              thread.throw_error(pl2.error.type("integer", priority, atom.indicator));
+            } else if (pl2.type.is_integer(priority) && (priority.value < 0 || priority.value > 1200)) {
+              thread.throw_error(pl2.error.domain("operator_priority", priority, atom.indicator));
+            } else if (!pl2.type.is_variable(specifier) && !pl2.type.is_atom(specifier)) {
+              thread.throw_error(pl2.error.type("atom", specifier, atom.indicator));
+            } else if (pl2.type.is_atom(specifier) && indexOf(["fy", "fx", "yf", "xf", "xfx", "yfx", "xfy"], specifier.id) === -1) {
+              thread.throw_error(pl2.error.domain("operator_specifier", specifier, atom.indicator));
+            } else if (!pl2.type.is_variable(operator) && !pl2.type.is_atom(operator)) {
+              thread.throw_error(pl2.error.type("atom", operator, atom.indicator));
+            } else {
+              for (var p in thread.session.__operators)
+                for (var o in thread.session.__operators[p])
+                  for (var i2 = 0; i2 < thread.session.__operators[p][o].length; i2++)
+                    points.push(new State(
+                      point.goal.replace(
+                        new Term(",", [
+                          new Term("=", [new Num(p, false), priority]),
+                          new Term(",", [
+                            new Term("=", [new Term(thread.session.__operators[p][o][i2], []), specifier]),
+                            new Term("=", [new Term(o, []), operator])
+                          ])
+                        ])
+                      ),
+                      point.substitution,
+                      point
+                    ));
+              thread.prepend(points);
+            }
+          },
+          // LOGIC AND CONTROL STRUCTURES
+          // ;/2 (disjunction)
+          ";/2": function(thread, point, atom) {
+            var left = atom.args[0], right = atom.args[1];
+            var context_left = left.args[0];
+            var free_left = left.indicator === ":/2" ? left.args[1] : left;
+            if (pl2.type.is_term(free_left) && free_left.indicator === "->/2") {
+              var cond = left.indicator === ":/2" ? new Term(":", [context_left, new Term("call", [free_left.args[0]])]) : free_left.args[0];
+              var then = left.indicator === ":/2" ? new Term(":", [context_left, free_left.args[1]]) : free_left.args[1];
+              var otherwise = right;
+              var goal_fst = point.goal.replace(new Term(",", [cond, new Term(",", [new Term("!"), then])]));
+              var goal_snd = point.goal.replace(new Term(",", [new Term("!"), otherwise]));
+              thread.prepend([
+                new State(goal_fst, point.substitution, point),
+                new State(goal_snd, point.substitution, point)
+              ]);
+            } else if (pl2.type.is_term(free_left) && free_left.indicator === "*->/2") {
+              var cond = left.indicator === ":/2" ? new Term(":", [context_left, free_left.args[0]]) : free_left.args[0];
+              var then = left.indicator === ":/2" ? new Term(":", [context_left, free_left.args[1]]) : free_left.args[1];
+              var otherwise = right;
+              thread.prepend([new State(
+                point.goal.replace(new Term("$if", [cond, then, otherwise])),
+                point.substitution,
+                point
+              )]);
+            } else {
+              thread.prepend([
+                new State(point.goal.replace(left), point.substitution, point),
+                new State(point.goal.replace(right), point.substitution, point)
+              ]);
+            }
+          },
+          // !/0 (cut)
+          "!/0": function(thread, point, atom) {
+            var parent_cut, last_cut, states = [];
+            parent_cut = point;
+            last_cut = null;
+            while (parent_cut.parent !== null && parent_cut.parent.goal.search(atom)) {
+              last_cut = parent_cut;
+              parent_cut = parent_cut.parent;
+              if (parent_cut.goal !== null) {
+                var selected = parent_cut.goal.select();
+                if (selected && selected.indicator === ":/2")
+                  selected = selected.args[1];
+                if (selected && selected.id === "call" && selected.search(atom)) {
+                  parent_cut = last_cut;
+                  break;
+                }
+              }
+            }
+            var setup_call_cleanup = null;
+            for (var i2 = thread.points.length - 1; i2 >= 0; i2--) {
+              var state = thread.points[i2];
+              var node = state.parent;
+              while (node !== null && node !== parent_cut.parent) {
+                node = node.parent;
+              }
+              if (node === null && node !== parent_cut.parent)
+                states.push(state);
+              else if (state.setup_call_cleanup_goal)
+                setup_call_cleanup = state.setup_call_cleanup_goal;
+            }
+            thread.points = states.reverse();
+            thread.prepend([new State(
+              point.goal.replace(setup_call_cleanup),
+              point.substitution,
+              point
+            )]);
+          },
+          // \+ (negation)
+          "\\+/1": function(thread, point, atom) {
+            var goal = atom.args[0];
+            if (pl2.type.is_variable(goal)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(goal)) {
+              thread.throw_error(pl2.error.type("callable", goal, atom.indicator));
+            } else {
+              thread.prepend([
+                new State(point.goal.replace(new Term(",", [new Term(",", [new Term("call", [goal]), new Term("!", [])]), new Term("fail", [])])), point.substitution, point),
+                new State(point.goal.replace(null), point.substitution, point)
+              ]);
+            }
+          },
+          // ->/2 (implication)
+          "->/2": function(thread, point, atom) {
+            var cond = atom.args[0], then = atom.args[1];
+            var goal = point.goal.replace(new Term(",", [
+              new Term("call", [cond]),
+              new Term(",", [new Term("!"), then])
+            ]));
+            thread.prepend([new State(goal, point.substitution, point)]);
+          },
+          // *->/2 (soft-cut)
+          "*->/2": function(thread, point, atom) {
+            var cond = atom.args[0], then = atom.args[1];
+            var goal = point.goal.replace(new Term(",", [
+              new Term("call", [cond]),
+              then
+            ]));
+            thread.prepend([new State(goal, point.substitution, point)]);
+          },
+          // fail/0
+          "fail/0": function(_1, _2, _3) {
+          },
+          // false/0
+          "false/0": function(_1, _2, _3) {
+          },
+          // true/0
+          "true/0": function(thread, point, _) {
+            thread.success(point);
+          },
+          // call/1..8
+          "call/1": callN(1),
+          "call/2": callN(2),
+          "call/3": callN(3),
+          "call/4": callN(4),
+          "call/5": callN(5),
+          "call/6": callN(6),
+          "call/7": callN(7),
+          "call/8": callN(8),
+          // once/1
+          "once/1": function(thread, point, atom) {
+            var goal = atom.args[0];
+            thread.prepend([new State(point.goal.replace(new Term(",", [new Term("call", [goal]), new Term("!", [])])), point.substitution, point)]);
+          },
+          // forall/2
+          "forall/2": function(thread, point, atom) {
+            var generate = atom.args[0], test = atom.args[1];
+            thread.prepend([new State(point.goal.replace(new Term("\\+", [new Term(",", [new Term("call", [generate]), new Term("\\+", [new Term("call", [test])])])])), point.substitution, point)]);
+          },
+          // repeat/0
+          "repeat/0": function(thread, point, _) {
+            thread.prepend([new State(point.goal.replace(null), point.substitution, point), point]);
+          },
+          // EXCEPTIONS
+          // throw/1
+          "throw/1": function(thread, point, atom) {
+            var error = atom.args[0];
+            if (pl2.type.is_variable(error)) {
+              thread.throw_error(pl2.error.instantiation(thread.level.indicator));
+            } else {
+              for (var i2 = 0; i2 < thread.points.length; i2++) {
+                var state = thread.points[i2];
+                if (state.setup_call_cleanup_catch) {
+                  thread.points = [new State(
+                    new Term(",", [
+                      new Term("catch", [
+                        state.setup_call_cleanup_catch,
+                        new Var("_"),
+                        new Term("throw", [error])
+                      ]),
+                      new Term("throw", [error])
+                    ]),
+                    point.substitution,
+                    point
+                  )];
+                  return;
+                }
+              }
+              thread.throw_error(error);
+            }
+          },
+          // catch/3
+          "catch/3": function(thread, point, atom) {
+            var goal = atom.args[0], catcher = atom.args[1], recover = atom.args[2];
+            var nthread;
+            if (!point.catch) {
+              nthread = new Thread(thread.session);
+              nthread.debugger = thread.debugger;
+              nthread.format_success = function(state) {
+                return state.substitution;
+              };
+              nthread.format_error = function(state) {
+                return state.goal;
+              };
+              nthread.add_goal(goal, true, point);
+              point.catch = nthread;
+            } else {
+              nthread = point.catch;
+            }
+            var callback = function(answer) {
+              if (pl2.type.is_error(answer)) {
+                var occurs_check = thread.get_flag("occurs_check").indicator === "true/0";
+                var state = new State();
+                var mgu = pl2.unify(answer.args[0], catcher, occurs_check);
+                if (mgu !== null) {
+                  state.substitution = point.substitution.apply(mgu);
+                  state.goal = point.goal.replace(recover).apply(mgu);
+                  state.parent = point;
+                  thread.prepend([state]);
+                } else {
+                  thread.throw_error(answer.args[0]);
+                }
+              } else if (answer !== false && answer !== null) {
+                var state = answer === null ? [] : new State(
+                  point.goal.apply(answer).replace(null),
+                  point.substitution.apply(answer),
+                  point
+                );
+                thread.prepend([state, point]);
+              } else if (answer === null) {
+                thread.prepend([point]);
+                if (thread.has_limit)
+                  thread.current_limit = 0;
+              }
+              thread.again(answer !== null);
+            };
+            nthread.answer(callback);
+            return true;
+          },
+          // call_cleanup/2
+          "call_cleanup/2": function(thread, point, atom) {
+            var call = atom.args[0], cleanup = atom.args[1];
+            if (pl2.type.is_variable(call) || pl2.type.is_variable(cleanup)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(call)) {
+              thread.throw_error(pl2.error.type("callable", call, atom.indicator));
+            } else if (!pl2.type.is_callable(cleanup)) {
+              thread.throw_error(pl2.error.type("callable", cleanup, atom.indicator));
+            } else {
+              var nthread, callback;
+              if (point.hasOwnProperty("setup_call_cleanup_thread")) {
+                nthread = point.setup_call_cleanup_thread;
+                callback = point.setup_call_cleanup_callback;
+              } else {
+                var goal = new Term("call", [call]);
+                nthread = new Thread(thread.session);
+                nthread.add_goal(goal, true, point);
+                callback = function(answer) {
+                  if (answer === null) {
+                    var state = new State(
+                      point.goal,
+                      point.substitution,
+                      point
+                    );
+                    state.setup_call_cleanup_thread = nthread;
+                    state.setup_call_cleanup_callback = callback;
+                    thread.prepend([state]);
+                  } else if (answer === false) {
+                    var cleanup_and_fail = new Term(",", [
+                      new Term("call", [cleanup]),
+                      new Term("fail")
+                    ]);
+                    var state = new State(
+                      point.goal.replace(cleanup_and_fail),
+                      point.substitution,
+                      point
+                    );
+                    thread.prepend([state]);
+                  } else if (pl2.type.is_error(answer)) {
+                    var cleanup_and_throw = new Term(",", [
+                      new Term("call", [cleanup]),
+                      answer
+                    ]);
+                    var state = new State(
+                      point.goal.replace(cleanup_and_throw),
+                      point.substitution,
+                      point
+                    );
+                    thread.prepend([state]);
+                  } else {
+                    if (nthread.points.length === 0) {
+                      var state = new State(
+                        point.goal.replace(
+                          new Term("call", [cleanup])
+                        ).apply(answer),
+                        point.substitution.apply(answer),
+                        point
+                      );
+                      thread.prepend([state]);
+                    } else {
+                      var state1 = new State(
+                        point.goal.apply(answer).replace(null),
+                        point.substitution.apply(answer),
+                        point
+                      );
+                      var state2 = new State(
+                        point.goal,
+                        point.substitution,
+                        point
+                      );
+                      state2.setup_call_cleanup_thread = nthread;
+                      state2.setup_call_cleanup_callback = callback;
+                      state2.setup_call_cleanup_goal = cleanup.apply(answer);
+                      state2.setup_call_cleanup_catch = cleanup;
+                      thread.prepend([state1, state2]);
+                    }
+                  }
+                  thread.again();
+                };
+              }
+              nthread.answer(callback);
+              return true;
+            }
+          },
+          // setup_call_cleanup/3
+          "setup_call_cleanup/3": function(thread, point, atom) {
+            var setup = atom.args[0], call = atom.args[1], cleanup = atom.args[2];
+            if (pl2.type.is_variable(setup) || pl2.type.is_variable(call) || pl2.type.is_variable(cleanup)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(setup)) {
+              thread.throw_error(pl2.error.type("callable", setup, atom.indicator));
+            } else if (!pl2.type.is_callable(call)) {
+              thread.throw_error(pl2.error.type("callable", call, atom.indicator));
+            } else if (!pl2.type.is_callable(cleanup)) {
+              thread.throw_error(pl2.error.type("callable", cleanup, atom.indicator));
+            } else {
+              thread.prepend([new State(
+                point.goal.replace(new Term(",", [
+                  new Term("once", [setup]),
+                  new Term("call_cleanup", [call, cleanup])
+                ])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // UNIFICATION
+          // =/2 (unification)
+          "=/2": function(thread, point, atom) {
+            var occurs_check = thread.get_flag("occurs_check").indicator === "true/0";
+            var state = new State();
+            var mgu = pl2.unify(atom.args[0], atom.args[1], occurs_check);
+            if (mgu !== null) {
+              state.goal = point.goal.apply(mgu).replace(null);
+              state.substitution = point.substitution.apply(mgu);
+              state.parent = point;
+              thread.prepend([state]);
+            }
+          },
+          // unify_with_occurs_check/2
+          "unify_with_occurs_check/2": function(thread, point, atom) {
+            var state = new State();
+            var mgu = pl2.unify(atom.args[0], atom.args[1], true);
+            if (mgu !== null) {
+              state.goal = point.goal.apply(mgu).replace(null);
+              state.substitution = point.substitution.apply(mgu);
+              state.parent = point;
+              thread.prepend([state]);
+            }
+          },
+          // \=/2
+          "\\=/2": function(thread, point, atom) {
+            var occurs_check = thread.get_flag("occurs_check").indicator === "true/0";
+            var mgu = pl2.unify(atom.args[0], atom.args[1], occurs_check);
+            if (mgu === null) {
+              thread.success(point);
+            }
+          },
+          // subsumes_term/2
+          /*
+          subsumes_term(General, Specific) :-
+          	\+ \+ (
+          	term_variables(Specific, Vars1),
+          	unify_with_occurs_check(General, Specific),
+          	term_variables(Vars1, Vars2),
+          	Vars1 == Vars2
+          ).
+          */
+          "subsumes_term/2": function(thread, point, atom) {
+            var general = atom.args[0], specific = atom.args[1];
+            var vars1 = thread.next_free_variable();
+            var vars2 = thread.next_free_variable();
+            thread.prepend([new State(
+              point.goal.replace(new Term("\\+", [
+                new Term("\\+", [
+                  new Term(",", [
+                    new Term("term_variables", [specific, vars1]),
+                    new Term(",", [
+                      new Term("unify_with_occurs_check", [general, specific]),
+                      new Term(",", [
+                        new Term("term_variables", [vars1, vars2]),
+                        new Term("==", [vars1, vars2])
+                      ])
+                    ])
+                  ])
+                ])
+              ])),
+              point.substitution,
+              point
+            )]);
+          },
+          // ALL SOLUTIONS
+          // findall/3
+          "findall/3": function(thread, point, atom) {
+            var template = atom.args[0], goal = atom.args[1], instances = atom.args[2];
+            var tail = new Term("[]", []);
+            thread.prepend([new State(
+              point.goal.replace(new Term("findall", [template, goal, instances, tail])),
+              point.substitution,
+              point
+            )]);
+          },
+          // findall/4
+          "findall/4": function(thread, point, atom) {
+            var template = atom.args[0], goal = atom.args[1], instances = atom.args[2], tail = atom.args[3];
+            var proper_goal = goal;
+            if (pl2.type.is_term(goal) && goal.indicator === ":/2")
+              proper_goal = goal.args[1];
+            if (pl2.type.is_variable(proper_goal)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(proper_goal)) {
+              thread.throw_error(pl2.error.type("callable", goal, atom.indicator));
+            } else if (!pl2.type.is_variable(instances) && !pl2.type.is_list(instances)) {
+              thread.throw_error(pl2.error.type("list", instances, atom.indicator));
+            } else if (!pl2.type.is_variable(tail) && !pl2.type.is_list(tail)) {
+              thread.throw_error(pl2.error.type("list", tail, atom.indicator));
+            } else {
+              thread.prepend([new State(
+                point.goal.replace(new Term("$findall", [template, goal, instances, tail])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // bagof/3
+          "bagof/3": function(thread, point, atom) {
+            var template = atom.args[0], goal = atom.args[1], instances = atom.args[2];
+            if (pl2.type.is_variable(goal)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(goal)) {
+              thread.throw_error(pl2.error.type("callable", goal, atom.indicator));
+            } else if (!pl2.type.is_variable(instances) && !pl2.type.is_list(instances)) {
+              thread.throw_error(pl2.error.type("list", instances, atom.indicator));
+            } else {
+              thread.prepend([new State(
+                point.goal.replace(new Term("$bagof", [template, goal, instances])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // setof/3
+          "setof/3": function(thread, point, atom) {
+            var template = atom.args[0], goal = atom.args[1], instances = atom.args[2];
+            if (pl2.type.is_variable(goal)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(goal)) {
+              thread.throw_error(pl2.error.type("callable", goal, atom.indicator));
+            } else if (!pl2.type.is_variable(instances) && !pl2.type.is_list(instances)) {
+              thread.throw_error(pl2.error.type("list", instances, atom.indicator));
+            } else {
+              thread.prepend([new State(
+                point.goal.replace(new Term("$setof", [template, goal, instances])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // TERM CREATION AND DECOMPOSITION
+          // functor/3
+          "functor/3": function(thread, point, atom) {
+            var subs;
+            var term = atom.args[0], name = atom.args[1], arity = atom.args[2];
+            if (pl2.type.is_variable(term) && (pl2.type.is_variable(name) || pl2.type.is_variable(arity))) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(arity) && !pl2.type.is_integer(arity)) {
+              thread.throw_error(pl2.error.type("integer", atom.args[2], atom.indicator));
+            } else if (!pl2.type.is_variable(name) && !pl2.type.is_atomic(name)) {
+              thread.throw_error(pl2.error.type("atomic", atom.args[1], atom.indicator));
+            } else if (pl2.type.is_variable(term) && !pl2.type.is_atom(name) && pl2.type.is_integer(arity) && arity.value > 0) {
+              thread.throw_error(pl2.error.type("atom", atom.args[1], atom.indicator));
+            } else if (pl2.type.is_variable(term) && pl2.type.is_integer(arity) && arity.value < 0) {
+              thread.throw_error(pl2.error.domain("not_less_than_zero", atom.args[2], atom.indicator));
+            } else if (pl2.type.is_variable(term)) {
+              if (atom.args[2].value >= 0) {
+                var args = [];
+                for (var i2 = 0; i2 < arity.value; i2++)
+                  args.push(thread.next_free_variable());
+                var functor = pl2.type.is_number(name) ? name : new Term(name.id, args);
+                thread.prepend([new State(point.goal.replace(new Term("=", [term, functor])), point.substitution, point)]);
+              }
+            } else {
+              var id = pl2.type.is_number(term) ? term : new Term(term.id, []);
+              var length = pl2.type.is_number(term) ? new Num(0, false) : new Num(term.args.length, false);
+              var goal = new Term(",", [new Term("=", [id, name]), new Term("=", [length, arity])]);
+              thread.prepend([new State(point.goal.replace(goal), point.substitution, point)]);
+            }
+          },
+          // arg/3
+          "arg/3": function(thread, point, atom) {
+            if (pl2.type.is_variable(atom.args[0]) || pl2.type.is_variable(atom.args[1])) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_integer(atom.args[0])) {
+              thread.throw_error(pl2.error.type("integer", atom.args[0], atom.indicator));
+            } else if (atom.args[0].value < 0) {
+              thread.throw_error(pl2.error.domain("not_less_than_zero", atom.args[0], atom.indicator));
+            } else if (!pl2.type.is_compound(atom.args[1])) {
+              thread.throw_error(pl2.error.type("compound", atom.args[1], atom.indicator));
+            } else {
+              var n = atom.args[0].value;
+              if (n > 0 && n <= atom.args[1].args.length) {
+                var goal = new Term("=", [atom.args[1].args[n - 1], atom.args[2]]);
+                thread.prepend([new State(point.goal.replace(goal), point.substitution, point)]);
+              }
+            }
+          },
+          // =../2 (univ)
+          "=../2": function(thread, point, atom) {
+            var list;
+            if (pl2.type.is_variable(atom.args[0]) && (pl2.type.is_variable(atom.args[1]) || pl2.type.is_non_empty_list(atom.args[1]) && pl2.type.is_variable(atom.args[1].args[0]))) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_fully_list(atom.args[1])) {
+              thread.throw_error(pl2.error.type("list", atom.args[1], atom.indicator));
+            } else if (pl2.type.is_variable(atom.args[0]) && pl2.type.is_empty_list(atom.args[1])) {
+              thread.throw_error(pl2.error.domain("non_empty_list", atom.args[1], atom.indicator));
+            } else if (!pl2.type.is_variable(atom.args[0])) {
+              if (pl2.type.is_term(atom.args[0]) && atom.args[0].args.length > 0) {
+                list = new Term("[]");
+                for (var i2 = atom.args[0].args.length - 1; i2 >= 0; i2--) {
+                  list = new Term(".", [atom.args[0].args[i2], list]);
+                }
+                list = new Term(".", [new Term(atom.args[0].id), list]);
+              } else {
+                list = new Term(".", [atom.args[0], new Term("[]")]);
+              }
+              thread.prepend([new State(point.goal.replace(new Term("=", [list, atom.args[1]])), point.substitution, point)]);
+            } else if (!pl2.type.is_variable(atom.args[1])) {
+              var args = [];
+              list = atom.args[1].args[1];
+              while (list.indicator === "./2") {
+                args.push(list.args[0]);
+                list = list.args[1];
+              }
+              if (pl2.type.is_variable(atom.args[0]) && pl2.type.is_variable(list)) {
+                thread.throw_error(pl2.error.instantiation(atom.indicator));
+              } else if (args.length === 0 && pl2.type.is_compound(atom.args[1].args[0])) {
+                thread.throw_error(pl2.error.type("atomic", atom.args[1].args[0], atom.indicator));
+              } else if (args.length > 0 && (pl2.type.is_compound(atom.args[1].args[0]) || pl2.type.is_number(atom.args[1].args[0]))) {
+                thread.throw_error(pl2.error.type("atom", atom.args[1].args[0], atom.indicator));
+              } else {
+                if (args.length === 0) {
+                  thread.prepend([new State(point.goal.replace(new Term("=", [atom.args[1].args[0], atom.args[0]], point)), point.substitution, point)]);
+                } else {
+                  thread.prepend([new State(point.goal.replace(new Term("=", [new Term(atom.args[1].args[0].id, args), atom.args[0]])), point.substitution, point)]);
+                }
+              }
+            }
+          },
+          // copy_term/2
+          "copy_term/2": function(thread, point, atom) {
+            var original_term = atom.args[0], renamed_term = atom.args[1];
+            thread.session.renamed_variables = {};
+            var new_term = original_term.rename(thread);
+            thread.session.renamed_variables = {};
+            thread.prepend(
+              [
+                new State(
+                  point.goal.replace(new Term("=", [renamed_term, new_term])),
+                  point.substitution,
+                  point
+                )
+              ]
+            );
+          },
+          // term_variables/2
+          "term_variables/2": [
+            new pl2.type.Rule(new pl2.type.Term("term_variables", [new pl2.type.Var("Term"), new pl2.type.Var("Vars")]), new pl2.type.Term("term_variables", [new pl2.type.Var("Term"), new pl2.type.Var("Vars"), new pl2.type.Term("[]", [])]))
+          ],
+          // term_variables/3
+          "term_variables/3": function(thread, point, atom) {
+            var term = atom.args[0], vars = atom.args[1], tail = atom.args[2];
+            if (!pl2.type.is_fully_list(vars)) {
+              thread.throw_error(pl2.error.type("list", vars, atom.indicator));
+            } else {
+              var list = arrayToList(map(nub(term.variables()), function(v) {
+                return new Var(v);
+              }), tail);
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [vars, list])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // numbervars/3
+          "numbervars/3": function(thread, point, atom) {
+            var term = atom.args[0], start = atom.args[1], end = atom.args[2];
+            if (pl2.type.is_variable(start)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_integer(start)) {
+              thread.throw_error(pl2.error.type("integer", start, atom.indicator));
+            } else if (!pl2.type.is_variable(end) && !pl2.type.is_integer(end)) {
+              thread.throw_error(pl2.error.type("integer", end, atom.indicator));
+            } else {
+              var variables = nub(term.variables());
+              var value = start.value;
+              var unif_body = new Term("true");
+              for (var i2 = 0; i2 < variables.length; i2++) {
+                unif_body = new Term(",", [
+                  new Term("=", [
+                    new Var(variables[i2]),
+                    new Term("$VAR", [new Num(value, false)])
+                  ]),
+                  unif_body
+                ]);
+                value++;
+              }
+              var unif_end = new Term("=", [end, new Num(value, false)]);
+              if (pl2.type.is_variable(end) || end.value === value) {
+                thread.prepend([new State(
+                  point.goal.replace(new Term(",", [unif_body, unif_end])),
+                  point.substitution,
+                  point
+                )]);
+              }
+            }
+          },
+          // CLAUSE RETRIEVAL AND INFORMATION
+          // clause/2
+          "clause/2": function(thread, point, atom) {
+            var head = atom.args[0], body = atom.args[1];
+            var module_id = "user";
+            if (pl2.type.is_term(head) && head.indicator === ":/2") {
+              if (!pl2.type.is_atom(head.args[0])) {
+                thread.throw_error(pl2.error.type("module", head.args[0], atom.indicator));
+                return;
+              }
+              module_id = head.args[0].id;
+              head = head.args[1];
+            }
+            var get_module = thread.session.modules[module_id];
+            if (pl2.type.is_variable(head)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(head)) {
+              thread.throw_error(pl2.error.type("callable", head, atom.indicator));
+            } else if (!pl2.type.is_variable(body) && !pl2.type.is_callable(body)) {
+              thread.throw_error(pl2.error.type("callable", body, atom.indicator));
+            } else if (head.indicator === ",/2" || thread.session.modules.system.rules.hasOwnProperty(head.indicator)) {
+              thread.throw_error(pl2.error.permission("access", "private_procedure", str_indicator(head.indicator), atom.indicator));
+            } else if (pl2.type.is_module(get_module) && get_module.rules[head.indicator]) {
+              if (get_module.is_public_predicate(head.indicator)) {
+                var states = [];
+                if (typeof get_module.rules[head.indicator] === "function") {
+                  thread.throw_error(pl2.error.permission("modify", "static_procedure", str_indicator(head.indicator), atom.indicator));
+                  return;
+                }
+                for (var i2 = 0; i2 < get_module.rules[head.indicator].length; i2++) {
+                  var rule = get_module.rules[head.indicator][i2];
+                  thread.session.renamed_variables = {};
+                  rule = rule.rename(thread);
+                  if (rule.body === null)
+                    rule.body = new Term("true");
+                  var goal = new Term(",", [
+                    new Term("=", [rule.head, head]),
+                    new Term("=", [rule.body, body])
+                  ]);
+                  states.push(new State(point.goal.replace(goal), point.substitution, point));
+                }
+                thread.prepend(states);
+              } else {
+                thread.throw_error(pl2.error.permission("access", "private_procedure", str_indicator(head.indicator), atom.indicator));
+              }
+            }
+          },
+          // current_predicate/1
+          "current_predicate/1": function(thread, point, atom) {
+            var indicator2 = atom.args[0];
+            var module_id;
+            if (pl2.type.is_term(indicator2) && indicator2.indicator === ":/2") {
+              if (!pl2.type.is_atom(indicator2.args[0])) {
+                thread.throw_error(pl2.error.type("module", indicator2.args[0], atom.indicator));
+                return;
+              }
+              module_id = indicator2.args[0].id;
+              indicator2 = indicator2.args[1];
+            } else {
+              module_id = "user";
+            }
+            if (!pl2.type.is_variable(indicator2) && (!pl2.type.is_compound(indicator2) || indicator2.indicator !== "//2")) {
+              thread.throw_error(pl2.error.type("predicate_indicator", indicator2, atom.indicator));
+            } else if (!pl2.type.is_variable(indicator2) && !pl2.type.is_variable(indicator2.args[0]) && !pl2.type.is_atom(indicator2.args[0])) {
+              thread.throw_error(pl2.error.type("atom", indicator2.args[0], atom.indicator));
+            } else if (!pl2.type.is_variable(indicator2) && !pl2.type.is_variable(indicator2.args[1]) && !pl2.type.is_integer(indicator2.args[1])) {
+              thread.throw_error(pl2.error.type("integer", indicator2.args[1], atom.indicator));
+            } else if (!pl2.type.is_variable(indicator2) && pl2.type.is_integer(indicator2.args[1]) && indicator2.args[1].value < 0) {
+              thread.throw_error(pl2.error.domain("not_less_than_zero", indicator2.args[1], atom.indicator));
+            } else {
+              var states = [];
+              var get_module = thread.session.modules[module_id];
+              if (pl2.type.is_module(get_module)) {
+                for (var prop in get_module.rules) {
+                  if (!get_module.rules.hasOwnProperty(prop))
+                    continue;
+                  var predicate = str_indicator(prop);
+                  var goal = new Term("=", [predicate, indicator2]);
+                  states.push(new State(point.goal.replace(goal), point.substitution, point));
+                }
+                thread.prepend(states);
+              }
+            }
+          },
+          // current_module/1
+          "current_module/1": function(thread, point, atom) {
+            var module_id = atom.args[0];
+            if (!pl2.type.is_variable(module_id) && !pl2.type.is_atom(module_id)) {
+              thread.throw_error(pl2.error.type("atom", module_id, atom.indicator));
+            } else {
+              if (pl2.type.is_variable(module_id)) {
+                var states = [];
+                for (var prop in thread.session.modules) {
+                  if (!thread.session.modules.hasOwnProperty(prop))
+                    continue;
+                  states.push(new State(
+                    point.goal.replace(new Term("=", [module_id, new Term(prop)])),
+                    point.substitution,
+                    point
+                  ));
+                }
+                thread.prepend(states);
+              } else {
+                if (thread.session.modules.hasOwnProperty(module_id.id))
+                  thread.success(point);
+              }
+            }
+          },
+          // predicate_property/2
+          "predicate_property/2": function(thread, point, atom) {
+            var head = atom.args[0], property = atom.args[1];
+            var module_id;
+            if (pl2.type.is_term(head) && head.indicator === ":/2") {
+              if (!pl2.type.is_atom(head.args[0])) {
+                thread.throw_error(pl2.error.type("module", head.args[0], atom.indicator));
+                return;
+              }
+              module_id = head.args[0].id;
+              head = head.args[1];
+            }
+            if (!pl2.type.is_variable(head) && !pl2.type.is_callable(head)) {
+              thread.throw_error(pl2.error.type("callable", head, atom.indicator));
+            } else if (!pl2.type.is_variable(property) && !pl2.type.is_predicate_property(property)) {
+              thread.throw_error(pl2.error.domain("predicate_property", property, atom.indicator));
+            } else {
+              var get_module = module_id ? thread.session.modules[module_id] : thread.session.modules.user;
+              var points = [];
+              if (pl2.type.is_variable(head)) {
+                if (!module_id) {
+                  for (var prop in pl2.builtin.rules) {
+                    if (!pl2.builtin.rules.hasOwnProperty(prop))
+                      continue;
+                    var indicator2 = str_indicator(prop);
+                    var args = [];
+                    for (var i2 = 0; i2 < indicator2.args[1].value; i2++)
+                      args.push(thread.next_free_variable());
+                    var unif_head = new Term(indicator2.args[0].id, args);
+                    var current_properties = [
+                      new Term("static"),
+                      new Term("built_in"),
+                      new Term("native_code")
+                    ];
+                    if (pl2.builtin.meta_predicates.hasOwnProperty(prop))
+                      current_properties.push(new Term("meta_predicate", [
+                        pl2.builtin.meta_predicates[prop]
+                      ]));
+                    for (var i2 = 0; i2 < current_properties.length; i2++) {
+                      if (pl2.type.is_variable(property) || current_properties[i2].indicator === property.indicator) {
+                        points.push(new State(
+                          point.goal.replace(new Term(",", [
+                            new Term("=", [head, unif_head]),
+                            new Term("=", [property, current_properties[i2]])
+                          ])),
+                          point.substitution,
+                          point
+                        ));
+                      }
+                    }
+                  }
+                }
+                if (pl2.type.is_module(get_module)) {
+                  for (var prop in get_module.rules) {
+                    if (!get_module.rules.hasOwnProperty(prop))
+                      continue;
+                    var indicator2 = str_indicator(prop);
+                    var args = [];
+                    for (var i2 = 0; i2 < indicator2.args[1].value; i2++)
+                      args.push(thread.next_free_variable());
+                    var unif_head = new Term(indicator2.args[0].id, args);
+                    var current_properties = [];
+                    if (thread.is_public_predicate(prop, module_id))
+                      current_properties.push(new Term("dynamic"));
+                    else
+                      current_properties.push(new Term("static"));
+                    if (get_module.rules[prop] instanceof Function)
+                      current_properties.push(new Term("native_code"));
+                    if (thread.is_multifile_predicate(prop, module_id))
+                      current_properties.push(new Term("multifile"));
+                    if (get_module.meta_predicates.hasOwnProperty(prop))
+                      current_properties.push(new Term("meta_predicate", [
+                        get_module.meta_predicates[prop]
+                      ]));
+                    for (var i2 = 0; i2 < current_properties.length; i2++) {
+                      if (pl2.type.is_variable(property) || current_properties[i2].indicator === property.indicator) {
+                        points.push(new State(
+                          point.goal.replace(new Term(",", [
+                            new Term("=", [head, unif_head]),
+                            new Term("=", [property, current_properties[i2]])
+                          ])),
+                          point.substitution,
+                          point
+                        ));
+                      }
+                    }
+                  }
+                }
+              } else {
+                var builtin = !module_id && pl2.type.is_builtin(head);
+                var predicate = builtin ? pl2.builtin.rules[head.indicator] : get_module.rules[head.indicator];
+                get_module = builtin ? pl2.builtin : get_module;
+                if (predicate) {
+                  var current_properties;
+                  if (builtin) {
+                    current_properties = [
+                      new Term("static"),
+                      new Term("built_in"),
+                      new Term("native_code")
+                    ];
+                  } else {
+                    current_properties = [];
+                    if (thread.is_public_predicate(head.indicator, module_id))
+                      current_properties.push(new Term("dynamic"));
+                    else
+                      current_properties.push(new Term("static"));
+                    if (predicate instanceof Function)
+                      current_properties.push(new Term("native_code"));
+                    if (thread.is_multifile_predicate(head.indicator, module_id))
+                      current_properties.push(new Term("multifile"));
+                  }
+                  if (get_module.meta_predicates.hasOwnProperty(head.indicator))
+                    current_properties.push(new Term("meta_predicate", [
+                      get_module.meta_predicates[head.indicator]
+                    ]));
+                  var args = [];
+                  for (var i2 = 0; i2 < head.args.length; i2++)
+                    args.push(thread.next_free_variable());
+                  var unif_head = new Term(head.id, args);
+                  for (var i2 = 0; i2 < current_properties.length; i2++) {
+                    if (pl2.type.is_variable(property) || current_properties[i2].indicator === property.indicator) {
+                      points.push(new State(
+                        point.goal.replace(new Term(",", [
+                          new Term("=", [head, unif_head]),
+                          new Term("=", [property, current_properties[i2]])
+                        ])),
+                        point.substitution,
+                        point
+                      ));
+                    }
+                  }
+                }
+              }
+              thread.prepend(points);
+            }
+          },
+          // listing/0
+          "listing/0": function(thread, point, atom) {
+            var context_module = atom.context_module ? atom.context_module : "user";
+            var rules2 = {};
+            if (pl2.type.is_module(thread.session.modules[context_module])) {
+              rules2 = thread.session.modules[context_module].rules;
+            }
+            var str = "";
+            for (var indicator2 in rules2) {
+              if (!rules2.hasOwnProperty(indicator2)) continue;
+              var predicate = rules2[indicator2];
+              str += "% " + indicator2 + "\n";
+              if (predicate instanceof Array) {
+                for (var i2 = 0; i2 < predicate.length; i2++)
+                  str += predicate[i2].toString({ session: thread.session }) + "\n";
+              } else {
+                str += "/*\n" + predicate.toString() + "\n*/";
+              }
+              str += "\n";
+            }
+            thread.prepend([new State(
+              point.goal.replace(new Term("write", [new Term(str, [])])),
+              point.substitution,
+              point
+            )]);
+          },
+          // listing/1
+          "listing/1": function(thread, point, atom) {
+            var indicator2 = atom.args[0];
+            var context_module = "user";
+            if (indicator2.indicator === ":/2") {
+              context_module = indicator2.args[0].id;
+              indicator2 = indicator2.args[1];
+            }
+            if (pl2.type.is_variable(indicator2)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_predicate_indicator(indicator2)) {
+              thread.throw_error(pl2.error.type("predicate_indicator", indicator2, atom.indicator));
+            } else {
+              var rules2 = {};
+              if (pl2.type.is_module(thread.session.modules[context_module])) {
+                rules2 = thread.session.modules[context_module].rules;
+              }
+              var str = "";
+              var str_indicator2 = indicator2.args[0].id + "/" + indicator2.args[1].value;
+              if (rules2.hasOwnProperty(str_indicator2)) {
+                var predicate = rules2[str_indicator2];
+                if (predicate instanceof Array) {
+                  for (var i2 = 0; i2 < predicate.length; i2++)
+                    str += predicate[i2].toString({ session: thread.session }) + "\n";
+                } else {
+                  str += "/*\n" + predicate.toString() + "\n*/";
+                }
+                str += "\n";
+              }
+              thread.prepend([new State(
+                point.goal.replace(new Term("write", [new Term(str, [])])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // LIST OPERATIONS
+          // sort/2
+          "sort/2": function(thread, point, atom) {
+            var list = atom.args[0], expected = atom.args[1];
+            if (pl2.type.is_variable(list)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(expected) && !pl2.type.is_fully_list(expected)) {
+              thread.throw_error(pl2.error.type("list", expected, atom.indicator));
+            } else {
+              var arr = [];
+              var pointer = list;
+              while (pointer.indicator === "./2") {
+                arr.push(pointer.args[0]);
+                pointer = pointer.args[1];
+              }
+              if (pl2.type.is_variable(pointer)) {
+                thread.throw_error(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_empty_list(pointer)) {
+                thread.throw_error(pl2.error.type("list", list, atom.indicator));
+              } else {
+                var sorted_arr = arr.sort(pl2.compare);
+                for (var i2 = sorted_arr.length - 1; i2 > 0; i2--) {
+                  if (sorted_arr[i2].equals(sorted_arr[i2 - 1]))
+                    sorted_arr.splice(i2, 1);
+                }
+                var sorted_list = new Term("[]");
+                for (var i2 = sorted_arr.length - 1; i2 >= 0; i2--) {
+                  sorted_list = new Term(".", [sorted_arr[i2], sorted_list]);
+                }
+                thread.prepend([new State(point.goal.replace(new Term("=", [sorted_list, expected])), point.substitution, point)]);
+              }
+            }
+          },
+          // keysort/2
+          "keysort/2": function(thread, point, atom) {
+            var list = atom.args[0], expected = atom.args[1];
+            if (pl2.type.is_variable(list)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(expected) && !pl2.type.is_fully_list(expected)) {
+              thread.throw_error(pl2.error.type("list", expected, atom.indicator));
+            } else {
+              var arr = [];
+              var elem;
+              var pointer = list;
+              while (pointer.indicator === "./2") {
+                elem = pointer.args[0];
+                if (pl2.type.is_variable(elem)) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (!pl2.type.is_term(elem) || elem.indicator !== "-/2") {
+                  thread.throw_error(pl2.error.type("pair", elem, atom.indicator));
+                  return;
+                }
+                elem.args[0].pair = elem.args[1];
+                arr.push(elem.args[0]);
+                pointer = pointer.args[1];
+              }
+              if (pl2.type.is_variable(pointer)) {
+                thread.throw_error(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_empty_list(pointer)) {
+                thread.throw_error(pl2.error.type("list", list, atom.indicator));
+              } else {
+                if (!pl2.type.is_variable(expected)) {
+                  var pointer = expected;
+                  while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                    var head = pointer.args[0];
+                    if (!pl2.type.is_variable(head) && (!pl2.type.is_term(head) || head.indicator !== "-/2")) {
+                      thread.throw_error(pl2.error.type("pair", head, atom.indicator));
+                      return;
+                    }
+                    pointer = pointer.args[1];
+                  }
+                  if (!pl2.type.is_variable(pointer) && !pl2.type.is_empty_list(pointer)) {
+                    thread.throw_error(pl2.error.type("list", expected, atom.indicator));
+                    return;
+                  }
+                }
+                var sorted_arr = arr.sort(pl2.compare);
+                var sorted_list = new pl2.type.Term("[]");
+                for (var i2 = sorted_arr.length - 1; i2 >= 0; i2--) {
+                  sorted_list = new pl2.type.Term(".", [new pl2.type.Term("-", [sorted_arr[i2], sorted_arr[i2].pair]), sorted_list]);
+                  delete sorted_arr[i2].pair;
+                }
+                thread.prepend([new pl2.type.State(point.goal.replace(new pl2.type.Term("=", [sorted_list, expected])), point.substitution, point)]);
+              }
+            }
+          },
+          // keygroup
+          "keygroup/2": function(thread, point, atom) {
+            var list = atom.args[0], expected = atom.args[1];
+            if (pl2.type.is_variable(list)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(expected) && !pl2.type.is_fully_list(expected)) {
+              thread.throw_error(pl2.error.type("list", expected, atom.indicator));
+            } else {
+              var keys = [];
+              var values = [];
+              var pointer = list;
+              while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                var elem = pointer.args[0];
+                if (pl2.type.is_variable(elem)) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (!pl2.type.is_term(elem) || elem.indicator !== "-/2") {
+                  thread.throw_error(pl2.error.type("pair", elem, atom.indicator));
+                  return;
+                }
+                var key = elem.args[0], value = elem.args[1];
+                var index = -1;
+                for (var i2 = 0; i2 < keys.length; i2++) {
+                  if (pl2.compare(key, keys[i2]) === 0) {
+                    index = i2;
+                    break;
+                  }
+                }
+                if (index === -1) {
+                  index = keys.length;
+                  keys.push(key);
+                  values.push([]);
+                }
+                values[index].push(value);
+                pointer = pointer.args[1];
+              }
+              if (pl2.type.is_variable(pointer)) {
+                thread.throw_error(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_empty_list(pointer)) {
+                thread.throw_error(pl2.error.type("list", list, atom.indicator));
+              } else {
+                if (!pl2.type.is_variable(expected)) {
+                  var pointer = expected;
+                  while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                    var head = pointer.args[0];
+                    if (!pl2.type.is_variable(head) && (!pl2.type.is_term(head) || head.indicator !== "-/2")) {
+                      thread.throw_error(pl2.error.type("pair", head, atom.indicator));
+                      return;
+                    }
+                    pointer = pointer.args[1];
+                  }
+                  if (!pl2.type.is_variable(pointer) && !pl2.type.is_empty_list(pointer)) {
+                    thread.throw_error(pl2.error.type("list", expected, atom.indicator));
+                    return;
+                  }
+                }
+                group = new Term("[]", []);
+                for (var i2 = keys.length - 1; i2 >= 0; i2--)
+                  group = new Term(".", [new Term("-", [keys[i2], arrayToList(values[i2])]), group]);
+                thread.prepend([
+                  new State(
+                    point.goal.replace(new pl2.type.Term("=", [expected, group])),
+                    point.substitution,
+                    point
+                  )
+                ]);
+              }
+            }
+          },
+          // CLAUSE CREATION AND DESTRUCTION
+          // asserta/1
+          "asserta/1": function(thread, point, atom) {
+            var clause = atom.args[0];
+            var module_id = "user";
+            if (pl2.type.is_term(clause) && clause.indicator === ":/2") {
+              module_id = clause.args[0].id;
+              clause = clause.args[1];
+            }
+            if (pl2.type.is_variable(clause)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(clause)) {
+              thread.throw_error(pl2.error.type("callable", clause, atom.indicator));
+            } else {
+              var head, body, get_module;
+              if (clause.indicator === ":-/2") {
+                head = clause.args[0];
+                body = body_conversion(clause.args[1]);
+              } else {
+                head = clause;
+                body = null;
+              }
+              if (pl2.type.is_variable(head)) {
+                thread.throw_error(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_callable(head)) {
+                thread.throw_error(pl2.error.type("callable", head, atom.indicator));
+              } else if (body !== null && !pl2.type.is_callable(body)) {
+                thread.throw_error(pl2.error.type("callable", body, atom.indicator));
+              } else if ((!pl2.type.is_module(thread.session.modules[module_id]) || thread.is_public_predicate(head.indicator, module_id)) && head.indicator !== ",/2" && !thread.session.modules.system.rules.hasOwnProperty(head.indicator)) {
+                if (!pl2.type.is_module(thread.session.modules[module_id])) {
+                  get_module = new Module(module_id, {}, "all", { session: thread.session });
+                  thread.session.modules[module_id] = get_module;
+                } else {
+                  get_module = thread.session.modules[module_id];
+                }
+                if (get_module.rules[head.indicator] === void 0)
+                  get_module.rules[head.indicator] = [];
+                get_module.public_predicates[head.indicator] = true;
+                get_module.rules[head.indicator] = [new Rule(head, body, true)].concat(get_module.rules[head.indicator]);
+                get_module.update_indices_predicate(head.indicator);
+                thread.success(point);
+              } else {
+                thread.throw_error(pl2.error.permission("modify", "static_procedure", str_indicator(head.indicator), atom.indicator));
+              }
+            }
+          },
+          // assertz/1
+          "assertz/1": function(thread, point, atom) {
+            var clause = atom.args[0];
+            var module_id = "user";
+            if (pl2.type.is_term(clause) && clause.indicator === ":/2") {
+              module_id = clause.args[0].id;
+              clause = clause.args[1];
+            }
+            if (pl2.type.is_variable(clause)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(clause)) {
+              thread.throw_error(pl2.error.type("callable", clause, atom.indicator));
+            } else {
+              var head, body, get_module;
+              if (clause.indicator === ":-/2") {
+                head = clause.args[0];
+                body = body_conversion(clause.args[1]);
+              } else {
+                head = clause;
+                body = null;
+              }
+              if (pl2.type.is_variable(head)) {
+                thread.throw_error(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_callable(head)) {
+                thread.throw_error(pl2.error.type("callable", head, atom.indicator));
+              } else if (body !== null && !pl2.type.is_callable(body)) {
+                thread.throw_error(pl2.error.type("callable", body, atom.indicator));
+              } else if ((!pl2.type.is_module(thread.session.modules[module_id]) || thread.is_public_predicate(head.indicator, module_id)) && head.indicator !== ",/2" && !thread.session.modules.system.rules.hasOwnProperty(head.indicator)) {
+                if (!pl2.type.is_module(thread.session.modules[module_id])) {
+                  get_module = new Module(module_id, {}, "all", { session: thread.session });
+                  thread.session.modules[module_id] = get_module;
+                } else {
+                  get_module = thread.session.modules[module_id];
+                }
+                if (get_module.rules[head.indicator] === void 0)
+                  get_module.rules[head.indicator] = [];
+                get_module.public_predicates[head.indicator] = true;
+                get_module.rules[head.indicator].push(new Rule(head, body, true));
+                get_module.update_indices_predicate(head.indicator);
+                thread.success(point);
+              } else {
+                thread.throw_error(pl2.error.permission("modify", "static_procedure", str_indicator(head.indicator), atom.indicator));
+              }
+            }
+          },
+          // retract/1
+          "retract/1": function(thread, point, atom) {
+            var clause = atom.args[0];
+            if (pl2.type.is_variable(clause)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(clause)) {
+              thread.throw_error(pl2.error.type("callable", clause, atom.indicator));
+            } else {
+              var head, body, module_atom, module_id;
+              if (clause.indicator === ":/2") {
+                module_atom = clause.args[0];
+                clause = clause.args[1];
+                if (!pl2.type.is_atom(module_atom)) {
+                  thread.throw_error(pl2.error.type("module", module_atom, atom.indicator));
+                  return;
+                }
+              } else {
+                module_atom = new Term("user");
+              }
+              if (clause.indicator === ":-/2") {
+                head = clause.args[0];
+                body = clause.args[1];
+              } else {
+                head = clause;
+                body = new Term("true");
+              }
+              if (pl2.type.is_variable(head)) {
+                thread.throw_error(pl2.error.instantiation(atom.indicator));
+                return;
+              } else if (!pl2.type.is_callable(head)) {
+                thread.throw_error(pl2.error.type("callable", head, atom.indicator));
+                return;
+              }
+              module_id = module_atom.id;
+              var get_module = thread.session.modules[module_id];
+              if (!pl2.type.is_module(get_module))
+                return;
+              if (!point.retract) {
+                if (thread.is_public_predicate(head.indicator, module_id) && head.indicator !== ",/2" && !thread.session.modules.system.rules.hasOwnProperty(head.indicator)) {
+                  if (get_module.rules[head.indicator] !== void 0) {
+                    var states = [];
+                    if (typeof get_module.rules[head.indicator] === "function") {
+                      thread.throw_error(pl2.error.permission("modify", "static_procedure", str_indicator(head.indicator), atom.indicator));
+                      return;
+                    }
+                    for (var i2 = 0; i2 < get_module.rules[head.indicator].length; i2++) {
+                      thread.session.renamed_variables = {};
+                      var orule = get_module.rules[head.indicator][i2];
+                      var rule = orule.rename(thread);
+                      if (rule.body === null)
+                        rule.body = new Term("true", []);
+                      var occurs_check = thread.get_flag("occurs_check").indicator === "true/0";
+                      var mgu = pl2.unify(new Term(",", [head, body]), new Term(",", [rule.head, rule.body]), occurs_check);
+                      if (mgu !== null) {
+                        var state = new State(
+                          point.goal.replace(new Term(",", [
+                            new Term(":", [
+                              module_atom,
+                              new Term("retract", [new Term(":-", [head, body])])
+                            ]),
+                            new Term(",", [
+                              new Term("=", [head, rule.head]),
+                              new Term("=", [body, rule.body])
+                            ])
+                          ])),
+                          point.substitution,
+                          point
+                        );
+                        state.retract = orule;
+                        states.push(state);
+                      }
+                    }
+                    thread.prepend(states);
+                  }
+                } else {
+                  thread.throw_error(pl2.error.permission("modify", "static_procedure", str_indicator(head.indicator), atom.indicator));
+                }
+              } else {
+                retract(thread, point, head.indicator, point.retract, get_module);
+              }
+            }
+          },
+          // retractall/1
+          "retractall/1": function(thread, point, atom) {
+            var head = atom.args[0];
+            var context_module = "user";
+            if (pl2.type.is_term(head) && head.indicator === ":/2") {
+              context_module = head.args[0].id;
+              head = head.args[1];
+            }
+            if (pl2.type.is_variable(head)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(head)) {
+              thread.throw_error(pl2.error.type("callable", head, atom.indicator));
+            } else if (!thread.is_public_predicate(head.indicator, context_module) || head.indicator === ",/2" || thread.session.modules.system.rules.hasOwnProperty(head.indicator)) {
+              thread.throw_error(pl2.error.permission("modify", "static_procedure", str_indicator(head.indicator), atom.indicator));
+            } else {
+              thread.prepend([
+                new State(point.goal.replace(new Term(",", [
+                  new Term(":", [
+                    new Term(context_module),
+                    new Term("retract", [new pl2.type.Term(":-", [head, new Var("_")])])
+                  ]),
+                  new Term("fail", [])
+                ])), point.substitution, point),
+                new State(point.goal.replace(null), point.substitution, point)
+              ]);
+            }
+          },
+          // abolish/1
+          "abolish/1": function(thread, point, atom) {
+            var predicate = atom.args[0];
+            var module_id;
+            if (pl2.type.is_term(predicate) && predicate.indicator === ":/2") {
+              if (!pl2.type.is_atom(predicate.args[0])) {
+                thread.throw_error(pl2.error.type("module", predicate.args[0], atom.indicator));
+                return;
+              }
+              module_id = predicate.args[0].id;
+              predicate = predicate.args[1];
+            } else {
+              module_id = "user";
+            }
+            if (pl2.type.is_variable(predicate) || pl2.type.is_term(predicate) && predicate.indicator === "//2" && (pl2.type.is_variable(predicate.args[0]) || pl2.type.is_variable(predicate.args[1]))) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_term(predicate) || predicate.indicator !== "//2") {
+              thread.throw_error(pl2.error.type("predicate_indicator", predicate, atom.indicator));
+            } else if (!pl2.type.is_atom(predicate.args[0])) {
+              thread.throw_error(pl2.error.type("atom", predicate.args[0], atom.indicator));
+            } else if (!pl2.type.is_integer(predicate.args[1])) {
+              thread.throw_error(pl2.error.type("integer", predicate.args[1], atom.indicator));
+            } else if (predicate.args[1].value < 0) {
+              thread.throw_error(pl2.error.domain("not_less_than_zero", predicate.args[1], atom.indicator));
+            } else if (pl2.type.is_number(thread.get_flag("max_arity")) && predicate.args[1].value > thread.get_flag("max_arity").value) {
+              thread.throw_error(pl2.error.representation("max_arity", atom.indicator));
+            } else {
+              var get_module = thread.session.modules[module_id];
+              if (pl2.type.is_module(get_module)) {
+                var indicator2 = predicate.args[0].id + "/" + predicate.args[1].value;
+                if (thread.is_public_predicate(indicator2, module_id) && indicator2 !== ",/2" && !thread.session.modules.system.rules.hasOwnProperty(indicator2)) {
+                  delete get_module.rules[indicator2];
+                  delete get_module.indexed_clauses[indicator2];
+                  delete get_module.non_indexable_clauses[indicator2];
+                  delete get_module.public_predicates[indicator2];
+                  delete get_module.multifile_predicates[indicator2];
+                  thread.success(point);
+                } else {
+                  thread.throw_error(pl2.error.permission("modify", "static_procedure", atom.args[0], atom.indicator));
+                }
+              } else {
+                thread.success(point);
+              }
+            }
+          },
+          // ATOM PROCESSING
+          // atom_length/2
+          "atom_length/2": function(thread, point, atom) {
+            if (pl2.type.is_variable(atom.args[0])) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_atom(atom.args[0])) {
+              thread.throw_error(pl2.error.type("atom", atom.args[0], atom.indicator));
+            } else if (!pl2.type.is_variable(atom.args[1]) && !pl2.type.is_integer(atom.args[1])) {
+              thread.throw_error(pl2.error.type("integer", atom.args[1], atom.indicator));
+            } else if (pl2.type.is_integer(atom.args[1]) && atom.args[1].value < 0) {
+              thread.throw_error(pl2.error.domain("not_less_than_zero", atom.args[1], atom.indicator));
+            } else {
+              var length = new Num(stringLength(atom.args[0].id), false);
+              thread.prepend([new State(point.goal.replace(new Term("=", [length, atom.args[1]])), point.substitution, point)]);
+            }
+          },
+          // atom_concat/3
+          "atom_concat/3": function(thread, point, atom) {
+            var str, goal, start = atom.args[0], end = atom.args[1], whole = atom.args[2];
+            if (pl2.type.is_variable(whole) && (pl2.type.is_variable(start) || pl2.type.is_variable(end))) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(start) && !pl2.type.is_atom(start)) {
+              thread.throw_error(pl2.error.type("atom", start, atom.indicator));
+            } else if (!pl2.type.is_variable(end) && !pl2.type.is_atom(end)) {
+              thread.throw_error(pl2.error.type("atom", end, atom.indicator));
+            } else if (!pl2.type.is_variable(whole) && !pl2.type.is_atom(whole)) {
+              thread.throw_error(pl2.error.type("atom", whole, atom.indicator));
+            } else {
+              var v1 = pl2.type.is_variable(start);
+              var v2 = pl2.type.is_variable(end);
+              if (!v1 && !v2) {
+                goal = new Term("=", [whole, new Term(start.id + end.id)]);
+                thread.prepend([new State(point.goal.replace(goal), point.substitution, point)]);
+              } else if (v1 && !v2) {
+                str = whole.id.substr(0, whole.id.length - end.id.length);
+                if (str + end.id === whole.id) {
+                  goal = new Term("=", [start, new Term(str)]);
+                  thread.prepend([new State(point.goal.replace(goal), point.substitution, point)]);
+                }
+              } else if (v2 && !v1) {
+                str = whole.id.substr(start.id.length);
+                if (start.id + str === whole.id) {
+                  goal = new Term("=", [end, new Term(str)]);
+                  thread.prepend([new State(point.goal.replace(goal), point.substitution, point)]);
+                }
+              } else {
+                var states = [];
+                for (var i2 = 0; i2 <= whole.id.length; i2++) {
+                  var atom1 = new Term(whole.id.substr(0, i2));
+                  var atom2 = new Term(whole.id.substr(i2));
+                  goal = new Term(",", [new Term("=", [atom1, start]), new Term("=", [atom2, end])]);
+                  states.push(new State(point.goal.replace(goal), point.substitution, point));
+                }
+                thread.prepend(states);
+              }
+            }
+          },
+          // sub_atom/5
+          "sub_atom/5": function(thread, point, atom) {
+            var i2, atom1 = atom.args[0], before = atom.args[1], length = atom.args[2], after = atom.args[3], subatom = atom.args[4];
+            if (pl2.type.is_variable(atom1)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_atom(atom1)) {
+              thread.throw_error(pl2.error.type("atom", atom1, atom.indicator));
+            } else if (!pl2.type.is_variable(before) && !pl2.type.is_integer(before)) {
+              thread.throw_error(pl2.error.type("integer", before, atom.indicator));
+            } else if (!pl2.type.is_variable(length) && !pl2.type.is_integer(length)) {
+              thread.throw_error(pl2.error.type("integer", length, atom.indicator));
+            } else if (!pl2.type.is_variable(after) && !pl2.type.is_integer(after)) {
+              thread.throw_error(pl2.error.type("integer", after, atom.indicator));
+            } else if (pl2.type.is_integer(before) && before.value < 0) {
+              thread.throw_error(pl2.error.domain("not_less_than_zero", before, atom.indicator));
+            } else if (pl2.type.is_integer(length) && length.value < 0) {
+              thread.throw_error(pl2.error.domain("not_less_than_zero", length, atom.indicator));
+            } else if (pl2.type.is_integer(after) && after.value < 0) {
+              thread.throw_error(pl2.error.domain("not_less_than_zero", after, atom.indicator));
+            } else if (!pl2.type.is_variable(subatom) && !pl2.type.is_atom(subatom)) {
+              thread.throw_error(pl2.error.type("atom", subatom, atom.indicator));
+            } else {
+              var bs = [], ls = [], as = [];
+              if (pl2.type.is_variable(before)) {
+                for (i2 = 0; i2 <= atom1.id.length; i2++) {
+                  bs.push(i2);
+                }
+              } else {
+                bs.push(before.value);
+              }
+              if (pl2.type.is_variable(length)) {
+                for (i2 = 0; i2 <= atom1.id.length; i2++) {
+                  ls.push(i2);
+                }
+              } else {
+                ls.push(length.value);
+              }
+              if (pl2.type.is_variable(after)) {
+                for (i2 = 0; i2 <= atom1.id.length; i2++) {
+                  as.push(i2);
+                }
+              } else {
+                as.push(after.value);
+              }
+              var states = [];
+              for (var _i in bs) {
+                if (!bs.hasOwnProperty(_i)) continue;
+                i2 = bs[_i];
+                for (var _j in ls) {
+                  if (!ls.hasOwnProperty(_j)) continue;
+                  var j = ls[_j];
+                  var k = atom1.id.length - i2 - j;
+                  if (indexOf(as, k) !== -1) {
+                    if (i2 + j + k === atom1.id.length) {
+                      var str = atom1.id.substr(i2, j);
+                      if (atom1.id === atom1.id.substr(0, i2) + str + atom1.id.substr(i2 + j, k)) {
+                        var pl1 = new Term("=", [new Term(str), subatom]);
+                        var pl22 = new Term("=", [before, new Num(i2)]);
+                        var pl3 = new Term("=", [length, new Num(j)]);
+                        var pl4 = new Term("=", [after, new Num(k)]);
+                        var goal = new Term(",", [new Term(",", [new Term(",", [pl22, pl3]), pl4]), pl1]);
+                        states.push(new State(point.goal.replace(goal), point.substitution, point));
+                      }
+                    }
+                  }
+                }
+              }
+              thread.prepend(states);
+            }
+          },
+          // atom_chars/2
+          "atom_chars/2": function(thread, point, atom) {
+            var atom1 = atom.args[0], list = atom.args[1];
+            if (pl2.type.is_variable(atom1) && pl2.type.is_variable(list)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(atom1) && !pl2.type.is_atom(atom1)) {
+              thread.throw_error(pl2.error.type("atom", atom1, atom.indicator));
+            } else {
+              if (!pl2.type.is_variable(atom1)) {
+                if (!pl2.type.is_variable(list)) {
+                  var pointer = list;
+                  while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                    if (!pl2.type.is_character(pointer.args[0]) && !pl2.type.is_variable(pointer.args[0])) {
+                      thread.throw_error(pl2.error.type("character", pointer.args[0], atom.indicator));
+                      return;
+                    }
+                    pointer = pointer.args[1];
+                  }
+                }
+                var list1 = new Term("[]");
+                var unilen = stringLength(atom1.id);
+                for (var i2 = unilen - 1; i2 >= 0; i2--) {
+                  list1 = new Term(".", [new Term(atom1.id.charAt(i2)), list1]);
+                }
+                thread.prepend([new State(point.goal.replace(new Term("=", [list, list1])), point.substitution, point)]);
+              } else {
+                var pointer = list;
+                var v = pl2.type.is_variable(atom1);
+                var str = "";
+                while (pointer.indicator === "./2") {
+                  if (!pl2.type.is_character(pointer.args[0])) {
+                    if (pl2.type.is_variable(pointer.args[0]) && v) {
+                      thread.throw_error(pl2.error.instantiation(atom.indicator));
+                      return;
+                    } else if (!pl2.type.is_variable(pointer.args[0])) {
+                      thread.throw_error(pl2.error.type("character", pointer.args[0], atom.indicator));
+                      return;
+                    }
+                  } else {
+                    str += pointer.args[0].id;
+                  }
+                  pointer = pointer.args[1];
+                }
+                if (pl2.type.is_variable(pointer) && v) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                } else if (!pl2.type.is_empty_list(pointer) && !pl2.type.is_variable(pointer)) {
+                  thread.throw_error(pl2.error.type("list", list, atom.indicator));
+                } else {
+                  thread.prepend([new State(point.goal.replace(new Term("=", [new Term(str), atom1])), point.substitution, point)]);
+                }
+              }
+            }
+          },
+          // atom_codes/2
+          "atom_codes/2": function(thread, point, atom) {
+            var atom1 = atom.args[0], list = atom.args[1];
+            if (pl2.type.is_variable(atom1) && pl2.type.is_variable(list)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(atom1) && !pl2.type.is_atom(atom1)) {
+              thread.throw_error(pl2.error.type("atom", atom1, atom.indicator));
+            } else {
+              if (!pl2.type.is_variable(atom1)) {
+                if (!pl2.type.is_variable(list)) {
+                  var pointer = list;
+                  while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                    if (!pl2.type.is_character_code(pointer.args[0]) && !pl2.type.is_variable(pointer.args[0])) {
+                      thread.throw_error(pl2.error.type("integer", pointer.args[0], atom.indicator));
+                      return;
+                    }
+                    pointer = pointer.args[1];
+                  }
+                }
+                var list1 = new Term("[]");
+                var unilen = stringLength(atom1.id);
+                for (var i2 = unilen - 1; i2 >= 0; i2--) {
+                  list1 = new Term(".", [new Num(codePointAt(atom1.id, i2), false), list1]);
+                }
+                thread.prepend([new State(point.goal.replace(new Term("=", [list, list1])), point.substitution, point)]);
+              } else {
+                var pointer = list;
+                var v = pl2.type.is_variable(atom1);
+                var str = "";
+                while (pointer.indicator === "./2") {
+                  if (!pl2.type.is_character_code(pointer.args[0])) {
+                    if (pl2.type.is_variable(pointer.args[0]) && v) {
+                      thread.throw_error(pl2.error.instantiation(atom.indicator));
+                      return;
+                    } else if (!pl2.type.is_variable(pointer.args[0])) {
+                      thread.throw_error(pl2.error.representation("character_code", atom.indicator));
+                      return;
+                    }
+                  } else {
+                    str += fromCodePoint(pointer.args[0].value);
+                  }
+                  pointer = pointer.args[1];
+                }
+                if (pl2.type.is_variable(pointer) && v) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                } else if (!pl2.type.is_empty_list(pointer) && !pl2.type.is_variable(pointer)) {
+                  thread.throw_error(pl2.error.type("list", list, atom.indicator));
+                } else {
+                  thread.prepend([new State(point.goal.replace(new Term("=", [new Term(str), atom1])), point.substitution, point)]);
+                }
+              }
+            }
+          },
+          // char_code/2
+          "char_code/2": function(thread, point, atom) {
+            var char = atom.args[0], code = atom.args[1];
+            if (pl2.type.is_variable(char) && pl2.type.is_variable(code)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(char) && !pl2.type.is_character(char)) {
+              thread.throw_error(pl2.error.type("character", char, atom.indicator));
+            } else if (!pl2.type.is_variable(code) && !pl2.type.is_integer(code)) {
+              thread.throw_error(pl2.error.type("integer", code, atom.indicator));
+            } else if (!pl2.type.is_variable(code) && !pl2.type.is_character_code(code)) {
+              thread.throw_error(pl2.error.representation("character_code", atom.indicator));
+            } else {
+              if (pl2.type.is_variable(code)) {
+                var code1 = new Num(codePointAt(char.id, 0), false);
+                thread.prepend([new State(point.goal.replace(new Term("=", [code1, code])), point.substitution, point)]);
+              } else {
+                var char1 = new Term(fromCodePoint(code.value));
+                thread.prepend([new State(point.goal.replace(new Term("=", [char1, char])), point.substitution, point)]);
+              }
+            }
+          },
+          // number_chars/2
+          "number_chars/2": function(thread, point, atom) {
+            var str, num = atom.args[0], list = atom.args[1];
+            if (pl2.type.is_variable(num) && pl2.type.is_variable(list)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(num) && !pl2.type.is_number(num)) {
+              thread.throw_error(pl2.error.type("number", num, atom.indicator));
+            } else if (!pl2.type.is_variable(list) && !pl2.type.is_list(list)) {
+              thread.throw_error(pl2.error.type("list", list, atom.indicator));
+            } else {
+              var isvar = pl2.type.is_variable(num);
+              if (!pl2.type.is_variable(list)) {
+                var pointer = list;
+                var total = true;
+                str = "";
+                while (pointer.indicator === "./2") {
+                  if (!pl2.type.is_character(pointer.args[0])) {
+                    if (pl2.type.is_variable(pointer.args[0])) {
+                      total = false;
+                    } else if (!pl2.type.is_variable(pointer.args[0])) {
+                      thread.throw_error(pl2.error.type("character", pointer.args[0], atom.indicator));
+                      return;
+                    }
+                  } else {
+                    str += pointer.args[0].id;
+                  }
+                  pointer = pointer.args[1];
+                }
+                total = total && pl2.type.is_empty_list(pointer);
+                if (!pl2.type.is_empty_list(pointer) && !pl2.type.is_variable(pointer)) {
+                  thread.throw_error(pl2.error.type("list", list, atom.indicator));
+                  return;
+                }
+                if (!total && isvar) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (total) {
+                  if (pl2.type.is_variable(pointer) && isvar) {
+                    thread.throw_error(pl2.error.instantiation(atom.indicator));
+                    return;
+                  } else {
+                    var expr = thread.parse(str);
+                    var num2 = expr.value;
+                    if (!pl2.type.is_number(num2) || expr.tokens[expr.tokens.length - 1].space) {
+                      thread.throw_error(pl2.error.syntax_by_predicate("parseable_number", atom.indicator));
+                    } else {
+                      thread.prepend([new State(point.goal.replace(new Term("=", [num, num2])), point.substitution, point)]);
+                    }
+                    return;
+                  }
+                }
+              }
+              if (!isvar) {
+                str = num.toString();
+                var list2 = new Term("[]");
+                for (var i2 = str.length - 1; i2 >= 0; i2--) {
+                  list2 = new Term(".", [new Term(str.charAt(i2)), list2]);
+                }
+                thread.prepend([new State(point.goal.replace(new Term("=", [list, list2])), point.substitution, point)]);
+              }
+            }
+          },
+          // number_codes/2
+          "number_codes/2": function(thread, point, atom) {
+            var str, num = atom.args[0], list = atom.args[1];
+            if (pl2.type.is_variable(num) && pl2.type.is_variable(list)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(num) && !pl2.type.is_number(num)) {
+              thread.throw_error(pl2.error.type("number", num, atom.indicator));
+            } else if (!pl2.type.is_variable(list) && !pl2.type.is_list(list)) {
+              thread.throw_error(pl2.error.type("list", list, atom.indicator));
+            } else {
+              var isvar = pl2.type.is_variable(num);
+              if (!pl2.type.is_variable(list)) {
+                var pointer = list;
+                var total = true;
+                str = "";
+                while (pointer.indicator === "./2") {
+                  if (!pl2.type.is_character_code(pointer.args[0])) {
+                    if (pl2.type.is_variable(pointer.args[0])) {
+                      total = false;
+                    } else if (!pl2.type.is_variable(pointer.args[0])) {
+                      thread.throw_error(pl2.error.representation("character_code", atom.indicator));
+                      return;
+                    }
+                  } else {
+                    str += fromCodePoint(pointer.args[0].value);
+                  }
+                  pointer = pointer.args[1];
+                }
+                total = total && pl2.type.is_empty_list(pointer);
+                if (!pl2.type.is_empty_list(pointer) && !pl2.type.is_variable(pointer)) {
+                  thread.throw_error(pl2.error.type("list", list, atom.indicator));
+                  return;
+                }
+                if (!total && isvar) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (total) {
+                  if (pl2.type.is_variable(pointer) && isvar) {
+                    thread.throw_error(pl2.error.instantiation(atom.indicator));
+                    return;
+                  } else {
+                    var expr = thread.parse(str);
+                    var num2 = expr.value;
+                    if (!pl2.type.is_number(num2) || expr.tokens[expr.tokens.length - 1].space) {
+                      thread.throw_error(pl2.error.syntax_by_predicate("parseable_number", atom.indicator));
+                    } else {
+                      thread.prepend([new State(point.goal.replace(new Term("=", [num, num2])), point.substitution, point)]);
+                    }
+                    return;
+                  }
+                }
+              }
+              if (!isvar) {
+                str = num.toString();
+                var list2 = new Term("[]");
+                for (var i2 = str.length - 1; i2 >= 0; i2--) {
+                  list2 = new Term(".", [new Num(codePointAt(str, i2), false), list2]);
+                }
+                thread.prepend([new State(point.goal.replace(new Term("=", [list, list2])), point.substitution, point)]);
+              }
+            }
+          },
+          // upcase_atom/2
+          "upcase_atom/2": function(thread, point, atom) {
+            var original = atom.args[0], upcase = atom.args[1];
+            if (pl2.type.is_variable(original)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_atom(original)) {
+              thread.throw_error(pl2.error.type("atom", original, atom.indicator));
+            } else if (!pl2.type.is_variable(upcase) && !pl2.type.is_atom(upcase)) {
+              thread.throw_error(pl2.error.type("atom", upcase, atom.indicator));
+            } else {
+              thread.prepend([new State(point.goal.replace(new Term("=", [upcase, new Term(original.id.toUpperCase(), [])])), point.substitution, point)]);
+            }
+          },
+          // downcase_atom/2
+          "downcase_atom/2": function(thread, point, atom) {
+            var original = atom.args[0], downcase = atom.args[1];
+            if (pl2.type.is_variable(original)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_atom(original)) {
+              thread.throw_error(pl2.error.type("atom", original, atom.indicator));
+            } else if (!pl2.type.is_variable(downcase) && !pl2.type.is_atom(downcase)) {
+              thread.throw_error(pl2.error.type("atom", downcase, atom.indicator));
+            } else {
+              thread.prepend([new State(point.goal.replace(new Term("=", [downcase, new Term(original.id.toLowerCase(), [])])), point.substitution, point)]);
+            }
+          },
+          // atomic_concat/3
+          "atomic_concat/3": function(thread, point, atom) {
+            var atomic1 = atom.args[0], atomic2 = atom.args[1], concat = atom.args[2];
+            if (pl2.type.is_variable(atomic1) || pl2.type.is_variable(atomic2)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_atomic(atomic1)) {
+              thread.throw_error(pl2.error.type("atomic", atomic1, atom.indicator));
+            } else if (!pl2.type.is_atomic(atomic2)) {
+              thread.throw_error(pl2.error.type("atomic", atomic2, atom.indicator));
+            } else if (!pl2.type.is_variable(concat) && !pl2.type.is_atom(concat)) {
+              thread.throw_error(pl2.error.type("atom", concat, atom.indicator));
+            } else {
+              var id = "";
+              if (pl2.type.is_atom(atomic1)) {
+                id += atomic1.id;
+              } else {
+                id += "" + atomic1.value;
+              }
+              if (pl2.type.is_atom(atomic2)) {
+                id += atomic2.id;
+              } else {
+                id += "" + atomic2.value;
+              }
+              var atom = new Term(id, []);
+              thread.prepend([new State(point.goal.replace(new Term("=", [atom, concat])), point.substitution, point)]);
+            }
+          },
+          // atomic_list_concat/2
+          "atomic_list_concat/2": function(thread, point, atom) {
+            var list = atom.args[0], concat = atom.args[1];
+            thread.prepend([new State(point.goal.replace(new Term("atomic_list_concat", [list, new Term("", []), concat])), point.substitution, point)]);
+          },
+          // atomic_list_concat/3
+          "atomic_list_concat/3": function(thread, point, atom) {
+            var list = atom.args[0], separator = atom.args[1], concat = atom.args[2];
+            if (pl2.type.is_variable(separator) || pl2.type.is_variable(list) && pl2.type.is_variable(concat)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(list) && !pl2.type.is_list(list)) {
+              thread.throw_error(pl2.error.type("list", list, atom.indicator));
+            } else if (!pl2.type.is_atom(separator) && !pl2.type.is_number(separator)) {
+              thread.throw_error(pl2.error.type("atomic", separator, atom.indicator));
+            } else if (!pl2.type.is_variable(concat) && !pl2.type.is_atom(concat)) {
+              thread.throw_error(pl2.error.type("atom", concat, atom.indicator));
+            } else {
+              var id = "";
+              var pointer = list;
+              while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                if (pl2.type.is_variable(pointer.args[0])) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (!pl2.type.is_atom(pointer.args[0]) && !pl2.type.is_number(pointer.args[0])) {
+                  thread.throw_error(pl2.error.type("atomic", pointer.args[0], atom.indicator));
+                  return;
+                }
+                if (id !== "")
+                  id += separator.id;
+                if (pl2.type.is_atom(pointer.args[0]))
+                  id += pointer.args[0].id;
+                else
+                  id += "" + pointer.args[0].value;
+                pointer = pointer.args[1];
+              }
+              id = new Term(id, []);
+              if (pl2.type.is_variable(pointer)) {
+                thread.throw_error(pl2.error.instantiation(atom.indicator));
+              } else if (!pl2.type.is_term(pointer) || pointer.indicator !== "[]/0") {
+                thread.throw_error(pl2.error.type("list", list, atom.indicator));
+              } else {
+                thread.prepend([new State(point.goal.replace(new Term("=", [id, concat])), point.substitution, point)]);
+              }
+            }
+          },
+          // TERM COMPARISON
+          "@=</2": function(thread, point, atom) {
+            if (pl2.compare(atom.args[0], atom.args[1]) <= 0) {
+              thread.success(point);
+            }
+          },
+          "==/2": function(thread, point, atom) {
+            if (pl2.compare(atom.args[0], atom.args[1]) === 0) {
+              thread.success(point);
+            }
+          },
+          "\\==/2": function(thread, point, atom) {
+            if (pl2.compare(atom.args[0], atom.args[1]) !== 0) {
+              thread.success(point);
+            }
+          },
+          "@</2": function(thread, point, atom) {
+            if (pl2.compare(atom.args[0], atom.args[1]) < 0) {
+              thread.success(point);
+            }
+          },
+          "@>/2": function(thread, point, atom) {
+            if (pl2.compare(atom.args[0], atom.args[1]) > 0) {
+              thread.success(point);
+            }
+          },
+          "@>=/2": function(thread, point, atom) {
+            if (pl2.compare(atom.args[0], atom.args[1]) >= 0) {
+              thread.success(point);
+            }
+          },
+          "compare/3": function(thread, point, atom) {
+            var order = atom.args[0], left = atom.args[1], right = atom.args[2];
+            if (!pl2.type.is_variable(order) && !pl2.type.is_atom(order)) {
+              thread.throw_error(pl2.error.type("atom", order, atom.indicator));
+            } else if (pl2.type.is_atom(order) && ["<", ">", "="].indexOf(order.id) === -1) {
+              thread.throw_error(pl2.error.domain("order", order, atom.indicator));
+            } else {
+              var compare = pl2.compare(left, right);
+              compare = compare === 0 ? "=" : compare === -1 ? "<" : ">";
+              thread.prepend([new State(point.goal.replace(new Term("=", [order, new Term(compare, [])])), point.substitution, point)]);
+            }
+          },
+          // EVALUATION
+          // is/2
+          "is/2": function(thread, point, atom) {
+            var op = atom.args[1].interpret(thread);
+            if (!pl2.type.is_number(op)) {
+              thread.throw_error(op);
+            } else {
+              thread.prepend([new State(point.goal.replace(new Term("=", [atom.args[0], op], atom.indicator)), point.substitution, point)]);
+            }
+          },
+          // between/3
+          "between/3": function(thread, point, atom) {
+            var lower = atom.args[0], upper = atom.args[1], bet = atom.args[2];
+            if (pl2.type.is_variable(lower) || pl2.type.is_variable(upper)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_integer(lower)) {
+              thread.throw_error(pl2.error.type("integer", lower, atom.indicator));
+            } else if (!pl2.type.is_integer(upper)) {
+              thread.throw_error(pl2.error.type("integer", upper, atom.indicator));
+            } else if (!pl2.type.is_variable(bet) && !pl2.type.is_integer(bet)) {
+              thread.throw_error(pl2.error.type("integer", bet, atom.indicator));
+            } else {
+              if (pl2.type.is_variable(bet)) {
+                if (lower.value <= upper.value) {
+                  var states = [new State(point.goal.replace(new Term("=", [bet, lower])), point.substitution, point)];
+                  states.push(new State(point.goal.replace(new Term("between", [new Num(lower.value + 1, false), upper, bet])), point.substitution, point));
+                  thread.prepend(states);
+                }
+              } else if (lower.value <= bet.value && upper.value >= bet.value) {
+                thread.success(point);
+              }
+            }
+          },
+          // succ/2
+          "succ/2": function(thread, point, atom) {
+            var n = atom.args[0], m = atom.args[1];
+            if (pl2.type.is_variable(n) && pl2.type.is_variable(m)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(n) && !pl2.type.is_integer(n)) {
+              thread.throw_error(pl2.error.type("integer", n, atom.indicator));
+            } else if (!pl2.type.is_variable(m) && !pl2.type.is_integer(m)) {
+              thread.throw_error(pl2.error.type("integer", m, atom.indicator));
+            } else if (!pl2.type.is_variable(n) && n.value < 0) {
+              thread.throw_error(pl2.error.domain("not_less_than_zero", n, atom.indicator));
+            } else if (!pl2.type.is_variable(m) && m.value < 0) {
+              thread.throw_error(pl2.error.domain("not_less_than_zero", m, atom.indicator));
+            } else {
+              if (pl2.type.is_variable(m) || m.value > 0) {
+                if (pl2.type.is_variable(n)) {
+                  thread.prepend([new State(point.goal.replace(new Term("=", [n, new Num(m.value - 1, false)])), point.substitution, point)]);
+                } else {
+                  thread.prepend([new State(point.goal.replace(new Term("=", [m, new Num(n.value + 1, false)])), point.substitution, point)]);
+                }
+              }
+            }
+          },
+          // =:=/2
+          "=:=/2": function(thread, point, atom) {
+            var cmp = pl2.arithmetic_compare(thread, atom.args[0], atom.args[1]);
+            if (pl2.type.is_term(cmp)) {
+              thread.throw_error(cmp);
+            } else if (cmp === 0) {
+              thread.success(point);
+            }
+          },
+          // =\=/2
+          "=\\=/2": function(thread, point, atom) {
+            var cmp = pl2.arithmetic_compare(thread, atom.args[0], atom.args[1]);
+            if (pl2.type.is_term(cmp)) {
+              thread.throw_error(cmp);
+            } else if (cmp !== 0) {
+              thread.success(point);
+            }
+          },
+          // </2
+          "</2": function(thread, point, atom) {
+            var cmp = pl2.arithmetic_compare(thread, atom.args[0], atom.args[1]);
+            if (pl2.type.is_term(cmp)) {
+              thread.throw_error(cmp);
+            } else if (cmp < 0) {
+              thread.success(point);
+            }
+          },
+          // =</2
+          "=</2": function(thread, point, atom) {
+            var cmp = pl2.arithmetic_compare(thread, atom.args[0], atom.args[1]);
+            if (pl2.type.is_term(cmp)) {
+              thread.throw_error(cmp);
+            } else if (cmp <= 0) {
+              thread.success(point);
+            }
+          },
+          // >/2
+          ">/2": function(thread, point, atom) {
+            var cmp = pl2.arithmetic_compare(thread, atom.args[0], atom.args[1]);
+            if (pl2.type.is_term(cmp)) {
+              thread.throw_error(cmp);
+            } else if (cmp > 0) {
+              thread.success(point);
+            }
+          },
+          // >=/2
+          ">=/2": function(thread, point, atom) {
+            var cmp = pl2.arithmetic_compare(thread, atom.args[0], atom.args[1]);
+            if (pl2.type.is_term(cmp)) {
+              thread.throw_error(cmp);
+            } else if (cmp >= 0) {
+              thread.success(point);
+            }
+          },
+          // TYPE TEST
+          // var/1
+          "var/1": function(thread, point, atom) {
+            if (pl2.type.is_variable(atom.args[0])) {
+              thread.success(point);
+            }
+          },
+          // atom/1
+          "atom/1": function(thread, point, atom) {
+            if (pl2.type.is_atom(atom.args[0])) {
+              thread.success(point);
+            }
+          },
+          // atomic/1
+          "atomic/1": function(thread, point, atom) {
+            if (pl2.type.is_atomic(atom.args[0])) {
+              thread.success(point);
+            }
+          },
+          // compound/1
+          "compound/1": function(thread, point, atom) {
+            if (pl2.type.is_compound(atom.args[0])) {
+              thread.success(point);
+            }
+          },
+          // integer/1
+          "integer/1": function(thread, point, atom) {
+            if (pl2.type.is_integer(atom.args[0])) {
+              thread.success(point);
+            }
+          },
+          // float/1
+          "float/1": function(thread, point, atom) {
+            if (pl2.type.is_float(atom.args[0])) {
+              thread.success(point);
+            }
+          },
+          // number/1
+          "number/1": function(thread, point, atom) {
+            if (pl2.type.is_number(atom.args[0])) {
+              thread.success(point);
+            }
+          },
+          // nonvar/1
+          "nonvar/1": function(thread, point, atom) {
+            if (!pl2.type.is_variable(atom.args[0])) {
+              thread.success(point);
+            }
+          },
+          // ground/1
+          "ground/1": function(thread, point, atom) {
+            if (atom.variables().length === 0) {
+              thread.success(point);
+            }
+          },
+          // acyclic_term/1
+          "acyclic_term/1": function(thread, point, atom) {
+            var test = point.substitution.apply(point.substitution);
+            var variables = atom.args[0].variables();
+            for (var i2 = 0; i2 < variables.length; i2++)
+              if (point.substitution.links[variables[i2]] !== void 0 && !point.substitution.links[variables[i2]].equals(test.links[variables[i2]]))
+                return;
+            thread.success(point);
+          },
+          // callable/1
+          "callable/1": function(thread, point, atom) {
+            var callable = atom.args[0];
+            if (pl2.type.is_term(callable)) {
+              thread.success(point);
+            }
+          },
+          // is_list/1
+          "is_list/1": function(thread, point, atom) {
+            var list = atom.args[0];
+            while (pl2.type.is_term(list) && list.indicator === "./2")
+              list = list.args[1];
+            if (pl2.type.is_term(list) && list.indicator === "[]/0")
+              thread.success(point);
+          },
+          // STREAM SELECTION AND CONTROL
+          // current_input/1
+          "current_input/1": function(thread, point, atom) {
+            var stream = atom.args[0];
+            if (!pl2.type.is_variable(stream) && (!pl2.type.is_stream(stream) || !thread.get_stream_by_alias(stream.alias) && !thread.get_stream_by_alias(stream.id)) && (!pl2.type.is_atom(stream) || !thread.get_stream_by_alias(stream.id))) {
+              thread.throw_error(pl2.error.domain("stream", stream, atom.indicator));
+            } else {
+              if (pl2.type.is_atom(stream))
+                stream = thread.get_stream_by_alias(stream.id);
+              thread.prepend([
+                new State(
+                  point.goal.replace(new Term("=", [stream, thread.get_current_input()])),
+                  point.substitution,
+                  point
+                )
+              ]);
+            }
+          },
+          // current_output/1
+          "current_output/1": function(thread, point, atom) {
+            var stream = atom.args[0];
+            if (!pl2.type.is_variable(stream) && (!pl2.type.is_stream(stream) || !thread.get_stream_by_alias(stream.alias) && !thread.get_stream_by_alias(stream.id)) && (!pl2.type.is_atom(stream) || !thread.get_stream_by_alias(stream.id))) {
+              thread.throw_error(pl2.error.domain("stream", stream, atom.indicator));
+            } else {
+              if (pl2.type.is_atom(stream))
+                stream = thread.get_stream_by_alias(stream.id);
+              thread.prepend([
+                new State(
+                  point.goal.replace(new Term("=", [stream, thread.get_current_output()])),
+                  point.substitution,
+                  point
+                )
+              ]);
+            }
+          },
+          // set_input/1
+          "set_input/1": function(thread, point, atom) {
+            var input = atom.args[0];
+            var stream = pl2.type.is_stream(input) ? input : thread.get_stream_by_alias(input.id);
+            if (pl2.type.is_variable(input)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_stream(input) && !pl2.type.is_atom(input)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", input, atom.indicator));
+            } else if (!pl2.type.is_stream(stream) || !thread.get_stream_by_alias(input.alias) && !thread.get_stream_by_alias(input.id)) {
+              thread.throw_error(pl2.error.existence("stream", input, atom.indicator));
+            } else if (stream.output === true) {
+              thread.throw_error(pl2.error.permission("input", "stream", input, atom.indicator));
+            } else {
+              thread.set_current_input(stream);
+              thread.success(point);
+            }
+          },
+          // set_output/1
+          "set_output/1": function(thread, point, atom) {
+            var output = atom.args[0];
+            var stream = pl2.type.is_stream(output) ? output : thread.get_stream_by_alias(output.id);
+            if (pl2.type.is_variable(output)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_stream(output) && !pl2.type.is_atom(output)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", output, atom.indicator));
+            } else if (!pl2.type.is_stream(stream) || !thread.get_stream_by_alias(output.alias) && !thread.get_stream_by_alias(output.id)) {
+              thread.throw_error(pl2.error.existence("stream", output, atom.indicator));
+            } else if (stream.input === true) {
+              thread.throw_error(pl2.error.permission("output", "stream", output, atom.indicator));
+            } else {
+              thread.set_current_output(stream);
+              thread.success(point);
+            }
+          },
+          // open/3
+          "open/3": function(thread, point, atom) {
+            var dest = atom.args[0], mode = atom.args[1], stream = atom.args[2];
+            thread.prepend([new State(
+              point.goal.replace(new Term("open", [dest, mode, stream, new Term("[]", [])])),
+              point.substitution,
+              point
+            )]);
+          },
+          // open/4
+          "open/4": function(thread, point, atom) {
+            var dest = atom.args[0], mode = atom.args[1], stream = atom.args[2], options = atom.args[3];
+            if (pl2.type.is_variable(dest) || pl2.type.is_variable(mode) || pl2.type.is_variable(options)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(mode) && !pl2.type.is_atom(mode)) {
+              thread.throw_error(pl2.error.type("atom", mode, atom.indicator));
+            } else if (!pl2.type.is_list(options)) {
+              thread.throw_error(pl2.error.type("list", options, atom.indicator));
+            } else if (!pl2.type.is_variable(stream)) {
+              thread.throw_error(pl2.error.uninstantiation(stream, atom.indicator));
+            } else if (!pl2.type.is_atom(dest) && !pl2.type.is_streamable(dest)) {
+              thread.throw_error(pl2.error.domain("source_sink", dest, atom.indicator));
+            } else if (!pl2.type.is_io_mode(mode)) {
+              thread.throw_error(pl2.error.domain("io_mode", mode, atom.indicator));
+            } else {
+              var obj_options = {};
+              var pointer = options;
+              var property;
+              while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                property = pointer.args[0];
+                if (pl2.type.is_variable(property)) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (!pl2.type.is_stream_option(property)) {
+                  thread.throw_error(pl2.error.domain("stream_option", property, atom.indicator));
+                  return;
+                }
+                obj_options[property.id] = property.args[0].id;
+                pointer = pointer.args[1];
+              }
+              if (pointer.indicator !== "[]/0") {
+                if (pl2.type.is_variable(pointer))
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                else
+                  thread.throw_error(pl2.error.type("list", options, atom.indicator));
+                return;
+              } else {
+                var alias = obj_options["alias"];
+                if (alias && thread.get_stream_by_alias(alias)) {
+                  thread.throw_error(pl2.error.permission("open", "source_sink", new Term("alias", [new Term(alias, [])]), atom.indicator));
+                  return;
+                }
+                if (!obj_options["type"])
+                  obj_options["type"] = "text";
+                var file;
+                if (pl2.type.is_atom(dest))
+                  file = thread.file_system_open(dest.id, obj_options["type"], mode.id);
+                else
+                  file = dest.stream(obj_options["type"], mode.id);
+                if (file === false) {
+                  thread.throw_error(pl2.error.permission("open", "source_sink", dest, atom.indicator));
+                  return;
+                } else if (file === null) {
+                  thread.throw_error(pl2.error.existence("source_sink", dest, atom.indicator));
+                  return;
+                }
+                var newstream = new Stream(
+                  file,
+                  mode.id,
+                  obj_options["alias"],
+                  obj_options["type"],
+                  obj_options["reposition"] === "true",
+                  obj_options["eof_action"]
+                );
+                if (alias)
+                  thread.session.streams[alias] = newstream;
+                else
+                  thread.session.streams[newstream.id] = newstream;
+                thread.prepend([new State(
+                  point.goal.replace(new Term("=", [stream, newstream])),
+                  point.substitution,
+                  point
+                )]);
+              }
+            }
+          },
+          // close/1
+          "close/1": function(thread, point, atom) {
+            var stream = atom.args[0];
+            thread.prepend([new State(
+              point.goal.replace(new Term("close", [stream, new Term("[]", [])])),
+              point.substitution,
+              point
+            )]);
+          },
+          // close/2
+          "close/2": function(thread, point, atom) {
+            var stream = atom.args[0], options = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream) || pl2.type.is_variable(options)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_list(options)) {
+              thread.throw_error(pl2.error.type("list", options, atom.indicator));
+            } else if (!pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else {
+              var obj_options = {};
+              var pointer = options;
+              var property;
+              while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                property = pointer.args[0];
+                if (pl2.type.is_variable(property)) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (!pl2.type.is_close_option(property)) {
+                  thread.throw_error(pl2.error.domain("close_option", property, atom.indicator));
+                  return;
+                }
+                obj_options[property.id] = property.args[0].id === "true";
+                pointer = pointer.args[1];
+              }
+              if (pointer.indicator !== "[]/0") {
+                if (pl2.type.is_variable(pointer))
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                else
+                  thread.throw_error(pl2.error.type("list", options, atom.indicator));
+                return;
+              } else {
+                if (stream2 === thread.session.standard_input || stream2 === thread.session.standard_output || stream2 === thread.session.standard_error) {
+                  thread.success(point);
+                  return;
+                } else if (stream2 === thread.session.current_input) {
+                  thread.session.current_input = thread.session.standard_input;
+                } else if (stream2 === thread.session.current_output) {
+                  thread.session.current_output = thread.session.standard_output;
+                }
+                if (stream2.alias !== null && stream2.alias !== void 0)
+                  delete thread.session.streams[stream2.alias];
+                else
+                  delete thread.session.streams[stream2.id];
+                if (stream2.output)
+                  stream2.stream.flush();
+                var closed = stream2.stream.close();
+                stream2.stream = null;
+                if (obj_options.force === true || closed === true) {
+                  thread.success(point);
+                }
+              }
+            }
+          },
+          // flush_output/0
+          "flush_output/0": [
+            new Rule(new Term("flush_output", []), new Term(",", [new Term("current_output", [new Var("S")]), new Term("flush_output", [new Var("S")])]))
+          ],
+          // flush_output/1
+          "flush_output/1": function(thread, point, atom) {
+            var stream = atom.args[0];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.input === true) {
+              thread.throw_error(pl2.error.permission("output", "stream", stream, atom.indicator));
+            } else {
+              stream2.stream.flush();
+              thread.success(point);
+            }
+          },
+          // stream_property/2
+          "stream_property/2": function(thread, point, atom) {
+            var stream = atom.args[0], property = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (!pl2.type.is_variable(stream) && !pl2.type.is_stream(stream)) {
+              thread.throw_error(pl2.error.domain("stream", stream, atom.indicator));
+            } else if (!pl2.type.is_variable(stream) && (!pl2.type.is_stream(stream2) || stream2.stream === null)) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (!pl2.type.is_variable(property) && !pl2.type.is_stream_property(property)) {
+              thread.throw_error(pl2.error.domain("stream_property", property, atom.indicator));
+            } else {
+              var streams = [];
+              var states = [];
+              var propvar = pl2.type.is_variable(property);
+              if (!pl2.type.is_variable(stream))
+                streams.push(stream2);
+              else
+                for (var key in thread.session.streams)
+                  streams.push(thread.session.streams[key]);
+              for (var i2 = 0; i2 < streams.length; i2++) {
+                var properties = [];
+                if ((propvar || property.indicator === "file_name/1") && streams[i2].filename)
+                  properties.push(new Term("file_name", [new Term(streams[i2].file_name, [])]));
+                if (propvar || property.indicator === "mode/1")
+                  properties.push(new Term("mode", [new Term(streams[i2].mode, [])]));
+                if (propvar || property.indicator === "input/0" || property.indicator === "output/0")
+                  properties.push(new Term(streams[i2].input ? "input" : "output", []));
+                if ((propvar || property.indicator === "alias/1") && streams[i2].alias)
+                  properties.push(new Term("alias", [new Term(streams[i2].alias, [])]));
+                if (propvar || property.indicator === "position/1")
+                  properties.push(new Term("position", [
+                    new Term("position", [
+                      new Num(streams[i2].char_count, false),
+                      new Num(streams[i2].line_count, false),
+                      new Num(streams[i2].line_position, false)
+                    ])
+                  ]));
+                if (propvar || property.indicator === "end_of_stream/1")
+                  properties.push(new Term("end_of_stream", [new Term(
+                    streams[i2].position === "end_of_stream" || streams[i2].stream.eof && streams[i2].stream.eof(streams[i2].position) ? "at" : streams[i2].position === "past_end_of_stream" ? "past" : "not",
+                    []
+                  )]));
+                if (propvar || property.indicator === "eof_action/1")
+                  properties.push(new Term("eof_action", [new Term(streams[i2].eof_action, [])]));
+                if (propvar || property.indicator === "reposition/1")
+                  properties.push(new Term("reposition", [new Term(streams[i2].reposition ? "true" : "false", [])]));
+                if (propvar || property.indicator === "type/1")
+                  properties.push(new Term("type", [new Term(streams[i2].type, [])]));
+                for (var j = 0; j < properties.length; j++) {
+                  states.push(new State(
+                    point.goal.replace(new Term(",", [
+                      new Term("=", [pl2.type.is_variable(stream) ? stream : stream2, streams[i2]]),
+                      new Term("=", [property, properties[j]])
+                    ])),
+                    point.substitution,
+                    point
+                  ));
+                }
+              }
+              thread.prepend(states);
+            }
+          },
+          // stream_position_data
+          "stream_position_data/3": function(thread, point, atom) {
+            var field = atom.args[0], position = atom.args[1], value = atom.args[2];
+            if (pl2.type.is_variable(position)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_term(position) || position.indicator !== "position/3") {
+              thread.throw_error(pl2.error.domain("stream_position", position, atom.indicator));
+            } else if (!pl2.type.is_variable(field) && !pl2.type.is_atom(field)) {
+              thread.throw_error(pl2.error.type("atom", field, atom.indicator));
+            } else if (!pl2.type.is_variable(value) && !pl2.type.is_integer(value)) {
+              thread.throw_error(pl2.error.type("integer", value, atom.indicator));
+            } else {
+              var fields = ["char_count", "line_count", "line_position"];
+              var states = [];
+              var data_pos = { char_count: 0, line_count: 1, line_position: 2 };
+              if (pl2.type.is_variable(field)) {
+                for (var i2 = 0; i2 < fields.length; i2++) {
+                  states.push(new State(point.goal.replace(
+                    new Term(",", [
+                      new Term("=", [new Term(fields[i2]), field]),
+                      new Term("=", [value, position.args[data_pos[fields[i2]]]])
+                    ])
+                  ), point.substitution, point));
+                }
+              } else if (data_pos.hasOwnProperty(field.id)) {
+                states.push(new State(point.goal.replace(
+                  new Term("=", [value, position.args[data_pos[field.id]]])
+                ), point.substitution, point));
+              }
+              thread.prepend(states);
+            }
+          },
+          // at_end_of_stream/0
+          "at_end_of_stream/0": [
+            new Rule(new Term("at_end_of_stream", []), new pl2.type.Term(",", [new Term("current_input", [new Var("S")]), new Term(",", [new Term("stream_property", [new Var("S"), new Term("end_of_stream", [new Var("E")])]), new Term(",", [new Term("!", []), new Term(";", [new Term("=", [new Var("E"), new Term("at", [])]), new Term("=", [new Var("E"), new Term("past", [])])])])])]))
+          ],
+          // at_end_of_stream/1
+          "at_end_of_stream/1": function(thread, point, atom) {
+            var stream = atom.args[0];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else {
+              var e = thread.next_free_variable();
+              thread.prepend([new State(
+                point.goal.replace(
+                  new Term(",", [
+                    new Term("stream_property", [stream2, new Term("end_of_stream", [e])]),
+                    new Term(",", [new Term("!", []), new Term(";", [
+                      new Term("=", [e, new Term("at", [])]),
+                      new Term("=", [e, new Term("past", [])])
+                    ])])
+                  ])
+                ),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // set_stream_position/2
+          "set_stream_position/2": function(thread, point, atom) {
+            var stream = atom.args[0], position = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream) || pl2.type.is_variable(position)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (!pl2.type.is_stream_position(position)) {
+              thread.throw_error(pl2.error.domain("stream_position", position, atom.indicator));
+            } else if (stream2.reposition === false) {
+              thread.throw_error(pl2.error.permission("reposition", "stream", stream, atom.indicator));
+            } else {
+              if (position.indicator === "position/3") {
+                stream2.position = position.args[0].value;
+                stream2.char_count = position.args[0].value;
+                stream2.line_count = position.args[1].value;
+                stream2.line_position = position.args[2].value;
+              } else {
+                stream2.position = position.id;
+              }
+              thread.success(point);
+            }
+          },
+          //  CHARACTER INPUT OUTPUT
+          // get_char/1
+          "get_char/1": [
+            new Rule(new Term("get_char", [new Var("C")]), new Term(",", [new Term("current_input", [new Var("S")]), new Term("get_char", [new Var("S"), new Var("C")])]))
+          ],
+          // get_char/2
+          "get_char/2": function(thread, point, atom) {
+            var stream = atom.args[0], char = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(char) && !pl2.type.is_in_character(char)) {
+              thread.throw_error(pl2.error.type("in_character", char, atom.indicator));
+            } else if (!pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.output) {
+              thread.throw_error(pl2.error.permission("input", "stream", stream, atom.indicator));
+            } else if (stream2.type === "binary") {
+              thread.throw_error(pl2.error.permission("input", "binary_stream", stream, atom.indicator));
+            } else if (stream2.position === "past_end_of_stream" && stream2.eof_action === "error") {
+              thread.throw_error(pl2.error.permission("input", "past_end_of_stream", stream, atom.indicator));
+            } else {
+              var stream_char;
+              if (stream2.position === "end_of_stream") {
+                stream_char = "end_of_file";
+                stream2.position = "past_end_of_stream";
+              } else if (stream2.position === "past_end_of_stream") {
+                stream_char = "end_of_file";
+                stream2.position = "past_end_of_stream";
+              } else {
+                stream_char = stream2.stream.get(1, stream2.position);
+                if (stream_char === null) {
+                  thread.throw_error(pl2.error.representation("character", atom.indicator));
+                  return;
+                } else if (stream_char === "end_of_stream") {
+                  stream_char = "end_of_file";
+                  stream2.position = "past_end_of_stream";
+                } else {
+                  stream2.position++;
+                  stream2.char_count++;
+                  stream2.line_position++;
+                  if (stream_char === "\n") {
+                    stream2.line_count++;
+                    stream2.line_position = 0;
+                  }
+                }
+              }
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [new Term(stream_char, []), char])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // get_code/1
+          "get_code/1": [
+            new Rule(new Term("get_code", [new Var("C")]), new Term(",", [new Term("current_input", [new Var("S")]), new Term("get_code", [new Var("S"), new Var("C")])]))
+          ],
+          // get_code/2
+          "get_code/2": function(thread, point, atom) {
+            var stream = atom.args[0], code = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(code) && !pl2.type.is_integer(code)) {
+              thread.throw_error(pl2.error.type("integer", code, atom.indicator));
+            } else if (pl2.type.is_integer(code) && !pl2.type.is_in_character_code(code)) {
+              thread.throw_error(pl2.error.representation("in_character_code", atom.indicator));
+            } else if (!pl2.type.is_variable(stream) && !pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.output) {
+              thread.throw_error(pl2.error.permission("input", "stream", stream, atom.indicator));
+            } else if (stream2.type === "binary") {
+              thread.throw_error(pl2.error.permission("input", "binary_stream", stream, atom.indicator));
+            } else if (stream2.position === "past_end_of_stream" && stream2.eof_action === "error") {
+              thread.throw_error(pl2.error.permission("input", "past_end_of_stream", stream, atom.indicator));
+            } else {
+              var stream_code;
+              if (stream2.position === "end_of_stream") {
+                stream_code = -1;
+                stream2.position = "past_end_of_stream";
+              } else if (stream2.position === "past_end_of_stream") {
+                stream_code = -1;
+                stream2.position = "past_end_of_stream";
+              } else {
+                stream_code = stream2.stream.get(1, stream2.position);
+                if (stream_code === null) {
+                  thread.throw_error(pl2.error.representation("character", atom.indicator));
+                  return;
+                } else if (stream_code === "end_of_stream") {
+                  stream_code = -1;
+                  stream2.position = "past_end_of_stream";
+                } else {
+                  stream_code = codePointAt(stream_code, 0);
+                  stream2.position++;
+                  stream2.char_count++;
+                  stream2.line_position++;
+                  if (stream_code === 10) {
+                    stream2.line_count++;
+                    stream2.line_position = 0;
+                  }
+                }
+              }
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [new Num(stream_code, false), code])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // peek_char/1
+          "peek_char/1": [
+            new Rule(new Term("peek_char", [new Var("C")]), new Term(",", [new Term("current_input", [new Var("S")]), new Term("peek_char", [new Var("S"), new Var("C")])]))
+          ],
+          // peek_char/2
+          "peek_char/2": function(thread, point, atom) {
+            var stream = atom.args[0], char = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(char) && !pl2.type.is_in_character(char)) {
+              thread.throw_error(pl2.error.type("in_character", char, atom.indicator));
+            } else if (!pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.output) {
+              thread.throw_error(pl2.error.permission("input", "stream", stream, atom.indicator));
+            } else if (stream2.type === "binary") {
+              thread.throw_error(pl2.error.permission("input", "binary_stream", stream, atom.indicator));
+            } else if (stream2.position === "past_end_of_stream" && stream2.eof_action === "error") {
+              thread.throw_error(pl2.error.permission("input", "past_end_of_stream", stream, atom.indicator));
+            } else {
+              var stream_char;
+              if (stream2.position === "end_of_stream") {
+                stream_char = "end_of_file";
+                stream2.position = "past_end_of_stream";
+              } else if (stream2.position === "past_end_of_stream") {
+                stream_char = "end_of_file";
+                stream2.position = "past_end_of_stream";
+              } else {
+                stream_char = stream2.stream.get(1, stream2.position);
+                if (stream_char === null) {
+                  thread.throw_error(pl2.error.representation("character", atom.indicator));
+                  return;
+                } else if (stream_char === "end_of_stream") {
+                  stream_char = "end_of_file";
+                }
+              }
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [new Term(stream_char, []), char])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // peek_code/1
+          "peek_code/1": [
+            new Rule(new Term("peek_code", [new Var("C")]), new Term(",", [new Term("current_input", [new Var("S")]), new Term("peek_code", [new Var("S"), new Var("C")])]))
+          ],
+          // peek_code/2
+          "peek_code/2": function(thread, point, atom) {
+            var stream = atom.args[0], code = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(code) && !pl2.type.is_integer(code)) {
+              thread.throw_error(pl2.error.type("integer", code, atom.indicator));
+            } else if (pl2.type.is_integer(code) && !pl2.type.is_in_character_code(code)) {
+              thread.throw_error(pl2.error.representation("in_character_code", atom.indicator));
+            } else if (!pl2.type.is_variable(stream) && !pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.output) {
+              thread.throw_error(pl2.error.permission("input", "stream", stream, atom.indicator));
+            } else if (stream2.type === "binary") {
+              thread.throw_error(pl2.error.permission("input", "binary_stream", stream, atom.indicator));
+            } else if (stream2.position === "past_end_of_stream" && stream2.eof_action === "error") {
+              thread.throw_error(pl2.error.permission("input", "past_end_of_stream", stream, atom.indicator));
+            } else {
+              var stream_code;
+              if (stream2.position === "end_of_stream") {
+                stream_code = -1;
+                stream2.position = "past_end_of_stream";
+              } else {
+                stream_code = stream2.stream.get(1, stream2.position);
+                if (stream_code === null) {
+                  thread.throw_error(pl2.error.representation("character", atom.indicator));
+                  return;
+                } else if (stream_code === "end_of_stream") {
+                  stream_code = -1;
+                } else {
+                  stream_code = codePointAt(stream_code, 0);
+                }
+              }
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [new Num(stream_code, false), code])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // put_char/1
+          "put_char/1": [
+            new Rule(new Term("put_char", [new Var("C")]), new Term(",", [new Term("current_output", [new Var("S")]), new Term("put_char", [new Var("S"), new Var("C")])]))
+          ],
+          // put_char/2
+          "put_char/2": function(thread, point, atom) {
+            var stream = atom.args[0], char = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream) || pl2.type.is_variable(char)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_character(char)) {
+              thread.throw_error(pl2.error.type("character", char, atom.indicator));
+            } else if (!pl2.type.is_variable(stream) && !pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.input) {
+              thread.throw_error(pl2.error.permission("output", "stream", stream, atom.indicator));
+            } else if (stream2.type === "binary") {
+              thread.throw_error(pl2.error.permission("output", "binary_stream", stream, atom.indicator));
+            } else {
+              if (stream2.stream.put(char.id, stream2.position)) {
+                if (typeof stream2.position === "number")
+                  stream2.position++;
+                stream2.char_count++;
+                stream2.line_position++;
+                if (char.id === "\n") {
+                  stream2.line_count++;
+                  stream2.line_position = 0;
+                }
+                thread.success(point);
+              }
+            }
+          },
+          // put_code/1
+          "put_code/1": [
+            new Rule(new Term("put_code", [new Var("C")]), new Term(",", [new Term("current_output", [new Var("S")]), new Term("put_code", [new Var("S"), new Var("C")])]))
+          ],
+          // put_code/2
+          "put_code/2": function(thread, point, atom) {
+            var stream = atom.args[0], code = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream) || pl2.type.is_variable(code)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_integer(code)) {
+              thread.throw_error(pl2.error.type("integer", code, atom.indicator));
+            } else if (!pl2.type.is_character_code(code)) {
+              thread.throw_error(pl2.error.representation("character_code", atom.indicator));
+            } else if (!pl2.type.is_variable(stream) && !pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.input) {
+              thread.throw_error(pl2.error.permission("output", "stream", stream, atom.indicator));
+            } else if (stream2.type === "binary") {
+              thread.throw_error(pl2.error.permission("output", "binary_stream", stream, atom.indicator));
+            } else {
+              if (stream2.stream.put(fromCodePoint(code.value), stream2.position)) {
+                if (typeof stream2.position === "number")
+                  stream2.position++;
+                stream2.char_count++;
+                stream2.line_position++;
+                if (code.value === 10) {
+                  stream2.line_count++;
+                  stream2.line_position = 0;
+                }
+                thread.success(point);
+              }
+            }
+          },
+          // nl/0
+          "nl/0": [
+            new Rule(new Term("nl"), new Term(",", [new Term("current_output", [new Var("S")]), new Term("put_char", [new Var("S"), new Term("\n")])]))
+          ],
+          // nl/1
+          "nl/1": function(thread, point, atom) {
+            var stream = atom.args[0];
+            thread.prepend([new State(
+              point.goal.replace(new Term("put_char", [stream, new Term("\n", [])])),
+              point.substitution,
+              point
+            )]);
+          },
+          // BYTE INPUT/OUTPUT
+          // get_byte/1
+          "get_byte/1": [
+            new Rule(new Term("get_byte", [new Var("B")]), new Term(",", [new Term("current_input", [new Var("S")]), new Term("get_byte", [new Var("S"), new Var("B")])]))
+          ],
+          // get_byte/2
+          "get_byte/2": function(thread, point, atom) {
+            var stream = atom.args[0], byte = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(byte) && !pl2.type.is_in_byte(byte)) {
+              thread.throw_error(pl2.error.type("in_byte", byte, atom.indicator));
+            } else if (!pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.output) {
+              thread.throw_error(pl2.error.permission("input", "stream", stream, atom.indicator));
+            } else if (stream2.type === "text") {
+              thread.throw_error(pl2.error.permission("input", "text_stream", stream, atom.indicator));
+            } else if (stream2.position === "past_end_of_stream" && stream2.eof_action === "error") {
+              thread.throw_error(pl2.error.permission("input", "past_end_of_stream", stream, atom.indicator));
+            } else {
+              var stream_byte;
+              if (stream2.position === "end_of_stream") {
+                stream_byte = -1;
+                stream2.position = "past_end_of_stream";
+              } else {
+                stream_byte = stream2.stream.get_byte(stream2.position);
+                if (stream_byte === null) {
+                  thread.throw_error(pl2.error.representation("byte", atom.indicator));
+                  return;
+                } else if (stream_byte === "end_of_stream") {
+                  stream_byte = -1;
+                  stream2.position = "past_end_of_stream";
+                } else {
+                  stream2.position++;
+                  stream2.char_count++;
+                  stream2.line_position++;
+                }
+              }
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [new Num(stream_byte, false), byte])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // peek_byte/1
+          "peek_byte/1": [
+            new Rule(new Term("peek_byte", [new Var("B")]), new Term(",", [new Term("current_input", [new Var("S")]), new Term("peek_byte", [new Var("S"), new Var("B")])]))
+          ],
+          // peek_byte/2
+          "peek_byte/2": function(thread, point, atom) {
+            var stream = atom.args[0], byte = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(byte) && !pl2.type.is_in_byte(byte)) {
+              thread.throw_error(pl2.error.type("in_byte", byte, atom.indicator));
+            } else if (!pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.output) {
+              thread.throw_error(pl2.error.permission("input", "stream", stream, atom.indicator));
+            } else if (stream2.type === "text") {
+              thread.throw_error(pl2.error.permission("input", "text_stream", stream, atom.indicator));
+            } else if (stream2.position === "past_end_of_stream" && stream2.eof_action === "error") {
+              thread.throw_error(pl2.error.permission("input", "past_end_of_stream", stream, atom.indicator));
+            } else {
+              var stream_byte;
+              if (stream2.position === "end_of_stream") {
+                stream_byte = -1;
+                stream2.position = "past_end_of_stream";
+              } else {
+                stream_byte = stream2.stream.get_byte(stream2.position);
+                if (stream_byte === null) {
+                  thread.throw_error(pl2.error.representation("byte", atom.indicator));
+                  return;
+                } else if (stream_byte === "end_of_stream") {
+                  stream_byte = -1;
+                }
+              }
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [new Num(stream_byte, false), byte])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // put_byte/1
+          "put_byte/1": [
+            new Rule(new Term("put_byte", [new Var("B")]), new Term(",", [new Term("current_output", [new Var("S")]), new Term("put_byte", [new Var("S"), new Var("B")])]))
+          ],
+          // put_byte/2
+          "put_byte/2": function(thread, point, atom) {
+            var stream = atom.args[0], byte = atom.args[1];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream) || pl2.type.is_variable(byte)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_byte(byte)) {
+              thread.throw_error(pl2.error.type("byte", byte, atom.indicator));
+            } else if (!pl2.type.is_variable(stream) && !pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.input) {
+              thread.throw_error(pl2.error.permission("output", "stream", stream, atom.indicator));
+            } else if (stream2.type === "text") {
+              thread.throw_error(pl2.error.permission("output", "text_stream", stream, atom.indicator));
+            } else {
+              if (stream2.stream.put_byte(byte.value, stream2.position)) {
+                if (typeof stream2.position === "number")
+                  stream2.position++;
+                stream2.char_count++;
+                stream2.line_position++;
+                thread.success(point);
+              }
+            }
+          },
+          // TERM INPUT/OUTPUT
+          // read/1
+          "read/1": [
+            new Rule(new Term("read", [new Var("T")]), new Term(",", [new Term("current_input", [new Var("S")]), new Term("read_term", [new Var("S"), new Var("T"), new Term("[]")])]))
+          ],
+          // read/2
+          "read/2": [
+            new Rule(new Term("read", [new Var("S"), new Var("T")]), new Term("read_term", [new Var("S"), new Var("T"), new Term("[]")]))
+          ],
+          // read_term/2
+          "read_term/2": [
+            new Rule(new Term("read_term", [new Var("T"), new Var("O")]), new Term(",", [new Term("current_input", [new Var("S")]), new Term("read_term", [new Var("S"), new Var("T"), new Var("O")])]))
+          ],
+          // read_term/3
+          "read_term/3": function(thread, point, atom) {
+            var stream = atom.args[0], term = atom.args[1], options = atom.args[2];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream) || pl2.type.is_variable(options)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_list(options)) {
+              thread.throw_error(pl2.error.type("list", options, atom.indicator));
+            } else if (!pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.output) {
+              thread.throw_error(pl2.error.permission("input", "stream", stream, atom.indicator));
+            } else if (stream2.type === "binary") {
+              thread.throw_error(pl2.error.permission("input", "binary_stream", stream, atom.indicator));
+            } else if (stream2.position === "past_end_of_stream" && stream2.eof_action === "error") {
+              thread.throw_error(pl2.error.permission("input", "past_end_of_stream", stream, atom.indicator));
+            } else if (stream2.position === "past_end_of_stream" && stream2.eof_action === "eof_code") {
+              expr = {
+                value: new Term("end_of_file", []),
+                type: SUCCESS,
+                len: -1
+              };
+            } else {
+              var obj_options = {};
+              var pointer = options;
+              var property;
+              while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                property = pointer.args[0];
+                if (pl2.type.is_variable(property)) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (!pl2.type.is_read_option(property)) {
+                  thread.throw_error(pl2.error.domain("read_option", property, atom.indicator));
+                  return;
+                }
+                obj_options[property.id] = property.args[0];
+                pointer = pointer.args[1];
+              }
+              if (pointer.indicator !== "[]/0") {
+                if (pl2.type.is_variable(pointer))
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                else
+                  thread.throw_error(pl2.error.type("list", options, atom.indicator));
+                return;
+              } else {
+                var char, tokenizer, expr;
+                var text = "";
+                var tokens = [];
+                var last_token = null;
+                var lexical_error = false;
+                while (last_token === null || lexical_error || last_token.name !== "atom" || last_token.value !== "." || tokens.length > 0 && expr.type === ERROR) {
+                  char = stream2.stream.get(1, stream2.position);
+                  while (char !== null && char !== "." && char !== "end_of_stream" && char !== "past_end_of_stream") {
+                    stream2.position++;
+                    text += char;
+                    char = stream2.stream.get(1, stream2.position);
+                  }
+                  if (char === null) {
+                    thread.throw_error(pl2.error.representation("character", atom.indicator));
+                    return;
+                  } else if (char === "end_of_stream" || char === "past_end_of_stream") {
+                    if (tokens === null || tokens.length === 0) {
+                      stream2.position = "past_end_of_stream";
+                      expr = {
+                        value: new Term("end_of_file", []),
+                        type: SUCCESS,
+                        len: -1
+                      };
+                      break;
+                    } else if (expr) {
+                      thread.throw_error(pl2.error.syntax(last_token, "unexpected end of file", false));
+                      return;
+                    } else {
+                      thread.throw_error(pl2.error.syntax(last_token, "token not found", true));
+                      return;
+                    }
+                  } else if (char === ".") {
+                    stream2.position++;
+                    text += char;
+                  }
+                  tokenizer = new Tokenizer(thread);
+                  tokenizer.new_text(text);
+                  tokens = tokenizer.get_tokens();
+                  num_token = tokens !== null && tokens.length > 1 ? tokens[tokens.length - 2] : null;
+                  last_token = tokens !== null && tokens.length > 0 ? tokens[tokens.length - 1] : null;
+                  if (tokens === null)
+                    continue;
+                  lexical_error = false;
+                  for (var i2 = 0; i2 < tokens.length && !lexical_error; i2++)
+                    lexical_error = tokens[i2].name === "lexical";
+                  if (lexical_error)
+                    continue;
+                  expr = parseExpr(thread, tokens, 0, thread.__get_max_priority(), false);
+                  if (num_token && num_token.name === "number" && !num_token.float && !num_token.blank && last_token.value === ".") {
+                    var next_char = stream2.stream.get(1, stream2.position);
+                    if (next_char >= "0" && next_char <= "9") {
+                      stream2.position++;
+                      text += next_char;
+                      last_token = null;
+                      continue;
+                    }
+                  }
+                }
+                if (last_token) {
+                  if (last_token.line_position === last_token.len)
+                    stream2.line_position += last_token.line_position;
+                  else
+                    stream2.line_position = last_token.line_position;
+                  stream2.line_count += last_token.line_count;
+                  stream2.char_count += last_token.len;
+                }
+                if (expr.type === SUCCESS && (expr.len === -1 || expr.len === tokens.length - 1 && last_token.value === ".")) {
+                  thread.session.renamed_variables = {};
+                  expr = expr.value.rename(thread);
+                  var eq = new Term("=", [term, expr]);
+                  if (obj_options.variables) {
+                    var vars = arrayToList(map(nub(expr.variables()), function(v2) {
+                      return new Var(v2);
+                    }));
+                    eq = new Term(",", [eq, new Term("=", [obj_options.variables, vars])]);
+                  }
+                  if (obj_options.variable_names) {
+                    var vars = nub(expr.variables());
+                    var plvars = [];
+                    for (var i2 = 0; i2 < vars.length; i2++) {
+                      var v = vars[i2];
+                      for (var prop in thread.session.renamed_variables) {
+                        if (thread.session.renamed_variables.hasOwnProperty(prop)) {
+                          if (thread.session.renamed_variables[prop] === v) {
+                            plvars.push(new Term("=", [new Term(prop, []), new Var(v)]));
+                            break;
+                          }
+                        }
+                      }
+                    }
+                    plvars = arrayToList(plvars);
+                    eq = new Term(",", [eq, new Term("=", [obj_options.variable_names, plvars])]);
+                  }
+                  if (obj_options.singletons) {
+                    var vars = nub(new Rule(expr, null).singleton_variables(true));
+                    var plvars = [];
+                    for (var i2 = 0; i2 < vars.length; i2++) {
+                      var v = vars[i2];
+                      for (var prop in thread.session.renamed_variables) {
+                        if (thread.session.renamed_variables.hasOwnProperty(prop)) {
+                          if (thread.session.renamed_variables[prop] === v) {
+                            plvars.push(new Term("=", [new Term(prop, []), new Var(v)]));
+                            break;
+                          }
+                        }
+                      }
+                    }
+                    plvars = arrayToList(plvars);
+                    eq = new Term(",", [eq, new Term("=", [obj_options.singletons, plvars])]);
+                  }
+                  thread.prepend([new State(point.goal.replace(eq), point.substitution, point)]);
+                } else {
+                  if (expr.type === SUCCESS)
+                    thread.throw_error(pl2.error.syntax(tokens[expr.len], "unexpected token", false));
+                  else
+                    thread.throw_error(expr.value);
+                }
+              }
+            }
+          },
+          // write/1
+          "write/1": [
+            new Rule(new Term("write", [new Var("T")]), new Term(",", [new Term("current_output", [new Var("S")]), new Term("write", [new Var("S"), new Var("T")])]))
+          ],
+          // write/2
+          "write/2": function(thread, point, atom) {
+            var stream = atom.args[0], term = atom.args[1];
+            thread.prepend([new State(
+              point.goal.replace(new Term("write_term", [
+                stream,
+                term,
+                new Term(".", [
+                  new Term("quoted", [new Term("false", [])]),
+                  new Term(".", [
+                    new Term("ignore_ops", [new Term("false")]),
+                    new Term(".", [new Term("numbervars", [new Term("true")]), new Term("[]", [])])
+                  ])
+                ])
+              ])),
+              point.substitution,
+              point
+            )]);
+          },
+          // writeq/1
+          "writeq/1": [
+            new Rule(new Term("writeq", [new Var("T")]), new Term(",", [new Term("current_output", [new Var("S")]), new Term("writeq", [new Var("S"), new Var("T")])]))
+          ],
+          // writeq/2
+          "writeq/2": function(thread, point, atom) {
+            var stream = atom.args[0], term = atom.args[1];
+            thread.prepend([new State(
+              point.goal.replace(new Term("write_term", [
+                stream,
+                term,
+                new Term(".", [
+                  new Term("quoted", [new Term("true", [])]),
+                  new Term(".", [
+                    new Term("ignore_ops", [new Term("false")]),
+                    new Term(".", [new Term("numbervars", [new Term("true")]), new Term("[]", [])])
+                  ])
+                ])
+              ])),
+              point.substitution,
+              point
+            )]);
+          },
+          // write_canonical/1
+          "write_canonical/1": [
+            new Rule(new Term("write_canonical", [new Var("T")]), new Term(",", [new Term("current_output", [new Var("S")]), new Term("write_canonical", [new Var("S"), new Var("T")])]))
+          ],
+          // write_canonical/2
+          "write_canonical/2": function(thread, point, atom) {
+            var stream = atom.args[0], term = atom.args[1];
+            thread.prepend([new State(
+              point.goal.replace(new Term("write_term", [
+                stream,
+                term,
+                new Term(".", [
+                  new Term("quoted", [new Term("true", [])]),
+                  new Term(".", [
+                    new Term("ignore_ops", [new Term("true")]),
+                    new Term(".", [new Term("numbervars", [new Term("false")]), new Term("[]", [])])
+                  ])
+                ])
+              ])),
+              point.substitution,
+              point
+            )]);
+          },
+          // write_term/2
+          "write_term/2": [
+            new Rule(new Term("write_term", [new Var("T"), new Var("O")]), new Term(",", [new Term("current_output", [new Var("S")]), new Term("write_term", [new Var("S"), new Var("T"), new Var("O")])]))
+          ],
+          // write_term/3
+          "write_term/3": function(thread, point, atom) {
+            var stream = atom.args[0], term = atom.args[1], options = atom.args[2];
+            var stream2 = pl2.type.is_stream(stream) ? stream : thread.get_stream_by_alias(stream.id);
+            if (pl2.type.is_variable(stream) || pl2.type.is_variable(options)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_list(options)) {
+              thread.throw_error(pl2.error.type("list", options, atom.indicator));
+            } else if (!pl2.type.is_stream(stream) && !pl2.type.is_atom(stream)) {
+              thread.throw_error(pl2.error.domain("stream_or_alias", stream, atom.indicator));
+            } else if (!pl2.type.is_stream(stream2) || stream2.stream === null) {
+              thread.throw_error(pl2.error.existence("stream", stream, atom.indicator));
+            } else if (stream2.input) {
+              thread.throw_error(pl2.error.permission("output", "stream", stream, atom.indicator));
+            } else if (stream2.type === "binary") {
+              thread.throw_error(pl2.error.permission("output", "binary_stream", stream, atom.indicator));
+            } else if (stream2.position === "past_end_of_stream" && stream2.eof_action === "error") {
+              thread.throw_error(pl2.error.permission("output", "past_end_of_stream", stream, atom.indicator));
+            } else {
+              var obj_options = {};
+              var pointer = options;
+              var property;
+              while (pl2.type.is_term(pointer) && pointer.indicator === "./2") {
+                property = pointer.args[0];
+                if (pl2.type.is_variable(property)) {
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                  return;
+                } else if (!pl2.type.is_write_option(property)) {
+                  thread.throw_error(pl2.error.domain("write_option", property, atom.indicator));
+                  return;
+                }
+                if (property.indicator === "variable_names/1")
+                  obj_options[property.id] = property.args[0];
+                else
+                  obj_options[property.id] = property.args[0].id === "true";
+                pointer = pointer.args[1];
+              }
+              if (pointer.indicator !== "[]/0") {
+                if (pl2.type.is_variable(pointer))
+                  thread.throw_error(pl2.error.instantiation(atom.indicator));
+                else
+                  thread.throw_error(pl2.error.type("list", options, atom.indicator));
+                return;
+              } else {
+                obj_options.session = thread.session;
+                var text = term.toString(obj_options);
+                stream2.stream.put(text, stream2.position);
+                if (typeof stream2.position === "number")
+                  stream2.position += text.length;
+                var nl = (text.match(/\n/g) || []).length;
+                stream2.line_count += nl;
+                if (nl > 0)
+                  stream2.line_position = text.length - text.lastIndexOf("\n") - 1;
+                else
+                  stream2.line_position += text.length;
+                stream2.char_count += text.length;
+                thread.success(point);
+              }
+            }
+          },
+          // IMPLEMENTATION DEFINED HOOKS
+          // halt/0
+          "halt/0": function(thread, point, _) {
+            if (thread.get_flag("nodejs").indicator === "true/0")
+              process.exit();
+            thread.points = [];
+          },
+          // halt/1
+          "halt/1": function(thread, point, atom) {
+            var int = atom.args[0];
+            if (pl2.type.is_variable(int)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_integer(int)) {
+              thread.throw_error(pl2.error.type("integer", int, atom.indicator));
+            } else {
+              if (thread.get_flag("nodejs").indicator === "true/0")
+                process.exit(int.value);
+              thread.points = [];
+            }
+          },
+          // current_prolog_flag/2
+          "current_prolog_flag/2": function(thread, point, atom) {
+            var flag = atom.args[0], value = atom.args[1];
+            if (!pl2.type.is_variable(flag) && !pl2.type.is_atom(flag)) {
+              thread.throw_error(pl2.error.type("atom", flag, atom.indicator));
+            } else if (!pl2.type.is_variable(flag) && !pl2.type.is_flag(flag)) {
+              thread.throw_error(pl2.error.domain("prolog_flag", flag, atom.indicator));
+            } else {
+              var states = [];
+              for (var name in pl2.flag) {
+                if (!pl2.flag.hasOwnProperty(name)) continue;
+                var goal = new Term(",", [new Term("=", [new Term(name), flag]), new Term("=", [thread.get_flag(name), value])]);
+                states.push(new State(point.goal.replace(goal), point.substitution, point));
+              }
+              thread.prepend(states);
+            }
+          },
+          // set_prolog_flag/2
+          "set_prolog_flag/2": function(thread, point, atom) {
+            var flag = atom.args[0], value = atom.args[1];
+            if (pl2.type.is_variable(flag) || pl2.type.is_variable(value)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_atom(flag)) {
+              thread.throw_error(pl2.error.type("atom", flag, atom.indicator));
+            } else if (!pl2.type.is_flag(flag)) {
+              thread.throw_error(pl2.error.domain("prolog_flag", flag, atom.indicator));
+            } else if (!pl2.type.is_modifiable_flag(flag)) {
+              thread.throw_error(pl2.error.permission("modify", "flag", flag, atom.indicator));
+            } else if (!pl2.type.is_value_flag(flag, value)) {
+              thread.throw_error(pl2.error.domain("flag_value", new Term("+", [flag, value]), atom.indicator));
+            } else {
+              thread.session.flag[flag.id] = value;
+              thread.success(point);
+            }
+          },
+          // LOAD PROLOG SOURCE FILES
+          // consult/1
+          "consult/1": function(thread, point, atom) {
+            var src = atom.args[0];
+            var context_module = "user";
+            if (src.indicator === ":/2") {
+              context_module = src.args[0].id;
+              src = src.args[1];
+            }
+            if (pl2.type.is_variable(src)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_atom(src)) {
+              thread.throw_error(pl2.error.type("atom", src, atom.indicator));
+            } else {
+              if (thread.consult(src.id, {
+                context_module,
+                text: false,
+                html: false,
+                success: function() {
+                  thread.success(point);
+                  thread.again();
+                },
+                error: function(err) {
+                  thread.throw_error(err);
+                  thread.again();
+                }
+              })) ;
+              return true;
+            }
+          },
+          // TIME AND DATES
+          // get_time/1
+          "get_time/1": function(thread, point, atom) {
+            var time = atom.args[0];
+            if (!pl2.type.is_variable(time) && !pl2.type.is_number(time)) {
+              thread.throw_error(pl2.error.type("number", time, atom.indicator));
+            } else {
+              var current = new Num(Date.now(), true);
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [time, current])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // time_property
+          "time_property/2": function(thread, point, atom) {
+            var time = atom.args[0], property = atom.args[1];
+            if (pl2.type.is_variable(time)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_variable(time) && !pl2.type.is_number(time)) {
+              thread.throw_error(pl2.error.type("number", time, atom.indicator));
+            } else if (!pl2.type.is_variable(property) && !pl2.type.is_time_property(property)) {
+              thread.throw_error(pl2.error.domain("time_property", property, atom.indicator));
+            } else {
+              var props;
+              if (pl2.type.is_variable(property)) {
+                props = ["year", "month", "day", "hours", "minutes", "seconds", "milliseconds", "weekday"];
+              } else {
+                props = [property.id];
+              }
+              var date = new Date(time.value);
+              var value;
+              var states = [];
+              for (var i2 = 0; i2 < props.length; i2++) {
+                switch (props[i2]) {
+                  case "year":
+                    value = new Term("year", [new Num(date.getFullYear(), false)]);
+                    break;
+                  case "month":
+                    value = new Term("month", [new Num(date.getMonth(), false)]);
+                    break;
+                  case "day":
+                    value = new Term("day", [new Num(date.getDate(), false)]);
+                    break;
+                  case "hours":
+                    value = new Term("hours", [new Num(date.getHours(), false)]);
+                    break;
+                  case "minutes":
+                    value = new Term("minutes", [new Num(date.getMinutes(), false)]);
+                    break;
+                  case "seconds":
+                    value = new Term("seconds", [new Num(date.getSeconds(), false)]);
+                    break;
+                  case "milliseconds":
+                    value = new Term("milliseconds", [new Num(date.getMilliseconds(), false)]);
+                    break;
+                  case "weekday":
+                    value = new Term("weekday", [new Num(date.getDay(), false)]);
+                    break;
+                }
+                states.push(new State(
+                  point.goal.replace(new Term("=", [property, value])),
+                  point.substitution,
+                  point
+                ));
+              }
+              thread.prepend(states);
+            }
+          },
+          // time_year/2
+          "time_year/2": function(thread, point, atom) {
+            var time = atom.args[0], year = atom.args[1];
+            if (pl2.type.is_variable(time)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_number(time)) {
+              thread.throw_error(pl2.error.type("number", time, atom.indicator));
+            } else if (!pl2.type.is_variable(year) && !pl2.type.is_integer(year)) {
+              thread.throw_error(pl2.error.type("integer", year, atom.indicator));
+            } else {
+              var value = new Num(new Date(time.value).getFullYear(), false);
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [year, value])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // time_month/2
+          "time_month/2": function(thread, point, atom) {
+            var time = atom.args[0], month = atom.args[1];
+            if (pl2.type.is_variable(time)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_number(time)) {
+              thread.throw_error(pl2.error.type("number", time, atom.indicator));
+            } else if (!pl2.type.is_variable(month) && !pl2.type.is_integer(month)) {
+              thread.throw_error(pl2.error.type("integer", month, atom.indicator));
+            } else {
+              var value = new Num(new Date(time.value).getMonth(), false);
+              thread.prepend([new State(
+                point.goal.replace(new Term("=", [month, value])),
+                point.substitution,
+                point
+              )]);
+            }
+          },
+          // GRAMMARS
+          // phrase/3
+          "phrase/3": function(thread, point, atom) {
+            var grbody = atom.args[0], s0 = atom.args[1], s = atom.args[2];
+            var context_module = "user";
+            if (grbody.indicator === ":/2") {
+              context_module = grbody.args[0].id;
+              grbody = grbody.args[1];
+            }
+            if (pl2.type.is_variable(grbody)) {
+              thread.throw_error(pl2.error.instantiation(atom.indicator));
+            } else if (!pl2.type.is_callable(grbody)) {
+              thread.throw_error(pl2.error.type("callable", grbody, atom.indicator));
+            } else {
+              var goal = body_to_dcg(grbody.clone(), s0, thread);
+              goal.value = new Term(":", [new Term(context_module), new Term("call", [goal.value])]);
+              if (goal !== null) {
+                thread.prepend([new State(
+                  point.goal.replace(new Term(",", [goal.value, new Term("=", [goal.variable, s])])),
+                  point.substitution,
+                  point
+                )]);
+              }
+            }
+          },
+          // phrase/2
+          "phrase/2": function(thread, point, atom) {
+            var grbody = atom.args[0], s0 = atom.args[1];
+            thread.prepend([new State(
+              point.goal.replace(new Term("phrase", [grbody, s0, new Term("[]", [])])),
+              point.substitution,
+              point
+            )]);
+          },
+          // TAU PROLOG INFORMATION
+          // version/0
+          "version/0": function(thread, point, atom) {
+            var msg = "Welcome to Tau Prolog version " + version.major + "." + version.minor + "." + version.patch + "\n";
+            msg += "Tau Prolog comes with ABSOLUTELY NO WARRANTY. This is free software.\n";
+            msg += "Please run ?- license. for legal details.\n";
+            msg += "For online help and background, visit http:/tau-prolog.org";
+            thread.prepend([new State(
+              point.goal.replace(new Term("write", [new Term(msg, [])])),
+              point.substitution,
+              point
+            )]);
+          },
+          // license/0
+          "license/0": function(thread, point, atom) {
+            var msg = "Tau Prolog. A Prolog interpreter in JavaScript.\n";
+            msg += "Copyright (C) 2017 - 2022 Jos\xE9 Antonio Riaza Valverde\n\n";
+            msg += "Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n";
+            msg += "1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.\n";
+            msg += "2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n";
+            msg += "3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.\n\n";
+            msg += 'THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n\n';
+            msg += "You should have received a copy of the BSD 3-Clause License along with this program. If not, see https://opensource.org/licenses/BSD-3-Clause";
+            thread.prepend([new State(
+              point.goal.replace(new Term("write", [new Term(msg, [])])),
+              point.substitution,
+              point
+            )]);
+          }
+        }, "all", {
+          meta_predicates: {
+            // '$findall'(?, 0, -, ?)
+            "$findall/4": new Term("$findall", [new Term("?"), new Num(0, false), new Term("-"), new Term("?")]),
+            // '$bagof'(?, ^, -)
+            "$bagof/3": new Term("$bagof", [new Term("?"), new Term("^"), new Term("-")]),
+            // '$setof'(?, ^, -)
+            "$setof/3": new Term("$setof", [new Term("?"), new Term("^"), new Term("-")]),
+            // '$if'(0, 0, 0)
+            "$if/3": new Term("$if", [new Num(0, false), new Num(0, false), new Num(0, false)]),
+            // (0;0)
+            ";/2": new Term(";", [new Num(0, false), new Num(0, false)]),
+            // (0->0)
+            "->/2": new Term("->", [new Num(0, false), new Num(0, false)]),
+            // (0->0)
+            "*->/2": new Term("*->", [new Num(0, false), new Num(0, false)]),
+            // (\+0)
+            "\\+/1": new Term("\\+", [new Num(0, false)]),
+            // abolish(:)
+            "abolish/1": new Term("abolish", [new Term(":")]),
+            // asserta(:)
+            "asserta/1": new Term("asserta", [new Term(":")]),
+            // assertz(:)
+            "assertz/1": new Term("assertz", [new Term(":")]),
+            // bagof(?, ^, -)
+            "bagof/3": new Term("bagof", [new Term("?"), new Term("^"), new Term("-")]),
+            // call(0)
+            "call/1": new Term("call", [new Num(0, false)]),
+            // call(1, ?)
+            "call/2": new Term("call", [new Num(1, false), new Term("?")]),
+            // call(2, ?, ?)
+            "call/3": new Term("call", [new Num(2, false), new Term("?"), new Term("?")]),
+            // call(3, ?, ?, ?)
+            "call/4": new Term("call", [new Num(3, false), new Term("?"), new Term("?"), new Term("?")]),
+            // call(4, ?, ?, ?, ?)
+            "call/5": new Term("call", [new Num(4, false), new Term("?"), new Term("?"), new Term("?"), new Term("?")]),
+            // call(5, ?, ?, ?, ?, ?)
+            "call/6": new Term("call", [new Num(5, false), new Term("?"), new Term("?"), new Term("?"), new Term("?"), new Term("?")]),
+            // call(6, ?, ?, ?, ?, ?, ?)
+            "call/7": new Term("call", [new Num(6, false), new Term("?"), new Term("?"), new Term("?"), new Term("?"), new Term("?"), new Term("?")]),
+            // call(7, ?, ?, ?, ?, ?, ?, ?)
+            "call/8": new Term("call", [new Num(6, false), new Term("?"), new Term("?"), new Term("?"), new Term("?"), new Term("?"), new Term("?"), new Term("?")]),
+            // call_cleanup(0, 0)
+            "call_cleanup/2": new Term("call_cleanup", [new Num(0, false), new Num(0, false)]),
+            // catch(0, ?, 0)
+            "catch/3": new Term("catch", [new Num(0, false), new Term("?"), new Num(0, false)]),
+            // consult(:)
+            "consult/1": new Term("consult", [new Term(":")]),
+            // clause(:, ?)
+            "clause/2": new Term("clause", [new Term(":"), new Term("?")]),
+            // current_predicate(?, :)
+            "current_predicate/2": new Term("current_predicate", [new Term("?"), new Term(":")]),
+            // findall(?, 0, -)
+            "findall/3": new Term("findall", [new Term("?"), new Num(0, false), new Term("-")]),
+            // findall(?, 0, -, ?)
+            "findall/4": new Term("findall", [new Term("?"), new Num(0, false), new Term("-"), new Term("?")]),
+            // forall(0, 0)
+            "forall/2": new Term("forall", [new Num(0, false), new Num(0, false)]),
+            // listing(:)
+            "listing/1": new Term("listing", [new Term(":")]),
+            // once(0)
+            "once/1": new Term("once", [new Num(0, false)]),
+            // phrase(:, ?)
+            "phrase/2": new Term("phrase", [new Term(":"), new Term("?")]),
+            // phrase(:, ?, ?)
+            "phrase/3": new Term("phrase", [new Term(":"), new Term("?"), new Term("?")]),
+            // retract(:)
+            "retract/1": new Term("retract", [new Term(":")]),
+            // retractall(:)
+            "retractall/1": new Term("retractall", [new Term(":")]),
+            // setup_call_cleanup(0, 0, 0)
+            "setup_call_cleanup/3": new Term("setup_call_cleanup", [new Num(0, false), new Num(0, false), new Num(0, false)]),
+            // setof(?, ^, -)
+            "setof/3": new Term("setof", [new Term("?"), new Term("^"), new Term("-")])
+          }
+        });
+        if (typeof module !== "undefined") {
+          module.exports = pl2;
+        } else {
+          window.pl = pl2;
+        }
+      })();
+    }
+  });
 
-`,s+=`THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  // node_modules/tau-prolog/modules/lists.js
+  var require_lists = __commonJS({
+    "node_modules/tau-prolog/modules/lists.js"(exports, module) {
+      var pl2;
+      (function(pl3) {
+        var predicates = function() {
+          return {
+            // append/2
+            "append/2": [
+              new pl3.type.Rule(new pl3.type.Term("append", [new pl3.type.Var("X"), new pl3.type.Var("L")]), new pl3.type.Term("foldl", [new pl3.type.Term("append", []), new pl3.type.Var("X"), new pl3.type.Term("[]", []), new pl3.type.Var("L")]))
+            ],
+            // append/3
+            "append/3": [
+              new pl3.type.Rule(new pl3.type.Term("append", [new pl3.type.Term("[]", []), new pl3.type.Var("X"), new pl3.type.Var("X")]), null),
+              new pl3.type.Rule(new pl3.type.Term("append", [new pl3.type.Term(".", [new pl3.type.Var("H"), new pl3.type.Var("T")]), new pl3.type.Var("X"), new pl3.type.Term(".", [new pl3.type.Var("H"), new pl3.type.Var("S")])]), new pl3.type.Term("append", [new pl3.type.Var("T"), new pl3.type.Var("X"), new pl3.type.Var("S")]))
+            ],
+            // member/2
+            "member/2": [
+              new pl3.type.Rule(new pl3.type.Term("member", [new pl3.type.Var("X"), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("_")])]), null),
+              new pl3.type.Rule(new pl3.type.Term("member", [new pl3.type.Var("X"), new pl3.type.Term(".", [new pl3.type.Var("_"), new pl3.type.Var("Xs")])]), new pl3.type.Term("member", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]))
+            ],
+            // permutation/2
+            "permutation/2": [
+              new pl3.type.Rule(new pl3.type.Term("permutation", [new pl3.type.Term("[]", []), new pl3.type.Term("[]", [])]), null),
+              new pl3.type.Rule(new pl3.type.Term("permutation", [new pl3.type.Term(".", [new pl3.type.Var("H"), new pl3.type.Var("T")]), new pl3.type.Var("S")]), new pl3.type.Term(",", [new pl3.type.Term("permutation", [new pl3.type.Var("T"), new pl3.type.Var("P")]), new pl3.type.Term(",", [new pl3.type.Term("append", [new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("P")]), new pl3.type.Term("append", [new pl3.type.Var("X"), new pl3.type.Term(".", [new pl3.type.Var("H"), new pl3.type.Var("Y")]), new pl3.type.Var("S")])])]))
+            ],
+            // maplist/2
+            "maplist/2": [
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("_"), new pl3.type.Term("[]", [])]), null),
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")])]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("P"), new pl3.type.Var("X")]), new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Var("Xs")])]))
+            ],
+            // maplist/3
+            "maplist/3": [
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", [])]), null),
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("A"), new pl3.type.Var("As")]), new pl3.type.Term(".", [new pl3.type.Var("B"), new pl3.type.Var("Bs")])]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("P"), new pl3.type.Var("A"), new pl3.type.Var("B")]), new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Var("As"), new pl3.type.Var("Bs")])]))
+            ],
+            // maplist/4
+            "maplist/4": [
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", [])]), null),
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("A"), new pl3.type.Var("As")]), new pl3.type.Term(".", [new pl3.type.Var("B"), new pl3.type.Var("Bs")]), new pl3.type.Term(".", [new pl3.type.Var("C"), new pl3.type.Var("Cs")])]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("P"), new pl3.type.Var("A"), new pl3.type.Var("B"), new pl3.type.Var("C")]), new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Var("As"), new pl3.type.Var("Bs"), new pl3.type.Var("Cs")])]))
+            ],
+            // maplist/5
+            "maplist/5": [
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", [])]), null),
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("A"), new pl3.type.Var("As")]), new pl3.type.Term(".", [new pl3.type.Var("B"), new pl3.type.Var("Bs")]), new pl3.type.Term(".", [new pl3.type.Var("C"), new pl3.type.Var("Cs")]), new pl3.type.Term(".", [new pl3.type.Var("D"), new pl3.type.Var("Ds")])]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("P"), new pl3.type.Var("A"), new pl3.type.Var("B"), new pl3.type.Var("C"), new pl3.type.Var("D")]), new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Var("As"), new pl3.type.Var("Bs"), new pl3.type.Var("Cs"), new pl3.type.Var("Ds")])]))
+            ],
+            // maplist/6
+            "maplist/6": [
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", [])]), null),
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("A"), new pl3.type.Var("As")]), new pl3.type.Term(".", [new pl3.type.Var("B"), new pl3.type.Var("Bs")]), new pl3.type.Term(".", [new pl3.type.Var("C"), new pl3.type.Var("Cs")]), new pl3.type.Term(".", [new pl3.type.Var("D"), new pl3.type.Var("Ds")]), new pl3.type.Term(".", [new pl3.type.Var("E"), new pl3.type.Var("Es")])]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("P"), new pl3.type.Var("A"), new pl3.type.Var("B"), new pl3.type.Var("C"), new pl3.type.Var("D"), new pl3.type.Var("E")]), new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Var("As"), new pl3.type.Var("Bs"), new pl3.type.Var("Cs"), new pl3.type.Var("Ds"), new pl3.type.Var("Es")])]))
+            ],
+            // maplist/7
+            "maplist/7": [
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", [])]), null),
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("A"), new pl3.type.Var("As")]), new pl3.type.Term(".", [new pl3.type.Var("B"), new pl3.type.Var("Bs")]), new pl3.type.Term(".", [new pl3.type.Var("C"), new pl3.type.Var("Cs")]), new pl3.type.Term(".", [new pl3.type.Var("D"), new pl3.type.Var("Ds")]), new pl3.type.Term(".", [new pl3.type.Var("E"), new pl3.type.Var("Es")]), new pl3.type.Term(".", [new pl3.type.Var("F"), new pl3.type.Var("Fs")])]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("P"), new pl3.type.Var("A"), new pl3.type.Var("B"), new pl3.type.Var("C"), new pl3.type.Var("D"), new pl3.type.Var("E"), new pl3.type.Var("F")]), new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Var("As"), new pl3.type.Var("Bs"), new pl3.type.Var("Cs"), new pl3.type.Var("Ds"), new pl3.type.Var("Es"), new pl3.type.Var("Fs")])]))
+            ],
+            // maplist/8
+            "maplist/8": [
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", [])]), null),
+              new pl3.type.Rule(new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("A"), new pl3.type.Var("As")]), new pl3.type.Term(".", [new pl3.type.Var("B"), new pl3.type.Var("Bs")]), new pl3.type.Term(".", [new pl3.type.Var("C"), new pl3.type.Var("Cs")]), new pl3.type.Term(".", [new pl3.type.Var("D"), new pl3.type.Var("Ds")]), new pl3.type.Term(".", [new pl3.type.Var("E"), new pl3.type.Var("Es")]), new pl3.type.Term(".", [new pl3.type.Var("F"), new pl3.type.Var("Fs")]), new pl3.type.Term(".", [new pl3.type.Var("G"), new pl3.type.Var("Gs")])]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("P"), new pl3.type.Var("A"), new pl3.type.Var("B"), new pl3.type.Var("C"), new pl3.type.Var("D"), new pl3.type.Var("E"), new pl3.type.Var("F"), new pl3.type.Var("G")]), new pl3.type.Term("maplist", [new pl3.type.Var("P"), new pl3.type.Var("As"), new pl3.type.Var("Bs"), new pl3.type.Var("Cs"), new pl3.type.Var("Ds"), new pl3.type.Var("Es"), new pl3.type.Var("Fs"), new pl3.type.Var("Gs")])]))
+            ],
+            // include/3
+            "include/3": [
+              new pl3.type.Rule(new pl3.type.Term("include", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", [])]), null),
+              new pl3.type.Rule(new pl3.type.Term("include", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("S")])]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("P"), new pl3.type.Var("X")]), new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("include", [new pl3.type.Var("P"), new pl3.type.Var("Xs"), new pl3.type.Var("S")])])])),
+              new pl3.type.Rule(new pl3.type.Term("include", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("_"), new pl3.type.Var("Xs")]), new pl3.type.Var("S")]), new pl3.type.Term("include", [new pl3.type.Var("P"), new pl3.type.Var("Xs"), new pl3.type.Var("S")]))
+            ],
+            // exclude/3
+            "exclude/3": [
+              new pl3.type.Rule(new pl3.type.Term("exclude", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", [])]), null),
+              new pl3.type.Rule(new pl3.type.Term("exclude", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]), new pl3.type.Var("S")]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("P"), new pl3.type.Var("X")]), new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("exclude", [new pl3.type.Var("P"), new pl3.type.Var("Xs"), new pl3.type.Var("S")])])])),
+              new pl3.type.Rule(new pl3.type.Term("exclude", [new pl3.type.Var("P"), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("S")])]), new pl3.type.Term("exclude", [new pl3.type.Var("P"), new pl3.type.Var("Xs"), new pl3.type.Var("S")]))
+            ],
+            // foldl/4
+            "foldl/4": [
+              new pl3.type.Rule(new pl3.type.Term("foldl", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Var("V"), new pl3.type.Var("V")]), null),
+              new pl3.type.Rule(new pl3.type.Term("foldl", [new pl3.type.Var("Goal"), new pl3.type.Term(".", [new pl3.type.Var("H"), new pl3.type.Var("T")]), new pl3.type.Var("V0"), new pl3.type.Var("V")]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("Goal"), new pl3.type.Var("H"), new pl3.type.Var("V0"), new pl3.type.Var("V1")]), new pl3.type.Term("foldl", [new pl3.type.Var("Goal"), new pl3.type.Var("T"), new pl3.type.Var("V1"), new pl3.type.Var("V")])]))
+            ],
+            // foldl/5
+            "foldl/5": [
+              new pl3.type.Rule(new pl3.type.Term("foldl", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Var("V"), new pl3.type.Var("V")]), null),
+              new pl3.type.Rule(new pl3.type.Term("foldl", [new pl3.type.Var("Goal"), new pl3.type.Term(".", [new pl3.type.Var("H1"), new pl3.type.Var("T1")]), new pl3.type.Term(".", [new pl3.type.Var("H2"), new pl3.type.Var("T2")]), new pl3.type.Var("V0"), new pl3.type.Var("V")]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("Goal"), new pl3.type.Var("H1"), new pl3.type.Var("H2"), new pl3.type.Var("V0"), new pl3.type.Var("V1")]), new pl3.type.Term("foldl", [new pl3.type.Var("Goal"), new pl3.type.Var("T1"), new pl3.type.Var("T2"), new pl3.type.Var("V1"), new pl3.type.Var("V")])]))
+            ],
+            // foldl/6
+            "foldl/6": [
+              new pl3.type.Rule(new pl3.type.Term("foldl", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Var("V"), new pl3.type.Var("V")]), null),
+              new pl3.type.Rule(new pl3.type.Term("foldl", [new pl3.type.Var("Goal"), new pl3.type.Term(".", [new pl3.type.Var("H1"), new pl3.type.Var("T1")]), new pl3.type.Term(".", [new pl3.type.Var("H2"), new pl3.type.Var("T2")]), new pl3.type.Term(".", [new pl3.type.Var("H3"), new pl3.type.Var("T3")]), new pl3.type.Var("V0"), new pl3.type.Var("V")]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("Goal"), new pl3.type.Var("H1"), new pl3.type.Var("H2"), new pl3.type.Var("H3"), new pl3.type.Var("V0"), new pl3.type.Var("V1")]), new pl3.type.Term("foldl", [new pl3.type.Var("Goal"), new pl3.type.Var("T1"), new pl3.type.Var("T2"), new pl3.type.Var("T3"), new pl3.type.Var("V1"), new pl3.type.Var("V")])]))
+            ],
+            // foldl/7
+            "foldl/7": [
+              new pl3.type.Rule(new pl3.type.Term("foldl", [new pl3.type.Var("_"), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Term("[]", []), new pl3.type.Var("V"), new pl3.type.Var("V")]), null),
+              new pl3.type.Rule(new pl3.type.Term("foldl", [new pl3.type.Var("Goal"), new pl3.type.Term(".", [new pl3.type.Var("H1"), new pl3.type.Var("T1")]), new pl3.type.Term(".", [new pl3.type.Var("H2"), new pl3.type.Var("T2")]), new pl3.type.Term(".", [new pl3.type.Var("H3"), new pl3.type.Var("T3")]), new pl3.type.Term(".", [new pl3.type.Var("H4"), new pl3.type.Var("T4")]), new pl3.type.Var("V0"), new pl3.type.Var("V")]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("Goal"), new pl3.type.Var("H1"), new pl3.type.Var("H2"), new pl3.type.Var("H3"), new pl3.type.Var("H4"), new pl3.type.Var("V0"), new pl3.type.Var("V1")]), new pl3.type.Term("foldl", [new pl3.type.Var("Goal"), new pl3.type.Var("T1"), new pl3.type.Var("T2"), new pl3.type.Var("T3"), new pl3.type.Var("T4"), new pl3.type.Var("V1"), new pl3.type.Var("V")])]))
+            ],
+            // select/3
+            "select/3": [
+              new pl3.type.Rule(new pl3.type.Term("select", [new pl3.type.Var("E"), new pl3.type.Term(".", [new pl3.type.Var("E"), new pl3.type.Var("Xs")]), new pl3.type.Var("Xs")]), null),
+              new pl3.type.Rule(new pl3.type.Term("select", [new pl3.type.Var("E"), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Ys")])]), new pl3.type.Term("select", [new pl3.type.Var("E"), new pl3.type.Var("Xs"), new pl3.type.Var("Ys")]))
+            ],
+            // sum_list/2
+            "sum_list/2": [
+              new pl3.type.Rule(new pl3.type.Term("sum_list", [new pl3.type.Term("[]", []), new pl3.type.Num(0, false)]), null),
+              new pl3.type.Rule(new pl3.type.Term("sum_list", [new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]), new pl3.type.Var("S")]), new pl3.type.Term(",", [new pl3.type.Term("sum_list", [new pl3.type.Var("Xs"), new pl3.type.Var("Y")]), new pl3.type.Term("is", [new pl3.type.Var("S"), new pl3.type.Term("+", [new pl3.type.Var("X"), new pl3.type.Var("Y")])])]))
+            ],
+            // max_list/2
+            "max_list/2": [
+              new pl3.type.Rule(new pl3.type.Term("max_list", [new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Term("[]", [])]), new pl3.type.Var("X")]), null),
+              new pl3.type.Rule(new pl3.type.Term("max_list", [new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]), new pl3.type.Var("S")]), new pl3.type.Term(",", [new pl3.type.Term("max_list", [new pl3.type.Var("Xs"), new pl3.type.Var("Y")]), new pl3.type.Term(";", [new pl3.type.Term(",", [new pl3.type.Term(">=", [new pl3.type.Var("X"), new pl3.type.Var("Y")]), new pl3.type.Term(",", [new pl3.type.Term("=", [new pl3.type.Var("S"), new pl3.type.Var("X")]), new pl3.type.Term("!", [])])]), new pl3.type.Term("=", [new pl3.type.Var("S"), new pl3.type.Var("Y")])])]))
+            ],
+            // min_list/2
+            "min_list/2": [
+              new pl3.type.Rule(new pl3.type.Term("min_list", [new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Term("[]", [])]), new pl3.type.Var("X")]), null),
+              new pl3.type.Rule(new pl3.type.Term("min_list", [new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]), new pl3.type.Var("S")]), new pl3.type.Term(",", [new pl3.type.Term("min_list", [new pl3.type.Var("Xs"), new pl3.type.Var("Y")]), new pl3.type.Term(";", [new pl3.type.Term(",", [new pl3.type.Term("=<", [new pl3.type.Var("X"), new pl3.type.Var("Y")]), new pl3.type.Term(",", [new pl3.type.Term("=", [new pl3.type.Var("S"), new pl3.type.Var("X")]), new pl3.type.Term("!", [])])]), new pl3.type.Term("=", [new pl3.type.Var("S"), new pl3.type.Var("Y")])])]))
+            ],
+            // prod_list/2
+            "prod_list/2": [
+              new pl3.type.Rule(new pl3.type.Term("prod_list", [new pl3.type.Term("[]", []), new pl3.type.Num(1, false)]), null),
+              new pl3.type.Rule(new pl3.type.Term("prod_list", [new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]), new pl3.type.Var("S")]), new pl3.type.Term(",", [new pl3.type.Term("prod_list", [new pl3.type.Var("Xs"), new pl3.type.Var("Y")]), new pl3.type.Term("is", [new pl3.type.Var("S"), new pl3.type.Term("*", [new pl3.type.Var("X"), new pl3.type.Var("Y")])])]))
+            ],
+            // last/2
+            "last/2": [
+              new pl3.type.Rule(new pl3.type.Term("last", [new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Term("[]", [])]), new pl3.type.Var("X")]), null),
+              new pl3.type.Rule(new pl3.type.Term("last", [new pl3.type.Term(".", [new pl3.type.Var("_"), new pl3.type.Var("Xs")]), new pl3.type.Var("X")]), new pl3.type.Term("last", [new pl3.type.Var("Xs"), new pl3.type.Var("X")]))
+            ],
+            // prefix/2
+            "prefix/2": [
+              new pl3.type.Rule(new pl3.type.Term("prefix", [new pl3.type.Var("Part"), new pl3.type.Var("Whole")]), new pl3.type.Term("append", [new pl3.type.Var("Part"), new pl3.type.Var("_"), new pl3.type.Var("Whole")]))
+            ],
+            // nth0/3
+            "nth0/3": [
+              new pl3.type.Rule(new pl3.type.Term("nth0", [new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z")]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("var", [new pl3.type.Var("X")]), new pl3.type.Term("nth", [new pl3.type.Num(0, false), new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z"), new pl3.type.Var("_")])]), new pl3.type.Term(",", [new pl3.type.Term(">=", [new pl3.type.Var("X"), new pl3.type.Num(0, false)]), new pl3.type.Term(",", [new pl3.type.Term("nth", [new pl3.type.Num(0, false), new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z"), new pl3.type.Var("_")]), new pl3.type.Term("!", [])])])]))
+            ],
+            // nth1/3
+            "nth1/3": [
+              new pl3.type.Rule(new pl3.type.Term("nth1", [new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z")]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("var", [new pl3.type.Var("X")]), new pl3.type.Term("nth", [new pl3.type.Num(1, false), new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z"), new pl3.type.Var("_")])]), new pl3.type.Term(",", [new pl3.type.Term(">", [new pl3.type.Var("X"), new pl3.type.Num(0, false)]), new pl3.type.Term(",", [new pl3.type.Term("nth", [new pl3.type.Num(1, false), new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z"), new pl3.type.Var("_")]), new pl3.type.Term("!", [])])])]))
+            ],
+            // nth0/4
+            "nth0/4": [
+              new pl3.type.Rule(new pl3.type.Term("nth0", [new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z"), new pl3.type.Var("W")]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("var", [new pl3.type.Var("X")]), new pl3.type.Term("nth", [new pl3.type.Num(0, false), new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z"), new pl3.type.Var("W")])]), new pl3.type.Term(",", [new pl3.type.Term(">=", [new pl3.type.Var("X"), new pl3.type.Num(0, false)]), new pl3.type.Term(",", [new pl3.type.Term("nth", [new pl3.type.Num(0, false), new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z"), new pl3.type.Var("W")]), new pl3.type.Term("!", [])])])]))
+            ],
+            // nth1/4
+            "nth1/4": [
+              new pl3.type.Rule(new pl3.type.Term("nth1", [new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z"), new pl3.type.Var("W")]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("var", [new pl3.type.Var("X")]), new pl3.type.Term("nth", [new pl3.type.Num(1, false), new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z"), new pl3.type.Var("W")])]), new pl3.type.Term(",", [new pl3.type.Term(">", [new pl3.type.Var("X"), new pl3.type.Num(0, false)]), new pl3.type.Term(",", [new pl3.type.Term("nth", [new pl3.type.Num(1, false), new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z"), new pl3.type.Var("W")]), new pl3.type.Term("!", [])])])]))
+            ],
+            // nth/5
+            // DO NOT EXPORT
+            "nth/5": [
+              new pl3.type.Rule(new pl3.type.Term("nth", [new pl3.type.Var("N"), new pl3.type.Var("N"), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]), new pl3.type.Var("X"), new pl3.type.Var("Xs")]), null),
+              new pl3.type.Rule(new pl3.type.Term("nth", [new pl3.type.Var("N"), new pl3.type.Var("O"), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Xs")]), new pl3.type.Var("Y"), new pl3.type.Term(".", [new pl3.type.Var("X"), new pl3.type.Var("Ys")])]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("M"), new pl3.type.Term("+", [new pl3.type.Var("N"), new pl3.type.Num(1, false)])]), new pl3.type.Term("nth", [new pl3.type.Var("M"), new pl3.type.Var("O"), new pl3.type.Var("Xs"), new pl3.type.Var("Y"), new pl3.type.Var("Ys")])]))
+            ],
+            // length/2
+            "length/2": function(thread, point, atom) {
+              var list = atom.args[0], length = atom.args[1];
+              if (!pl3.type.is_variable(length) && !pl3.type.is_integer(length)) {
+                thread.throw_error(pl3.error.type("integer", length, atom.indicator));
+              } else if (pl3.type.is_integer(length) && length.value < 0) {
+                thread.throw_error(pl3.error.domain("not_less_than_zero", length, atom.indicator));
+              } else {
+                if (!pl3.type.is_variable(length)) {
+                  var max_length = 0;
+                  var pointer = list;
+                  while (pl3.type.is_term(pointer) && pointer.indicator == "./2") {
+                    max_length++;
+                    pointer = pointer.args[1];
+                  }
+                  if (!pl3.type.is_variable(pointer) && !pl3.type.is_empty_list(pointer))
+                    return;
+                  if (pl3.type.is_integer(length) && max_length > length)
+                    return;
+                }
+                var newgoal = new pl3.type.Term("length", [list, new pl3.type.Num(0, false), length]);
+                if (pl3.type.is_integer(length))
+                  newgoal = new pl3.type.Term(",", [newgoal, new pl3.type.Term("!", [])]);
+                thread.prepend([
+                  new pl3.type.State(
+                    point.goal.replace(newgoal),
+                    point.substitution,
+                    point
+                  )
+                ]);
+              }
+            },
+            // length/3
+            // DO NOT EXPORT
+            "length/3": [
+              new pl3.type.Rule(new pl3.type.Term("length", [new pl3.type.Term("[]", []), new pl3.type.Var("N"), new pl3.type.Var("N")]), null),
+              new pl3.type.Rule(new pl3.type.Term("length", [new pl3.type.Term(".", [new pl3.type.Var("_"), new pl3.type.Var("X")]), new pl3.type.Var("A"), new pl3.type.Var("N")]), new pl3.type.Term(",", [new pl3.type.Term("succ", [new pl3.type.Var("A"), new pl3.type.Var("B")]), new pl3.type.Term("length", [new pl3.type.Var("X"), new pl3.type.Var("B"), new pl3.type.Var("N")])]))
+            ],
+            // replicate/3
+            "replicate/3": function(thread, point, atom) {
+              var elem = atom.args[0], times = atom.args[1], list = atom.args[2];
+              if (pl3.type.is_variable(times)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_integer(times)) {
+                thread.throw_error(pl3.error.type("integer", times, atom.indicator));
+              } else if (times.value < 0) {
+                thread.throw_error(pl3.error.domain("not_less_than_zero", times, atom.indicator));
+              } else if (!pl3.type.is_variable(list) && !pl3.type.is_list(list)) {
+                thread.throw_error(pl3.error.type("list", list, atom.indicator));
+              } else {
+                var replicate = new pl3.type.Term("[]");
+                for (var i2 = 0; i2 < times.value; i2++) {
+                  replicate = new pl3.type.Term(".", [elem, replicate]);
+                }
+                thread.prepend([new pl3.type.State(point.goal.replace(new pl3.type.Term("=", [replicate, list])), point.substitution, point)]);
+              }
+            },
+            // msort/2
+            "msort/2": function(thread, point, atom) {
+              var list = atom.args[0], expected = atom.args[1];
+              if (pl3.type.is_variable(list)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_variable(expected) && !pl3.type.is_fully_list(expected)) {
+                thread.throw_error(pl3.error.type("list", expected, atom.indicator));
+              } else {
+                var arr = [];
+                var pointer = list;
+                while (pointer.indicator === "./2") {
+                  arr.push(pointer.args[0]);
+                  pointer = pointer.args[1];
+                }
+                if (pl3.type.is_variable(pointer)) {
+                  thread.throw_error(pl3.error.instantiation(atom.indicator));
+                } else if (!pl3.type.is_empty_list(pointer)) {
+                  thread.throw_error(pl3.error.type("list", list, atom.indicator));
+                } else {
+                  var sorted_arr = arr.sort(pl3.compare);
+                  var sorted_list = new pl3.type.Term("[]");
+                  for (var i2 = sorted_arr.length - 1; i2 >= 0; i2--) {
+                    sorted_list = new pl3.type.Term(".", [sorted_arr[i2], sorted_list]);
+                  }
+                  thread.prepend([new pl3.type.State(point.goal.replace(new pl3.type.Term("=", [sorted_list, expected])), point.substitution, point)]);
+                }
+              }
+            },
+            // take/3
+            "take/3": function(thread, point, atom) {
+              var number = atom.args[0], list = atom.args[1], take = atom.args[2];
+              if (pl3.type.is_variable(list) || pl3.type.is_variable(number)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_list(list)) {
+                thread.throw_error(pl3.error.type("list", list, atom.indicator));
+              } else if (!pl3.type.is_integer(number)) {
+                thread.throw_error(pl3.error.type("integer", number, atom.indicator));
+              } else if (!pl3.type.is_variable(take) && !pl3.type.is_list(take)) {
+                thread.throw_error(pl3.error.type("list", take, atom.indicator));
+              } else {
+                var i2 = number.value;
+                var arr = [];
+                var pointer = list;
+                while (i2 > 0 && pointer.indicator === "./2") {
+                  arr.push(pointer.args[0]);
+                  pointer = pointer.args[1];
+                  i2--;
+                }
+                if (i2 === 0) {
+                  var new_list = new pl3.type.Term("[]");
+                  for (var i2 = arr.length - 1; i2 >= 0; i2--) {
+                    new_list = new pl3.type.Term(".", [arr[i2], new_list]);
+                  }
+                  thread.prepend([new pl3.type.State(point.goal.replace(new pl3.type.Term("=", [new_list, take])), point.substitution, point)]);
+                }
+              }
+            },
+            // drop/3
+            "drop/3": function(thread, point, atom) {
+              var number = atom.args[0], list = atom.args[1], drop = atom.args[2];
+              if (pl3.type.is_variable(list) || pl3.type.is_variable(number)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_list(list)) {
+                thread.throw_error(pl3.error.type("list", list, atom.indicator));
+              } else if (!pl3.type.is_integer(number)) {
+                thread.throw_error(pl3.error.type("integer", number, atom.indicator));
+              } else if (!pl3.type.is_variable(drop) && !pl3.type.is_list(drop)) {
+                thread.throw_error(pl3.error.type("list", drop, atom.indicator));
+              } else {
+                var i2 = number.value;
+                var arr = [];
+                var pointer = list;
+                while (i2 > 0 && pointer.indicator === "./2") {
+                  arr.push(pointer.args[0]);
+                  pointer = pointer.args[1];
+                  i2--;
+                }
+                if (i2 === 0)
+                  thread.prepend([new pl3.type.State(point.goal.replace(new pl3.type.Term("=", [pointer, drop])), point.substitution, point)]);
+              }
+            },
+            // reverse/2
+            "reverse/2": function(thread, point, atom) {
+              var list = atom.args[0], reversed = atom.args[1];
+              var ins_list = pl3.type.is_instantiated_list(list);
+              var ins_reversed = pl3.type.is_instantiated_list(reversed);
+              if (pl3.type.is_variable(list) && pl3.type.is_variable(reversed)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_variable(list) && !pl3.type.is_fully_list(list)) {
+                thread.throw_error(pl3.error.type("list", list, atom.indicator));
+              } else if (!pl3.type.is_variable(reversed) && !pl3.type.is_fully_list(reversed)) {
+                thread.throw_error(pl3.error.type("list", reversed, atom.indicator));
+              } else if (!ins_list && !ins_reversed) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else {
+                var pointer = ins_list ? list : reversed;
+                var new_reversed = new pl3.type.Term("[]", []);
+                while (pointer.indicator === "./2") {
+                  new_reversed = new pl3.type.Term(".", [pointer.args[0], new_reversed]);
+                  pointer = pointer.args[1];
+                }
+                thread.prepend([new pl3.type.State(point.goal.replace(new pl3.type.Term("=", [new_reversed, ins_list ? reversed : list])), point.substitution, point)]);
+              }
+            },
+            // list_to_set/2
+            "list_to_set/2": function(thread, point, atom) {
+              var list = atom.args[0], lset = atom.args[1];
+              if (pl3.type.is_variable(list)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else {
+                var pointer = list;
+                var elems = [];
+                while (pointer.indicator === "./2") {
+                  elems.push(pointer.args[0]);
+                  pointer = pointer.args[1];
+                }
+                if (pl3.type.is_variable(pointer)) {
+                  thread.throw_error(pl3.error.instantiation(atom.indicator));
+                } else if (!pl3.type.is_term(pointer) || pointer.indicator !== "[]/0") {
+                  thread.throw_error(pl3.error.type("list", list, atom.indicator));
+                } else {
+                  var arr = [], nub = new pl3.type.Term("[]", []);
+                  var match;
+                  for (var i2 = 0; i2 < elems.length; i2++) {
+                    match = false;
+                    for (var j = 0; j < arr.length && !match; j++) {
+                      match = pl3.compare(elems[i2], arr[j]) === 0;
+                    }
+                    if (!match)
+                      arr.push(elems[i2]);
+                  }
+                  for (i2 = arr.length - 1; i2 >= 0; i2--)
+                    nub = new pl3.type.Term(".", [arr[i2], nub]);
+                  thread.prepend([new pl3.type.State(point.goal.replace(new pl3.type.Term("=", [lset, nub])), point.substitution, point)]);
+                }
+              }
+            }
+          };
+        };
+        var exports2 = ["append/2", "append/3", "member/2", "permutation/2", "maplist/2", "maplist/3", "maplist/4", "maplist/5", "maplist/6", "maplist/7", "maplist/8", "include/3", "exclude/3", "foldl/4", "foldl/5", "foldl/6", "foldl/7", "sum_list/2", "max_list/2", "min_list/2", "prod_list/2", "last/2", "prefix/2", "nth0/3", "nth1/3", "nth0/4", "nth1/4", "length/2", "replicate/3", "select/3", "msort/2", "take/3", "drop/3", "reverse/2", "list_to_set/2"];
+        var options = function() {
+          return {
+            meta_predicates: {
+              // exclude(1, +, -)
+              "exclude/3": new pl3.type.Term("exclude", [new pl3.type.Num(1, false), new pl3.type.Term("+"), new pl3.type.Term("-")]),
+              // foldl(3, +, +, -)
+              "foldl/4": new pl3.type.Term("foldl", [new pl3.type.Num(3, false), new pl3.type.Term("+"), new pl3.type.Term("+"), new pl3.type.Term("-")]),
+              // foldl(4, +, +, +, -)
+              "foldl/5": new pl3.type.Term("foldl", [new pl3.type.Num(4, false), new pl3.type.Term("+"), new pl3.type.Term("+"), new pl3.type.Term("+"), new pl3.type.Term("-")]),
+              // foldl(5, +, +, +, +, -)
+              "foldl/6": new pl3.type.Term("foldl", [new pl3.type.Num(5, false), new pl3.type.Term("+"), new pl3.type.Term("+"), new pl3.type.Term("+"), new pl3.type.Term("+"), new pl3.type.Term("-")]),
+              // foldl(6, +, +, +, +, +, -)
+              "foldl/7": new pl3.type.Term("foldl", [new pl3.type.Num(6, false), new pl3.type.Term("+"), new pl3.type.Term("+"), new pl3.type.Term("+"), new pl3.type.Term("+"), new pl3.type.Term("+"), new pl3.type.Term("-")]),
+              // exclude(1, +, -)
+              "include/3": new pl3.type.Term("include", [new pl3.type.Num(1, false), new pl3.type.Term("+"), new pl3.type.Term("-")]),
+              // maplist(1, ?)
+              "maplist/2": new pl3.type.Term("maplist", [new pl3.type.Num(1, false), new pl3.type.Term("?")]),
+              // maplist(2, ?, ?)
+              "maplist/3": new pl3.type.Term("maplist", [new pl3.type.Num(2, false), new pl3.type.Term("?"), new pl3.type.Term("?")]),
+              // maplist(3, ?, ?, ?)
+              "maplist/4": new pl3.type.Term("maplist", [new pl3.type.Num(3, false), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?")]),
+              // maplist(4, ?, ?, ?, ?)
+              "maplist/5": new pl3.type.Term("maplist", [new pl3.type.Num(4, false), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?")]),
+              // maplist(5, ?, ?, ?, ?, ?)
+              "maplist/6": new pl3.type.Term("maplist", [new pl3.type.Num(5, false), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?")]),
+              // maplist(6, ?, ?, ?, ?, ?, ?)
+              "maplist/7": new pl3.type.Term("maplist", [new pl3.type.Num(6, false), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?")]),
+              // maplist(7, ?, ?, ?, ?, ?, ?, ?)
+              "maplist/8": new pl3.type.Term("maplist", [new pl3.type.Num(7, false), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?"), new pl3.type.Term("?")])
+            }
+          };
+        };
+        if (typeof module !== "undefined") {
+          module.exports = function(p) {
+            pl3 = p;
+            new pl3.type.Module("lists", predicates(), exports2, options());
+          };
+        } else {
+          new pl3.type.Module("lists", predicates(), exports2, options());
+        }
+      })(pl2);
+    }
+  });
 
-`,s+="You should have received a copy of the BSD 3-Clause License along with this program. If not, see https://opensource.org/licenses/BSD-3-Clause",r.prepend([new h(a.goal.replace(new w("write",[new w(s,[])])),a.substitution,a)])}},"all",{meta_predicates:{"$findall/4":new w("$findall",[new w("?"),new S(0,!1),new w("-"),new w("?")]),"$bagof/3":new w("$bagof",[new w("?"),new w("^"),new w("-")]),"$setof/3":new w("$setof",[new w("?"),new w("^"),new w("-")]),"$if/3":new w("$if",[new S(0,!1),new S(0,!1),new S(0,!1)]),";/2":new w(";",[new S(0,!1),new S(0,!1)]),"->/2":new w("->",[new S(0,!1),new S(0,!1)]),"*->/2":new w("*->",[new S(0,!1),new S(0,!1)]),"\\+/1":new w("\\+",[new S(0,!1)]),"abolish/1":new w("abolish",[new w(":")]),"asserta/1":new w("asserta",[new w(":")]),"assertz/1":new w("assertz",[new w(":")]),"bagof/3":new w("bagof",[new w("?"),new w("^"),new w("-")]),"call/1":new w("call",[new S(0,!1)]),"call/2":new w("call",[new S(1,!1),new w("?")]),"call/3":new w("call",[new S(2,!1),new w("?"),new w("?")]),"call/4":new w("call",[new S(3,!1),new w("?"),new w("?"),new w("?")]),"call/5":new w("call",[new S(4,!1),new w("?"),new w("?"),new w("?"),new w("?")]),"call/6":new w("call",[new S(5,!1),new w("?"),new w("?"),new w("?"),new w("?"),new w("?")]),"call/7":new w("call",[new S(6,!1),new w("?"),new w("?"),new w("?"),new w("?"),new w("?"),new w("?")]),"call/8":new w("call",[new S(6,!1),new w("?"),new w("?"),new w("?"),new w("?"),new w("?"),new w("?"),new w("?")]),"call_cleanup/2":new w("call_cleanup",[new S(0,!1),new S(0,!1)]),"catch/3":new w("catch",[new S(0,!1),new w("?"),new S(0,!1)]),"consult/1":new w("consult",[new w(":")]),"clause/2":new w("clause",[new w(":"),new w("?")]),"current_predicate/2":new w("current_predicate",[new w("?"),new w(":")]),"findall/3":new w("findall",[new w("?"),new S(0,!1),new w("-")]),"findall/4":new w("findall",[new w("?"),new S(0,!1),new w("-"),new w("?")]),"forall/2":new w("forall",[new S(0,!1),new S(0,!1)]),"listing/1":new w("listing",[new w(":")]),"once/1":new w("once",[new S(0,!1)]),"phrase/2":new w("phrase",[new w(":"),new w("?")]),"phrase/3":new w("phrase",[new w(":"),new w("?"),new w("?")]),"retract/1":new w("retract",[new w(":")]),"retractall/1":new w("retractall",[new w(":")]),"setup_call_cleanup/3":new w("setup_call_cleanup",[new S(0,!1),new S(0,!1),new S(0,!1)]),"setof/3":new w("setof",[new w("?"),new w("^"),new w("-")])}}),typeof Re!="undefined"?Re.exports=n:window.pl=n})()});var ke=me((rr,Ne)=>{var He;(function(e){var D=function(){return{"append/2":[new e.type.Rule(new e.type.Term("append",[new e.type.Var("X"),new e.type.Var("L")]),new e.type.Term("foldl",[new e.type.Term("append",[]),new e.type.Var("X"),new e.type.Term("[]",[]),new e.type.Var("L")]))],"append/3":[new e.type.Rule(new e.type.Term("append",[new e.type.Term("[]",[]),new e.type.Var("X"),new e.type.Var("X")]),null),new e.type.Rule(new e.type.Term("append",[new e.type.Term(".",[new e.type.Var("H"),new e.type.Var("T")]),new e.type.Var("X"),new e.type.Term(".",[new e.type.Var("H"),new e.type.Var("S")])]),new e.type.Term("append",[new e.type.Var("T"),new e.type.Var("X"),new e.type.Var("S")]))],"member/2":[new e.type.Rule(new e.type.Term("member",[new e.type.Var("X"),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("_")])]),null),new e.type.Rule(new e.type.Term("member",[new e.type.Var("X"),new e.type.Term(".",[new e.type.Var("_"),new e.type.Var("Xs")])]),new e.type.Term("member",[new e.type.Var("X"),new e.type.Var("Xs")]))],"permutation/2":[new e.type.Rule(new e.type.Term("permutation",[new e.type.Term("[]",[]),new e.type.Term("[]",[])]),null),new e.type.Rule(new e.type.Term("permutation",[new e.type.Term(".",[new e.type.Var("H"),new e.type.Var("T")]),new e.type.Var("S")]),new e.type.Term(",",[new e.type.Term("permutation",[new e.type.Var("T"),new e.type.Var("P")]),new e.type.Term(",",[new e.type.Term("append",[new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("P")]),new e.type.Term("append",[new e.type.Var("X"),new e.type.Term(".",[new e.type.Var("H"),new e.type.Var("Y")]),new e.type.Var("S")])])]))],"maplist/2":[new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("_"),new e.type.Term("[]",[])]),null),new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")])]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("P"),new e.type.Var("X")]),new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Var("Xs")])]))],"maplist/3":[new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[])]),null),new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("A"),new e.type.Var("As")]),new e.type.Term(".",[new e.type.Var("B"),new e.type.Var("Bs")])]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("P"),new e.type.Var("A"),new e.type.Var("B")]),new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Var("As"),new e.type.Var("Bs")])]))],"maplist/4":[new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[])]),null),new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("A"),new e.type.Var("As")]),new e.type.Term(".",[new e.type.Var("B"),new e.type.Var("Bs")]),new e.type.Term(".",[new e.type.Var("C"),new e.type.Var("Cs")])]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("P"),new e.type.Var("A"),new e.type.Var("B"),new e.type.Var("C")]),new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Var("As"),new e.type.Var("Bs"),new e.type.Var("Cs")])]))],"maplist/5":[new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[])]),null),new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("A"),new e.type.Var("As")]),new e.type.Term(".",[new e.type.Var("B"),new e.type.Var("Bs")]),new e.type.Term(".",[new e.type.Var("C"),new e.type.Var("Cs")]),new e.type.Term(".",[new e.type.Var("D"),new e.type.Var("Ds")])]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("P"),new e.type.Var("A"),new e.type.Var("B"),new e.type.Var("C"),new e.type.Var("D")]),new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Var("As"),new e.type.Var("Bs"),new e.type.Var("Cs"),new e.type.Var("Ds")])]))],"maplist/6":[new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[])]),null),new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("A"),new e.type.Var("As")]),new e.type.Term(".",[new e.type.Var("B"),new e.type.Var("Bs")]),new e.type.Term(".",[new e.type.Var("C"),new e.type.Var("Cs")]),new e.type.Term(".",[new e.type.Var("D"),new e.type.Var("Ds")]),new e.type.Term(".",[new e.type.Var("E"),new e.type.Var("Es")])]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("P"),new e.type.Var("A"),new e.type.Var("B"),new e.type.Var("C"),new e.type.Var("D"),new e.type.Var("E")]),new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Var("As"),new e.type.Var("Bs"),new e.type.Var("Cs"),new e.type.Var("Ds"),new e.type.Var("Es")])]))],"maplist/7":[new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[])]),null),new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("A"),new e.type.Var("As")]),new e.type.Term(".",[new e.type.Var("B"),new e.type.Var("Bs")]),new e.type.Term(".",[new e.type.Var("C"),new e.type.Var("Cs")]),new e.type.Term(".",[new e.type.Var("D"),new e.type.Var("Ds")]),new e.type.Term(".",[new e.type.Var("E"),new e.type.Var("Es")]),new e.type.Term(".",[new e.type.Var("F"),new e.type.Var("Fs")])]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("P"),new e.type.Var("A"),new e.type.Var("B"),new e.type.Var("C"),new e.type.Var("D"),new e.type.Var("E"),new e.type.Var("F")]),new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Var("As"),new e.type.Var("Bs"),new e.type.Var("Cs"),new e.type.Var("Ds"),new e.type.Var("Es"),new e.type.Var("Fs")])]))],"maplist/8":[new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[])]),null),new e.type.Rule(new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("A"),new e.type.Var("As")]),new e.type.Term(".",[new e.type.Var("B"),new e.type.Var("Bs")]),new e.type.Term(".",[new e.type.Var("C"),new e.type.Var("Cs")]),new e.type.Term(".",[new e.type.Var("D"),new e.type.Var("Ds")]),new e.type.Term(".",[new e.type.Var("E"),new e.type.Var("Es")]),new e.type.Term(".",[new e.type.Var("F"),new e.type.Var("Fs")]),new e.type.Term(".",[new e.type.Var("G"),new e.type.Var("Gs")])]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("P"),new e.type.Var("A"),new e.type.Var("B"),new e.type.Var("C"),new e.type.Var("D"),new e.type.Var("E"),new e.type.Var("F"),new e.type.Var("G")]),new e.type.Term("maplist",[new e.type.Var("P"),new e.type.Var("As"),new e.type.Var("Bs"),new e.type.Var("Cs"),new e.type.Var("Ds"),new e.type.Var("Es"),new e.type.Var("Fs"),new e.type.Var("Gs")])]))],"include/3":[new e.type.Rule(new e.type.Term("include",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[])]),null),new e.type.Rule(new e.type.Term("include",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")]),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("S")])]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("P"),new e.type.Var("X")]),new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("include",[new e.type.Var("P"),new e.type.Var("Xs"),new e.type.Var("S")])])])),new e.type.Rule(new e.type.Term("include",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("_"),new e.type.Var("Xs")]),new e.type.Var("S")]),new e.type.Term("include",[new e.type.Var("P"),new e.type.Var("Xs"),new e.type.Var("S")]))],"exclude/3":[new e.type.Rule(new e.type.Term("exclude",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[])]),null),new e.type.Rule(new e.type.Term("exclude",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")]),new e.type.Var("S")]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("P"),new e.type.Var("X")]),new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("exclude",[new e.type.Var("P"),new e.type.Var("Xs"),new e.type.Var("S")])])])),new e.type.Rule(new e.type.Term("exclude",[new e.type.Var("P"),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")]),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("S")])]),new e.type.Term("exclude",[new e.type.Var("P"),new e.type.Var("Xs"),new e.type.Var("S")]))],"foldl/4":[new e.type.Rule(new e.type.Term("foldl",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Var("V"),new e.type.Var("V")]),null),new e.type.Rule(new e.type.Term("foldl",[new e.type.Var("Goal"),new e.type.Term(".",[new e.type.Var("H"),new e.type.Var("T")]),new e.type.Var("V0"),new e.type.Var("V")]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("Goal"),new e.type.Var("H"),new e.type.Var("V0"),new e.type.Var("V1")]),new e.type.Term("foldl",[new e.type.Var("Goal"),new e.type.Var("T"),new e.type.Var("V1"),new e.type.Var("V")])]))],"foldl/5":[new e.type.Rule(new e.type.Term("foldl",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Var("V"),new e.type.Var("V")]),null),new e.type.Rule(new e.type.Term("foldl",[new e.type.Var("Goal"),new e.type.Term(".",[new e.type.Var("H1"),new e.type.Var("T1")]),new e.type.Term(".",[new e.type.Var("H2"),new e.type.Var("T2")]),new e.type.Var("V0"),new e.type.Var("V")]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("Goal"),new e.type.Var("H1"),new e.type.Var("H2"),new e.type.Var("V0"),new e.type.Var("V1")]),new e.type.Term("foldl",[new e.type.Var("Goal"),new e.type.Var("T1"),new e.type.Var("T2"),new e.type.Var("V1"),new e.type.Var("V")])]))],"foldl/6":[new e.type.Rule(new e.type.Term("foldl",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Var("V"),new e.type.Var("V")]),null),new e.type.Rule(new e.type.Term("foldl",[new e.type.Var("Goal"),new e.type.Term(".",[new e.type.Var("H1"),new e.type.Var("T1")]),new e.type.Term(".",[new e.type.Var("H2"),new e.type.Var("T2")]),new e.type.Term(".",[new e.type.Var("H3"),new e.type.Var("T3")]),new e.type.Var("V0"),new e.type.Var("V")]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("Goal"),new e.type.Var("H1"),new e.type.Var("H2"),new e.type.Var("H3"),new e.type.Var("V0"),new e.type.Var("V1")]),new e.type.Term("foldl",[new e.type.Var("Goal"),new e.type.Var("T1"),new e.type.Var("T2"),new e.type.Var("T3"),new e.type.Var("V1"),new e.type.Var("V")])]))],"foldl/7":[new e.type.Rule(new e.type.Term("foldl",[new e.type.Var("_"),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Term("[]",[]),new e.type.Var("V"),new e.type.Var("V")]),null),new e.type.Rule(new e.type.Term("foldl",[new e.type.Var("Goal"),new e.type.Term(".",[new e.type.Var("H1"),new e.type.Var("T1")]),new e.type.Term(".",[new e.type.Var("H2"),new e.type.Var("T2")]),new e.type.Term(".",[new e.type.Var("H3"),new e.type.Var("T3")]),new e.type.Term(".",[new e.type.Var("H4"),new e.type.Var("T4")]),new e.type.Var("V0"),new e.type.Var("V")]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("Goal"),new e.type.Var("H1"),new e.type.Var("H2"),new e.type.Var("H3"),new e.type.Var("H4"),new e.type.Var("V0"),new e.type.Var("V1")]),new e.type.Term("foldl",[new e.type.Var("Goal"),new e.type.Var("T1"),new e.type.Var("T2"),new e.type.Var("T3"),new e.type.Var("T4"),new e.type.Var("V1"),new e.type.Var("V")])]))],"select/3":[new e.type.Rule(new e.type.Term("select",[new e.type.Var("E"),new e.type.Term(".",[new e.type.Var("E"),new e.type.Var("Xs")]),new e.type.Var("Xs")]),null),new e.type.Rule(new e.type.Term("select",[new e.type.Var("E"),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")]),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Ys")])]),new e.type.Term("select",[new e.type.Var("E"),new e.type.Var("Xs"),new e.type.Var("Ys")]))],"sum_list/2":[new e.type.Rule(new e.type.Term("sum_list",[new e.type.Term("[]",[]),new e.type.Num(0,!1)]),null),new e.type.Rule(new e.type.Term("sum_list",[new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")]),new e.type.Var("S")]),new e.type.Term(",",[new e.type.Term("sum_list",[new e.type.Var("Xs"),new e.type.Var("Y")]),new e.type.Term("is",[new e.type.Var("S"),new e.type.Term("+",[new e.type.Var("X"),new e.type.Var("Y")])])]))],"max_list/2":[new e.type.Rule(new e.type.Term("max_list",[new e.type.Term(".",[new e.type.Var("X"),new e.type.Term("[]",[])]),new e.type.Var("X")]),null),new e.type.Rule(new e.type.Term("max_list",[new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")]),new e.type.Var("S")]),new e.type.Term(",",[new e.type.Term("max_list",[new e.type.Var("Xs"),new e.type.Var("Y")]),new e.type.Term(";",[new e.type.Term(",",[new e.type.Term(">=",[new e.type.Var("X"),new e.type.Var("Y")]),new e.type.Term(",",[new e.type.Term("=",[new e.type.Var("S"),new e.type.Var("X")]),new e.type.Term("!",[])])]),new e.type.Term("=",[new e.type.Var("S"),new e.type.Var("Y")])])]))],"min_list/2":[new e.type.Rule(new e.type.Term("min_list",[new e.type.Term(".",[new e.type.Var("X"),new e.type.Term("[]",[])]),new e.type.Var("X")]),null),new e.type.Rule(new e.type.Term("min_list",[new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")]),new e.type.Var("S")]),new e.type.Term(",",[new e.type.Term("min_list",[new e.type.Var("Xs"),new e.type.Var("Y")]),new e.type.Term(";",[new e.type.Term(",",[new e.type.Term("=<",[new e.type.Var("X"),new e.type.Var("Y")]),new e.type.Term(",",[new e.type.Term("=",[new e.type.Var("S"),new e.type.Var("X")]),new e.type.Term("!",[])])]),new e.type.Term("=",[new e.type.Var("S"),new e.type.Var("Y")])])]))],"prod_list/2":[new e.type.Rule(new e.type.Term("prod_list",[new e.type.Term("[]",[]),new e.type.Num(1,!1)]),null),new e.type.Rule(new e.type.Term("prod_list",[new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")]),new e.type.Var("S")]),new e.type.Term(",",[new e.type.Term("prod_list",[new e.type.Var("Xs"),new e.type.Var("Y")]),new e.type.Term("is",[new e.type.Var("S"),new e.type.Term("*",[new e.type.Var("X"),new e.type.Var("Y")])])]))],"last/2":[new e.type.Rule(new e.type.Term("last",[new e.type.Term(".",[new e.type.Var("X"),new e.type.Term("[]",[])]),new e.type.Var("X")]),null),new e.type.Rule(new e.type.Term("last",[new e.type.Term(".",[new e.type.Var("_"),new e.type.Var("Xs")]),new e.type.Var("X")]),new e.type.Term("last",[new e.type.Var("Xs"),new e.type.Var("X")]))],"prefix/2":[new e.type.Rule(new e.type.Term("prefix",[new e.type.Var("Part"),new e.type.Var("Whole")]),new e.type.Term("append",[new e.type.Var("Part"),new e.type.Var("_"),new e.type.Var("Whole")]))],"nth0/3":[new e.type.Rule(new e.type.Term("nth0",[new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z")]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("var",[new e.type.Var("X")]),new e.type.Term("nth",[new e.type.Num(0,!1),new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z"),new e.type.Var("_")])]),new e.type.Term(",",[new e.type.Term(">=",[new e.type.Var("X"),new e.type.Num(0,!1)]),new e.type.Term(",",[new e.type.Term("nth",[new e.type.Num(0,!1),new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z"),new e.type.Var("_")]),new e.type.Term("!",[])])])]))],"nth1/3":[new e.type.Rule(new e.type.Term("nth1",[new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z")]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("var",[new e.type.Var("X")]),new e.type.Term("nth",[new e.type.Num(1,!1),new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z"),new e.type.Var("_")])]),new e.type.Term(",",[new e.type.Term(">",[new e.type.Var("X"),new e.type.Num(0,!1)]),new e.type.Term(",",[new e.type.Term("nth",[new e.type.Num(1,!1),new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z"),new e.type.Var("_")]),new e.type.Term("!",[])])])]))],"nth0/4":[new e.type.Rule(new e.type.Term("nth0",[new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z"),new e.type.Var("W")]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("var",[new e.type.Var("X")]),new e.type.Term("nth",[new e.type.Num(0,!1),new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z"),new e.type.Var("W")])]),new e.type.Term(",",[new e.type.Term(">=",[new e.type.Var("X"),new e.type.Num(0,!1)]),new e.type.Term(",",[new e.type.Term("nth",[new e.type.Num(0,!1),new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z"),new e.type.Var("W")]),new e.type.Term("!",[])])])]))],"nth1/4":[new e.type.Rule(new e.type.Term("nth1",[new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z"),new e.type.Var("W")]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("var",[new e.type.Var("X")]),new e.type.Term("nth",[new e.type.Num(1,!1),new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z"),new e.type.Var("W")])]),new e.type.Term(",",[new e.type.Term(">",[new e.type.Var("X"),new e.type.Num(0,!1)]),new e.type.Term(",",[new e.type.Term("nth",[new e.type.Num(1,!1),new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z"),new e.type.Var("W")]),new e.type.Term("!",[])])])]))],"nth/5":[new e.type.Rule(new e.type.Term("nth",[new e.type.Var("N"),new e.type.Var("N"),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")]),new e.type.Var("X"),new e.type.Var("Xs")]),null),new e.type.Rule(new e.type.Term("nth",[new e.type.Var("N"),new e.type.Var("O"),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Xs")]),new e.type.Var("Y"),new e.type.Term(".",[new e.type.Var("X"),new e.type.Var("Ys")])]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("M"),new e.type.Term("+",[new e.type.Var("N"),new e.type.Num(1,!1)])]),new e.type.Term("nth",[new e.type.Var("M"),new e.type.Var("O"),new e.type.Var("Xs"),new e.type.Var("Y"),new e.type.Var("Ys")])]))],"length/2":function(m,d,g){var T=g.args[0],l=g.args[1];if(!e.type.is_variable(l)&&!e.type.is_integer(l))m.throw_error(e.error.type("integer",l,g.indicator));else if(e.type.is_integer(l)&&l.value<0)m.throw_error(e.error.domain("not_less_than_zero",l,g.indicator));else{if(!e.type.is_variable(l)){for(var x=0,N=T;e.type.is_term(N)&&N.indicator=="./2";)x++,N=N.args[1];if(!e.type.is_variable(N)&&!e.type.is_empty_list(N)||e.type.is_integer(l)&&x>l)return}var b=new e.type.Term("length",[T,new e.type.Num(0,!1),l]);e.type.is_integer(l)&&(b=new e.type.Term(",",[b,new e.type.Term("!",[])])),m.prepend([new e.type.State(d.goal.replace(b),d.substitution,d)])}},"length/3":[new e.type.Rule(new e.type.Term("length",[new e.type.Term("[]",[]),new e.type.Var("N"),new e.type.Var("N")]),null),new e.type.Rule(new e.type.Term("length",[new e.type.Term(".",[new e.type.Var("_"),new e.type.Var("X")]),new e.type.Var("A"),new e.type.Var("N")]),new e.type.Term(",",[new e.type.Term("succ",[new e.type.Var("A"),new e.type.Var("B")]),new e.type.Term("length",[new e.type.Var("X"),new e.type.Var("B"),new e.type.Var("N")])]))],"replicate/3":function(m,d,g){var T=g.args[0],l=g.args[1],x=g.args[2];if(e.type.is_variable(l))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_integer(l))m.throw_error(e.error.type("integer",l,g.indicator));else if(l.value<0)m.throw_error(e.error.domain("not_less_than_zero",l,g.indicator));else if(!e.type.is_variable(x)&&!e.type.is_list(x))m.throw_error(e.error.type("list",x,g.indicator));else{for(var N=new e.type.Term("[]"),b=0;b<l.value;b++)N=new e.type.Term(".",[T,N]);m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[N,x])),d.substitution,d)])}},"msort/2":function(m,d,g){var T=g.args[0],l=g.args[1];if(e.type.is_variable(T))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_variable(l)&&!e.type.is_fully_list(l))m.throw_error(e.error.type("list",l,g.indicator));else{for(var x=[],N=T;N.indicator==="./2";)x.push(N.args[0]),N=N.args[1];if(e.type.is_variable(N))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_empty_list(N))m.throw_error(e.error.type("list",T,g.indicator));else{for(var b=x.sort(e.compare),X=new e.type.Term("[]"),Y=b.length-1;Y>=0;Y--)X=new e.type.Term(".",[b[Y],X]);m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[X,l])),d.substitution,d)])}}},"take/3":function(m,d,g){var T=g.args[0],l=g.args[1],x=g.args[2];if(e.type.is_variable(l)||e.type.is_variable(T))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_list(l))m.throw_error(e.error.type("list",l,g.indicator));else if(!e.type.is_integer(T))m.throw_error(e.error.type("integer",T,g.indicator));else if(!e.type.is_variable(x)&&!e.type.is_list(x))m.throw_error(e.error.type("list",x,g.indicator));else{for(var N=T.value,b=[],X=l;N>0&&X.indicator==="./2";)b.push(X.args[0]),X=X.args[1],N--;if(N===0){for(var Y=new e.type.Term("[]"),N=b.length-1;N>=0;N--)Y=new e.type.Term(".",[b[N],Y]);m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[Y,x])),d.substitution,d)])}}},"drop/3":function(m,d,g){var T=g.args[0],l=g.args[1],x=g.args[2];if(e.type.is_variable(l)||e.type.is_variable(T))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_list(l))m.throw_error(e.error.type("list",l,g.indicator));else if(!e.type.is_integer(T))m.throw_error(e.error.type("integer",T,g.indicator));else if(!e.type.is_variable(x)&&!e.type.is_list(x))m.throw_error(e.error.type("list",x,g.indicator));else{for(var N=T.value,b=[],X=l;N>0&&X.indicator==="./2";)b.push(X.args[0]),X=X.args[1],N--;N===0&&m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[X,x])),d.substitution,d)])}},"reverse/2":function(m,d,g){var T=g.args[0],l=g.args[1],x=e.type.is_instantiated_list(T),N=e.type.is_instantiated_list(l);if(e.type.is_variable(T)&&e.type.is_variable(l))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_variable(T)&&!e.type.is_fully_list(T))m.throw_error(e.error.type("list",T,g.indicator));else if(!e.type.is_variable(l)&&!e.type.is_fully_list(l))m.throw_error(e.error.type("list",l,g.indicator));else if(!x&&!N)m.throw_error(e.error.instantiation(g.indicator));else{for(var b=x?T:l,X=new e.type.Term("[]",[]);b.indicator==="./2";)X=new e.type.Term(".",[b.args[0],X]),b=b.args[1];m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[X,x?l:T])),d.substitution,d)])}},"list_to_set/2":function(m,d,g){var T=g.args[0],l=g.args[1];if(e.type.is_variable(T))m.throw_error(e.error.instantiation(g.indicator));else{for(var x=T,N=[];x.indicator==="./2";)N.push(x.args[0]),x=x.args[1];if(e.type.is_variable(x))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_term(x)||x.indicator!=="[]/0")m.throw_error(e.error.type("list",T,g.indicator));else{for(var b=[],X=new e.type.Term("[]",[]),Y,J=0;J<N.length;J++){Y=!1;for(var H=0;H<b.length&&!Y;H++)Y=e.compare(N[J],b[H])===0;Y||b.push(N[J])}for(J=b.length-1;J>=0;J--)X=new e.type.Term(".",[b[J],X]);m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[l,X])),d.substitution,d)])}}}}},G=["append/2","append/3","member/2","permutation/2","maplist/2","maplist/3","maplist/4","maplist/5","maplist/6","maplist/7","maplist/8","include/3","exclude/3","foldl/4","foldl/5","foldl/6","foldl/7","sum_list/2","max_list/2","min_list/2","prod_list/2","last/2","prefix/2","nth0/3","nth1/3","nth0/4","nth1/4","length/2","replicate/3","select/3","msort/2","take/3","drop/3","reverse/2","list_to_set/2"],P=function(){return{meta_predicates:{"exclude/3":new e.type.Term("exclude",[new e.type.Num(1,!1),new e.type.Term("+"),new e.type.Term("-")]),"foldl/4":new e.type.Term("foldl",[new e.type.Num(3,!1),new e.type.Term("+"),new e.type.Term("+"),new e.type.Term("-")]),"foldl/5":new e.type.Term("foldl",[new e.type.Num(4,!1),new e.type.Term("+"),new e.type.Term("+"),new e.type.Term("+"),new e.type.Term("-")]),"foldl/6":new e.type.Term("foldl",[new e.type.Num(5,!1),new e.type.Term("+"),new e.type.Term("+"),new e.type.Term("+"),new e.type.Term("+"),new e.type.Term("-")]),"foldl/7":new e.type.Term("foldl",[new e.type.Num(6,!1),new e.type.Term("+"),new e.type.Term("+"),new e.type.Term("+"),new e.type.Term("+"),new e.type.Term("+"),new e.type.Term("-")]),"include/3":new e.type.Term("include",[new e.type.Num(1,!1),new e.type.Term("+"),new e.type.Term("-")]),"maplist/2":new e.type.Term("maplist",[new e.type.Num(1,!1),new e.type.Term("?")]),"maplist/3":new e.type.Term("maplist",[new e.type.Num(2,!1),new e.type.Term("?"),new e.type.Term("?")]),"maplist/4":new e.type.Term("maplist",[new e.type.Num(3,!1),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?")]),"maplist/5":new e.type.Term("maplist",[new e.type.Num(4,!1),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?")]),"maplist/6":new e.type.Term("maplist",[new e.type.Num(5,!1),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?")]),"maplist/7":new e.type.Term("maplist",[new e.type.Num(6,!1),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?")]),"maplist/8":new e.type.Term("maplist",[new e.type.Num(7,!1),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?"),new e.type.Term("?")])}}};typeof Ne!="undefined"?Ne.exports=function(m){e=m,new e.type.Module("lists",D(),G,P())}:new e.type.Module("lists",D(),G,P())})(He)});var Fe=me((nr,Ae)=>{var Ze;(function(e){var D="charsio",G=function(){return{"write_term_to_chars/3":function(m,d,g){var T=g.args[0],l=g.args[1],x=g.args[2];if(!e.type.is_variable(x)&&!e.type.is_list(x))m.throw_error(e.error.type("list",x,g.indicator));else if(e.type.is_variable(l))m.throw_error(e.error.instantiation(g.indicator));else{if(!e.type.is_variable(x)){for(var X=x;e.type.is_term(X)&&X.indicator==="./2";){var N=X.args[0];if(!e.type.is_character(N)){m.throw_error(e.error.type("character",N,g.indicator));return}X=X.args[1]}if(!e.type.is_variable(X)&&!e.type.is_empty_list(X)){m.throw_error(e.error.type("list",x,g.indicator));return}}for(var b={},X=l,Y;e.type.is_term(X)&&X.indicator==="./2";){if(Y=X.args[0],e.type.is_variable(Y)){m.throw_error(e.error.instantiation(g.indicator));return}else if(!e.type.is_write_option(Y)){m.throw_error(e.error.domain("write_option",Y,g.indicator));return}b[Y.id]=Y.args[0].id==="true",X=X.args[1]}if(X.indicator!=="[]/0"){e.type.is_variable(X)?m.throw_error(e.error.instantiation(g.indicator)):m.throw_error(e.error.type("list",l,g.indicator));return}else{b.session=m.session;for(var J=T.toString(b),H=new e.type.Term("[]",[]),U=e.utils.stringLength(J)-1;U>=0;U--)H=new e.type.Term(".",[new e.type.Term(e.utils.fromCodePoint(e.utils.codePointAt(J,U)),[]),H]);m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[x,H])),d.substitution,d)])}}},"fabricate_var_name/3":[new e.type.Rule(new e.type.Term("fabricate_var_name",[new e.type.Var("VarType"),new e.type.Var("VarName"),new e.type.Var("N")]),new e.type.Term(",",[new e.type.Term("char_code",[new e.type.Term("A",[]),new e.type.Var("AC")]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("LN"),new e.type.Term("+",[new e.type.Term("mod",[new e.type.Var("N"),new e.type.Num(26,!1)]),new e.type.Var("AC")])]),new e.type.Term(",",[new e.type.Term("char_code",[new e.type.Var("LC"),new e.type.Var("LN")]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("NN"),new e.type.Term("//",[new e.type.Var("N"),new e.type.Num(26,!1)])]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("=:=",[new e.type.Var("NN"),new e.type.Num(0,!1)]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("==",[new e.type.Var("VarType"),new e.type.Term("fabricated",[])]),new e.type.Term("atom_chars",[new e.type.Var("VarName"),new e.type.Term(".",[new e.type.Term("_",[]),new e.type.Term(".",[new e.type.Var("LC"),new e.type.Term("[]",[])])])])]),new e.type.Term("->",[new e.type.Term("==",[new e.type.Var("VarType"),new e.type.Term("numbervars",[])]),new e.type.Term("atom_chars",[new e.type.Var("VarName"),new e.type.Term(".",[new e.type.Var("LC"),new e.type.Term("[]",[])])])])])]),new e.type.Term(",",[new e.type.Term("number_chars",[new e.type.Var("NN"),new e.type.Var("NNChars")]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("==",[new e.type.Var("VarType"),new e.type.Term("fabricated",[])]),new e.type.Term("atom_chars",[new e.type.Var("VarName"),new e.type.Term(".",[new e.type.Term("_",[]),new e.type.Term(".",[new e.type.Var("LC"),new e.type.Var("NNChars")])])])]),new e.type.Term("->",[new e.type.Term("==",[new e.type.Var("VarType"),new e.type.Term("numbervars",[])]),new e.type.Term("atom_chars",[new e.type.Var("VarName"),new e.type.Term(".",[new e.type.Var("LC"),new e.type.Var("NNChars")])])])])])])])])])]))]}},P=["write_term_to_chars/3"];typeof Ae!="undefined"?Ae.exports=function(m){e=m,new e.type.Module(D,G(),P)}:new e.type.Module(D,G(),P)})(Ze)});var De=me((tr,Xe)=>{var Ue;(function(e){var D=function(){return{"global/1":function(m,d,g){m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[g.args[0],e.fromJavaScript.apply(e.__env)])),d.substitution,d)])},"apply/3":[new e.type.Rule(new e.type.Term("apply",[new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z")]),new e.type.Term(",",[new e.type.Term("global",[new e.type.Var("G")]),new e.type.Term("apply",[new e.type.Var("G"),new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z")])]))],"apply/4":function(m,d,g){var T=g.args[0],l=g.args[1],x=g.args[2],N=g.args[3];e.type.is_variable(T)||e.type.is_variable(l)||e.type.is_variable(x)?m.throw_error(e.error.instantiation(g.indicator)):!e.type.is_atom(l)&&(!e.type.is_js_object(l)||typeof l.value!="function")?m.throw_error(e.error.type("atom_or_JSValueFUNCTION",l,g.indicator)):e.type.is_list(x)||m.throw_error(e.error.type("list",x,g.indicator));var b=T.toJavaScript(),X=e.type.is_atom(l)?b[l.id]:l.toJavaScript();if(typeof X=="function"){for(var Y=x,J,H=[];Y.indicator==="./2";){if(J=Y.args[0].toJavaScript(),J===void 0){m.throw_error(e.error.domain("javascript_object",Y.args[0],g.indicator));return}H.push(J),Y=Y.args[1]}if(e.type.is_variable(Y)){m.throw_error(e.error.instantiation(g.indicator));return}else if(Y.indicator!=="[]/0"){m.throw_error(e.error.type("list",x,g.indicator));return}var U;try{U=X.apply(b,H)}catch(te){m.throw_error(e.error.javascript(te.toString(),g.indicator));return}U=e.fromJavaScript.apply(U),m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[U,N])),d.substitution,d)])}},"prop/2":[new e.type.Rule(new e.type.Term("prop",[new e.type.Var("X"),new e.type.Var("Y")]),new e.type.Term("get_prop",[new e.type.Var("X"),new e.type.Var("Y")]))],"prop/3":[new e.type.Rule(new e.type.Term("prop",[new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z")]),new e.type.Term("get_prop",[new e.type.Var("X"),new e.type.Var("Y"),new e.type.Var("Z")]))],"get_prop/2":[new e.type.Rule(new e.type.Term("get_prop",[new e.type.Var("X"),new e.type.Var("Y")]),new e.type.Term(",",[new e.type.Term("global",[new e.type.Var("G")]),new e.type.Term("get_prop",[new e.type.Var("G"),new e.type.Var("X"),new e.type.Var("Y")])]))],"get_prop/3":function(m,d,g){var T=g.args[0],l=g.args[1],x=g.args[2];if(e.type.is_variable(T))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_variable(l)&&!e.type.is_atom(l))m.throw_error(e.error.type("atom",l,g.indicator));else if(e.type.is_atom(l)){var N=T.toJavaScript()[l.id];N!==void 0&&(N=e.fromJavaScript.apply(N),m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[N,x])),d.substitution,d)]))}else{var N=T.toJavaScript(),b=[];for(var X in N)if(N.hasOwnProperty(X)){var Y=e.fromJavaScript.apply(N[X]);b.push(new e.type.State(d.goal.replace(new e.type.Term(",",[new e.type.Term("=",[Y,x]),new e.type.Term("=",[new e.type.Term(X,[]),l])])),d.substitution,d))}m.prepend(b)}},"set_prop/2":[new e.type.Rule(new e.type.Term("set_prop",[new e.type.Var("X"),new e.type.Var("Y")]),new e.type.Term(",",[new e.type.Term("global",[new e.type.Var("G")]),new e.type.Term("set_prop",[new e.type.Var("G"),new e.type.Var("X"),new e.type.Var("Y")])]))],"set_prop/3":function(m,d,g){var T=g.args[0],l=g.args[1],x=g.args[2];if(e.type.is_variable(T)||e.type.is_variable(l))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_atom(l))m.throw_error(e.error.type("atom",l,g.indicator));else{var N=T.toJavaScript();N!==void 0&&(N[l.id]=x.toJavaScript(),m.success(d))}},"new/3":function(m,d,g){var T=g.args[0],l=g.args[1],x=g.args[2];if(e.type.is_variable(T)||e.type.is_variable(l))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_js_object(T))m.throw_error(e.error.type("JsValueOBJECT",l,g.indicator));else if(!e.type.is_list(l))m.throw_error(e.error.type("list",l,g.indicator));else{for(var N=[],b=l;e.type.is_term(b)&&b.indicator==="./2";)N.push(b.args[0].toJavaScript()),b=b.args[1];if(!e.type.is_term(b)||b.indicator!=="[]/0"){m.throw_error(e.error.type("list",l,g.indicator));return}try{var X=e.fromJavaScript.apply(new(Function.prototype.bind.apply(T.value,[null].concat(N))));m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[x,X])),d.substitution,d)])}catch(Y){m.throw_error(e.error.javascript(Y.toString(),g.indicator))}}},"json_prolog/2":function(m,d,g){var T=g.args[0],l=g.args[1];if(e.type.is_variable(T)&&e.type.is_variable(l))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_variable(T)&&(!e.type.is_js_object(T)||typeof T.value!="object"))m.throw_error(e.error.type("JsValueOBJECT",T,g.indicator));else if(!e.type.is_variable(l)&&!e.type.is_list(l))m.throw_error(e.error.type("list",l,g.indicator));else if(e.type.is_variable(l)){var x=e.fromJavaScript.apply(T.value,!0);m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[l,x])),d.substitution,d)])}else{var N=new e.type.JSValue(l.toJavaScript());m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[T,N])),d.substitution,d)])}},"json_atom/2":function(m,d,g){var T=g.args[0],l=g.args[1];if(e.type.is_variable(T)&&e.type.is_variable(l))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_variable(T)&&(!e.type.is_js_object(T)||typeof T.value!="object"))m.throw_error(e.error.type("JsValueOBJECT",T,g.indicator));else if(!e.type.is_variable(l)&&!e.type.is_atom(l))m.throw_error(e.error.type("atom",l,g.indicator));else if(e.type.is_variable(l))try{var x=new e.type.Term(JSON.stringify(T.value),[]);m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[l,x])),d.substitution,d)])}catch(b){}else try{var N=e.fromJavaScript.apply(JSON.parse(l.id));m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[T,N])),d.substitution,d)])}catch(b){}},"ajax/3":[new e.type.Rule(new e.type.Term("ajax",[new e.type.Var("Method"),new e.type.Var("URL"),new e.type.Var("Response")]),new e.type.Term("ajax",[new e.type.Var("Method"),new e.type.Var("URL"),new e.type.Var("Response"),new e.type.Term("[]",[])]))],"ajax/4":function(m,d,g){var T=g.args[0],l=g.args[1],x=g.args[2],N=g.args[3];if(e.type.is_variable(l)||e.type.is_variable(T)||e.type.is_variable(N))m.throw_error(e.error.instantiation(g.indicator));else if(!e.type.is_atom(l))m.throw_error(e.error.type("atom",l,g.indicator));else if(!e.type.is_atom(T))m.throw_error(e.error.type("atom",T,g.indicator));else if(!e.type.is_list(N))m.throw_error(e.error.type("list",N,g.indicator));else if(["connect","delete","get","head","options","patch","post","put","trace"].indexOf(T.id)===-1)m.throw_error(e.error.domain("http_method",T,g.indicator));else{for(var b=N,X=null,Y=0,J="false",H="true",U=null,te=[],ve=new FormData,Te=null,de=null;e.type.is_term(b)&&b.indicator==="./2";){var B=b.args[0];if(!e.type.is_term(B)||B.args.length!==1){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}var k=B.args[0];if(B.indicator==="type/1"){if(!e.type.is_atom(k)||k.id!=="text"&&k.id!=="json"&&k.id!=="document"){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}X=k.id}else if(B.indicator==="user/1"){if(!e.type.is_atom(k)){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}Te=k.id}else if(B.indicator==="password/1"){if(!e.type.is_atom(k)){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}de=k.id}else if(B.indicator==="timeout/1"){if(!e.type.is_integer(k)||k.value<0){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}Y=k.value}else if(B.indicator==="async/1"){if(!e.type.is_atom(k)||k.id!=="true"&&k.id!=="false"){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}H=k.id}else if(B.indicator==="credentials/1"){if(!e.type.is_atom(k)||k.id!=="true"&&k.id!=="false"){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}J=k.id}else if(B.indicator==="mime/1"){if(!e.type.is_atom(k)){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}U=k.id}else if(B.indicator==="headers/1"){if(!e.type.is_list(k)){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}for(var q=k;e.type.is_term(q)&&q.indicator==="./2";){var oe=q.args[0];if(!e.type.is_term(oe)||oe.indicator!=="-/2"||!e.type.is_atom(oe.args[0])||!e.type.is_atom(oe.args[1])){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}te.push({header:oe.args[0].id,value:oe.args[1].id}),q=q.args[1]}if(e.type.is_variable(q)){m.throw_error(e.error.instantiation(g.indicator));return}else if(!e.type.is_term(q)||q.indicator!=="[]/0"){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}}else if(B.indicator==="body/1"){if(!e.type.is_list(k)&&(e.type.is_dom_object===void 0||!e.type.is_dom_object(k))&&!e.type.is_atom(k)){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}if(e.type.is_list(k)){for(var q=k;e.type.is_term(q)&&q.indicator==="./2";){var _e=q.args[0];if(!e.type.is_term(_e)||_e.indicator!=="-/2"||!e.type.is_atom(_e.args[0])||!e.type.is_atom(_e.args[1])){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}ve.append(_e.args[0].id,_e.args[1].id),q=q.args[1]}if(e.type.is_variable(q)){m.throw_error(e.error.instantiation(g.indicator));return}else if(!e.type.is_term(q)||q.indicator!=="[]/0"){m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}}else e.type.is_atom(k)?ve=k.id:ve=k.value}else{m.throw_error(e.error.domain("ajax_option",B,g.indicator));return}b=b.args[1]}if(e.type.is_variable(b)){m.throw_error(e.error.instantiation(g.indicator));return}else if(!e.type.is_term(b)||b.indicator!=="[]/0"){m.throw_error(e.error.type("list",N,g.indicator));return}var ae=new XMLHttpRequest;U!==null&&ae.overrideMimeType(U);var se=function(){if(this.readyState==4){if(this.status==200){var ye=null,pe=this.getResponseHeader("Content-Type");if(this.responseType==="json"&&this.response)ye=e.fromJavaScript.apply(this.response);else if(this.responseType===""&&pe.indexOf("application/json")!==-1)try{ye=e.fromJavaScript.apply(JSON.parse(this.responseText))}catch(be){}ye===null&&((this.responseType==="document"||this.responseType===""&&pe.indexOf("text/html")!==-1||this.responseType===""&&pe.indexOf("application/xml")!==-1)&&this.responseXML!==null&&e.type.DOM!==void 0?ye=new e.type.DOM(this.responseXML):(this.responseType===""||this.responseType==="text")&&(ye=new e.type.Term(this.responseText,[]))),ye!==null&&m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[x,ye])),d.substitution,d)])}H==="true"&&m.again()}};ae.onreadystatechange=se,ae.open(T.id.toUpperCase(),l.id,H==="true",Te,de),X!==null&&H==="true"&&(ae.responseType=X),ae.withCredentials=J==="true",H==="true"&&(ae.timeout=Y);for(var fe=0;fe<te.length;fe++)ae.setRequestHeader(te[fe].header,te[fe].value);if(ae.send(ve),H==="true")return!0;se.apply(ae)}}}},G=["global/1","apply/3","apply/4","prop/2","prop/3","get_prop/2","get_prop/3","set_prop/2","set_prop/3","new/3","json_prolog/2","json_atom/2","ajax/3","ajax/4"];function P(){e.type.is_js_object=function(m){return m instanceof e.type.JSValue},e.type.order.push(e.type.JSValue),e.type.JSValue=function(m){this.value=m},e.type.JSValue.prototype.toString=function(){return"<javascript>("+(typeof this.value).toLowerCase()+")"},e.type.JSValue.prototype.clone=function(){return new e.type.JSValue(this.value)},e.type.JSValue.prototype.equals=function(m){return e.type.is_js_object(m)&&this.value===m.value},e.type.JSValue.prototype.rename=function(m){return this},e.type.JSValue.prototype.variables=function(){return[]},e.type.JSValue.prototype.apply=function(m){return this},e.type.JSValue.prototype.unify=function(m,d){if(e.type.is_js_object(m)&&this.value===m.value)return new e.type.Substitution;if(e.type.is_term(m)&&m.indicator==="{}/1"){for(var g=[],T=[],l=m.args[0],x=[];e.type.is_term(l)&&l.indicator===",/2";)x.push(l.args[0]),l=l.args[1];x.push(l);for(var N=0;N<x.length;N++){var b=x[N];if(!e.type.is_term(b)||b.indicator!==":/2")return null;var X=b.args[0];if(!e.type.is_atom(X)||!this.value.hasOwnProperty(X.id))return null;var Y=e.fromJavaScript.apply(this.value[X.id]);T.push(b.args[1]),g.push(Y)}return e.unify(g,T,d)}return null},e.type.JSValue.prototype.interpret=function(m){return e.error.instantiation(m)},e.type.JSValue.prototype.compare=function(m){if(this.value===m.value)return 0;if(this.value<m.value)return-1;if(this.value>m.value)return 1},e.type.JSValue.prototype.toJavaScript=function(){return this.value},e.fromJavaScript.conversion.any=function(m){return new e.type.JSValue(m)},e.error.javascript=function(m,d){return new e.type.Term("error",[new e.type.Term("javascript_error",[new e.type.Term(m)]),e.utils.str_indicator(d)])}}typeof Xe!="undefined"?Xe.exports=function(m){e=m,P(),new e.type.Module("js",D(),G)}:(P(),new e.type.Module("js",D(),G))})(Ue)});var qe=me((ir,Oe)=>{var We;(function(e){var D="format",G=function(){return{"format_/4":[new e.type.Rule(new e.type.Term("format_",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32320"),new e.type.Var("_32322")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("is_list",[new e.type.Var("_32316")]),new e.type.Term("true",[])]),new e.type.Term("throw",[new e.type.Term("error",[new e.type.Term("type_error",[new e.type.Term("list",[]),new e.type.Var("_32316")]),new e.type.Term("//",[new e.type.Term("format_",[]),new e.type.Num(2,!1)])])])]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("is_list",[new e.type.Var("_32317")]),new e.type.Term("true",[])]),new e.type.Term("throw",[new e.type.Term("error",[new e.type.Term("type_error",[new e.type.Term("list",[]),new e.type.Var("_32317")]),new e.type.Term("//",[new e.type.Term("format_",[]),new e.type.Num(2,!1)])])])]),new e.type.Term(",",[new e.type.Term("unique_variable_names",[new e.type.Var("_32317"),new e.type.Var("_32318")]),new e.type.Term("phrase",[new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Num(0,!1),new e.type.Term("[]",[]),new e.type.Var("_32318")]),new e.type.Var("_32319")])])])]),new e.type.Term("=",[new e.type.Var("_32320"),new e.type.Var("_32321")])]),new e.type.Term("format_cells",[new e.type.Var("_32319"),new e.type.Var("_32321"),new e.type.Var("_32322")])]))],"format_cells/3":[new e.type.Rule(new e.type.Term("format_cells",[new e.type.Term("[]",[]),new e.type.Var("_32323"),new e.type.Var("_32323")]),new e.type.Term("true",[])),new e.type.Rule(new e.type.Term("format_cells",[new e.type.Term(".",[new e.type.Var("_32324"),new e.type.Var("_32319")]),new e.type.Var("_32325"),new e.type.Var("_32327")]),new e.type.Term(",",[new e.type.Term("format_cell",[new e.type.Var("_32324"),new e.type.Var("_32325"),new e.type.Var("_32326")]),new e.type.Term("format_cells",[new e.type.Var("_32319"),new e.type.Var("_32326"),new e.type.Var("_32327")])]))],"format_cell/3":[new e.type.Rule(new e.type.Term("format_cell",[new e.type.Term("newline",[]),new e.type.Term(".",[new e.type.Term(`
-`,[]),new e.type.Var("_32329")]),new e.type.Var("_32329")]),null),new e.type.Rule(new e.type.Term("format_cell",[new e.type.Term("cell",[new e.type.Var("_32330"),new e.type.Var("_32331"),new e.type.Var("_32332")]),new e.type.Var("_32341"),new e.type.Var("_32343")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("elements_gluevars",[new e.type.Var("_32332"),new e.type.Num(0,!1),new e.type.Var("_32333")]),new e.type.Var("_32334")]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("=",[new e.type.Var("_32334"),new e.type.Term("[]",[])]),new e.type.Term("true",[])]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("_32335"),new e.type.Term("-",[new e.type.Term("-",[new e.type.Var("_32331"),new e.type.Var("_32330")]),new e.type.Var("_32333")])]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("=<",[new e.type.Var("_32335"),new e.type.Num(0,!1)]),new e.type.Term("maplist",[new e.type.Term("=",[new e.type.Num(0,!1)]),new e.type.Var("_32334")])]),new e.type.Term(",",[new e.type.Term("length",[new e.type.Var("_32334"),new e.type.Var("_32336")]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("_32337"),new e.type.Term("//",[new e.type.Var("_32335"),new e.type.Var("_32336")])]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("_32338"),new e.type.Term("-",[new e.type.Var("_32335"),new e.type.Term("*",[new e.type.Var("_32337"),new e.type.Var("_32336")])])]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("=:=",[new e.type.Var("_32338"),new e.type.Num(0,!1)]),new e.type.Term("maplist",[new e.type.Term("=",[new e.type.Var("_32337")]),new e.type.Var("_32334")])]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("_32339"),new e.type.Term("+",[new e.type.Var("_32337"),new e.type.Var("_32338")])]),new e.type.Term(",",[new e.type.Term("reverse",[new e.type.Var("_32334"),new e.type.Term(".",[new e.type.Var("_32339"),new e.type.Var("_32340")])]),new e.type.Term("maplist",[new e.type.Term("=",[new e.type.Var("_32337")]),new e.type.Var("_32340")])])])])])])])])])])]),new e.type.Term("=",[new e.type.Var("_32341"),new e.type.Var("_32342")])]),new e.type.Term("format_elements",[new e.type.Var("_32332"),new e.type.Var("_32342"),new e.type.Var("_32343")])]))],"format_elements/3":[new e.type.Rule(new e.type.Term("format_elements",[new e.type.Term("[]",[]),new e.type.Var("_32344"),new e.type.Var("_32344")]),new e.type.Term("true",[])),new e.type.Rule(new e.type.Term("format_elements",[new e.type.Term(".",[new e.type.Var("_32345"),new e.type.Var("_32332")]),new e.type.Var("_32346"),new e.type.Var("_32348")]),new e.type.Term(",",[new e.type.Term("format_element",[new e.type.Var("_32345"),new e.type.Var("_32346"),new e.type.Var("_32347")]),new e.type.Term("format_elements",[new e.type.Var("_32332"),new e.type.Var("_32347"),new e.type.Var("_32348")])]))],"format_element/3":[new e.type.Rule(new e.type.Term("format_element",[new e.type.Term("chars",[new e.type.Var("_32349")]),new e.type.Var("_32350"),new e.type.Var("_32351")]),new e.type.Term("seq",[new e.type.Var("_32349"),new e.type.Var("_32350"),new e.type.Var("_32351")])),new e.type.Rule(new e.type.Term("format_element",[new e.type.Term("glue",[new e.type.Var("_32352"),new e.type.Var("_32353")]),new e.type.Var("_32355"),new e.type.Var("_32357")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("length",[new e.type.Var("_32354"),new e.type.Var("_32353")]),new e.type.Term("maplist",[new e.type.Term("=",[new e.type.Var("_32352")]),new e.type.Var("_32354")])]),new e.type.Term("=",[new e.type.Var("_32355"),new e.type.Var("_32356")])]),new e.type.Term("seq",[new e.type.Var("_32354"),new e.type.Var("_32356"),new e.type.Var("_32357")])]))],"elements_gluevars/5":[new e.type.Rule(new e.type.Term("elements_gluevars",[new e.type.Term("[]",[]),new e.type.Var("_32358"),new e.type.Var("_32358"),new e.type.Var("_32359"),new e.type.Var("_32359")]),new e.type.Term("true",[])),new e.type.Rule(new e.type.Term("elements_gluevars",[new e.type.Term(".",[new e.type.Var("_32345"),new e.type.Var("_32332")]),new e.type.Var("_32360"),new e.type.Var("_32358"),new e.type.Var("_32362"),new e.type.Var("_32364")]),new e.type.Term(",",[new e.type.Term("element_gluevar",[new e.type.Var("_32345"),new e.type.Var("_32360"),new e.type.Var("_32361"),new e.type.Var("_32362"),new e.type.Var("_32363")]),new e.type.Term("elements_gluevars",[new e.type.Var("_32332"),new e.type.Var("_32361"),new e.type.Var("_32358"),new e.type.Var("_32363"),new e.type.Var("_32364")])]))],"element_gluevar/5":[new e.type.Rule(new e.type.Term("element_gluevar",[new e.type.Term("chars",[new e.type.Var("_32349")]),new e.type.Var("_32360"),new e.type.Var("_32358"),new e.type.Var("_32366"),new e.type.Var("_32367")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("length",[new e.type.Var("_32349"),new e.type.Var("_32365")]),new e.type.Term("is",[new e.type.Var("_32358"),new e.type.Term("+",[new e.type.Var("_32360"),new e.type.Var("_32365")])])]),new e.type.Term("=",[new e.type.Var("_32366"),new e.type.Var("_32367")])])),new e.type.Rule(new e.type.Term("element_gluevar",[new e.type.Term("glue",[new e.type.Var("__32368"),new e.type.Var("_32369")]),new e.type.Var("_32358"),new e.type.Var("_32358"),new e.type.Term(".",[new e.type.Var("_32369"),new e.type.Var("_32371")]),new e.type.Var("_32371")]),null)],"cells/7":[new e.type.Rule(new e.type.Term("cells",[new e.type.Term("[]",[]),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("__32373"),new e.type.Var("_32374"),new e.type.Var("_32378")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32374"),new e.type.Var("_32375")])]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term(",",[new e.type.Term("==",[new e.type.Var("_32317"),new e.type.Term("[]",[])]),new e.type.Term("=",[new e.type.Var("_32375"),new e.type.Var("_32376")])]),new e.type.Term("cell",[new e.type.Var("_32372"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32376"),new e.type.Var("_32377")])]),new e.type.Term(",",[new e.type.Term("throw",[new e.type.Term("error",[new e.type.Term("domain_error",[new e.type.Term("empty_list",[]),new e.type.Var("_32317")]),new e.type.Term("//",[new e.type.Term("cells",[]),new e.type.Num(5,!1)])])]),new e.type.Term("=",[new e.type.Var("_32375"),new e.type.Var("_32378")])])]),new e.type.Term("=",[new e.type.Var("_32377"),new e.type.Var("_32378")])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32316")])]),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32379"),new e.type.Var("_32381")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32379"),new e.type.Var("_32380")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term("[]",[])])]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32380"),new e.type.Var("_32381")])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("w",[]),new e.type.Var("_32316")])]),new e.type.Term(".",[new e.type.Var("_32382"),new e.type.Var("_32317")]),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32384"),new e.type.Var("_32387")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32384"),new e.type.Var("_32385")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("write_term_to_chars",[new e.type.Var("_32382"),new e.type.Term(".",[new e.type.Term("numbervars",[new e.type.Term("true",[])]),new e.type.Term(".",[new e.type.Term("variable_names",[new e.type.Var("_32318")]),new e.type.Term("[]",[])])]),new e.type.Var("_32383")]),new e.type.Term("=",[new e.type.Var("_32385"),new e.type.Var("_32386")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32383")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32386"),new e.type.Var("_32387")])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("q",[]),new e.type.Var("_32316")])]),new e.type.Term(".",[new e.type.Var("_32382"),new e.type.Var("_32317")]),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32388"),new e.type.Var("_32391")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32388"),new e.type.Var("_32389")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("write_term_to_chars",[new e.type.Var("_32382"),new e.type.Term(".",[new e.type.Term("quoted",[new e.type.Term("true",[])]),new e.type.Term(".",[new e.type.Term("numbervars",[new e.type.Term("true",[])]),new e.type.Term(".",[new e.type.Term("variable_names",[new e.type.Var("_32318")]),new e.type.Term("[]",[])])])]),new e.type.Var("_32383")]),new e.type.Term("=",[new e.type.Var("_32389"),new e.type.Var("_32390")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32383")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32390"),new e.type.Var("_32391")])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("a",[]),new e.type.Var("_32316")])]),new e.type.Term(".",[new e.type.Var("_32382"),new e.type.Var("_32317")]),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32392"),new e.type.Var("_32395")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32392"),new e.type.Var("_32393")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("atom_chars",[new e.type.Var("_32382"),new e.type.Var("_32383")]),new e.type.Term("=",[new e.type.Var("_32393"),new e.type.Var("_32394")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32383")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32394"),new e.type.Var("_32395")])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32396")]),new e.type.Var("_32397"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32404"),new e.type.Var("_32411")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("numeric_argument",[new e.type.Var("_32396"),new e.type.Var("_32353"),new e.type.Term(".",[new e.type.Term("d",[]),new e.type.Var("_32316")]),new e.type.Var("_32397"),new e.type.Term(".",[new e.type.Var("_32398"),new e.type.Var("_32317")])]),new e.type.Term("=",[new e.type.Var("_32404"),new e.type.Var("_32405")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32405"),new e.type.Var("_32406")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("_32382"),new e.type.Var("_32398")]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("integer",[new e.type.Var("_32382")]),new e.type.Term("true",[])]),new e.type.Term("throw",[new e.type.Term("error",[new e.type.Term("type_error",[new e.type.Term("integer",[]),new e.type.Var("_32382")]),new e.type.Term("//",[new e.type.Term("cells",[]),new e.type.Num(5,!1)])])])]),new e.type.Term("number_chars",[new e.type.Var("_32382"),new e.type.Var("_32399")])])]),new e.type.Term("=",[new e.type.Var("_32406"),new e.type.Var("_32407")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term(",",[new e.type.Term("=:=",[new e.type.Var("_32353"),new e.type.Num(0,!1)]),new e.type.Term("=",[new e.type.Var("_32407"),new e.type.Var("_32408")])]),new e.type.Term(",",[new e.type.Term("=",[new e.type.Var("_32349"),new e.type.Var("_32399")]),new e.type.Term("=",[new e.type.Var("_32408"),new e.type.Var("_32409")])])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("length",[new e.type.Var("_32399"),new e.type.Var("_32365")]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("=<",[new e.type.Var("_32365"),new e.type.Var("_32353")]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("_32338"),new e.type.Term("-",[new e.type.Var("_32353"),new e.type.Var("_32365")])]),new e.type.Term(",",[new e.type.Term("length",[new e.type.Var("_32400"),new e.type.Var("_32338")]),new e.type.Term(",",[new e.type.Term("maplist",[new e.type.Term("=",[new e.type.Term("0",[])]),new e.type.Var("_32400")]),new e.type.Term("phrase",[new e.type.Term(",",[new e.type.Term(".",[new e.type.Term("0",[]),new e.type.Term(".",[new e.type.Term(".",[]),new e.type.Term("[]",[])])]),new e.type.Term(",",[new e.type.Term("seq",[new e.type.Var("_32400")]),new e.type.Term("seq",[new e.type.Var("_32399")])])]),new e.type.Var("_32349")])])])])]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("_32401"),new e.type.Term("-",[new e.type.Var("_32365"),new e.type.Var("_32353")])]),new e.type.Term(",",[new e.type.Term("length",[new e.type.Var("_32402"),new e.type.Var("_32401")]),new e.type.Term(",",[new e.type.Term("append",[new e.type.Var("_32402"),new e.type.Var("_32403"),new e.type.Var("_32399")]),new e.type.Term("phrase",[new e.type.Term(",",[new e.type.Term("seq",[new e.type.Var("_32402")]),new e.type.Term(",",[new e.type.Term(".",[new e.type.Term(".",[]),new e.type.Term("[]",[])]),new e.type.Term("seq",[new e.type.Var("_32403")])])]),new e.type.Var("_32349")])])])])])]),new e.type.Term("=",[new e.type.Var("_32407"),new e.type.Var("_32410")])])]),new e.type.Term("=",[new e.type.Var("_32409"),new e.type.Var("_32410")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32349")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32410"),new e.type.Var("_32411")])])])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32396")]),new e.type.Var("_32397"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32417"),new e.type.Var("_32421")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("numeric_argument",[new e.type.Var("_32396"),new e.type.Var("_32353"),new e.type.Term(".",[new e.type.Term("D",[]),new e.type.Var("_32316")]),new e.type.Var("_32397"),new e.type.Term(".",[new e.type.Var("_32382"),new e.type.Var("_32317")])]),new e.type.Term("=",[new e.type.Var("_32417"),new e.type.Var("_32418")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32418"),new e.type.Var("_32419")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("number_chars",[new e.type.Var("_32353"),new e.type.Var("_32412")]),new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term(",",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term("[]",[])]),new e.type.Term(",",[new e.type.Term("seq",[new e.type.Var("_32412")]),new e.type.Term(".",[new e.type.Term("d",[]),new e.type.Term("[]",[])])])]),new e.type.Var("_32413")]),new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("format_",[new e.type.Var("_32413"),new e.type.Term(".",[new e.type.Var("_32382"),new e.type.Term("[]",[])])]),new e.type.Var("_32399")]),new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("upto_what",[new e.type.Var("_32414"),new e.type.Term(".",[])]),new e.type.Var("_32399"),new e.type.Var("_32403")]),new e.type.Term(",",[new e.type.Term("reverse",[new e.type.Var("_32414"),new e.type.Var("_32415")]),new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("groups_of_three",[new e.type.Var("_32415")]),new e.type.Var("_32416")]),new e.type.Term(",",[new e.type.Term("reverse",[new e.type.Var("_32416"),new e.type.Var("_32402")]),new e.type.Term("append",[new e.type.Var("_32402"),new e.type.Var("_32403"),new e.type.Var("_32349")])])])])])])])]),new e.type.Term("=",[new e.type.Var("_32419"),new e.type.Var("_32420")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32349")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32420"),new e.type.Var("_32421")])])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("i",[]),new e.type.Var("_32316")])]),new e.type.Term(".",[new e.type.Var("__32422"),new e.type.Var("_32317")]),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32423"),new e.type.Var("_32425")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32423"),new e.type.Var("_32424")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32424"),new e.type.Var("_32425")])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("n",[]),new e.type.Var("_32316")])]),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32426"),new e.type.Var("_32430")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32426"),new e.type.Var("_32427")])]),new e.type.Term(",",[new e.type.Term("cell",[new e.type.Var("_32372"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32427"),new e.type.Var("_32428")]),new e.type.Term(",",[new e.type.Term("n_newlines",[new e.type.Num(1,!1),new e.type.Var("_32428"),new e.type.Var("_32429")]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Num(0,!1),new e.type.Term("[]",[]),new e.type.Var("_32318"),new e.type.Var("_32429"),new e.type.Var("_32430")])])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32396")]),new e.type.Var("_32397"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32431"),new e.type.Var("_32436")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("numeric_argument",[new e.type.Var("_32396"),new e.type.Var("_32353"),new e.type.Term(".",[new e.type.Term("n",[]),new e.type.Var("_32316")]),new e.type.Var("_32397"),new e.type.Var("_32317")]),new e.type.Term("=",[new e.type.Var("_32431"),new e.type.Var("_32432")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32432"),new e.type.Var("_32433")])]),new e.type.Term(",",[new e.type.Term("cell",[new e.type.Var("_32372"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32433"),new e.type.Var("_32434")]),new e.type.Term(",",[new e.type.Term("n_newlines",[new e.type.Var("_32353"),new e.type.Var("_32434"),new e.type.Var("_32435")]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Num(0,!1),new e.type.Term("[]",[]),new e.type.Var("_32318"),new e.type.Var("_32435"),new e.type.Var("_32436")])])])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("s",[]),new e.type.Var("_32316")])]),new e.type.Term(".",[new e.type.Var("_32382"),new e.type.Var("_32317")]),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32437"),new e.type.Var("_32439")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32437"),new e.type.Var("_32438")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32382")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32438"),new e.type.Var("_32439")])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("f",[]),new e.type.Var("_32316")])]),new e.type.Term(".",[new e.type.Var("_32382"),new e.type.Var("_32317")]),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32440"),new e.type.Var("_32443")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32440"),new e.type.Var("_32441")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("format_number_chars",[new e.type.Var("_32382"),new e.type.Var("_32383")]),new e.type.Term("=",[new e.type.Var("_32441"),new e.type.Var("_32442")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32383")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32442"),new e.type.Var("_32443")])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32396")]),new e.type.Var("_32397"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32445"),new e.type.Var("_32449")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("numeric_argument",[new e.type.Var("_32396"),new e.type.Var("_32353"),new e.type.Term(".",[new e.type.Term("f",[]),new e.type.Var("_32316")]),new e.type.Var("_32397"),new e.type.Term(".",[new e.type.Var("_32382"),new e.type.Var("_32317")])]),new e.type.Term("=",[new e.type.Var("_32445"),new e.type.Var("_32446")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32446"),new e.type.Var("_32447")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("format_number_chars",[new e.type.Var("_32382"),new e.type.Var("_32399")]),new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("upto_what",[new e.type.Var("_32402"),new e.type.Term(".",[])]),new e.type.Var("_32399"),new e.type.Var("_32349")]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("=:=",[new e.type.Var("_32353"),new e.type.Num(0,!1)]),new e.type.Term("=",[new e.type.Var("_32383"),new e.type.Var("_32402")])]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("=",[new e.type.Var("_32349"),new e.type.Term(".",[new e.type.Term(".",[]),new e.type.Var("_32340")])]),new e.type.Term(",",[new e.type.Term("length",[new e.type.Var("_32340"),new e.type.Var("_32365")]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("<",[new e.type.Var("_32353"),new e.type.Var("_32365")]),new e.type.Term(",",[new e.type.Term("length",[new e.type.Var("_32403"),new e.type.Var("_32353")]),new e.type.Term("append",[new e.type.Var("_32403"),new e.type.Var("__32444"),new e.type.Var("_32340")])])]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("=:=",[new e.type.Var("_32353"),new e.type.Var("_32365")]),new e.type.Term("=",[new e.type.Var("_32403"),new e.type.Var("_32340")])]),new e.type.Term(",",[new e.type.Term(">",[new e.type.Var("_32353"),new e.type.Var("_32365")]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("_32338"),new e.type.Term("-",[new e.type.Var("_32353"),new e.type.Var("_32365")])]),new e.type.Term(",",[new e.type.Term("length",[new e.type.Var("_32400"),new e.type.Var("_32338")]),new e.type.Term(",",[new e.type.Term("maplist",[new e.type.Term("=",[new e.type.Term("0",[])]),new e.type.Var("_32400")]),new e.type.Term("append",[new e.type.Var("_32340"),new e.type.Var("_32400"),new e.type.Var("_32403")])])])])])])])])]),new e.type.Term(",",[new e.type.Term("length",[new e.type.Var("_32403"),new e.type.Var("_32353")]),new e.type.Term("maplist",[new e.type.Term("=",[new e.type.Term("0",[])]),new e.type.Var("_32403")])])]),new e.type.Term("append",[new e.type.Var("_32402"),new e.type.Term(".",[new e.type.Term(".",[]),new e.type.Var("_32403")]),new e.type.Var("_32383")])])])])]),new e.type.Term("=",[new e.type.Var("_32447"),new e.type.Var("_32448")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32383")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32448"),new e.type.Var("_32449")])])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("r",[]),new e.type.Var("_32316")])]),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32450"),new e.type.Var("_32452")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32450"),new e.type.Var("_32451")])]),new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("8",[]),new e.type.Term(".",[new e.type.Term("r",[]),new e.type.Var("_32316")])])]),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32451"),new e.type.Var("_32452")])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32396")]),new e.type.Var("_32397"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32453"),new e.type.Var("_32457")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("numeric_argument",[new e.type.Var("_32396"),new e.type.Var("_32353"),new e.type.Term(".",[new e.type.Term("r",[]),new e.type.Var("_32316")]),new e.type.Var("_32397"),new e.type.Term(".",[new e.type.Var("_32382"),new e.type.Var("_32317")])]),new e.type.Term("=",[new e.type.Var("_32453"),new e.type.Var("_32454")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32454"),new e.type.Var("_32455")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("integer_to_radix",[new e.type.Var("_32382"),new e.type.Var("_32353"),new e.type.Term("lowercase",[]),new e.type.Var("_32349")]),new e.type.Term("=",[new e.type.Var("_32455"),new e.type.Var("_32456")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32349")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32456"),new e.type.Var("_32457")])])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("R",[]),new e.type.Var("_32316")])]),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32458"),new e.type.Var("_32460")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32458"),new e.type.Var("_32459")])]),new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("8",[]),new e.type.Term(".",[new e.type.Term("R",[]),new e.type.Var("_32316")])])]),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32459"),new e.type.Var("_32460")])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32396")]),new e.type.Var("_32397"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32461"),new e.type.Var("_32465")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("numeric_argument",[new e.type.Var("_32396"),new e.type.Var("_32353"),new e.type.Term(".",[new e.type.Term("R",[]),new e.type.Var("_32316")]),new e.type.Var("_32397"),new e.type.Term(".",[new e.type.Var("_32382"),new e.type.Var("_32317")])]),new e.type.Term("=",[new e.type.Var("_32461"),new e.type.Var("_32462")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32462"),new e.type.Var("_32463")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("integer_to_radix",[new e.type.Var("_32382"),new e.type.Var("_32353"),new e.type.Term("uppercase",[]),new e.type.Var("_32349")]),new e.type.Term("=",[new e.type.Var("_32463"),new e.type.Var("_32464")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32349")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32464"),new e.type.Var("_32465")])])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("`",[]),new e.type.Term(".",[new e.type.Var("_32466"),new e.type.Term(".",[new e.type.Term("t",[]),new e.type.Var("_32316")])])])]),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32468"),new e.type.Var("_32470")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32468"),new e.type.Var("_32469")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("glue",[new e.type.Var("_32466"),new e.type.Var("__32467")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32469"),new e.type.Var("_32470")])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("t",[]),new e.type.Var("_32316")])]),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32472"),new e.type.Var("_32474")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32472"),new e.type.Var("_32473")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("glue",[new e.type.Term(" ",[]),new e.type.Var("__32471")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32473"),new e.type.Var("_32474")])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("|",[]),new e.type.Var("_32316")])]),new e.type.Var("_32317"),new e.type.Var("_32475"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32478"),new e.type.Var("_32482")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32478"),new e.type.Var("_32479")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("elements_gluevars",[new e.type.Var("_32332"),new e.type.Num(0,!1),new e.type.Var("_32476")]),new e.type.Var("__32477")]),new e.type.Term("is",[new e.type.Var("_32372"),new e.type.Term("+",[new e.type.Var("_32475"),new e.type.Var("_32476")])])]),new e.type.Term("=",[new e.type.Var("_32479"),new e.type.Var("_32480")])]),new e.type.Term(",",[new e.type.Term("cell",[new e.type.Var("_32475"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32480"),new e.type.Var("_32481")]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term("[]",[]),new e.type.Var("_32318"),new e.type.Var("_32481"),new e.type.Var("_32482")])])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32396")]),new e.type.Var("_32397"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32483"),new e.type.Var("_32487")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("numeric_argument",[new e.type.Var("_32396"),new e.type.Var("_32353"),new e.type.Term(".",[new e.type.Term("|",[]),new e.type.Var("_32316")]),new e.type.Var("_32397"),new e.type.Var("_32317")]),new e.type.Term("=",[new e.type.Var("_32483"),new e.type.Var("_32484")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32484"),new e.type.Var("_32485")])]),new e.type.Term(",",[new e.type.Term("cell",[new e.type.Var("_32372"),new e.type.Var("_32353"),new e.type.Var("_32332"),new e.type.Var("_32485"),new e.type.Var("_32486")]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32353"),new e.type.Term("[]",[]),new e.type.Var("_32318"),new e.type.Var("_32486"),new e.type.Var("_32487")])])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32396")]),new e.type.Var("_32397"),new e.type.Var("_32475"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32488"),new e.type.Var("_32493")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("numeric_argument",[new e.type.Var("_32396"),new e.type.Var("_32353"),new e.type.Term(".",[new e.type.Term("+",[]),new e.type.Var("_32316")]),new e.type.Var("_32397"),new e.type.Var("_32317")]),new e.type.Term("=",[new e.type.Var("_32488"),new e.type.Var("_32489")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32489"),new e.type.Var("_32490")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("_32372"),new e.type.Term("+",[new e.type.Var("_32475"),new e.type.Var("_32353")])]),new e.type.Term("=",[new e.type.Var("_32490"),new e.type.Var("_32491")])]),new e.type.Term(",",[new e.type.Term("cell",[new e.type.Var("_32475"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32491"),new e.type.Var("_32492")]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term("[]",[]),new e.type.Var("_32318"),new e.type.Var("_32492"),new e.type.Var("_32493")])])])])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32349")]),new e.type.Var("_32317"),new e.type.Var("__32494"),new e.type.Var("__32495"),new e.type.Var("__32496"),new e.type.Var("_32497"),new e.type.Var("_32500")]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term(",",[new e.type.Term("==",[new e.type.Var("_32317"),new e.type.Term("[]",[])]),new e.type.Term("=",[new e.type.Var("_32497"),new e.type.Var("_32498")])]),new e.type.Term(",",[new e.type.Term("throw",[new e.type.Term("error",[new e.type.Term("domain_error",[new e.type.Term("non_empty_list",[]),new e.type.Term("[]",[])]),new e.type.Term("//",[new e.type.Term("cells",[]),new e.type.Num(5,!1)])])]),new e.type.Term("=",[new e.type.Var("_32498"),new e.type.Var("_32499")])])]),new e.type.Term(",",[new e.type.Term("throw",[new e.type.Term("error",[new e.type.Term("domain_error",[new e.type.Term("format_string",[]),new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Var("_32349")])]),new e.type.Term("//",[new e.type.Term("cells",[]),new e.type.Num(5,!1)])])]),new e.type.Term("=",[new e.type.Var("_32497"),new e.type.Var("_32500")])])]),new e.type.Term("=",[new e.type.Var("_32499"),new e.type.Var("_32500")])])),new e.type.Rule(new e.type.Term("cells",[new e.type.Var("_32396"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Var("_32332"),new e.type.Var("_32318"),new e.type.Var("_32504"),new e.type.Var("_32506")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("upto_what",[new e.type.Var("_32501"),new e.type.Term("~",[])]),new e.type.Var("_32396"),new e.type.Var("_32316")]),new e.type.Term("=",[new e.type.Var("_32501"),new e.type.Term(".",[new e.type.Var("__32502"),new e.type.Var("__32503")])])]),new e.type.Term("=",[new e.type.Var("_32504"),new e.type.Var("_32505")])]),new e.type.Term("cells",[new e.type.Var("_32316"),new e.type.Var("_32317"),new e.type.Var("_32372"),new e.type.Term(".",[new e.type.Term("chars",[new e.type.Var("_32501")]),new e.type.Var("_32332")]),new e.type.Var("_32318"),new e.type.Var("_32505"),new e.type.Var("_32506")])]))],"format_number_chars/2":[new e.type.Rule(new e.type.Term("format_number_chars",[new e.type.Var("N0"),new e.type.Var("Chars")]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("N"),new e.type.Var("N0")]),new e.type.Term("number_chars",[new e.type.Var("N"),new e.type.Var("Chars")])]))],"n_newlines/3":[new e.type.Rule(new e.type.Term("n_newlines",[new e.type.Num(0,!1),new e.type.Var("_32507"),new e.type.Var("_32508")]),new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32507"),new e.type.Var("_32508")])])),new e.type.Rule(new e.type.Term("n_newlines",[new e.type.Var("_32360"),new e.type.Var("_32509"),new e.type.Var("_32512")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(">",[new e.type.Var("_32360"),new e.type.Num(0,!1)]),new e.type.Term("is",[new e.type.Var("_32358"),new e.type.Term("-",[new e.type.Var("_32360"),new e.type.Num(1,!1)])])]),new e.type.Term("=",[new e.type.Var("_32509"),new e.type.Var("_32510")])]),new e.type.Term(",",[new e.type.Term("=",[new e.type.Var("_32510"),new e.type.Term(".",[new e.type.Term("newline",[]),new e.type.Var("_32511")])]),new e.type.Term("n_newlines",[new e.type.Var("_32358"),new e.type.Var("_32511"),new e.type.Var("_32512")])])]))],"upto_what/4":[new e.type.Rule(new e.type.Term("upto_what",[new e.type.Term("[]",[]),new e.type.Var("_32513"),new e.type.Var("_32514"),new e.type.Var("_32517")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("=",[new e.type.Var("_32514"),new e.type.Term(".",[new e.type.Var("_32513"),new e.type.Var("_32515")])]),new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32515"),new e.type.Var("_32516")])])]),new e.type.Term("=",[new e.type.Var("_32517"),new e.type.Term(".",[new e.type.Var("_32513"),new e.type.Var("_32516")])])])),new e.type.Rule(new e.type.Term("upto_what",[new e.type.Term(".",[new e.type.Var("_32518"),new e.type.Var("_32349")]),new e.type.Var("_32513"),new e.type.Term(".",[new e.type.Var("_32518"),new e.type.Var("_32520")]),new e.type.Var("_32522")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32520"),new e.type.Var("_32521")])]),new e.type.Term("upto_what",[new e.type.Var("_32349"),new e.type.Var("_32513"),new e.type.Var("_32521"),new e.type.Var("_32522")])])),new e.type.Rule(new e.type.Term("upto_what",[new e.type.Term("[]",[]),new e.type.Var("__32523"),new e.type.Var("_32524"),new e.type.Var("_32524")]),new e.type.Term("true",[]))],"groups_of_three/3":[new e.type.Rule(new e.type.Term("groups_of_three",[new e.type.Term(".",[new e.type.Var("_32525"),new e.type.Term(".",[new e.type.Var("_32526"),new e.type.Term(".",[new e.type.Var("_32518"),new e.type.Term(".",[new e.type.Var("_32527"),new e.type.Var("_32528")])])])]),new e.type.Var("_32529"),new e.type.Var("_32533")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32529"),new e.type.Var("_32530")])]),new e.type.Term(",",[new e.type.Term("=",[new e.type.Var("_32530"),new e.type.Term(".",[new e.type.Var("_32525"),new e.type.Term(".",[new e.type.Var("_32526"),new e.type.Term(".",[new e.type.Var("_32518"),new e.type.Var("_32531")])])])]),new e.type.Term(",",[new e.type.Term("=",[new e.type.Var("_32531"),new e.type.Term(".",[new e.type.Term(",",[]),new e.type.Var("_32532")])]),new e.type.Term("groups_of_three",[new e.type.Term(".",[new e.type.Var("_32527"),new e.type.Var("_32528")]),new e.type.Var("_32532"),new e.type.Var("_32533")])])])])),new e.type.Rule(new e.type.Term("groups_of_three",[new e.type.Var("_32354"),new e.type.Var("_32534"),new e.type.Var("_32535")]),new e.type.Term("seq",[new e.type.Var("_32354"),new e.type.Var("_32534"),new e.type.Var("_32535")]))],"cell/5":[new e.type.Rule(new e.type.Term("cell",[new e.type.Var("_32330"),new e.type.Var("_32331"),new e.type.Var("_32536"),new e.type.Var("_32537"),new e.type.Var("_32540")]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term(",",[new e.type.Term("==",[new e.type.Var("_32536"),new e.type.Term("[]",[])]),new e.type.Term("=",[new e.type.Var("_32537"),new e.type.Var("_32538")])]),new e.type.Term("true",[])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("reverse",[new e.type.Var("_32536"),new e.type.Var("_32332")]),new e.type.Term("=",[new e.type.Var("_32537"),new e.type.Var("_32539")])]),new e.type.Term("=",[new e.type.Var("_32539"),new e.type.Term(".",[new e.type.Term("cell",[new e.type.Var("_32330"),new e.type.Var("_32331"),new e.type.Var("_32332")]),new e.type.Var("_32540")])])])]),new e.type.Term("=",[new e.type.Var("_32538"),new e.type.Var("_32540")])]))],"numeric_argument/5":[new e.type.Rule(new e.type.Term("numeric_argument",[new e.type.Var("Ds"),new e.type.Var("Num"),new e.type.Var("Rest"),new e.type.Var("Args0"),new e.type.Var("Args")]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("=",[new e.type.Var("Ds"),new e.type.Term(".",[new e.type.Term("*",[]),new e.type.Var("Rest")])]),new e.type.Term("=",[new e.type.Var("Args0"),new e.type.Term(".",[new e.type.Var("Num"),new e.type.Var("Args")])])]),new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("numeric_argument_",[new e.type.Var("Ds"),new e.type.Var("Rest")]),new e.type.Var("Ns")]),new e.type.Term(",",[new e.type.Term("foldl",[new e.type.Term("plus_times10",[]),new e.type.Var("Ns"),new e.type.Num(0,!1),new e.type.Var("Num")]),new e.type.Term("=",[new e.type.Var("Args0"),new e.type.Var("Args")])])])]))],"numeric_argument_/4":[new e.type.Rule(new e.type.Term("numeric_argument_",[new e.type.Term(".",[new e.type.Var("_32527"),new e.type.Var("_32403")]),new e.type.Var("_32340"),new e.type.Var("_32541"),new e.type.Var("_32546")]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term(",",[new e.type.Term("member",[new e.type.Var("_32527"),new e.type.Term(".",[new e.type.Term("0",[]),new e.type.Term(".",[new e.type.Term("1",[]),new e.type.Term(".",[new e.type.Term("2",[]),new e.type.Term(".",[new e.type.Term("3",[]),new e.type.Term(".",[new e.type.Term("4",[]),new e.type.Term(".",[new e.type.Term("5",[]),new e.type.Term(".",[new e.type.Term("6",[]),new e.type.Term(".",[new e.type.Term("7",[]),new e.type.Term(".",[new e.type.Term("8",[]),new e.type.Term(".",[new e.type.Term("9",[]),new e.type.Term("[]",[])])])])])])])])])])])]),new e.type.Term("=",[new e.type.Var("_32541"),new e.type.Var("_32542")])]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("number_chars",[new e.type.Var("_32358"),new e.type.Term(".",[new e.type.Var("_32527"),new e.type.Term("[]",[])])]),new e.type.Term("=",[new e.type.Var("_32542"),new e.type.Var("_32543")])]),new e.type.Term(",",[new e.type.Term("=",[new e.type.Var("_32543"),new e.type.Term(".",[new e.type.Var("_32358"),new e.type.Var("_32544")])]),new e.type.Term("numeric_argument_",[new e.type.Var("_32403"),new e.type.Var("_32340"),new e.type.Var("_32544"),new e.type.Var("_32545")])])])]),new e.type.Term(",",[new e.type.Term("=",[new e.type.Var("_32340"),new e.type.Term(".",[new e.type.Var("_32527"),new e.type.Var("_32403")])]),new e.type.Term("=",[new e.type.Var("_32541"),new e.type.Var("_32546")])])]),new e.type.Term("=",[new e.type.Var("_32545"),new e.type.Var("_32546")])]))],"plus_times10/3":[new e.type.Rule(new e.type.Term("plus_times10",[new e.type.Var("D"),new e.type.Var("N0"),new e.type.Var("N")]),new e.type.Term("is",[new e.type.Var("N"),new e.type.Term("+",[new e.type.Var("D"),new e.type.Term("*",[new e.type.Var("N0"),new e.type.Num(10,!1)])])]))],"radix_error/4":[new e.type.Rule(new e.type.Term("radix_error",[new e.type.Term("lowercase",[]),new e.type.Var("_32547"),new e.type.Var("_32548"),new e.type.Var("_32549")]),new e.type.Term("format_",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("d",[]),new e.type.Term(".",[new e.type.Term("r",[]),new e.type.Term("[]",[])])])])])]),new e.type.Term(".",[new e.type.Var("_32547"),new e.type.Term("[]",[])]),new e.type.Var("_32548"),new e.type.Var("_32549")])),new e.type.Rule(new e.type.Term("radix_error",[new e.type.Term("uppercase",[]),new e.type.Var("_32547"),new e.type.Var("_32550"),new e.type.Var("_32551")]),new e.type.Term("format_",[new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("~",[]),new e.type.Term(".",[new e.type.Term("d",[]),new e.type.Term(".",[new e.type.Term("R",[]),new e.type.Term("[]",[])])])])])]),new e.type.Term(".",[new e.type.Var("_32547"),new e.type.Term("[]",[])]),new e.type.Var("_32550"),new e.type.Var("_32551")]))],"integer_to_radix/4":[new e.type.Rule(new e.type.Term("integer_to_radix",[new e.type.Var("I0"),new e.type.Var("R"),new e.type.Var("Which"),new e.type.Var("Cs")]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("I"),new e.type.Var("I0")]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("integer",[new e.type.Var("I")]),new e.type.Term("true",[])]),new e.type.Term("throw",[new e.type.Term("error",[new e.type.Term("type_error",[new e.type.Term("integer",[]),new e.type.Var("I")]),new e.type.Term("/",[new e.type.Term("integer_to_radix",[]),new e.type.Num(4,!1)])])])]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("integer",[new e.type.Var("R")]),new e.type.Term("true",[])]),new e.type.Term("throw",[new e.type.Term("error",[new e.type.Term("type_error",[new e.type.Term("integer",[]),new e.type.Var("R")]),new e.type.Term("/",[new e.type.Term("integer_to_radix",[]),new e.type.Num(4,!1)])])])]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("\\+",[new e.type.Term("between",[new e.type.Num(2,!1),new e.type.Num(36,!1),new e.type.Var("R")])]),new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("radix_error",[new e.type.Var("Which"),new e.type.Var("R")]),new e.type.Var("Es")]),new e.type.Term("throw",[new e.type.Term("error",[new e.type.Term("domain_error",[new e.type.Term("format_string",[]),new e.type.Var("Es")]),new e.type.Term("/",[new e.type.Term("integer_to_radix",[]),new e.type.Num(4,!1)])])])])]),new e.type.Term("true",[])]),new e.type.Term(",",[new e.type.Term("digits",[new e.type.Var("Which"),new e.type.Var("Ds")]),new e.type.Term(",",[new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("<",[new e.type.Var("I"),new e.type.Num(0,!1)]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("Pos"),new e.type.Term("abs",[new e.type.Var("I")])]),new e.type.Term("phrase",[new e.type.Term("integer_to_radix_",[new e.type.Var("Pos"),new e.type.Var("R"),new e.type.Var("Ds")]),new e.type.Var("Cs0"),new e.type.Term(".",[new e.type.Term("-",[]),new e.type.Term("[]",[])])])])]),new e.type.Term(";",[new e.type.Term("->",[new e.type.Term("=:=",[new e.type.Var("I"),new e.type.Num(0,!1)]),new e.type.Term("=",[new e.type.Var("Cs0"),new e.type.Term(".",[new e.type.Term("0",[]),new e.type.Term("[]",[])])])]),new e.type.Term("phrase",[new e.type.Term("integer_to_radix_",[new e.type.Var("I"),new e.type.Var("R"),new e.type.Var("Ds")]),new e.type.Var("Cs0")])])]),new e.type.Term("reverse",[new e.type.Var("Cs0"),new e.type.Var("Cs")])])])])])])]))],"integer_to_radix_/5":[new e.type.Rule(new e.type.Term("integer_to_radix_",[new e.type.Num(0,!1),new e.type.Var("__32552"),new e.type.Var("__32553"),new e.type.Var("_32554"),new e.type.Var("_32555")]),new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term("=",[new e.type.Var("_32554"),new e.type.Var("_32555")])])),new e.type.Rule(new e.type.Term("integer_to_radix_",[new e.type.Var("_32556"),new e.type.Var("_32547"),new e.type.Var("_32403"),new e.type.Var("_32559"),new e.type.Var("_32562")]),new e.type.Term(",",[new e.type.Term(",",[new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("_32557"),new e.type.Term("mod",[new e.type.Var("_32556"),new e.type.Var("_32547")])]),new e.type.Term(",",[new e.type.Term("nth0",[new e.type.Var("_32557"),new e.type.Var("_32403"),new e.type.Var("_32527")]),new e.type.Term("is",[new e.type.Var("_32558"),new e.type.Term("//",[new e.type.Var("_32556"),new e.type.Var("_32547")])])])]),new e.type.Term("=",[new e.type.Var("_32559"),new e.type.Var("_32560")])]),new e.type.Term(",",[new e.type.Term("=",[new e.type.Var("_32560"),new e.type.Term(".",[new e.type.Var("_32527"),new e.type.Var("_32561")])]),new e.type.Term("integer_to_radix_",[new e.type.Var("_32558"),new e.type.Var("_32547"),new e.type.Var("_32403"),new e.type.Var("_32561"),new e.type.Var("_32562")])])]))],"digits/2":[new e.type.Rule(new e.type.Term("digits",[new e.type.Term("lowercase",[]),new e.type.Term(".",[new e.type.Term("0",[]),new e.type.Term(".",[new e.type.Term("1",[]),new e.type.Term(".",[new e.type.Term("2",[]),new e.type.Term(".",[new e.type.Term("3",[]),new e.type.Term(".",[new e.type.Term("4",[]),new e.type.Term(".",[new e.type.Term("5",[]),new e.type.Term(".",[new e.type.Term("6",[]),new e.type.Term(".",[new e.type.Term("7",[]),new e.type.Term(".",[new e.type.Term("8",[]),new e.type.Term(".",[new e.type.Term("9",[]),new e.type.Term(".",[new e.type.Term("a",[]),new e.type.Term(".",[new e.type.Term("b",[]),new e.type.Term(".",[new e.type.Term("c",[]),new e.type.Term(".",[new e.type.Term("d",[]),new e.type.Term(".",[new e.type.Term("e",[]),new e.type.Term(".",[new e.type.Term("f",[]),new e.type.Term(".",[new e.type.Term("g",[]),new e.type.Term(".",[new e.type.Term("h",[]),new e.type.Term(".",[new e.type.Term("i",[]),new e.type.Term(".",[new e.type.Term("j",[]),new e.type.Term(".",[new e.type.Term("k",[]),new e.type.Term(".",[new e.type.Term("l",[]),new e.type.Term(".",[new e.type.Term("m",[]),new e.type.Term(".",[new e.type.Term("n",[]),new e.type.Term(".",[new e.type.Term("o",[]),new e.type.Term(".",[new e.type.Term("p",[]),new e.type.Term(".",[new e.type.Term("q",[]),new e.type.Term(".",[new e.type.Term("r",[]),new e.type.Term(".",[new e.type.Term("s",[]),new e.type.Term(".",[new e.type.Term("t",[]),new e.type.Term(".",[new e.type.Term("u",[]),new e.type.Term(".",[new e.type.Term("v",[]),new e.type.Term(".",[new e.type.Term("w",[]),new e.type.Term(".",[new e.type.Term("x",[]),new e.type.Term(".",[new e.type.Term("y",[]),new e.type.Term(".",[new e.type.Term("z",[]),new e.type.Term("[]",[])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])]),null),new e.type.Rule(new e.type.Term("digits",[new e.type.Term("uppercase",[]),new e.type.Term(".",[new e.type.Term("0",[]),new e.type.Term(".",[new e.type.Term("1",[]),new e.type.Term(".",[new e.type.Term("2",[]),new e.type.Term(".",[new e.type.Term("3",[]),new e.type.Term(".",[new e.type.Term("4",[]),new e.type.Term(".",[new e.type.Term("5",[]),new e.type.Term(".",[new e.type.Term("6",[]),new e.type.Term(".",[new e.type.Term("7",[]),new e.type.Term(".",[new e.type.Term("8",[]),new e.type.Term(".",[new e.type.Term("9",[]),new e.type.Term(".",[new e.type.Term("A",[]),new e.type.Term(".",[new e.type.Term("B",[]),new e.type.Term(".",[new e.type.Term("C",[]),new e.type.Term(".",[new e.type.Term("D",[]),new e.type.Term(".",[new e.type.Term("E",[]),new e.type.Term(".",[new e.type.Term("F",[]),new e.type.Term(".",[new e.type.Term("G",[]),new e.type.Term(".",[new e.type.Term("H",[]),new e.type.Term(".",[new e.type.Term("I",[]),new e.type.Term(".",[new e.type.Term("J",[]),new e.type.Term(".",[new e.type.Term("K",[]),new e.type.Term(".",[new e.type.Term("L",[]),new e.type.Term(".",[new e.type.Term("M",[]),new e.type.Term(".",[new e.type.Term("N",[]),new e.type.Term(".",[new e.type.Term("O",[]),new e.type.Term(".",[new e.type.Term("P",[]),new e.type.Term(".",[new e.type.Term("Q",[]),new e.type.Term(".",[new e.type.Term("R",[]),new e.type.Term(".",[new e.type.Term("S",[]),new e.type.Term(".",[new e.type.Term("T",[]),new e.type.Term(".",[new e.type.Term("U",[]),new e.type.Term(".",[new e.type.Term("V",[]),new e.type.Term(".",[new e.type.Term("W",[]),new e.type.Term(".",[new e.type.Term("X",[]),new e.type.Term(".",[new e.type.Term("Y",[]),new e.type.Term(".",[new e.type.Term("Z",[]),new e.type.Term("[]",[])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])]),null)],"format/2":[new e.type.Rule(new e.type.Term("format",[new e.type.Var("Fs"),new e.type.Var("Args")]),new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("format_",[new e.type.Var("Fs"),new e.type.Var("Args")]),new e.type.Var("Cs")]),new e.type.Term("maplist",[new e.type.Term("write",[]),new e.type.Var("Cs")])]))],"format/3":[new e.type.Rule(new e.type.Term("format",[new e.type.Var("Stream"),new e.type.Var("Fs"),new e.type.Var("Args")]),new e.type.Term(",",[new e.type.Term("phrase",[new e.type.Term("format_",[new e.type.Var("Fs"),new e.type.Var("Args")]),new e.type.Var("Cs")]),new e.type.Term("maplist",[new e.type.Term("write",[new e.type.Var("Stream")]),new e.type.Var("Cs")])]))],"unique_variable_names/2":[new e.type.Rule(new e.type.Term("unique_variable_names",[new e.type.Var("Term"),new e.type.Var("VNs")]),new e.type.Term(",",[new e.type.Term("term_variables",[new e.type.Var("Term"),new e.type.Var("Vs")]),new e.type.Term("foldl",[new e.type.Term("var_name",[]),new e.type.Var("Vs"),new e.type.Var("VNs"),new e.type.Num(0,!1),new e.type.Var("_")])]))],"seq/3":[new e.type.Rule(new e.type.Term("seq",[new e.type.Term("[]",[]),new e.type.Var("_32563"),new e.type.Var("_32563")]),new e.type.Term("true",[])),new e.type.Rule(new e.type.Term("seq",[new e.type.Term(".",[new e.type.Var("_32345"),new e.type.Var("_32332")]),new e.type.Term(".",[new e.type.Var("_32345"),new e.type.Var("_32565")]),new e.type.Var("_32566")]),new e.type.Term("seq",[new e.type.Var("_32332"),new e.type.Var("_32565"),new e.type.Var("_32566")]))],"var_name/4":[new e.type.Rule(new e.type.Term("var_name",[new e.type.Var("V"),new e.type.Term("=",[new e.type.Var("Name"),new e.type.Var("V")]),new e.type.Var("Num0"),new e.type.Var("Num")]),new e.type.Term(",",[new e.type.Term(":",[new e.type.Term("charsio",[]),new e.type.Term("fabricate_var_name",[new e.type.Term("numbervars",[]),new e.type.Var("Name"),new e.type.Var("Num0")])]),new e.type.Term("is",[new e.type.Var("Num"),new e.type.Term("+",[new e.type.Var("Num0"),new e.type.Num(1,!1)])])]))]}},P=["format_/4","format/2","format/3"],m=function(){return{dependencies:["lists","charsio"]}};typeof Oe!="undefined"?Oe.exports=function(d){e=d,new e.type.Module(D,G(),P,m())}:new e.type.Module(D,G(),P,m())})(We)});var Ge=me((ar,Pe)=>{var Ke;(function(e){var D=function(){return{"get_seed/1":function(d,g,T){var l=T.args[0];if(!e.type.is_variable(l)&&!e.type.is_integer(l))d.throw_error(e.error.type("integer",l,T.indicator));else{var x=d.get_random_generator().get_seed();d.prepend([new e.type.State(g.goal.replace(new e.type.Term("=",[new e.type.Num(x,!1),l])),g.substitution,g)])}},"set_seed/1":function(d,g,T){var l=T.args[0];e.type.is_variable(l)?d.throw_error(e.error.instantiation(T.indicator)):e.type.is_integer(l)?(d.get_random_generator().set_seed(l.value),d.success(g)):d.throw_error(e.error.type("integer",l,T.indicator))},"maybe/0":function(d,g,T){d.get_random_generator().next()<.5&&d.success(g)},"maybe/1":function(d,g,T){var l=T.args[0];d.get_random_generator().next()<l.value&&d.success(g)},"random/1":function(d,g,T){var l=T.args[0];if(!e.type.is_variable(l)&&!e.type.is_number(l))d.throw_error(e.error.type("number",l,T.indicator));else{var x=d.get_random_generator().next();d.prepend([new e.type.State(g.goal.replace(new e.type.Term("=",[l,new e.type.Num(x,!0)])),g.substitution,g)])}},"random/3":function(d,g,T){var l=T.args[0],x=T.args[1],N=T.args[2];if(e.type.is_variable(l)||e.type.is_variable(x))d.throw_error(e.error.instantiation(T.indicator));else if(!e.type.is_number(l))d.throw_error(e.error.type("number",l,T.indicator));else if(!e.type.is_number(x))d.throw_error(e.error.type("number",x,T.indicator));else if(!e.type.is_variable(N)&&!e.type.is_number(N))d.throw_error(e.error.type("number",N,T.indicator));else if(l.value<x.value){var b=l.is_float||x.is_float,X=l.value+d.get_random_generator().next()*(x.value-l.value);b||(X=Math.floor(X)),d.prepend([new e.type.State(g.goal.replace(new e.type.Term("=",[N,new e.type.Num(X,b)])),g.substitution,g)])}},"random_between/3":function(d,g,T){var l=T.args[0],x=T.args[1],N=T.args[2];if(e.type.is_variable(l)||e.type.is_variable(x))d.throw_error(e.error.instantiation(T.indicator));else if(!e.type.is_integer(l))d.throw_error(e.error.type("integer",l,T.indicator));else if(!e.type.is_integer(x))d.throw_error(e.error.type("integer",x,T.indicator));else if(!e.type.is_variable(N)&&!e.type.is_integer(N))d.throw_error(e.error.type("integer",N,T.indicator));else if(l.value<x.value){var b=Math.floor(l.value+d.get_random_generator().next()*(x.value-l.value+1));d.prepend([new e.type.State(g.goal.replace(new e.type.Term("=",[N,new e.type.Num(b,!1)])),g.substitution,g)])}},"random_member/2":function(d,g,T){var l=T.args[0],x=T.args[1];if(e.type.is_variable(x))d.throw_error(e.error.instantiation(T.indicator));else{for(var N=[],b=x;b.indicator==="./2";)N.push(b.args[0]),b=b.args[1];if(N.length>0){var X=Math.floor(d.get_random_generator().next()*N.length);d.prepend([new e.type.State(g.goal.replace(new e.type.Term("=",[l,N[X]])),g.substitution,g)])}}},"random_permutation/2":function(d,g,T){var l,x=T.args[0],N=T.args[1],b=e.type.is_instantiated_list(x),X=e.type.is_instantiated_list(N);if(e.type.is_variable(x)&&e.type.is_variable(N)||!b&&!X)d.throw_error(e.error.instantiation(T.indicator));else if(!e.type.is_variable(x)&&!e.type.is_fully_list(x))d.throw_error(e.error.type("list",x,T.indicator));else if(!e.type.is_variable(N)&&!e.type.is_fully_list(N))d.throw_error(e.error.type("list",N,T.indicator));else{for(var Y=b?x:N,J=[];Y.indicator==="./2";)J.push(Y.args[0]),Y=Y.args[1];for(l=0;l<J.length;l++){var H=Math.floor(d.get_random_generator().next()*J.length),U=J[l];J[l]=J[H],J[H]=U}var te=new e.type.Term("[]",[]);for(l=J.length-1;l>=0;l--)te=new e.type.Term(".",[J[l],te]);d.prepend([new e.type.State(g.goal.replace(new e.type.Term("=",[te,b?N:x])),g.substitution,g)])}}}},G=["get_seed/1","set_seed/1","maybe/0","maybe/1","random/1","random/3","random_between/3","random_member/2","random_permutation/2"],P=function(d){this.set_seed(d)};P.prototype.next=function(){var d=this.get_seed()+1831565813;return this.set_seed(d),d=Math.imul(d^d>>>15,d|1),d^=d+Math.imul(d^d>>>7,d|61),((d^d>>>14)>>>0)/4294967296},P.prototype.set_seed=function(d){this.seed=d},P.prototype.get_seed=function(){return this.seed};var m=function(d){d.type.Session.prototype.get_random_generator=function(){return this.random_generator||(this.random_generator=new P(Date.now())),this.random_generator},d.type.Thread.prototype.get_random_generator=function(){return this.session.get_random_generator()}};typeof Pe!="undefined"?Pe.exports=function(d){e=d,m(d),new e.type.Module("random",D(),G)}:(m(e),new e.type.Module("random",D(),G))})(Ke)});var Je=me((sr,Ie)=>{var Qe;(function(e){var D=function(){return{"time/1":[new e.type.Rule(new e.type.Term("time",[new e.type.Var("Goal")]),new e.type.Term(",",[new e.type.Term("get_time",[new e.type.Var("T0")]),new e.type.Term(",",[new e.type.Term("call",[new e.type.Var("Goal")]),new e.type.Term(",",[new e.type.Term("get_time",[new e.type.Var("T1")]),new e.type.Term(",",[new e.type.Term("!",[]),new e.type.Term(",",[new e.type.Term("is",[new e.type.Var("T"),new e.type.Term("-",[new e.type.Var("T1"),new e.type.Var("T0")])]),new e.type.Term("write",[new e.type.Var("T")])])])])])]))],"statistics/0":function(m,d,g){var T=`% Tau Prolog statistics
-`;for(var l in P)T+="%%% "+l+": "+P[l](m).toString()+`
-`;m.prepend([new e.type.State(d.goal.replace(new e.type.Term("write",[new e.type.Term(T)])),d.substitution,d)])},"statistics/2":function(m,d,g){var T=g.args[0],l=g.args[1];if(!e.type.is_variable(T)&&!e.type.is_atom(T))m.throw_error(e.error.type("atom",T,g.indicator));else if(!e.type.is_variable(T)&&P[T.id]===void 0)m.throw_error(e.error.domain("statistics_key",T,g.indicator));else if(e.type.is_variable(T)){var N=[];for(var b in P){var x=P[b](m);N.push(new e.type.State(d.goal.replace(new e.type.Term(",",[new e.type.Term("=",[T,new e.type.Term(b,[])]),new e.type.Term("=",[l,x])])),d.substitution,d))}m.prepend(N)}else{var x=P[T.id](m);m.prepend([new e.type.State(d.goal.replace(new e.type.Term("=",[l,x])),d.substitution,d)])}}}},G=["time/1","statistics/0","statistics/2"],P={atoms:function(m){return new e.type.Num(e.statistics.getCountTerms(),!1)},clauses:function(m){var d=0;for(var g in m.session.rules)m.session.rules[g]instanceof Array&&(d+=m.session.rules[g].length);for(var T=0;T<m.session.modules.length;T++)for(var l=e.module[m.session.modules[T]],x=0;x<l.exports.length;x++){var N=l.rules[l.exports[x]];N instanceof Array&&(d+=N.length)}return new e.type.Num(d,!1)},cputime:function(m){return new e.type.Num(m.cpu_time,!1)},walltime:function(m){return new e.type.Num(Date.now(),!1)},epoch:function(m){return new e.type.Num(m.epoch,!1)},inferences:function(m){return new e.type.Num(m.total_steps,!1)},modules:function(m){var d=0;for(var g in m.session.modules)d++;return new e.type.Num(d,!1)},predicates:function(m){for(var d=Object.keys(m.session.rules).length,g=0;g<m.session.modules.length;g++){var T=e.module[m.session.modules[g]];d+=T.exports.length}return new e.type.Num(d,!1)},threads:function(m){return new e.type.Num(m.session.total_threads,!1)}};typeof Ie!="undefined"?Ie.exports=function(m){e=m,new e.type.Module("statistics",D(),G)}:new e.type.Module("statistics",D(),G)})(Qe)});var ge=Ye();ke()(ge);Fe()(ge);De()(ge);qe()(ge);Ge()(ge);Je()(ge);globalThis.pl=ge;})();
+  // node_modules/tau-prolog/modules/charsio.js
+  var require_charsio = __commonJS({
+    "node_modules/tau-prolog/modules/charsio.js"(exports, module) {
+      var pl2;
+      (function(pl3) {
+        var name = "charsio";
+        var predicates = function() {
+          return {
+            // write_term_to_chars/3
+            "write_term_to_chars/3": function(thread, point, atom) {
+              var term = atom.args[0], options = atom.args[1], chars = atom.args[2];
+              if (!pl3.type.is_variable(chars) && !pl3.type.is_list(chars)) {
+                thread.throw_error(pl3.error.type("list", chars, atom.indicator));
+              } else if (pl3.type.is_variable(options)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else {
+                if (!pl3.type.is_variable(chars)) {
+                  var pointer = chars;
+                  while (pl3.type.is_term(pointer) && pointer.indicator === "./2") {
+                    var char = pointer.args[0];
+                    if (!pl3.type.is_character(char)) {
+                      thread.throw_error(pl3.error.type("character", char, atom.indicator));
+                      return;
+                    }
+                    pointer = pointer.args[1];
+                  }
+                  if (!pl3.type.is_variable(pointer) && !pl3.type.is_empty_list(pointer)) {
+                    thread.throw_error(pl3.error.type("list", chars, atom.indicator));
+                    return;
+                  }
+                }
+                var obj_options = {};
+                var pointer = options;
+                var property;
+                while (pl3.type.is_term(pointer) && pointer.indicator === "./2") {
+                  property = pointer.args[0];
+                  if (pl3.type.is_variable(property)) {
+                    thread.throw_error(pl3.error.instantiation(atom.indicator));
+                    return;
+                  } else if (!pl3.type.is_write_option(property)) {
+                    thread.throw_error(pl3.error.domain("write_option", property, atom.indicator));
+                    return;
+                  }
+                  obj_options[property.id] = property.args[0].id === "true";
+                  pointer = pointer.args[1];
+                }
+                if (pointer.indicator !== "[]/0") {
+                  if (pl3.type.is_variable(pointer))
+                    thread.throw_error(pl3.error.instantiation(atom.indicator));
+                  else
+                    thread.throw_error(pl3.error.type("list", options, atom.indicator));
+                  return;
+                } else {
+                  obj_options.session = thread.session;
+                  var text = term.toString(obj_options);
+                  var list = new pl3.type.Term("[]", []);
+                  for (var i2 = pl3.utils.stringLength(text) - 1; i2 >= 0; i2--)
+                    list = new pl3.type.Term(".", [new pl3.type.Term(pl3.utils.fromCodePoint(pl3.utils.codePointAt(text, i2)), []), list]);
+                  thread.prepend([new pl3.type.State(
+                    point.goal.replace(new pl3.type.Term("=", [chars, list])),
+                    point.substitution,
+                    point
+                  )]);
+                }
+              }
+            },
+            // fabricate_var_name/3
+            "fabricate_var_name/3": [
+              new pl3.type.Rule(new pl3.type.Term("fabricate_var_name", [new pl3.type.Var("VarType"), new pl3.type.Var("VarName"), new pl3.type.Var("N")]), new pl3.type.Term(",", [new pl3.type.Term("char_code", [new pl3.type.Term("A", []), new pl3.type.Var("AC")]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("LN"), new pl3.type.Term("+", [new pl3.type.Term("mod", [new pl3.type.Var("N"), new pl3.type.Num(26, false)]), new pl3.type.Var("AC")])]), new pl3.type.Term(",", [new pl3.type.Term("char_code", [new pl3.type.Var("LC"), new pl3.type.Var("LN")]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("NN"), new pl3.type.Term("//", [new pl3.type.Var("N"), new pl3.type.Num(26, false)])]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("=:=", [new pl3.type.Var("NN"), new pl3.type.Num(0, false)]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("==", [new pl3.type.Var("VarType"), new pl3.type.Term("fabricated", [])]), new pl3.type.Term("atom_chars", [new pl3.type.Var("VarName"), new pl3.type.Term(".", [new pl3.type.Term("_", []), new pl3.type.Term(".", [new pl3.type.Var("LC"), new pl3.type.Term("[]", [])])])])]), new pl3.type.Term("->", [new pl3.type.Term("==", [new pl3.type.Var("VarType"), new pl3.type.Term("numbervars", [])]), new pl3.type.Term("atom_chars", [new pl3.type.Var("VarName"), new pl3.type.Term(".", [new pl3.type.Var("LC"), new pl3.type.Term("[]", [])])])])])]), new pl3.type.Term(",", [new pl3.type.Term("number_chars", [new pl3.type.Var("NN"), new pl3.type.Var("NNChars")]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("==", [new pl3.type.Var("VarType"), new pl3.type.Term("fabricated", [])]), new pl3.type.Term("atom_chars", [new pl3.type.Var("VarName"), new pl3.type.Term(".", [new pl3.type.Term("_", []), new pl3.type.Term(".", [new pl3.type.Var("LC"), new pl3.type.Var("NNChars")])])])]), new pl3.type.Term("->", [new pl3.type.Term("==", [new pl3.type.Var("VarType"), new pl3.type.Term("numbervars", [])]), new pl3.type.Term("atom_chars", [new pl3.type.Var("VarName"), new pl3.type.Term(".", [new pl3.type.Var("LC"), new pl3.type.Var("NNChars")])])])])])])])])])]))
+            ]
+          };
+        };
+        var exports2 = ["write_term_to_chars/3"];
+        if (typeof module !== "undefined") {
+          module.exports = function(p) {
+            pl3 = p;
+            new pl3.type.Module(name, predicates(), exports2);
+          };
+        } else {
+          new pl3.type.Module(name, predicates(), exports2);
+        }
+      })(pl2);
+    }
+  });
+
+  // node_modules/tau-prolog/modules/js.js
+  var require_js = __commonJS({
+    "node_modules/tau-prolog/modules/js.js"(exports, module) {
+      var pl2;
+      (function(pl3) {
+        var predicates = function() {
+          return {
+            // global/1
+            "global/1": function(thread, point, atom) {
+              thread.prepend([new pl3.type.State(point.goal.replace(new pl3.type.Term("=", [atom.args[0], pl3.fromJavaScript.apply(pl3.__env)])), point.substitution, point)]);
+            },
+            // apply/3:
+            "apply/3": [
+              new pl3.type.Rule(new pl3.type.Term("apply", [new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z")]), new pl3.type.Term(",", [new pl3.type.Term("global", [new pl3.type.Var("G")]), new pl3.type.Term("apply", [new pl3.type.Var("G"), new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z")])]))
+            ],
+            // apply/4
+            "apply/4": function(thread, point, atom) {
+              var context = atom.args[0], name = atom.args[1], args = atom.args[2], result = atom.args[3];
+              if (pl3.type.is_variable(context) || pl3.type.is_variable(name) || pl3.type.is_variable(args)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_atom(name) && (!pl3.type.is_js_object(name) || typeof name.value !== "function")) {
+                thread.throw_error(pl3.error.type("atom_or_JSValueFUNCTION", name, atom.indicator));
+              } else if (!pl3.type.is_list(args)) {
+                thread.throw_error(pl3.error.type("list", args, atom.indicator));
+              }
+              var ctx = context.toJavaScript();
+              var fn = pl3.type.is_atom(name) ? ctx[name.id] : name.toJavaScript();
+              if (typeof fn === "function") {
+                var pointer = args;
+                var pltojs;
+                var arr = [];
+                while (pointer.indicator === "./2") {
+                  pltojs = pointer.args[0].toJavaScript();
+                  if (pltojs === void 0) {
+                    thread.throw_error(pl3.error.domain("javascript_object", pointer.args[0], atom.indicator));
+                    return void 0;
+                  }
+                  arr.push(pltojs);
+                  pointer = pointer.args[1];
+                }
+                if (pl3.type.is_variable(pointer)) {
+                  thread.throw_error(pl3.error.instantiation(atom.indicator));
+                  return;
+                } else if (pointer.indicator !== "[]/0") {
+                  thread.throw_error(pl3.error.type("list", args, atom.indicator));
+                  return;
+                }
+                var value;
+                try {
+                  value = fn.apply(ctx, arr);
+                } catch (e) {
+                  thread.throw_error(pl3.error.javascript(e.toString(), atom.indicator));
+                  return;
+                }
+                value = pl3.fromJavaScript.apply(value);
+                thread.prepend([new pl3.type.State(point.goal.replace(new pl3.type.Term("=", [value, result])), point.substitution, point)]);
+              }
+            },
+            // prop/2 (deprecated)
+            "prop/2": [
+              new pl3.type.Rule(new pl3.type.Term("prop", [new pl3.type.Var("X"), new pl3.type.Var("Y")]), new pl3.type.Term("get_prop", [new pl3.type.Var("X"), new pl3.type.Var("Y")]))
+            ],
+            // prop/3 (deprecated)
+            "prop/3": [
+              new pl3.type.Rule(new pl3.type.Term("prop", [new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z")]), new pl3.type.Term("get_prop", [new pl3.type.Var("X"), new pl3.type.Var("Y"), new pl3.type.Var("Z")]))
+            ],
+            // get_prop/2
+            "get_prop/2": [
+              new pl3.type.Rule(new pl3.type.Term("get_prop", [new pl3.type.Var("X"), new pl3.type.Var("Y")]), new pl3.type.Term(",", [new pl3.type.Term("global", [new pl3.type.Var("G")]), new pl3.type.Term("get_prop", [new pl3.type.Var("G"), new pl3.type.Var("X"), new pl3.type.Var("Y")])]))
+            ],
+            // get_prop/3
+            "get_prop/3": function(thread, point, atom) {
+              var context = atom.args[0], name = atom.args[1], result = atom.args[2];
+              if (pl3.type.is_variable(context)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_variable(name) && !pl3.type.is_atom(name)) {
+                thread.throw_error(pl3.error.type("atom", name, atom.indicator));
+              } else {
+                if (pl3.type.is_atom(name)) {
+                  var fn = context.toJavaScript()[name.id];
+                  if (fn !== void 0) {
+                    fn = pl3.fromJavaScript.apply(fn);
+                    thread.prepend([new pl3.type.State(point.goal.replace(new pl3.type.Term("=", [fn, result])), point.substitution, point)]);
+                  }
+                } else {
+                  var fn = context.toJavaScript();
+                  var states = [];
+                  for (var x in fn) {
+                    if (fn.hasOwnProperty(x)) {
+                      var fn_ = pl3.fromJavaScript.apply(fn[x]);
+                      states.push(new pl3.type.State(point.goal.replace(new pl3.type.Term(",", [
+                        new pl3.type.Term("=", [fn_, result]),
+                        new pl3.type.Term("=", [new pl3.type.Term(x, []), name])
+                      ])), point.substitution, point));
+                    }
+                  }
+                  thread.prepend(states);
+                }
+              }
+            },
+            // set_prop/2:
+            "set_prop/2": [
+              new pl3.type.Rule(new pl3.type.Term("set_prop", [new pl3.type.Var("X"), new pl3.type.Var("Y")]), new pl3.type.Term(",", [new pl3.type.Term("global", [new pl3.type.Var("G")]), new pl3.type.Term("set_prop", [new pl3.type.Var("G"), new pl3.type.Var("X"), new pl3.type.Var("Y")])]))
+            ],
+            // set_prop/3
+            "set_prop/3": function(thread, point, atom) {
+              var context = atom.args[0], key = atom.args[1], value = atom.args[2];
+              if (pl3.type.is_variable(context) || pl3.type.is_variable(key)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_atom(key)) {
+                thread.throw_error(pl3.error.type("atom", key, atom.indicator));
+              } else {
+                var obj = context.toJavaScript();
+                if (obj !== void 0) {
+                  obj[key.id] = value.toJavaScript();
+                  thread.success(point);
+                }
+              }
+            },
+            // new/3
+            "new/3": function(thread, point, atom) {
+              var obj = atom.args[0], args = atom.args[1], instance = atom.args[2];
+              if (pl3.type.is_variable(obj) || pl3.type.is_variable(args)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_js_object(obj)) {
+                thread.throw_error(pl3.error.type("JsValueOBJECT", args, atom.indicator));
+              } else if (!pl3.type.is_list(args)) {
+                thread.throw_error(pl3.error.type("list", args, atom.indicator));
+              } else {
+                var arr_args = [];
+                var pointer = args;
+                while (pl3.type.is_term(pointer) && pointer.indicator === "./2") {
+                  arr_args.push(pointer.args[0].toJavaScript());
+                  pointer = pointer.args[1];
+                }
+                if (!pl3.type.is_term(pointer) || pointer.indicator !== "[]/0") {
+                  thread.throw_error(pl3.error.type("list", args, atom.indicator));
+                  return;
+                }
+                try {
+                  var result = pl3.fromJavaScript.apply(
+                    new (Function.prototype.bind.apply(obj.value, [null].concat(arr_args)))()
+                  );
+                  thread.prepend([
+                    new pl3.type.State(
+                      point.goal.replace(new pl3.type.Term("=", [instance, result])),
+                      point.substitution,
+                      point
+                    )
+                  ]);
+                } catch (error) {
+                  thread.throw_error(pl3.error.javascript(error.toString(), atom.indicator));
+                }
+              }
+            },
+            // json_prolog/2
+            "json_prolog/2": function(thread, point, atom) {
+              var json = atom.args[0], prolog = atom.args[1];
+              if (pl3.type.is_variable(json) && pl3.type.is_variable(prolog)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_variable(json) && (!pl3.type.is_js_object(json) || typeof json.value !== "object")) {
+                thread.throw_error(pl3.error.type("JsValueOBJECT", json, atom.indicator));
+              } else if (!pl3.type.is_variable(prolog) && !pl3.type.is_list(prolog)) {
+                thread.throw_error(pl3.error.type("list", prolog, atom.indicator));
+              } else {
+                if (pl3.type.is_variable(prolog)) {
+                  var list = pl3.fromJavaScript.apply(json.value, true);
+                  thread.prepend([new pl3.type.State(
+                    point.goal.replace(new pl3.type.Term("=", [prolog, list])),
+                    point.substitution,
+                    point
+                  )]);
+                } else {
+                  var obj = new pl3.type.JSValue(prolog.toJavaScript());
+                  thread.prepend([new pl3.type.State(
+                    point.goal.replace(new pl3.type.Term("=", [json, obj])),
+                    point.substitution,
+                    point
+                  )]);
+                }
+              }
+            },
+            // json_atom/2
+            "json_atom/2": function(thread, point, atom) {
+              var json = atom.args[0], prolog = atom.args[1];
+              if (pl3.type.is_variable(json) && pl3.type.is_variable(prolog)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_variable(json) && (!pl3.type.is_js_object(json) || typeof json.value !== "object")) {
+                thread.throw_error(pl3.error.type("JsValueOBJECT", json, atom.indicator));
+              } else if (!pl3.type.is_variable(prolog) && !pl3.type.is_atom(prolog)) {
+                thread.throw_error(pl3.error.type("atom", prolog, atom.indicator));
+              } else {
+                if (pl3.type.is_variable(prolog)) {
+                  try {
+                    var jatom = new pl3.type.Term(JSON.stringify(json.value), []);
+                    thread.prepend([new pl3.type.State(
+                      point.goal.replace(new pl3.type.Term("=", [prolog, jatom])),
+                      point.substitution,
+                      point
+                    )]);
+                  } catch (ex) {
+                  }
+                } else {
+                  try {
+                    var obj = pl3.fromJavaScript.apply(JSON.parse(prolog.id));
+                    thread.prepend([new pl3.type.State(
+                      point.goal.replace(new pl3.type.Term("=", [json, obj])),
+                      point.substitution,
+                      point
+                    )]);
+                  } catch (ex) {
+                  }
+                }
+              }
+            },
+            // ajax/3
+            "ajax/3": [
+              new pl3.type.Rule(new pl3.type.Term("ajax", [new pl3.type.Var("Method"), new pl3.type.Var("URL"), new pl3.type.Var("Response")]), new pl3.type.Term("ajax", [new pl3.type.Var("Method"), new pl3.type.Var("URL"), new pl3.type.Var("Response"), new pl3.type.Term("[]", [])]))
+            ],
+            // ajax/4
+            "ajax/4": function(thread, point, atom) {
+              var method = atom.args[0], url = atom.args[1], value = atom.args[2], options = atom.args[3];
+              if (pl3.type.is_variable(url) || pl3.type.is_variable(method) || pl3.type.is_variable(options)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_atom(url)) {
+                thread.throw_error(pl3.error.type("atom", url, atom.indicator));
+              } else if (!pl3.type.is_atom(method)) {
+                thread.throw_error(pl3.error.type("atom", method, atom.indicator));
+              } else if (!pl3.type.is_list(options)) {
+                thread.throw_error(pl3.error.type("list", options, atom.indicator));
+              } else if (["connect", "delete", "get", "head", "options", "patch", "post", "put", "trace"].indexOf(method.id) === -1) {
+                thread.throw_error(pl3.error.domain("http_method", method, atom.indicator));
+              } else {
+                var pointer = options;
+                var opt_type = null;
+                var opt_timeout = 0;
+                var opt_credentials = "false";
+                var opt_async = "true";
+                var opt_mime = null;
+                var opt_headers = [];
+                var opt_body = new FormData();
+                var opt_user = null;
+                var opt_password = null;
+                while (pl3.type.is_term(pointer) && pointer.indicator === "./2") {
+                  var option = pointer.args[0];
+                  if (!pl3.type.is_term(option) || option.args.length !== 1) {
+                    thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                    return;
+                  }
+                  var prop = option.args[0];
+                  if (option.indicator === "type/1") {
+                    if (!pl3.type.is_atom(prop) || prop.id !== "text" && prop.id !== "json" && prop.id !== "document") {
+                      thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                      return;
+                    }
+                    opt_type = prop.id;
+                  } else if (option.indicator === "user/1") {
+                    if (!pl3.type.is_atom(prop)) {
+                      thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                      return;
+                    }
+                    opt_user = prop.id;
+                  } else if (option.indicator === "password/1") {
+                    if (!pl3.type.is_atom(prop)) {
+                      thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                      return;
+                    }
+                    opt_password = prop.id;
+                  } else if (option.indicator === "timeout/1") {
+                    if (!pl3.type.is_integer(prop) || prop.value < 0) {
+                      thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                      return;
+                    }
+                    opt_timeout = prop.value;
+                  } else if (option.indicator === "async/1") {
+                    if (!pl3.type.is_atom(prop) || prop.id !== "true" && prop.id !== "false") {
+                      thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                      return;
+                    }
+                    opt_async = prop.id;
+                  } else if (option.indicator === "credentials/1") {
+                    if (!pl3.type.is_atom(prop) || prop.id !== "true" && prop.id !== "false") {
+                      thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                      return;
+                    }
+                    opt_credentials = prop.id;
+                  } else if (option.indicator === "mime/1") {
+                    if (!pl3.type.is_atom(prop)) {
+                      thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                      return;
+                    }
+                    opt_mime = prop.id;
+                  } else if (option.indicator === "headers/1") {
+                    if (!pl3.type.is_list(prop)) {
+                      thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                      return;
+                    }
+                    var hpointer = prop;
+                    while (pl3.type.is_term(hpointer) && hpointer.indicator === "./2") {
+                      var header = hpointer.args[0];
+                      if (!pl3.type.is_term(header) || header.indicator !== "-/2" || !pl3.type.is_atom(header.args[0]) || !pl3.type.is_atom(header.args[1])) {
+                        thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                        return;
+                      }
+                      opt_headers.push({ header: header.args[0].id, value: header.args[1].id });
+                      hpointer = hpointer.args[1];
+                    }
+                    if (pl3.type.is_variable(hpointer)) {
+                      thread.throw_error(pl3.error.instantiation(atom.indicator));
+                      return;
+                    } else if (!pl3.type.is_term(hpointer) || hpointer.indicator !== "[]/0") {
+                      thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                      return;
+                    }
+                  } else if (option.indicator === "body/1") {
+                    if (!pl3.type.is_list(prop) && (pl3.type.is_dom_object === void 0 || !pl3.type.is_dom_object(prop)) && !pl3.type.is_atom(prop)) {
+                      thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                      return;
+                    }
+                    if (pl3.type.is_list(prop)) {
+                      var hpointer = prop;
+                      while (pl3.type.is_term(hpointer) && hpointer.indicator === "./2") {
+                        var body = hpointer.args[0];
+                        if (!pl3.type.is_term(body) || body.indicator !== "-/2" || !pl3.type.is_atom(body.args[0]) || !pl3.type.is_atom(body.args[1])) {
+                          thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                          return;
+                        }
+                        opt_body.append(body.args[0].id, body.args[1].id);
+                        hpointer = hpointer.args[1];
+                      }
+                      if (pl3.type.is_variable(hpointer)) {
+                        thread.throw_error(pl3.error.instantiation(atom.indicator));
+                        return;
+                      } else if (!pl3.type.is_term(hpointer) || hpointer.indicator !== "[]/0") {
+                        thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                        return;
+                      }
+                    } else if (pl3.type.is_atom(prop)) {
+                      opt_body = prop.id;
+                    } else {
+                      opt_body = prop.value;
+                    }
+                  } else {
+                    thread.throw_error(pl3.error.domain("ajax_option", option, atom.indicator));
+                    return;
+                  }
+                  pointer = pointer.args[1];
+                }
+                if (pl3.type.is_variable(pointer)) {
+                  thread.throw_error(pl3.error.instantiation(atom.indicator));
+                  return;
+                } else if (!pl3.type.is_term(pointer) || pointer.indicator !== "[]/0") {
+                  thread.throw_error(pl3.error.type("list", options, atom.indicator));
+                  return;
+                }
+                var xhttp = new XMLHttpRequest();
+                if (opt_mime !== null)
+                  xhttp.overrideMimeType(opt_mime);
+                var fn = function() {
+                  if (this.readyState == 4) {
+                    if (this.status == 200) {
+                      var data = null;
+                      var content_type = this.getResponseHeader("Content-Type");
+                      if (this.responseType === "json" && this.response) {
+                        data = pl3.fromJavaScript.apply(this.response);
+                      } else if (this.responseType === "" && content_type.indexOf("application/json") !== -1) {
+                        try {
+                          data = pl3.fromJavaScript.apply(JSON.parse(this.responseText));
+                        } catch (e) {
+                        }
+                      }
+                      if (data === null) {
+                        if ((this.responseType === "document" || this.responseType === "" && content_type.indexOf("text/html") !== -1 || this.responseType === "" && content_type.indexOf("application/xml") !== -1) && this.responseXML !== null && pl3.type.DOM !== void 0) {
+                          data = new pl3.type.DOM(this.responseXML);
+                        } else if (this.responseType === "" || this.responseType === "text") {
+                          data = new pl3.type.Term(this.responseText, []);
+                        }
+                      }
+                      if (data !== null)
+                        thread.prepend([
+                          new pl3.type.State(
+                            point.goal.replace(new pl3.type.Term("=", [value, data])),
+                            point.substitution,
+                            point
+                          )
+                        ]);
+                    }
+                    if (opt_async === "true")
+                      thread.again();
+                  }
+                };
+                xhttp.onreadystatechange = fn;
+                xhttp.open(method.id.toUpperCase(), url.id, opt_async === "true", opt_user, opt_password);
+                if (opt_type !== null && opt_async === "true")
+                  xhttp.responseType = opt_type;
+                xhttp.withCredentials = opt_credentials === "true";
+                if (opt_async === "true")
+                  xhttp.timeout = opt_timeout;
+                for (var i2 = 0; i2 < opt_headers.length; i2++)
+                  xhttp.setRequestHeader(opt_headers[i2].header, opt_headers[i2].value);
+                xhttp.send(opt_body);
+                if (opt_async === "true")
+                  return true;
+                else
+                  fn.apply(xhttp);
+              }
+            }
+          };
+        };
+        var exports2 = ["global/1", "apply/3", "apply/4", "prop/2", "prop/3", "get_prop/2", "get_prop/3", "set_prop/2", "set_prop/3", "new/3", "json_prolog/2", "json_atom/2", "ajax/3", "ajax/4"];
+        function define_properties() {
+          pl3.type.is_js_object = function(obj) {
+            return obj instanceof pl3.type.JSValue;
+          };
+          pl3.type.order.push(pl3.type.JSValue);
+          pl3.type.JSValue = function(value) {
+            this.value = value;
+          };
+          pl3.type.JSValue.prototype.toString = function() {
+            return "<javascript>(" + (typeof this.value).toLowerCase() + ")";
+          };
+          pl3.type.JSValue.prototype.clone = function() {
+            return new pl3.type.JSValue(this.value);
+          };
+          pl3.type.JSValue.prototype.equals = function(obj) {
+            return pl3.type.is_js_object(obj) && this.value === obj.value;
+          };
+          pl3.type.JSValue.prototype.rename = function(_) {
+            return this;
+          };
+          pl3.type.JSValue.prototype.variables = function() {
+            return [];
+          };
+          pl3.type.JSValue.prototype.apply = function(_) {
+            return this;
+          };
+          pl3.type.JSValue.prototype.unify = function(obj, occurs_check) {
+            if (pl3.type.is_js_object(obj) && this.value === obj.value)
+              return new pl3.type.Substitution();
+            if (pl3.type.is_term(obj) && obj.indicator === "{}/1") {
+              var left = [], right = [];
+              var pointer = obj.args[0];
+              var props = [];
+              while (pl3.type.is_term(pointer) && pointer.indicator === ",/2") {
+                props.push(pointer.args[0]);
+                pointer = pointer.args[1];
+              }
+              props.push(pointer);
+              for (var i2 = 0; i2 < props.length; i2++) {
+                var bind = props[i2];
+                if (!pl3.type.is_term(bind) || bind.indicator !== ":/2")
+                  return null;
+                var name = bind.args[0];
+                if (!pl3.type.is_atom(name) || !this.value.hasOwnProperty(name.id))
+                  return null;
+                var value = pl3.fromJavaScript.apply(this.value[name.id]);
+                right.push(bind.args[1]);
+                left.push(value);
+              }
+              return pl3.unify(left, right, occurs_check);
+            }
+            return null;
+          };
+          pl3.type.JSValue.prototype.interpret = function(indicator2) {
+            return pl3.error.instantiation(indicator2);
+          };
+          pl3.type.JSValue.prototype.compare = function(obj) {
+            if (this.value === obj.value) {
+              return 0;
+            } else if (this.value < obj.value) {
+              return -1;
+            } else if (this.value > obj.value) {
+              return 1;
+            }
+          };
+          pl3.type.JSValue.prototype.toJavaScript = function() {
+            return this.value;
+          };
+          pl3.fromJavaScript.conversion.any = function(obj) {
+            return new pl3.type.JSValue(obj);
+          };
+          pl3.error.javascript = function(error, indicator2) {
+            return new pl3.type.Term("error", [new pl3.type.Term("javascript_error", [new pl3.type.Term(error)]), pl3.utils.str_indicator(indicator2)]);
+          };
+        }
+        if (typeof module !== "undefined") {
+          module.exports = function(p) {
+            pl3 = p;
+            define_properties();
+            new pl3.type.Module("js", predicates(), exports2);
+          };
+        } else {
+          define_properties();
+          new pl3.type.Module("js", predicates(), exports2);
+        }
+      })(pl2);
+    }
+  });
+
+  // node_modules/tau-prolog/modules/format.js
+  var require_format = __commonJS({
+    "node_modules/tau-prolog/modules/format.js"(exports, module) {
+      var pl2;
+      (function(pl3) {
+        var name = "format";
+        var predicates = function() {
+          return {
+            "format_/4": [
+              new pl3.type.Rule(new pl3.type.Term("format_", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32320"), new pl3.type.Var("_32322")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("is_list", [new pl3.type.Var("_32316")]), new pl3.type.Term("true", [])]), new pl3.type.Term("throw", [new pl3.type.Term("error", [new pl3.type.Term("type_error", [new pl3.type.Term("list", []), new pl3.type.Var("_32316")]), new pl3.type.Term("//", [new pl3.type.Term("format_", []), new pl3.type.Num(2, false)])])])]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("is_list", [new pl3.type.Var("_32317")]), new pl3.type.Term("true", [])]), new pl3.type.Term("throw", [new pl3.type.Term("error", [new pl3.type.Term("type_error", [new pl3.type.Term("list", []), new pl3.type.Var("_32317")]), new pl3.type.Term("//", [new pl3.type.Term("format_", []), new pl3.type.Num(2, false)])])])]), new pl3.type.Term(",", [new pl3.type.Term("unique_variable_names", [new pl3.type.Var("_32317"), new pl3.type.Var("_32318")]), new pl3.type.Term("phrase", [new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Num(0, false), new pl3.type.Term("[]", []), new pl3.type.Var("_32318")]), new pl3.type.Var("_32319")])])])]), new pl3.type.Term("=", [new pl3.type.Var("_32320"), new pl3.type.Var("_32321")])]), new pl3.type.Term("format_cells", [new pl3.type.Var("_32319"), new pl3.type.Var("_32321"), new pl3.type.Var("_32322")])]))
+            ],
+            "format_cells/3": [
+              new pl3.type.Rule(new pl3.type.Term("format_cells", [new pl3.type.Term("[]", []), new pl3.type.Var("_32323"), new pl3.type.Var("_32323")]), new pl3.type.Term("true", [])),
+              new pl3.type.Rule(new pl3.type.Term("format_cells", [new pl3.type.Term(".", [new pl3.type.Var("_32324"), new pl3.type.Var("_32319")]), new pl3.type.Var("_32325"), new pl3.type.Var("_32327")]), new pl3.type.Term(",", [new pl3.type.Term("format_cell", [new pl3.type.Var("_32324"), new pl3.type.Var("_32325"), new pl3.type.Var("_32326")]), new pl3.type.Term("format_cells", [new pl3.type.Var("_32319"), new pl3.type.Var("_32326"), new pl3.type.Var("_32327")])]))
+            ],
+            "format_cell/3": [
+              new pl3.type.Rule(new pl3.type.Term("format_cell", [new pl3.type.Term("newline", []), new pl3.type.Term(".", [new pl3.type.Term("\n", []), new pl3.type.Var("_32329")]), new pl3.type.Var("_32329")]), null),
+              new pl3.type.Rule(new pl3.type.Term("format_cell", [new pl3.type.Term("cell", [new pl3.type.Var("_32330"), new pl3.type.Var("_32331"), new pl3.type.Var("_32332")]), new pl3.type.Var("_32341"), new pl3.type.Var("_32343")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("elements_gluevars", [new pl3.type.Var("_32332"), new pl3.type.Num(0, false), new pl3.type.Var("_32333")]), new pl3.type.Var("_32334")]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("=", [new pl3.type.Var("_32334"), new pl3.type.Term("[]", [])]), new pl3.type.Term("true", [])]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("_32335"), new pl3.type.Term("-", [new pl3.type.Term("-", [new pl3.type.Var("_32331"), new pl3.type.Var("_32330")]), new pl3.type.Var("_32333")])]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("=<", [new pl3.type.Var("_32335"), new pl3.type.Num(0, false)]), new pl3.type.Term("maplist", [new pl3.type.Term("=", [new pl3.type.Num(0, false)]), new pl3.type.Var("_32334")])]), new pl3.type.Term(",", [new pl3.type.Term("length", [new pl3.type.Var("_32334"), new pl3.type.Var("_32336")]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("_32337"), new pl3.type.Term("//", [new pl3.type.Var("_32335"), new pl3.type.Var("_32336")])]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("_32338"), new pl3.type.Term("-", [new pl3.type.Var("_32335"), new pl3.type.Term("*", [new pl3.type.Var("_32337"), new pl3.type.Var("_32336")])])]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("=:=", [new pl3.type.Var("_32338"), new pl3.type.Num(0, false)]), new pl3.type.Term("maplist", [new pl3.type.Term("=", [new pl3.type.Var("_32337")]), new pl3.type.Var("_32334")])]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("_32339"), new pl3.type.Term("+", [new pl3.type.Var("_32337"), new pl3.type.Var("_32338")])]), new pl3.type.Term(",", [new pl3.type.Term("reverse", [new pl3.type.Var("_32334"), new pl3.type.Term(".", [new pl3.type.Var("_32339"), new pl3.type.Var("_32340")])]), new pl3.type.Term("maplist", [new pl3.type.Term("=", [new pl3.type.Var("_32337")]), new pl3.type.Var("_32340")])])])])])])])])])])]), new pl3.type.Term("=", [new pl3.type.Var("_32341"), new pl3.type.Var("_32342")])]), new pl3.type.Term("format_elements", [new pl3.type.Var("_32332"), new pl3.type.Var("_32342"), new pl3.type.Var("_32343")])]))
+            ],
+            "format_elements/3": [
+              new pl3.type.Rule(new pl3.type.Term("format_elements", [new pl3.type.Term("[]", []), new pl3.type.Var("_32344"), new pl3.type.Var("_32344")]), new pl3.type.Term("true", [])),
+              new pl3.type.Rule(new pl3.type.Term("format_elements", [new pl3.type.Term(".", [new pl3.type.Var("_32345"), new pl3.type.Var("_32332")]), new pl3.type.Var("_32346"), new pl3.type.Var("_32348")]), new pl3.type.Term(",", [new pl3.type.Term("format_element", [new pl3.type.Var("_32345"), new pl3.type.Var("_32346"), new pl3.type.Var("_32347")]), new pl3.type.Term("format_elements", [new pl3.type.Var("_32332"), new pl3.type.Var("_32347"), new pl3.type.Var("_32348")])]))
+            ],
+            "format_element/3": [
+              new pl3.type.Rule(new pl3.type.Term("format_element", [new pl3.type.Term("chars", [new pl3.type.Var("_32349")]), new pl3.type.Var("_32350"), new pl3.type.Var("_32351")]), new pl3.type.Term("seq", [new pl3.type.Var("_32349"), new pl3.type.Var("_32350"), new pl3.type.Var("_32351")])),
+              new pl3.type.Rule(new pl3.type.Term("format_element", [new pl3.type.Term("glue", [new pl3.type.Var("_32352"), new pl3.type.Var("_32353")]), new pl3.type.Var("_32355"), new pl3.type.Var("_32357")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("length", [new pl3.type.Var("_32354"), new pl3.type.Var("_32353")]), new pl3.type.Term("maplist", [new pl3.type.Term("=", [new pl3.type.Var("_32352")]), new pl3.type.Var("_32354")])]), new pl3.type.Term("=", [new pl3.type.Var("_32355"), new pl3.type.Var("_32356")])]), new pl3.type.Term("seq", [new pl3.type.Var("_32354"), new pl3.type.Var("_32356"), new pl3.type.Var("_32357")])]))
+            ],
+            "elements_gluevars/5": [
+              new pl3.type.Rule(new pl3.type.Term("elements_gluevars", [new pl3.type.Term("[]", []), new pl3.type.Var("_32358"), new pl3.type.Var("_32358"), new pl3.type.Var("_32359"), new pl3.type.Var("_32359")]), new pl3.type.Term("true", [])),
+              new pl3.type.Rule(new pl3.type.Term("elements_gluevars", [new pl3.type.Term(".", [new pl3.type.Var("_32345"), new pl3.type.Var("_32332")]), new pl3.type.Var("_32360"), new pl3.type.Var("_32358"), new pl3.type.Var("_32362"), new pl3.type.Var("_32364")]), new pl3.type.Term(",", [new pl3.type.Term("element_gluevar", [new pl3.type.Var("_32345"), new pl3.type.Var("_32360"), new pl3.type.Var("_32361"), new pl3.type.Var("_32362"), new pl3.type.Var("_32363")]), new pl3.type.Term("elements_gluevars", [new pl3.type.Var("_32332"), new pl3.type.Var("_32361"), new pl3.type.Var("_32358"), new pl3.type.Var("_32363"), new pl3.type.Var("_32364")])]))
+            ],
+            "element_gluevar/5": [
+              new pl3.type.Rule(new pl3.type.Term("element_gluevar", [new pl3.type.Term("chars", [new pl3.type.Var("_32349")]), new pl3.type.Var("_32360"), new pl3.type.Var("_32358"), new pl3.type.Var("_32366"), new pl3.type.Var("_32367")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("length", [new pl3.type.Var("_32349"), new pl3.type.Var("_32365")]), new pl3.type.Term("is", [new pl3.type.Var("_32358"), new pl3.type.Term("+", [new pl3.type.Var("_32360"), new pl3.type.Var("_32365")])])]), new pl3.type.Term("=", [new pl3.type.Var("_32366"), new pl3.type.Var("_32367")])])),
+              new pl3.type.Rule(new pl3.type.Term("element_gluevar", [new pl3.type.Term("glue", [new pl3.type.Var("__32368"), new pl3.type.Var("_32369")]), new pl3.type.Var("_32358"), new pl3.type.Var("_32358"), new pl3.type.Term(".", [new pl3.type.Var("_32369"), new pl3.type.Var("_32371")]), new pl3.type.Var("_32371")]), null)
+            ],
+            "cells/7": [
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term("[]", []), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("__32373"), new pl3.type.Var("_32374"), new pl3.type.Var("_32378")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32374"), new pl3.type.Var("_32375")])]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term(",", [new pl3.type.Term("==", [new pl3.type.Var("_32317"), new pl3.type.Term("[]", [])]), new pl3.type.Term("=", [new pl3.type.Var("_32375"), new pl3.type.Var("_32376")])]), new pl3.type.Term("cell", [new pl3.type.Var("_32372"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32376"), new pl3.type.Var("_32377")])]), new pl3.type.Term(",", [new pl3.type.Term("throw", [new pl3.type.Term("error", [new pl3.type.Term("domain_error", [new pl3.type.Term("empty_list", []), new pl3.type.Var("_32317")]), new pl3.type.Term("//", [new pl3.type.Term("cells", []), new pl3.type.Num(5, false)])])]), new pl3.type.Term("=", [new pl3.type.Var("_32375"), new pl3.type.Var("_32378")])])]), new pl3.type.Term("=", [new pl3.type.Var("_32377"), new pl3.type.Var("_32378")])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32316")])]), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32379"), new pl3.type.Var("_32381")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32379"), new pl3.type.Var("_32380")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term("[]", [])])]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32380"), new pl3.type.Var("_32381")])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("w", []), new pl3.type.Var("_32316")])]), new pl3.type.Term(".", [new pl3.type.Var("_32382"), new pl3.type.Var("_32317")]), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32384"), new pl3.type.Var("_32387")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32384"), new pl3.type.Var("_32385")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("write_term_to_chars", [new pl3.type.Var("_32382"), new pl3.type.Term(".", [new pl3.type.Term("numbervars", [new pl3.type.Term("true", [])]), new pl3.type.Term(".", [new pl3.type.Term("variable_names", [new pl3.type.Var("_32318")]), new pl3.type.Term("[]", [])])]), new pl3.type.Var("_32383")]), new pl3.type.Term("=", [new pl3.type.Var("_32385"), new pl3.type.Var("_32386")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32383")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32386"), new pl3.type.Var("_32387")])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("q", []), new pl3.type.Var("_32316")])]), new pl3.type.Term(".", [new pl3.type.Var("_32382"), new pl3.type.Var("_32317")]), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32388"), new pl3.type.Var("_32391")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32388"), new pl3.type.Var("_32389")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("write_term_to_chars", [new pl3.type.Var("_32382"), new pl3.type.Term(".", [new pl3.type.Term("quoted", [new pl3.type.Term("true", [])]), new pl3.type.Term(".", [new pl3.type.Term("numbervars", [new pl3.type.Term("true", [])]), new pl3.type.Term(".", [new pl3.type.Term("variable_names", [new pl3.type.Var("_32318")]), new pl3.type.Term("[]", [])])])]), new pl3.type.Var("_32383")]), new pl3.type.Term("=", [new pl3.type.Var("_32389"), new pl3.type.Var("_32390")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32383")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32390"), new pl3.type.Var("_32391")])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("a", []), new pl3.type.Var("_32316")])]), new pl3.type.Term(".", [new pl3.type.Var("_32382"), new pl3.type.Var("_32317")]), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32392"), new pl3.type.Var("_32395")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32392"), new pl3.type.Var("_32393")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("atom_chars", [new pl3.type.Var("_32382"), new pl3.type.Var("_32383")]), new pl3.type.Term("=", [new pl3.type.Var("_32393"), new pl3.type.Var("_32394")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32383")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32394"), new pl3.type.Var("_32395")])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32396")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32404"), new pl3.type.Var("_32411")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("numeric_argument", [new pl3.type.Var("_32396"), new pl3.type.Var("_32353"), new pl3.type.Term(".", [new pl3.type.Term("d", []), new pl3.type.Var("_32316")]), new pl3.type.Var("_32397"), new pl3.type.Term(".", [new pl3.type.Var("_32398"), new pl3.type.Var("_32317")])]), new pl3.type.Term("=", [new pl3.type.Var("_32404"), new pl3.type.Var("_32405")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32405"), new pl3.type.Var("_32406")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("_32382"), new pl3.type.Var("_32398")]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("integer", [new pl3.type.Var("_32382")]), new pl3.type.Term("true", [])]), new pl3.type.Term("throw", [new pl3.type.Term("error", [new pl3.type.Term("type_error", [new pl3.type.Term("integer", []), new pl3.type.Var("_32382")]), new pl3.type.Term("//", [new pl3.type.Term("cells", []), new pl3.type.Num(5, false)])])])]), new pl3.type.Term("number_chars", [new pl3.type.Var("_32382"), new pl3.type.Var("_32399")])])]), new pl3.type.Term("=", [new pl3.type.Var("_32406"), new pl3.type.Var("_32407")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term(",", [new pl3.type.Term("=:=", [new pl3.type.Var("_32353"), new pl3.type.Num(0, false)]), new pl3.type.Term("=", [new pl3.type.Var("_32407"), new pl3.type.Var("_32408")])]), new pl3.type.Term(",", [new pl3.type.Term("=", [new pl3.type.Var("_32349"), new pl3.type.Var("_32399")]), new pl3.type.Term("=", [new pl3.type.Var("_32408"), new pl3.type.Var("_32409")])])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("length", [new pl3.type.Var("_32399"), new pl3.type.Var("_32365")]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("=<", [new pl3.type.Var("_32365"), new pl3.type.Var("_32353")]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("_32338"), new pl3.type.Term("-", [new pl3.type.Var("_32353"), new pl3.type.Var("_32365")])]), new pl3.type.Term(",", [new pl3.type.Term("length", [new pl3.type.Var("_32400"), new pl3.type.Var("_32338")]), new pl3.type.Term(",", [new pl3.type.Term("maplist", [new pl3.type.Term("=", [new pl3.type.Term("0", [])]), new pl3.type.Var("_32400")]), new pl3.type.Term("phrase", [new pl3.type.Term(",", [new pl3.type.Term(".", [new pl3.type.Term("0", []), new pl3.type.Term(".", [new pl3.type.Term(".", []), new pl3.type.Term("[]", [])])]), new pl3.type.Term(",", [new pl3.type.Term("seq", [new pl3.type.Var("_32400")]), new pl3.type.Term("seq", [new pl3.type.Var("_32399")])])]), new pl3.type.Var("_32349")])])])])]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("_32401"), new pl3.type.Term("-", [new pl3.type.Var("_32365"), new pl3.type.Var("_32353")])]), new pl3.type.Term(",", [new pl3.type.Term("length", [new pl3.type.Var("_32402"), new pl3.type.Var("_32401")]), new pl3.type.Term(",", [new pl3.type.Term("append", [new pl3.type.Var("_32402"), new pl3.type.Var("_32403"), new pl3.type.Var("_32399")]), new pl3.type.Term("phrase", [new pl3.type.Term(",", [new pl3.type.Term("seq", [new pl3.type.Var("_32402")]), new pl3.type.Term(",", [new pl3.type.Term(".", [new pl3.type.Term(".", []), new pl3.type.Term("[]", [])]), new pl3.type.Term("seq", [new pl3.type.Var("_32403")])])]), new pl3.type.Var("_32349")])])])])])]), new pl3.type.Term("=", [new pl3.type.Var("_32407"), new pl3.type.Var("_32410")])])]), new pl3.type.Term("=", [new pl3.type.Var("_32409"), new pl3.type.Var("_32410")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32349")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32410"), new pl3.type.Var("_32411")])])])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32396")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32417"), new pl3.type.Var("_32421")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("numeric_argument", [new pl3.type.Var("_32396"), new pl3.type.Var("_32353"), new pl3.type.Term(".", [new pl3.type.Term("D", []), new pl3.type.Var("_32316")]), new pl3.type.Var("_32397"), new pl3.type.Term(".", [new pl3.type.Var("_32382"), new pl3.type.Var("_32317")])]), new pl3.type.Term("=", [new pl3.type.Var("_32417"), new pl3.type.Var("_32418")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32418"), new pl3.type.Var("_32419")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("number_chars", [new pl3.type.Var("_32353"), new pl3.type.Var("_32412")]), new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term(",", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term("[]", [])]), new pl3.type.Term(",", [new pl3.type.Term("seq", [new pl3.type.Var("_32412")]), new pl3.type.Term(".", [new pl3.type.Term("d", []), new pl3.type.Term("[]", [])])])]), new pl3.type.Var("_32413")]), new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("format_", [new pl3.type.Var("_32413"), new pl3.type.Term(".", [new pl3.type.Var("_32382"), new pl3.type.Term("[]", [])])]), new pl3.type.Var("_32399")]), new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("upto_what", [new pl3.type.Var("_32414"), new pl3.type.Term(".", [])]), new pl3.type.Var("_32399"), new pl3.type.Var("_32403")]), new pl3.type.Term(",", [new pl3.type.Term("reverse", [new pl3.type.Var("_32414"), new pl3.type.Var("_32415")]), new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("groups_of_three", [new pl3.type.Var("_32415")]), new pl3.type.Var("_32416")]), new pl3.type.Term(",", [new pl3.type.Term("reverse", [new pl3.type.Var("_32416"), new pl3.type.Var("_32402")]), new pl3.type.Term("append", [new pl3.type.Var("_32402"), new pl3.type.Var("_32403"), new pl3.type.Var("_32349")])])])])])])])]), new pl3.type.Term("=", [new pl3.type.Var("_32419"), new pl3.type.Var("_32420")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32349")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32420"), new pl3.type.Var("_32421")])])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("i", []), new pl3.type.Var("_32316")])]), new pl3.type.Term(".", [new pl3.type.Var("__32422"), new pl3.type.Var("_32317")]), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32423"), new pl3.type.Var("_32425")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32423"), new pl3.type.Var("_32424")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32424"), new pl3.type.Var("_32425")])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("n", []), new pl3.type.Var("_32316")])]), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32426"), new pl3.type.Var("_32430")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32426"), new pl3.type.Var("_32427")])]), new pl3.type.Term(",", [new pl3.type.Term("cell", [new pl3.type.Var("_32372"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32427"), new pl3.type.Var("_32428")]), new pl3.type.Term(",", [new pl3.type.Term("n_newlines", [new pl3.type.Num(1, false), new pl3.type.Var("_32428"), new pl3.type.Var("_32429")]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Num(0, false), new pl3.type.Term("[]", []), new pl3.type.Var("_32318"), new pl3.type.Var("_32429"), new pl3.type.Var("_32430")])])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32396")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32431"), new pl3.type.Var("_32436")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("numeric_argument", [new pl3.type.Var("_32396"), new pl3.type.Var("_32353"), new pl3.type.Term(".", [new pl3.type.Term("n", []), new pl3.type.Var("_32316")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32317")]), new pl3.type.Term("=", [new pl3.type.Var("_32431"), new pl3.type.Var("_32432")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32432"), new pl3.type.Var("_32433")])]), new pl3.type.Term(",", [new pl3.type.Term("cell", [new pl3.type.Var("_32372"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32433"), new pl3.type.Var("_32434")]), new pl3.type.Term(",", [new pl3.type.Term("n_newlines", [new pl3.type.Var("_32353"), new pl3.type.Var("_32434"), new pl3.type.Var("_32435")]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Num(0, false), new pl3.type.Term("[]", []), new pl3.type.Var("_32318"), new pl3.type.Var("_32435"), new pl3.type.Var("_32436")])])])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("s", []), new pl3.type.Var("_32316")])]), new pl3.type.Term(".", [new pl3.type.Var("_32382"), new pl3.type.Var("_32317")]), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32437"), new pl3.type.Var("_32439")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32437"), new pl3.type.Var("_32438")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32382")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32438"), new pl3.type.Var("_32439")])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("f", []), new pl3.type.Var("_32316")])]), new pl3.type.Term(".", [new pl3.type.Var("_32382"), new pl3.type.Var("_32317")]), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32440"), new pl3.type.Var("_32443")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32440"), new pl3.type.Var("_32441")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("format_number_chars", [new pl3.type.Var("_32382"), new pl3.type.Var("_32383")]), new pl3.type.Term("=", [new pl3.type.Var("_32441"), new pl3.type.Var("_32442")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32383")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32442"), new pl3.type.Var("_32443")])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32396")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32445"), new pl3.type.Var("_32449")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("numeric_argument", [new pl3.type.Var("_32396"), new pl3.type.Var("_32353"), new pl3.type.Term(".", [new pl3.type.Term("f", []), new pl3.type.Var("_32316")]), new pl3.type.Var("_32397"), new pl3.type.Term(".", [new pl3.type.Var("_32382"), new pl3.type.Var("_32317")])]), new pl3.type.Term("=", [new pl3.type.Var("_32445"), new pl3.type.Var("_32446")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32446"), new pl3.type.Var("_32447")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("format_number_chars", [new pl3.type.Var("_32382"), new pl3.type.Var("_32399")]), new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("upto_what", [new pl3.type.Var("_32402"), new pl3.type.Term(".", [])]), new pl3.type.Var("_32399"), new pl3.type.Var("_32349")]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("=:=", [new pl3.type.Var("_32353"), new pl3.type.Num(0, false)]), new pl3.type.Term("=", [new pl3.type.Var("_32383"), new pl3.type.Var("_32402")])]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("=", [new pl3.type.Var("_32349"), new pl3.type.Term(".", [new pl3.type.Term(".", []), new pl3.type.Var("_32340")])]), new pl3.type.Term(",", [new pl3.type.Term("length", [new pl3.type.Var("_32340"), new pl3.type.Var("_32365")]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("<", [new pl3.type.Var("_32353"), new pl3.type.Var("_32365")]), new pl3.type.Term(",", [new pl3.type.Term("length", [new pl3.type.Var("_32403"), new pl3.type.Var("_32353")]), new pl3.type.Term("append", [new pl3.type.Var("_32403"), new pl3.type.Var("__32444"), new pl3.type.Var("_32340")])])]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("=:=", [new pl3.type.Var("_32353"), new pl3.type.Var("_32365")]), new pl3.type.Term("=", [new pl3.type.Var("_32403"), new pl3.type.Var("_32340")])]), new pl3.type.Term(",", [new pl3.type.Term(">", [new pl3.type.Var("_32353"), new pl3.type.Var("_32365")]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("_32338"), new pl3.type.Term("-", [new pl3.type.Var("_32353"), new pl3.type.Var("_32365")])]), new pl3.type.Term(",", [new pl3.type.Term("length", [new pl3.type.Var("_32400"), new pl3.type.Var("_32338")]), new pl3.type.Term(",", [new pl3.type.Term("maplist", [new pl3.type.Term("=", [new pl3.type.Term("0", [])]), new pl3.type.Var("_32400")]), new pl3.type.Term("append", [new pl3.type.Var("_32340"), new pl3.type.Var("_32400"), new pl3.type.Var("_32403")])])])])])])])])]), new pl3.type.Term(",", [new pl3.type.Term("length", [new pl3.type.Var("_32403"), new pl3.type.Var("_32353")]), new pl3.type.Term("maplist", [new pl3.type.Term("=", [new pl3.type.Term("0", [])]), new pl3.type.Var("_32403")])])]), new pl3.type.Term("append", [new pl3.type.Var("_32402"), new pl3.type.Term(".", [new pl3.type.Term(".", []), new pl3.type.Var("_32403")]), new pl3.type.Var("_32383")])])])])]), new pl3.type.Term("=", [new pl3.type.Var("_32447"), new pl3.type.Var("_32448")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32383")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32448"), new pl3.type.Var("_32449")])])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("r", []), new pl3.type.Var("_32316")])]), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32450"), new pl3.type.Var("_32452")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32450"), new pl3.type.Var("_32451")])]), new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("8", []), new pl3.type.Term(".", [new pl3.type.Term("r", []), new pl3.type.Var("_32316")])])]), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32451"), new pl3.type.Var("_32452")])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32396")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32453"), new pl3.type.Var("_32457")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("numeric_argument", [new pl3.type.Var("_32396"), new pl3.type.Var("_32353"), new pl3.type.Term(".", [new pl3.type.Term("r", []), new pl3.type.Var("_32316")]), new pl3.type.Var("_32397"), new pl3.type.Term(".", [new pl3.type.Var("_32382"), new pl3.type.Var("_32317")])]), new pl3.type.Term("=", [new pl3.type.Var("_32453"), new pl3.type.Var("_32454")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32454"), new pl3.type.Var("_32455")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("integer_to_radix", [new pl3.type.Var("_32382"), new pl3.type.Var("_32353"), new pl3.type.Term("lowercase", []), new pl3.type.Var("_32349")]), new pl3.type.Term("=", [new pl3.type.Var("_32455"), new pl3.type.Var("_32456")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32349")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32456"), new pl3.type.Var("_32457")])])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("R", []), new pl3.type.Var("_32316")])]), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32458"), new pl3.type.Var("_32460")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32458"), new pl3.type.Var("_32459")])]), new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("8", []), new pl3.type.Term(".", [new pl3.type.Term("R", []), new pl3.type.Var("_32316")])])]), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32459"), new pl3.type.Var("_32460")])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32396")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32461"), new pl3.type.Var("_32465")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("numeric_argument", [new pl3.type.Var("_32396"), new pl3.type.Var("_32353"), new pl3.type.Term(".", [new pl3.type.Term("R", []), new pl3.type.Var("_32316")]), new pl3.type.Var("_32397"), new pl3.type.Term(".", [new pl3.type.Var("_32382"), new pl3.type.Var("_32317")])]), new pl3.type.Term("=", [new pl3.type.Var("_32461"), new pl3.type.Var("_32462")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32462"), new pl3.type.Var("_32463")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("integer_to_radix", [new pl3.type.Var("_32382"), new pl3.type.Var("_32353"), new pl3.type.Term("uppercase", []), new pl3.type.Var("_32349")]), new pl3.type.Term("=", [new pl3.type.Var("_32463"), new pl3.type.Var("_32464")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32349")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32464"), new pl3.type.Var("_32465")])])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("`", []), new pl3.type.Term(".", [new pl3.type.Var("_32466"), new pl3.type.Term(".", [new pl3.type.Term("t", []), new pl3.type.Var("_32316")])])])]), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32468"), new pl3.type.Var("_32470")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32468"), new pl3.type.Var("_32469")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("glue", [new pl3.type.Var("_32466"), new pl3.type.Var("__32467")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32469"), new pl3.type.Var("_32470")])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("t", []), new pl3.type.Var("_32316")])]), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32472"), new pl3.type.Var("_32474")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32472"), new pl3.type.Var("_32473")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("glue", [new pl3.type.Term(" ", []), new pl3.type.Var("__32471")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32473"), new pl3.type.Var("_32474")])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("|", []), new pl3.type.Var("_32316")])]), new pl3.type.Var("_32317"), new pl3.type.Var("_32475"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32478"), new pl3.type.Var("_32482")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32478"), new pl3.type.Var("_32479")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("elements_gluevars", [new pl3.type.Var("_32332"), new pl3.type.Num(0, false), new pl3.type.Var("_32476")]), new pl3.type.Var("__32477")]), new pl3.type.Term("is", [new pl3.type.Var("_32372"), new pl3.type.Term("+", [new pl3.type.Var("_32475"), new pl3.type.Var("_32476")])])]), new pl3.type.Term("=", [new pl3.type.Var("_32479"), new pl3.type.Var("_32480")])]), new pl3.type.Term(",", [new pl3.type.Term("cell", [new pl3.type.Var("_32475"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32480"), new pl3.type.Var("_32481")]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term("[]", []), new pl3.type.Var("_32318"), new pl3.type.Var("_32481"), new pl3.type.Var("_32482")])])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32396")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32483"), new pl3.type.Var("_32487")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("numeric_argument", [new pl3.type.Var("_32396"), new pl3.type.Var("_32353"), new pl3.type.Term(".", [new pl3.type.Term("|", []), new pl3.type.Var("_32316")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32317")]), new pl3.type.Term("=", [new pl3.type.Var("_32483"), new pl3.type.Var("_32484")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32484"), new pl3.type.Var("_32485")])]), new pl3.type.Term(",", [new pl3.type.Term("cell", [new pl3.type.Var("_32372"), new pl3.type.Var("_32353"), new pl3.type.Var("_32332"), new pl3.type.Var("_32485"), new pl3.type.Var("_32486")]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32353"), new pl3.type.Term("[]", []), new pl3.type.Var("_32318"), new pl3.type.Var("_32486"), new pl3.type.Var("_32487")])])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32396")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32475"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32488"), new pl3.type.Var("_32493")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("numeric_argument", [new pl3.type.Var("_32396"), new pl3.type.Var("_32353"), new pl3.type.Term(".", [new pl3.type.Term("+", []), new pl3.type.Var("_32316")]), new pl3.type.Var("_32397"), new pl3.type.Var("_32317")]), new pl3.type.Term("=", [new pl3.type.Var("_32488"), new pl3.type.Var("_32489")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32489"), new pl3.type.Var("_32490")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("_32372"), new pl3.type.Term("+", [new pl3.type.Var("_32475"), new pl3.type.Var("_32353")])]), new pl3.type.Term("=", [new pl3.type.Var("_32490"), new pl3.type.Var("_32491")])]), new pl3.type.Term(",", [new pl3.type.Term("cell", [new pl3.type.Var("_32475"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32491"), new pl3.type.Var("_32492")]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term("[]", []), new pl3.type.Var("_32318"), new pl3.type.Var("_32492"), new pl3.type.Var("_32493")])])])])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32349")]), new pl3.type.Var("_32317"), new pl3.type.Var("__32494"), new pl3.type.Var("__32495"), new pl3.type.Var("__32496"), new pl3.type.Var("_32497"), new pl3.type.Var("_32500")]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term(",", [new pl3.type.Term("==", [new pl3.type.Var("_32317"), new pl3.type.Term("[]", [])]), new pl3.type.Term("=", [new pl3.type.Var("_32497"), new pl3.type.Var("_32498")])]), new pl3.type.Term(",", [new pl3.type.Term("throw", [new pl3.type.Term("error", [new pl3.type.Term("domain_error", [new pl3.type.Term("non_empty_list", []), new pl3.type.Term("[]", [])]), new pl3.type.Term("//", [new pl3.type.Term("cells", []), new pl3.type.Num(5, false)])])]), new pl3.type.Term("=", [new pl3.type.Var("_32498"), new pl3.type.Var("_32499")])])]), new pl3.type.Term(",", [new pl3.type.Term("throw", [new pl3.type.Term("error", [new pl3.type.Term("domain_error", [new pl3.type.Term("format_string", []), new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Var("_32349")])]), new pl3.type.Term("//", [new pl3.type.Term("cells", []), new pl3.type.Num(5, false)])])]), new pl3.type.Term("=", [new pl3.type.Var("_32497"), new pl3.type.Var("_32500")])])]), new pl3.type.Term("=", [new pl3.type.Var("_32499"), new pl3.type.Var("_32500")])])),
+              new pl3.type.Rule(new pl3.type.Term("cells", [new pl3.type.Var("_32396"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Var("_32332"), new pl3.type.Var("_32318"), new pl3.type.Var("_32504"), new pl3.type.Var("_32506")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("upto_what", [new pl3.type.Var("_32501"), new pl3.type.Term("~", [])]), new pl3.type.Var("_32396"), new pl3.type.Var("_32316")]), new pl3.type.Term("=", [new pl3.type.Var("_32501"), new pl3.type.Term(".", [new pl3.type.Var("__32502"), new pl3.type.Var("__32503")])])]), new pl3.type.Term("=", [new pl3.type.Var("_32504"), new pl3.type.Var("_32505")])]), new pl3.type.Term("cells", [new pl3.type.Var("_32316"), new pl3.type.Var("_32317"), new pl3.type.Var("_32372"), new pl3.type.Term(".", [new pl3.type.Term("chars", [new pl3.type.Var("_32501")]), new pl3.type.Var("_32332")]), new pl3.type.Var("_32318"), new pl3.type.Var("_32505"), new pl3.type.Var("_32506")])]))
+            ],
+            "format_number_chars/2": [
+              new pl3.type.Rule(new pl3.type.Term("format_number_chars", [new pl3.type.Var("N0"), new pl3.type.Var("Chars")]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("N"), new pl3.type.Var("N0")]), new pl3.type.Term("number_chars", [new pl3.type.Var("N"), new pl3.type.Var("Chars")])]))
+            ],
+            "n_newlines/3": [
+              new pl3.type.Rule(new pl3.type.Term("n_newlines", [new pl3.type.Num(0, false), new pl3.type.Var("_32507"), new pl3.type.Var("_32508")]), new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32507"), new pl3.type.Var("_32508")])])),
+              new pl3.type.Rule(new pl3.type.Term("n_newlines", [new pl3.type.Var("_32360"), new pl3.type.Var("_32509"), new pl3.type.Var("_32512")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(">", [new pl3.type.Var("_32360"), new pl3.type.Num(0, false)]), new pl3.type.Term("is", [new pl3.type.Var("_32358"), new pl3.type.Term("-", [new pl3.type.Var("_32360"), new pl3.type.Num(1, false)])])]), new pl3.type.Term("=", [new pl3.type.Var("_32509"), new pl3.type.Var("_32510")])]), new pl3.type.Term(",", [new pl3.type.Term("=", [new pl3.type.Var("_32510"), new pl3.type.Term(".", [new pl3.type.Term("newline", []), new pl3.type.Var("_32511")])]), new pl3.type.Term("n_newlines", [new pl3.type.Var("_32358"), new pl3.type.Var("_32511"), new pl3.type.Var("_32512")])])]))
+            ],
+            "upto_what/4": [
+              new pl3.type.Rule(new pl3.type.Term("upto_what", [new pl3.type.Term("[]", []), new pl3.type.Var("_32513"), new pl3.type.Var("_32514"), new pl3.type.Var("_32517")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("=", [new pl3.type.Var("_32514"), new pl3.type.Term(".", [new pl3.type.Var("_32513"), new pl3.type.Var("_32515")])]), new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32515"), new pl3.type.Var("_32516")])])]), new pl3.type.Term("=", [new pl3.type.Var("_32517"), new pl3.type.Term(".", [new pl3.type.Var("_32513"), new pl3.type.Var("_32516")])])])),
+              new pl3.type.Rule(new pl3.type.Term("upto_what", [new pl3.type.Term(".", [new pl3.type.Var("_32518"), new pl3.type.Var("_32349")]), new pl3.type.Var("_32513"), new pl3.type.Term(".", [new pl3.type.Var("_32518"), new pl3.type.Var("_32520")]), new pl3.type.Var("_32522")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32520"), new pl3.type.Var("_32521")])]), new pl3.type.Term("upto_what", [new pl3.type.Var("_32349"), new pl3.type.Var("_32513"), new pl3.type.Var("_32521"), new pl3.type.Var("_32522")])])),
+              new pl3.type.Rule(new pl3.type.Term("upto_what", [new pl3.type.Term("[]", []), new pl3.type.Var("__32523"), new pl3.type.Var("_32524"), new pl3.type.Var("_32524")]), new pl3.type.Term("true", []))
+            ],
+            "groups_of_three/3": [
+              new pl3.type.Rule(new pl3.type.Term("groups_of_three", [new pl3.type.Term(".", [new pl3.type.Var("_32525"), new pl3.type.Term(".", [new pl3.type.Var("_32526"), new pl3.type.Term(".", [new pl3.type.Var("_32518"), new pl3.type.Term(".", [new pl3.type.Var("_32527"), new pl3.type.Var("_32528")])])])]), new pl3.type.Var("_32529"), new pl3.type.Var("_32533")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32529"), new pl3.type.Var("_32530")])]), new pl3.type.Term(",", [new pl3.type.Term("=", [new pl3.type.Var("_32530"), new pl3.type.Term(".", [new pl3.type.Var("_32525"), new pl3.type.Term(".", [new pl3.type.Var("_32526"), new pl3.type.Term(".", [new pl3.type.Var("_32518"), new pl3.type.Var("_32531")])])])]), new pl3.type.Term(",", [new pl3.type.Term("=", [new pl3.type.Var("_32531"), new pl3.type.Term(".", [new pl3.type.Term(",", []), new pl3.type.Var("_32532")])]), new pl3.type.Term("groups_of_three", [new pl3.type.Term(".", [new pl3.type.Var("_32527"), new pl3.type.Var("_32528")]), new pl3.type.Var("_32532"), new pl3.type.Var("_32533")])])])])),
+              new pl3.type.Rule(new pl3.type.Term("groups_of_three", [new pl3.type.Var("_32354"), new pl3.type.Var("_32534"), new pl3.type.Var("_32535")]), new pl3.type.Term("seq", [new pl3.type.Var("_32354"), new pl3.type.Var("_32534"), new pl3.type.Var("_32535")]))
+            ],
+            "cell/5": [
+              new pl3.type.Rule(new pl3.type.Term("cell", [new pl3.type.Var("_32330"), new pl3.type.Var("_32331"), new pl3.type.Var("_32536"), new pl3.type.Var("_32537"), new pl3.type.Var("_32540")]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term(",", [new pl3.type.Term("==", [new pl3.type.Var("_32536"), new pl3.type.Term("[]", [])]), new pl3.type.Term("=", [new pl3.type.Var("_32537"), new pl3.type.Var("_32538")])]), new pl3.type.Term("true", [])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("reverse", [new pl3.type.Var("_32536"), new pl3.type.Var("_32332")]), new pl3.type.Term("=", [new pl3.type.Var("_32537"), new pl3.type.Var("_32539")])]), new pl3.type.Term("=", [new pl3.type.Var("_32539"), new pl3.type.Term(".", [new pl3.type.Term("cell", [new pl3.type.Var("_32330"), new pl3.type.Var("_32331"), new pl3.type.Var("_32332")]), new pl3.type.Var("_32540")])])])]), new pl3.type.Term("=", [new pl3.type.Var("_32538"), new pl3.type.Var("_32540")])]))
+            ],
+            "numeric_argument/5": [
+              new pl3.type.Rule(new pl3.type.Term("numeric_argument", [new pl3.type.Var("Ds"), new pl3.type.Var("Num"), new pl3.type.Var("Rest"), new pl3.type.Var("Args0"), new pl3.type.Var("Args")]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("=", [new pl3.type.Var("Ds"), new pl3.type.Term(".", [new pl3.type.Term("*", []), new pl3.type.Var("Rest")])]), new pl3.type.Term("=", [new pl3.type.Var("Args0"), new pl3.type.Term(".", [new pl3.type.Var("Num"), new pl3.type.Var("Args")])])]), new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("numeric_argument_", [new pl3.type.Var("Ds"), new pl3.type.Var("Rest")]), new pl3.type.Var("Ns")]), new pl3.type.Term(",", [new pl3.type.Term("foldl", [new pl3.type.Term("plus_times10", []), new pl3.type.Var("Ns"), new pl3.type.Num(0, false), new pl3.type.Var("Num")]), new pl3.type.Term("=", [new pl3.type.Var("Args0"), new pl3.type.Var("Args")])])])]))
+            ],
+            "numeric_argument_/4": [
+              new pl3.type.Rule(new pl3.type.Term("numeric_argument_", [new pl3.type.Term(".", [new pl3.type.Var("_32527"), new pl3.type.Var("_32403")]), new pl3.type.Var("_32340"), new pl3.type.Var("_32541"), new pl3.type.Var("_32546")]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term(",", [new pl3.type.Term("member", [new pl3.type.Var("_32527"), new pl3.type.Term(".", [new pl3.type.Term("0", []), new pl3.type.Term(".", [new pl3.type.Term("1", []), new pl3.type.Term(".", [new pl3.type.Term("2", []), new pl3.type.Term(".", [new pl3.type.Term("3", []), new pl3.type.Term(".", [new pl3.type.Term("4", []), new pl3.type.Term(".", [new pl3.type.Term("5", []), new pl3.type.Term(".", [new pl3.type.Term("6", []), new pl3.type.Term(".", [new pl3.type.Term("7", []), new pl3.type.Term(".", [new pl3.type.Term("8", []), new pl3.type.Term(".", [new pl3.type.Term("9", []), new pl3.type.Term("[]", [])])])])])])])])])])])]), new pl3.type.Term("=", [new pl3.type.Var("_32541"), new pl3.type.Var("_32542")])]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("number_chars", [new pl3.type.Var("_32358"), new pl3.type.Term(".", [new pl3.type.Var("_32527"), new pl3.type.Term("[]", [])])]), new pl3.type.Term("=", [new pl3.type.Var("_32542"), new pl3.type.Var("_32543")])]), new pl3.type.Term(",", [new pl3.type.Term("=", [new pl3.type.Var("_32543"), new pl3.type.Term(".", [new pl3.type.Var("_32358"), new pl3.type.Var("_32544")])]), new pl3.type.Term("numeric_argument_", [new pl3.type.Var("_32403"), new pl3.type.Var("_32340"), new pl3.type.Var("_32544"), new pl3.type.Var("_32545")])])])]), new pl3.type.Term(",", [new pl3.type.Term("=", [new pl3.type.Var("_32340"), new pl3.type.Term(".", [new pl3.type.Var("_32527"), new pl3.type.Var("_32403")])]), new pl3.type.Term("=", [new pl3.type.Var("_32541"), new pl3.type.Var("_32546")])])]), new pl3.type.Term("=", [new pl3.type.Var("_32545"), new pl3.type.Var("_32546")])]))
+            ],
+            "plus_times10/3": [
+              new pl3.type.Rule(new pl3.type.Term("plus_times10", [new pl3.type.Var("D"), new pl3.type.Var("N0"), new pl3.type.Var("N")]), new pl3.type.Term("is", [new pl3.type.Var("N"), new pl3.type.Term("+", [new pl3.type.Var("D"), new pl3.type.Term("*", [new pl3.type.Var("N0"), new pl3.type.Num(10, false)])])]))
+            ],
+            "radix_error/4": [
+              new pl3.type.Rule(new pl3.type.Term("radix_error", [new pl3.type.Term("lowercase", []), new pl3.type.Var("_32547"), new pl3.type.Var("_32548"), new pl3.type.Var("_32549")]), new pl3.type.Term("format_", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("d", []), new pl3.type.Term(".", [new pl3.type.Term("r", []), new pl3.type.Term("[]", [])])])])])]), new pl3.type.Term(".", [new pl3.type.Var("_32547"), new pl3.type.Term("[]", [])]), new pl3.type.Var("_32548"), new pl3.type.Var("_32549")])),
+              new pl3.type.Rule(new pl3.type.Term("radix_error", [new pl3.type.Term("uppercase", []), new pl3.type.Var("_32547"), new pl3.type.Var("_32550"), new pl3.type.Var("_32551")]), new pl3.type.Term("format_", [new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("~", []), new pl3.type.Term(".", [new pl3.type.Term("d", []), new pl3.type.Term(".", [new pl3.type.Term("R", []), new pl3.type.Term("[]", [])])])])])]), new pl3.type.Term(".", [new pl3.type.Var("_32547"), new pl3.type.Term("[]", [])]), new pl3.type.Var("_32550"), new pl3.type.Var("_32551")]))
+            ],
+            "integer_to_radix/4": [
+              new pl3.type.Rule(new pl3.type.Term("integer_to_radix", [new pl3.type.Var("I0"), new pl3.type.Var("R"), new pl3.type.Var("Which"), new pl3.type.Var("Cs")]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("I"), new pl3.type.Var("I0")]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("integer", [new pl3.type.Var("I")]), new pl3.type.Term("true", [])]), new pl3.type.Term("throw", [new pl3.type.Term("error", [new pl3.type.Term("type_error", [new pl3.type.Term("integer", []), new pl3.type.Var("I")]), new pl3.type.Term("/", [new pl3.type.Term("integer_to_radix", []), new pl3.type.Num(4, false)])])])]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("integer", [new pl3.type.Var("R")]), new pl3.type.Term("true", [])]), new pl3.type.Term("throw", [new pl3.type.Term("error", [new pl3.type.Term("type_error", [new pl3.type.Term("integer", []), new pl3.type.Var("R")]), new pl3.type.Term("/", [new pl3.type.Term("integer_to_radix", []), new pl3.type.Num(4, false)])])])]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("\\+", [new pl3.type.Term("between", [new pl3.type.Num(2, false), new pl3.type.Num(36, false), new pl3.type.Var("R")])]), new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("radix_error", [new pl3.type.Var("Which"), new pl3.type.Var("R")]), new pl3.type.Var("Es")]), new pl3.type.Term("throw", [new pl3.type.Term("error", [new pl3.type.Term("domain_error", [new pl3.type.Term("format_string", []), new pl3.type.Var("Es")]), new pl3.type.Term("/", [new pl3.type.Term("integer_to_radix", []), new pl3.type.Num(4, false)])])])])]), new pl3.type.Term("true", [])]), new pl3.type.Term(",", [new pl3.type.Term("digits", [new pl3.type.Var("Which"), new pl3.type.Var("Ds")]), new pl3.type.Term(",", [new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("<", [new pl3.type.Var("I"), new pl3.type.Num(0, false)]), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("Pos"), new pl3.type.Term("abs", [new pl3.type.Var("I")])]), new pl3.type.Term("phrase", [new pl3.type.Term("integer_to_radix_", [new pl3.type.Var("Pos"), new pl3.type.Var("R"), new pl3.type.Var("Ds")]), new pl3.type.Var("Cs0"), new pl3.type.Term(".", [new pl3.type.Term("-", []), new pl3.type.Term("[]", [])])])])]), new pl3.type.Term(";", [new pl3.type.Term("->", [new pl3.type.Term("=:=", [new pl3.type.Var("I"), new pl3.type.Num(0, false)]), new pl3.type.Term("=", [new pl3.type.Var("Cs0"), new pl3.type.Term(".", [new pl3.type.Term("0", []), new pl3.type.Term("[]", [])])])]), new pl3.type.Term("phrase", [new pl3.type.Term("integer_to_radix_", [new pl3.type.Var("I"), new pl3.type.Var("R"), new pl3.type.Var("Ds")]), new pl3.type.Var("Cs0")])])]), new pl3.type.Term("reverse", [new pl3.type.Var("Cs0"), new pl3.type.Var("Cs")])])])])])])]))
+            ],
+            "integer_to_radix_/5": [
+              new pl3.type.Rule(new pl3.type.Term("integer_to_radix_", [new pl3.type.Num(0, false), new pl3.type.Var("__32552"), new pl3.type.Var("__32553"), new pl3.type.Var("_32554"), new pl3.type.Var("_32555")]), new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term("=", [new pl3.type.Var("_32554"), new pl3.type.Var("_32555")])])),
+              new pl3.type.Rule(new pl3.type.Term("integer_to_radix_", [new pl3.type.Var("_32556"), new pl3.type.Var("_32547"), new pl3.type.Var("_32403"), new pl3.type.Var("_32559"), new pl3.type.Var("_32562")]), new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("_32557"), new pl3.type.Term("mod", [new pl3.type.Var("_32556"), new pl3.type.Var("_32547")])]), new pl3.type.Term(",", [new pl3.type.Term("nth0", [new pl3.type.Var("_32557"), new pl3.type.Var("_32403"), new pl3.type.Var("_32527")]), new pl3.type.Term("is", [new pl3.type.Var("_32558"), new pl3.type.Term("//", [new pl3.type.Var("_32556"), new pl3.type.Var("_32547")])])])]), new pl3.type.Term("=", [new pl3.type.Var("_32559"), new pl3.type.Var("_32560")])]), new pl3.type.Term(",", [new pl3.type.Term("=", [new pl3.type.Var("_32560"), new pl3.type.Term(".", [new pl3.type.Var("_32527"), new pl3.type.Var("_32561")])]), new pl3.type.Term("integer_to_radix_", [new pl3.type.Var("_32558"), new pl3.type.Var("_32547"), new pl3.type.Var("_32403"), new pl3.type.Var("_32561"), new pl3.type.Var("_32562")])])]))
+            ],
+            "digits/2": [
+              new pl3.type.Rule(new pl3.type.Term("digits", [new pl3.type.Term("lowercase", []), new pl3.type.Term(".", [new pl3.type.Term("0", []), new pl3.type.Term(".", [new pl3.type.Term("1", []), new pl3.type.Term(".", [new pl3.type.Term("2", []), new pl3.type.Term(".", [new pl3.type.Term("3", []), new pl3.type.Term(".", [new pl3.type.Term("4", []), new pl3.type.Term(".", [new pl3.type.Term("5", []), new pl3.type.Term(".", [new pl3.type.Term("6", []), new pl3.type.Term(".", [new pl3.type.Term("7", []), new pl3.type.Term(".", [new pl3.type.Term("8", []), new pl3.type.Term(".", [new pl3.type.Term("9", []), new pl3.type.Term(".", [new pl3.type.Term("a", []), new pl3.type.Term(".", [new pl3.type.Term("b", []), new pl3.type.Term(".", [new pl3.type.Term("c", []), new pl3.type.Term(".", [new pl3.type.Term("d", []), new pl3.type.Term(".", [new pl3.type.Term("e", []), new pl3.type.Term(".", [new pl3.type.Term("f", []), new pl3.type.Term(".", [new pl3.type.Term("g", []), new pl3.type.Term(".", [new pl3.type.Term("h", []), new pl3.type.Term(".", [new pl3.type.Term("i", []), new pl3.type.Term(".", [new pl3.type.Term("j", []), new pl3.type.Term(".", [new pl3.type.Term("k", []), new pl3.type.Term(".", [new pl3.type.Term("l", []), new pl3.type.Term(".", [new pl3.type.Term("m", []), new pl3.type.Term(".", [new pl3.type.Term("n", []), new pl3.type.Term(".", [new pl3.type.Term("o", []), new pl3.type.Term(".", [new pl3.type.Term("p", []), new pl3.type.Term(".", [new pl3.type.Term("q", []), new pl3.type.Term(".", [new pl3.type.Term("r", []), new pl3.type.Term(".", [new pl3.type.Term("s", []), new pl3.type.Term(".", [new pl3.type.Term("t", []), new pl3.type.Term(".", [new pl3.type.Term("u", []), new pl3.type.Term(".", [new pl3.type.Term("v", []), new pl3.type.Term(".", [new pl3.type.Term("w", []), new pl3.type.Term(".", [new pl3.type.Term("x", []), new pl3.type.Term(".", [new pl3.type.Term("y", []), new pl3.type.Term(".", [new pl3.type.Term("z", []), new pl3.type.Term("[]", [])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])]), null),
+              new pl3.type.Rule(new pl3.type.Term("digits", [new pl3.type.Term("uppercase", []), new pl3.type.Term(".", [new pl3.type.Term("0", []), new pl3.type.Term(".", [new pl3.type.Term("1", []), new pl3.type.Term(".", [new pl3.type.Term("2", []), new pl3.type.Term(".", [new pl3.type.Term("3", []), new pl3.type.Term(".", [new pl3.type.Term("4", []), new pl3.type.Term(".", [new pl3.type.Term("5", []), new pl3.type.Term(".", [new pl3.type.Term("6", []), new pl3.type.Term(".", [new pl3.type.Term("7", []), new pl3.type.Term(".", [new pl3.type.Term("8", []), new pl3.type.Term(".", [new pl3.type.Term("9", []), new pl3.type.Term(".", [new pl3.type.Term("A", []), new pl3.type.Term(".", [new pl3.type.Term("B", []), new pl3.type.Term(".", [new pl3.type.Term("C", []), new pl3.type.Term(".", [new pl3.type.Term("D", []), new pl3.type.Term(".", [new pl3.type.Term("E", []), new pl3.type.Term(".", [new pl3.type.Term("F", []), new pl3.type.Term(".", [new pl3.type.Term("G", []), new pl3.type.Term(".", [new pl3.type.Term("H", []), new pl3.type.Term(".", [new pl3.type.Term("I", []), new pl3.type.Term(".", [new pl3.type.Term("J", []), new pl3.type.Term(".", [new pl3.type.Term("K", []), new pl3.type.Term(".", [new pl3.type.Term("L", []), new pl3.type.Term(".", [new pl3.type.Term("M", []), new pl3.type.Term(".", [new pl3.type.Term("N", []), new pl3.type.Term(".", [new pl3.type.Term("O", []), new pl3.type.Term(".", [new pl3.type.Term("P", []), new pl3.type.Term(".", [new pl3.type.Term("Q", []), new pl3.type.Term(".", [new pl3.type.Term("R", []), new pl3.type.Term(".", [new pl3.type.Term("S", []), new pl3.type.Term(".", [new pl3.type.Term("T", []), new pl3.type.Term(".", [new pl3.type.Term("U", []), new pl3.type.Term(".", [new pl3.type.Term("V", []), new pl3.type.Term(".", [new pl3.type.Term("W", []), new pl3.type.Term(".", [new pl3.type.Term("X", []), new pl3.type.Term(".", [new pl3.type.Term("Y", []), new pl3.type.Term(".", [new pl3.type.Term("Z", []), new pl3.type.Term("[]", [])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])])]), null)
+            ],
+            "format/2": [
+              new pl3.type.Rule(new pl3.type.Term("format", [new pl3.type.Var("Fs"), new pl3.type.Var("Args")]), new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("format_", [new pl3.type.Var("Fs"), new pl3.type.Var("Args")]), new pl3.type.Var("Cs")]), new pl3.type.Term("maplist", [new pl3.type.Term("write", []), new pl3.type.Var("Cs")])]))
+            ],
+            "format/3": [
+              new pl3.type.Rule(new pl3.type.Term("format", [new pl3.type.Var("Stream"), new pl3.type.Var("Fs"), new pl3.type.Var("Args")]), new pl3.type.Term(",", [new pl3.type.Term("phrase", [new pl3.type.Term("format_", [new pl3.type.Var("Fs"), new pl3.type.Var("Args")]), new pl3.type.Var("Cs")]), new pl3.type.Term("maplist", [new pl3.type.Term("write", [new pl3.type.Var("Stream")]), new pl3.type.Var("Cs")])]))
+            ],
+            "unique_variable_names/2": [
+              new pl3.type.Rule(new pl3.type.Term("unique_variable_names", [new pl3.type.Var("Term"), new pl3.type.Var("VNs")]), new pl3.type.Term(",", [new pl3.type.Term("term_variables", [new pl3.type.Var("Term"), new pl3.type.Var("Vs")]), new pl3.type.Term("foldl", [new pl3.type.Term("var_name", []), new pl3.type.Var("Vs"), new pl3.type.Var("VNs"), new pl3.type.Num(0, false), new pl3.type.Var("_")])]))
+            ],
+            "seq/3": [
+              new pl3.type.Rule(new pl3.type.Term("seq", [new pl3.type.Term("[]", []), new pl3.type.Var("_32563"), new pl3.type.Var("_32563")]), new pl3.type.Term("true", [])),
+              new pl3.type.Rule(new pl3.type.Term("seq", [new pl3.type.Term(".", [new pl3.type.Var("_32345"), new pl3.type.Var("_32332")]), new pl3.type.Term(".", [new pl3.type.Var("_32345"), new pl3.type.Var("_32565")]), new pl3.type.Var("_32566")]), new pl3.type.Term("seq", [new pl3.type.Var("_32332"), new pl3.type.Var("_32565"), new pl3.type.Var("_32566")]))
+            ],
+            "var_name/4": [
+              new pl3.type.Rule(new pl3.type.Term("var_name", [new pl3.type.Var("V"), new pl3.type.Term("=", [new pl3.type.Var("Name"), new pl3.type.Var("V")]), new pl3.type.Var("Num0"), new pl3.type.Var("Num")]), new pl3.type.Term(",", [new pl3.type.Term(":", [new pl3.type.Term("charsio", []), new pl3.type.Term("fabricate_var_name", [new pl3.type.Term("numbervars", []), new pl3.type.Var("Name"), new pl3.type.Var("Num0")])]), new pl3.type.Term("is", [new pl3.type.Var("Num"), new pl3.type.Term("+", [new pl3.type.Var("Num0"), new pl3.type.Num(1, false)])])]))
+            ]
+          };
+        };
+        var exports2 = ["format_/4", "format/2", "format/3"];
+        var options = function() {
+          return {
+            dependencies: ["lists", "charsio"]
+          };
+        };
+        if (typeof module !== "undefined") {
+          module.exports = function(p) {
+            pl3 = p;
+            new pl3.type.Module(name, predicates(), exports2, options());
+          };
+        } else {
+          new pl3.type.Module(name, predicates(), exports2, options());
+        }
+      })(pl2);
+    }
+  });
+
+  // node_modules/tau-prolog/modules/random.js
+  var require_random = __commonJS({
+    "node_modules/tau-prolog/modules/random.js"(exports, module) {
+      var pl2;
+      (function(pl3) {
+        var predicates = function() {
+          return {
+            // get_seed/1
+            "get_seed/1": function(thread, point, atom) {
+              var seed = atom.args[0];
+              if (!pl3.type.is_variable(seed) && !pl3.type.is_integer(seed)) {
+                thread.throw_error(pl3.error.type("integer", seed, atom.indicator));
+              } else {
+                var current_seed = thread.get_random_generator().get_seed();
+                thread.prepend([new pl3.type.State(
+                  point.goal.replace(new pl3.type.Term("=", [
+                    new pl3.type.Num(current_seed, false),
+                    seed
+                  ])),
+                  point.substitution,
+                  point
+                )]);
+              }
+            },
+            // set_seed/1
+            "set_seed/1": function(thread, point, atom) {
+              var seed = atom.args[0];
+              if (pl3.type.is_variable(seed)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_integer(seed)) {
+                thread.throw_error(pl3.error.type("integer", seed, atom.indicator));
+              } else {
+                thread.get_random_generator().set_seed(seed.value);
+                thread.success(point);
+              }
+            },
+            // maybe/0
+            "maybe/0": function(thread, point, _) {
+              if (thread.get_random_generator().next() < 0.5) {
+                thread.success(point);
+              }
+            },
+            // maybe/1
+            "maybe/1": function(thread, point, atom) {
+              var num = atom.args[0];
+              if (thread.get_random_generator().next() < num.value) {
+                thread.success(point);
+              }
+            },
+            // random/1
+            "random/1": function(thread, point, atom) {
+              var rand = atom.args[0];
+              if (!pl3.type.is_variable(rand) && !pl3.type.is_number(rand)) {
+                thread.throw_error(pl3.error.type("number", rand, atom.indicator));
+              } else {
+                var gen = thread.get_random_generator().next();
+                thread.prepend([new pl3.type.State(
+                  point.goal.replace(new pl3.type.Term("=", [rand, new pl3.type.Num(gen, true)])),
+                  point.substitution,
+                  point
+                )]);
+              }
+            },
+            // random/3
+            "random/3": function(thread, point, atom) {
+              var lower = atom.args[0], upper = atom.args[1], rand = atom.args[2];
+              if (pl3.type.is_variable(lower) || pl3.type.is_variable(upper)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_number(lower)) {
+                thread.throw_error(pl3.error.type("number", lower, atom.indicator));
+              } else if (!pl3.type.is_number(upper)) {
+                thread.throw_error(pl3.error.type("number", upper, atom.indicator));
+              } else if (!pl3.type.is_variable(rand) && !pl3.type.is_number(rand)) {
+                thread.throw_error(pl3.error.type("number", rand, atom.indicator));
+              } else {
+                if (lower.value < upper.value) {
+                  var float = lower.is_float || upper.is_float;
+                  var gen = lower.value + thread.get_random_generator().next() * (upper.value - lower.value);
+                  if (!float)
+                    gen = Math.floor(gen);
+                  thread.prepend([new pl3.type.State(
+                    point.goal.replace(new pl3.type.Term("=", [rand, new pl3.type.Num(gen, float)])),
+                    point.substitution,
+                    point
+                  )]);
+                }
+              }
+            },
+            // random_between/3
+            "random_between/3": function(thread, point, atom) {
+              var lower = atom.args[0], upper = atom.args[1], rand = atom.args[2];
+              if (pl3.type.is_variable(lower) || pl3.type.is_variable(upper)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_integer(lower)) {
+                thread.throw_error(pl3.error.type("integer", lower, atom.indicator));
+              } else if (!pl3.type.is_integer(upper)) {
+                thread.throw_error(pl3.error.type("integer", upper, atom.indicator));
+              } else if (!pl3.type.is_variable(rand) && !pl3.type.is_integer(rand)) {
+                thread.throw_error(pl3.error.type("integer", rand, atom.indicator));
+              } else {
+                if (lower.value < upper.value) {
+                  var gen = Math.floor(lower.value + thread.get_random_generator().next() * (upper.value - lower.value + 1));
+                  thread.prepend([new pl3.type.State(
+                    point.goal.replace(new pl3.type.Term("=", [rand, new pl3.type.Num(gen, false)])),
+                    point.substitution,
+                    point
+                  )]);
+                }
+              }
+            },
+            // random_member/2
+            "random_member/2": function(thread, point, atom) {
+              var member = atom.args[0], list = atom.args[1];
+              if (pl3.type.is_variable(list)) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else {
+                var array = [];
+                var pointer = list;
+                while (pointer.indicator === "./2") {
+                  array.push(pointer.args[0]);
+                  pointer = pointer.args[1];
+                }
+                if (array.length > 0) {
+                  var gen = Math.floor(thread.get_random_generator().next() * array.length);
+                  thread.prepend([new pl3.type.State(
+                    point.goal.replace(new pl3.type.Term("=", [member, array[gen]])),
+                    point.substitution,
+                    point
+                  )]);
+                }
+              }
+            },
+            // random_permutation/2
+            "random_permutation/2": function(thread, point, atom) {
+              var i2;
+              var list = atom.args[0], permutation = atom.args[1];
+              var ins_list = pl3.type.is_instantiated_list(list);
+              var ins_permutation = pl3.type.is_instantiated_list(permutation);
+              if (pl3.type.is_variable(list) && pl3.type.is_variable(permutation) || !ins_list && !ins_permutation) {
+                thread.throw_error(pl3.error.instantiation(atom.indicator));
+              } else if (!pl3.type.is_variable(list) && !pl3.type.is_fully_list(list)) {
+                thread.throw_error(pl3.error.type("list", list, atom.indicator));
+              } else if (!pl3.type.is_variable(permutation) && !pl3.type.is_fully_list(permutation)) {
+                thread.throw_error(pl3.error.type("list", permutation, atom.indicator));
+              } else {
+                var pointer = ins_list ? list : permutation;
+                var array = [];
+                while (pointer.indicator === "./2") {
+                  array.push(pointer.args[0]);
+                  pointer = pointer.args[1];
+                }
+                for (i2 = 0; i2 < array.length; i2++) {
+                  var rand = Math.floor(thread.get_random_generator().next() * array.length);
+                  var tmp = array[i2];
+                  array[i2] = array[rand];
+                  array[rand] = tmp;
+                }
+                var new_list = new pl3.type.Term("[]", []);
+                for (i2 = array.length - 1; i2 >= 0; i2--)
+                  new_list = new pl3.type.Term(".", [array[i2], new_list]);
+                thread.prepend([new pl3.type.State(
+                  point.goal.replace(new pl3.type.Term("=", [new_list, ins_list ? permutation : list])),
+                  point.substitution,
+                  point
+                )]);
+              }
+            }
+          };
+        };
+        var exports2 = ["get_seed/1", "set_seed/1", "maybe/0", "maybe/1", "random/1", "random/3", "random_between/3", "random_member/2", "random_permutation/2"];
+        var mulberry32 = function(seed) {
+          this.set_seed(seed);
+        };
+        mulberry32.prototype.next = function() {
+          var t = this.get_seed() + 1831565813;
+          this.set_seed(t);
+          t = Math.imul(t ^ t >>> 15, t | 1);
+          t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+          return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+        mulberry32.prototype.set_seed = function(seed) {
+          this.seed = seed;
+        };
+        mulberry32.prototype.get_seed = function() {
+          return this.seed;
+        };
+        var extend = function(pl4) {
+          pl4.type.Session.prototype.get_random_generator = function() {
+            if (!this.random_generator)
+              this.random_generator = new mulberry32(Date.now());
+            return this.random_generator;
+          };
+          pl4.type.Thread.prototype.get_random_generator = function() {
+            return this.session.get_random_generator();
+          };
+        };
+        if (typeof module !== "undefined") {
+          module.exports = function(p) {
+            pl3 = p;
+            extend(p);
+            new pl3.type.Module("random", predicates(), exports2);
+          };
+        } else {
+          extend(pl3);
+          new pl3.type.Module("random", predicates(), exports2);
+        }
+      })(pl2);
+    }
+  });
+
+  // node_modules/tau-prolog/modules/statistics.js
+  var require_statistics = __commonJS({
+    "node_modules/tau-prolog/modules/statistics.js"(exports, module) {
+      var pl2;
+      (function(pl3) {
+        var predicates = function() {
+          return {
+            // time/1
+            "time/1": [
+              new pl3.type.Rule(new pl3.type.Term("time", [new pl3.type.Var("Goal")]), new pl3.type.Term(",", [new pl3.type.Term("get_time", [new pl3.type.Var("T0")]), new pl3.type.Term(",", [new pl3.type.Term("call", [new pl3.type.Var("Goal")]), new pl3.type.Term(",", [new pl3.type.Term("get_time", [new pl3.type.Var("T1")]), new pl3.type.Term(",", [new pl3.type.Term("!", []), new pl3.type.Term(",", [new pl3.type.Term("is", [new pl3.type.Var("T"), new pl3.type.Term("-", [new pl3.type.Var("T1"), new pl3.type.Var("T0")])]), new pl3.type.Term("write", [new pl3.type.Var("T")])])])])])]))
+            ],
+            // statistics/0
+            "statistics/0": function(thread, point, atom) {
+              var stats = "% Tau Prolog statistics\n";
+              for (var x in statistics)
+                stats += "%%% " + x + ": " + statistics[x](thread).toString() + "\n";
+              thread.prepend([new pl3.type.State(
+                point.goal.replace(new pl3.type.Term("write", [new pl3.type.Term(stats)])),
+                point.substitution,
+                point
+              )]);
+            },
+            // statistics/2
+            "statistics/2": function(thread, point, atom) {
+              var key = atom.args[0], value = atom.args[1];
+              if (!pl3.type.is_variable(key) && !pl3.type.is_atom(key)) {
+                thread.throw_error(pl3.error.type("atom", key, atom.indicator));
+              } else if (!pl3.type.is_variable(key) && statistics[key.id] === void 0) {
+                thread.throw_error(pl3.error.domain("statistics_key", key, atom.indicator));
+              } else {
+                if (!pl3.type.is_variable(key)) {
+                  var value_ = statistics[key.id](thread);
+                  thread.prepend([new pl3.type.State(point.goal.replace(new pl3.type.Term("=", [value, value_])), point.substitution, point)]);
+                } else {
+                  var states = [];
+                  for (var x in statistics) {
+                    var value_ = statistics[x](thread);
+                    states.push(new pl3.type.State(point.goal.replace(
+                      new pl3.type.Term(",", [
+                        new pl3.type.Term("=", [key, new pl3.type.Term(x, [])]),
+                        new pl3.type.Term("=", [value, value_])
+                      ])
+                    ), point.substitution, point));
+                  }
+                  thread.prepend(states);
+                }
+              }
+            }
+          };
+        };
+        var exports2 = ["time/1", "statistics/0", "statistics/2"];
+        var statistics = {
+          // Total number of defined atoms
+          atoms: function(thread) {
+            return new pl3.type.Num(pl3.statistics.getCountTerms(), false);
+          },
+          // Total number of clauses
+          clauses: function(thread) {
+            var total = 0;
+            for (var x in thread.session.rules)
+              if (thread.session.rules[x] instanceof Array)
+                total += thread.session.rules[x].length;
+            for (var i2 = 0; i2 < thread.session.modules.length; i2++) {
+              var module2 = pl3.module[thread.session.modules[i2]];
+              for (var j = 0; j < module2.exports.length; j++) {
+                var predicate = module2.rules[module2.exports[j]];
+                if (predicate instanceof Array)
+                  total += predicate.length;
+              }
+            }
+            return new pl3.type.Num(total, false);
+          },
+          // Total cpu time
+          cputime: function(thread) {
+            return new pl3.type.Num(thread.cpu_time, false);
+          },
+          // wall time
+          walltime: function(thread) {
+            return new pl3.type.Num(Date.now(), false);
+          },
+          // Time stamp when thread was started
+          epoch: function(thread) {
+            return new pl3.type.Num(thread.epoch, false);
+          },
+          // Total number of resolution steps
+          inferences: function(thread) {
+            return new pl3.type.Num(thread.total_steps, false);
+          },
+          // Total number of defined modules
+          modules: function(thread) {
+            var nb_modules = 0;
+            for (var _module_id in thread.session.modules)
+              nb_modules++;
+            return new pl3.type.Num(nb_modules, false);
+          },
+          // Total number of predicates
+          predicates: function(thread) {
+            var total = Object.keys(thread.session.rules).length;
+            for (var i2 = 0; i2 < thread.session.modules.length; i2++) {
+              var module2 = pl3.module[thread.session.modules[i2]];
+              total += module2.exports.length;
+            }
+            return new pl3.type.Num(total, false);
+          },
+          // Total number of threads in current session
+          threads: function(thread) {
+            return new pl3.type.Num(thread.session.total_threads, false);
+          }
+        };
+        if (typeof module !== "undefined") {
+          module.exports = function(p) {
+            pl3 = p;
+            new pl3.type.Module("statistics", predicates(), exports2);
+          };
+        } else {
+          new pl3.type.Module("statistics", predicates(), exports2);
+        }
+      })(pl2);
+    }
+  });
+
+  // <stdin>
+  var pl = require_core();
+  require_lists()(pl);
+  require_charsio()(pl);
+  require_js()(pl);
+  require_format()(pl);
+  require_random()(pl);
+  require_statistics()(pl);
+  globalThis.pl = pl;
+})();

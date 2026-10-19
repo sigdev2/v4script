@@ -73,23 +73,23 @@ time.
 
 Embedded size of each language (the host layer adds 25 KB, the translator
 core shared by Go, C, Java, Forth, BASIC, Pascal, WebAssembly and Scheme
-120 KB; minified: 10 KB and 50 KB):
+124 KB; minified: 10 KB and 50 KB):
 
 | Language | Scripts | Minified |
 | --- | --- | --- |
-| Python | 1072 KB | 1058 KB |
-| Lua | 264 KB | 260 KB |
-| Prolog | 306 KB | 297 KB |
+| Python | 2009 KB | 1096 KB |
+| Lua | 630 KB | 278 KB |
+| Prolog | 559 KB | 303 KB |
 | Perl | 1823 KB | 1157 KB |
-| PHP | 846 KB | 804 KB |
-| Go | 527 KB | 270 KB |
-| C | 348 KB | 165 KB |
-| Java | 845 KB | 570 KB |
-| Forth | 187 KB | 91 KB |
-| BASIC | 302 KB | 143 KB |
-| Pascal | 721 KB | 391 KB |
-| WebAssembly | 241 KB | 117 KB |
-| Scheme | 388 KB | 193 KB |
+| PHP | 2551 KB | 877 KB |
+| Go | 537 KB | 270 KB |
+| C | 352 KB | 165 KB |
+| Java | 852 KB | 570 KB |
+| Forth | 199 KB | 91 KB |
+| BASIC | 309 KB | 143 KB |
+| Pascal | 732 KB | 391 KB |
+| WebAssembly | 245 KB | 117 KB |
+| Scheme | 405 KB | 193 KB |
 
 ## Quick start
 

@@ -131,10 +131,3 @@ Decisions already taken for these stages:
    the program waits for input (now at the end of a run and at waits for
    time) - in the Qt engine too.
  - Syntax highlighting in the editor; a link that carries a program.
-
-## Later (not now)
-
- - **Readable vendor bundles**: keep the third-party interpreters in the
-   repository unminified (or with source maps) so that they can be read;
-   either rebuild them without minification or decide whether to
-   reimplement a language on the translator core instead.
