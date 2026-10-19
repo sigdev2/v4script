@@ -16,7 +16,7 @@ implementation, tests, documentation). The order approved by the owner:
 | 1 | Go (with the translator core) | done |
 | 2 | C | done |
 | 3 | Java | done |
-| 4 | C++ | done (C++17) |
+| 4 | C++ | done (C++17; C++20 with concepts later) |
 | 5 | **C#** | next |
 | 6 | Kotlin | planned |
 | 7 | Scheme | done (R7RS-small) |
@@ -66,7 +66,13 @@ Decisions already taken for these stages:
  - **C**: `goto`, `_Generic`, `setjmp`/`longjmp`, `wchar.h`; writing files
    through the host; bounds checks inside the program memory (as
    AddressSanitizer does).
- - **C++**: pointers to members, virtual inheritance, `goto`, `alignas` on
+ - **C++**: later the translator grows from C++17 to C++20 with concepts -
+   `concept`, `requires` clauses and expressions, constrained templates
+   and abbreviated function templates (`auto` parameters), `<concepts>`
+   and the constrained algorithms - then the rest of C++20 (`<=>`, ranges,
+   `std::span`, coroutines, modules); the version in the manifest becomes
+   C++20 (designated initializers and `consteval` already work). Gaps of
+   C++17: pointers to members, virtual inheritance, `goto`, `alignas` on
    classes, `noexcept` violations terminating, `std::exception_ptr`, wide
    strings, deduction of `std::function` from a lambda; threads
    (`std::thread`, `mutex`, `atomic`), `<regex>`, `<variant>`, `<any>`,

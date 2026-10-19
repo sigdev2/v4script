@@ -74,7 +74,8 @@ stock.size();                                              // the value of the r
    destructors, copy and move constructors and assignments (implicit ones
    as the standard defines them, `= default`, `= delete`), conversion
    operators and `explicit`, `friend`, nested classes, `mutable`,
-   aggregates and designated-less brace initialization, `this`.
+   aggregates and brace initialization (with designated initializers
+   `{ .x = 1 }`, as g++ accepts them), `this`.
  - **Inheritance**: single and multiple (non-virtual) inheritance,
    virtual functions, `override` and `final`, abstract classes, virtual
    destructors, `dynamic_cast` (also across bases and to `void*`),
