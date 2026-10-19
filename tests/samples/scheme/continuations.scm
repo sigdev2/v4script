@@ -1,0 +1,63 @@
+; Continuations: early exit, a generator, re-entry, dynamic-wind.
+(define (find-first pred lst)
+  (call-with-current-continuation
+    (lambda (return)
+      (for-each (lambda (x) (if (pred x) (return x))) lst)
+      #f)))
+(display (find-first even? '(1 3 6 7 8)))
+(newline)
+(define (make-generator lst)
+  (define return #f)
+  (define resume #f)
+  (define (gen)
+    (call/cc (lambda (r)
+      (set! return r)
+      (if resume
+          (resume 'go)
+          (begin
+            (for-each (lambda (x) (call/cc (lambda (next) (set! resume next) (return x)))) lst)
+            (return 'done))))))
+  gen)
+(define g (make-generator '(a b c)))
+(define first (g))
+(define second (g))
+(define third (g))
+(display (list first second third (g) (g)))
+(newline)
+(define k #f)
+(define n 0)
+(display (+ 100 (call/cc (lambda (c) (set! k c) 0))))
+(newline)
+(set! n (+ n 1))
+(if (< n 3) (k n))
+(display "после")
+(newline)
+(define trace '())
+(define (note x) (set! trace (cons x trace)))
+(define result
+  (call/cc (lambda (escape)
+    (dynamic-wind
+      (lambda () (note 'вход))
+      (lambda () (note 'тело) (escape 'выход) (note 'не-будет))
+      (lambda () (note 'выход-из-wind))))))
+(display (list result (reverse trace)))
+(newline)
+(call-with-values (lambda () (values 1 2 3)) (lambda (a b c) (display (list a b c)) (newline)))
+(define (tree-walk tree)
+  (call/cc (lambda (done)
+    (let walk ((t tree))
+      (cond ((null? t) 'ok)
+            ((pair? t) (walk (car t)) (walk (cdr t)))
+            ((negative? t) (done (list 'negative t)))
+            (else 'ok))))))
+(display (tree-walk '(1 (2 3) (4 (-5 6)))))
+(newline)
+
+; Output:
+; 6
+; (a b c done done)
+; 100
+; 101после
+; (выход (вход тело выход-из-wind))
+; (1 2 3)
+; (negative -5)

@@ -1,0 +1,37 @@
+; Lazy evaluation: delay, force, delay-force, make-promise, streams.
+(define count 0)
+(define p (delay (begin (set! count (+ count 1)) (* 6 7))))
+(define first-value (force p))
+(define second-value (force p))
+(display (list (promise? p) first-value second-value count))
+(newline)
+(define (integers-from n) (cons n (delay (integers-from (+ n 1)))))
+(define (stream-head s k)
+  (if (= k 0) '() (cons (car s) (stream-head (force (cdr s)) (- k 1)))))
+(define (stream-filter pred s)
+  (if (pred (car s))
+      (cons (car s) (delay (stream-filter pred (force (cdr s)))))
+      (stream-filter pred (force (cdr s)))))
+(display (stream-head (integers-from 1) 5))
+(newline)
+(define (sieve s)
+  (cons (car s)
+        (delay (sieve (stream-filter (lambda (x) (not (= 0 (remainder x (car s))))) (force (cdr s)))))))
+(display (stream-head (sieve (integers-from 2)) 10))
+(newline)
+(define (loop n) (if (= n 0) (make-promise 'done) (delay-force (loop (- n 1)))))
+(display (force (loop 100000)))
+(newline)
+(display (force (make-promise 5)))
+(newline)
+(define r (delay (begin (set! count (+ count 100)) count)))
+(display (+ (force r) (force r)))
+(newline)
+
+; Output:
+; (#t 42 42 1)
+; (1 2 3 4 5)
+; (2 3 5 7 11 13 17 19 23 29)
+; done
+; 5
+; 202

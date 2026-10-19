@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master, dev]
+
+jobs:
+  linux:
+    name: Linux, Qt 6.4.1${{ matrix.minify && ', minified scripts' || '' }}
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        minify: [false, true]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.4.1'
+          cache: true
+
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y ninja-build libgl1-mesa-dev libxkbcommon-dev
+
+      - name: Set up Node.js
+        if: matrix.minify
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install the tools
+        if: matrix.minify
+        working-directory: tools
+        run: npm ci
+
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DV4SCRIPT_MINIFY_JS=${{ matrix.minify && 'ON' || 'OFF' }}
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  samples:
+    name: Samples in Node.js
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install the tools
+        working-directory: tools
+        run: npm ci
+
+      - name: Run the samples of every language
+        run: |
+          status=0
+          for language in $(node -e "for (const l of require('./languages.json').languages) console.log(l.id)"); do
+            echo "::group::$language"
+            node tools/run-samples.mjs "$language" || status=1
+            echo "::endgroup::"
+          done
+          exit $status

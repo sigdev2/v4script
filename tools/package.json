@@ -1,0 +1,27 @@
+{
+  "name": "v4script-tools",
+  "private": true,
+  "description": "Tools of v4script: third-party bundles, release minification, sample runner (see docs/development.md)",
+  "type": "module",
+  "scripts": {
+    "bundles": "node build-bundles.mjs",
+    "minify": "node minify.mjs",
+    "samples": "node run-samples.mjs"
+  },
+  "devDependencies": {
+    "acorn": "8.18.0",
+    "buffer": "6.0.3",
+    "esbuild": "0.28.2",
+    "events": "3.3.0",
+    "fengari": "0.1.5",
+    "fengari-interop": "0.1.4",
+    "path-browserify": "1.0.1",
+    "phpruntime": "9.3.0",
+    "phptoast": "9.4.1",
+    "phptojs": "10.3.2",
+    "process": "0.11.10",
+    "tau-prolog": "0.3.4",
+    "url": "0.11.4",
+    "util": "0.12.5"
+  }
+}

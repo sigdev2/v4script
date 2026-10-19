@@ -1,0 +1,12 @@
+# Build directories
+/build*/
+/out/
+
+# IDE and OS files
+CMakeLists.txt.user*
+*.user
+.vscode/
+.idea/
+.vs/
+.DS_Store
+Thumbs.db

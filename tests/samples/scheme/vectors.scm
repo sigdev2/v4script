@@ -1,0 +1,53 @@
+; Vectors and bytevectors.
+(define (show x) (write x) (newline))
+(define v (make-vector 3 0))
+(vector-set! v 0 'a)
+(show v)
+(show (vector-length v))
+(show (vector 1 "two" #\3))
+(show (vector->list #(1 2 3) 1))
+(show (list->vector '(x y)))
+(show (vector-map + #(1 2) #(10 20)))
+(let ((sum 0)) (vector-for-each (lambda (x) (set! sum (+ sum x))) #(1 2 3)) (show sum))
+(show (vector-copy #(1 2 3 4) 1 3))
+(define w (vector 1 2 3 4 5))
+(vector-copy! w 0 #(a b))
+(show w)
+(vector-fill! w 0 3)
+(show w)
+(show (vector-append #(1) #(2 3)))
+(show (vector-ref #(a b c) 2))
+(define b (make-bytevector 3 7))
+(bytevector-u8-set! b 1 255)
+(show b)
+(show (bytevector-u8-ref b 1))
+(show (bytevector-length b))
+(show (bytevector-append (bytevector 1 2) (bytevector 3)))
+(show (bytevector-copy (bytevector 1 2 3 4) 2))
+(show (equal? #(1 (2 "x")) (vector 1 (list 2 "x"))))
+(show (vector-sort < (vector 5 3 1 4)))
+(show (sort '(3 1 2) <))
+(show (sort (list "pear" "apple" "fig") string<?))
+
+; Output:
+; #(a 0 0)
+; 3
+; #(1 "two" #\3)
+; (2 3)
+; #(x y)
+; #(11 22)
+; 6
+; #(2 3)
+; #(a b 3 4 5)
+; #(a b 3 0 0)
+; #(1 2 3)
+; c
+; #u8(7 255 7)
+; 255
+; 3
+; #u8(1 2 3)
+; #u8(3 4)
+; #t
+; #(1 3 4 5)
+; (1 2 3)
+; ("apple" "fig" "pear")

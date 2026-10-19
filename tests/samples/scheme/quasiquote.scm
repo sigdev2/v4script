@@ -1,0 +1,26 @@
+; Quasiquotation.
+(define x 5)
+(define lst '(a b c))
+(write `(x is ,x)) (newline)
+(write `(list: ,@lst end)) (newline)
+(write `(1 ,(+ 1 1) ,@(map (lambda (n) (* n n)) '(3 4)))) (newline)
+(write `#(vector ,x ,@lst)) (newline)
+(write `(dotted . ,x)) (newline)
+(write `(nested (deeper ,(* x 2)))) (newline)
+(write `(1 `(2 ,(3 ,x)))) (newline)
+(write (quasiquote (a (unquote x) (unquote-splicing lst)))) (newline)
+(define (make-adder-code n) `(lambda (y) (+ y ,n)))
+(write (make-adder-code 10)) (newline)
+(write ((eval (make-adder-code 10) (environment '(scheme base))) 5)) (newline)
+
+; Output:
+; (x is 5)
+; (list: a b c end)
+; (1 2 9 16)
+; #(vector 5 a b c)
+; (dotted . 5)
+; (nested (deeper 10))
+; (1 (quasiquote (2 (unquote (3 5)))))
+; (a 5 a b c)
+; (lambda (y) (+ y 10))
+; 15

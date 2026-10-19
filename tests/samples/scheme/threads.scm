@@ -1,0 +1,52 @@
+; SRFI 18 threads: start, join, a mutex, a condition variable, sleep.
+(define lock (make-mutex 'counter))
+(define counter 0)
+(define (worker name steps)
+  (lambda ()
+    (do ((i 0 (+ i 1))) ((= i steps) name)
+      (mutex-lock! lock)
+      (set! counter (+ counter 1))
+      (mutex-unlock! lock)
+      (thread-yield!))))
+(define a (thread-start! (make-thread (worker 'a 500) 'first)))
+(define b (thread-start! (make-thread (worker 'b 500) 'second)))
+(display (list (thread-join! a) (thread-join! b) counter))
+(newline)
+(define sleeper (make-thread (lambda () (thread-sleep! 0.05) 'woke-up)))
+(thread-start! sleeper)
+(display (thread-join! sleeper))
+(newline)
+(define failing (thread-start! (make-thread (lambda () (raise 'boom)))))
+(display (guard (e ((uncaught-exception? e) (list 'uncaught (uncaught-exception-reason e))))
+           (thread-join! failing)))
+(newline)
+(define m (make-mutex))
+(define cv (make-condition-variable))
+(define ready #f)
+(define consumer
+  (thread-start!
+    (make-thread
+      (lambda ()
+        (mutex-lock! m)
+        (let wait () (unless ready (mutex-unlock! m cv) (mutex-lock! m) (wait)))
+        (mutex-unlock! m)
+        'got-signal))))
+(thread-sleep! 0.01)
+(mutex-lock! m)
+(set! ready #t)
+(condition-variable-signal! cv)
+(mutex-unlock! m)
+(display (thread-join! consumer))
+(newline)
+(display (thread-join! (thread-start! (make-thread (lambda () (thread-sleep! 10) 'never))) 0.02 'timed-out))
+(newline)
+(display (list (thread-name (current-thread)) (thread? a) (mutex? m) (time? (current-time))))
+(newline)
+
+; Output:
+; (a b 1000)
+; woke-up
+; (uncaught boom)
+; got-signal
+; timed-out
+; (main #t #t #t)

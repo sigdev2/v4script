@@ -1,0 +1,9 @@
+# Text files are stored and checked out with LF on every platform.
+* text=auto eol=lf
+
+# Generated third-party bundles: the bytes stay as the build script wrote them.
+js/vendor/** -text
+
+*.png binary
+*.jpg binary
+*.ico binary

@@ -1,0 +1,130 @@
+# C++ formatting of v4script (see StyleGuide.CPP.md).
+#
+# The reference is clang-format 15 (as bundled with Qt Creator). Newer versions wrap some cases
+# differently (nested calls, concatenated string literals, a lambda that is not the last argument,
+# alignment of trailing comments), so the code is formatted with version 15.
+# Do not add keys that version 15 does not know: it treats an unknown key as an error and formats
+# nothing.
+
+Language: Cpp
+Standard: c++17
+
+# Indentation and line length
+ColumnLimit: 120
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ContinuationIndentWidth: 4
+ConstructorInitializerIndentWidth: 8
+AccessModifierOffset: -4
+IndentCaseLabels: false
+IndentPPDirectives: None
+IndentWrappedFunctionNames: true
+NamespaceIndentation: None
+FixNamespaceComments: true
+LambdaBodyIndentation: Signature
+
+# Braces: a function has them on a separate line, everything else at the end of the line,
+# except if / for / while with a multi-line header. The body of if / for / while is always in braces.
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: MultiLine
+  AfterEnum: false
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  IndentBraces: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+InsertBraces: true
+
+# Only short lambdas may stay on one line
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortLambdasOnASingleLine: All
+
+# Long lines break after the opening parenthesis, one argument per line.
+# A binary operator stays at the end of the line; << and the ternary operator start the next one.
+AlignAfterOpenBracket: AlwaysBreak
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+BinPackArguments: false
+BinPackParameters: false
+AlignOperands: DontAlign
+BreakBeforeBinaryOperators: None
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: false
+AlwaysBreakAfterReturnType: None
+AlwaysBreakTemplateDeclarations: Yes
+
+# Initializer lists and base classes: the colon at the end of the line, every item on its own line
+BreakConstructorInitializers: AfterColon
+PackConstructorInitializers: Never
+BreakInheritanceList: AfterColon
+
+# Alignment
+AlignConsecutiveAssignments: None
+AlignConsecutiveBitFields: None
+AlignConsecutiveDeclarations: None
+AlignConsecutiveMacros: None
+AlignEscapedNewlines: DontAlign
+AlignTrailingComments: true
+PointerAlignment: Left
+DerivePointerAlignment: false
+ReferenceAlignment: Pointer
+QualifierAlignment: Leave
+
+# Spaces
+Cpp11BracedListStyle: false
+SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
+SpaceBeforeCpp11BracedList: true
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: false
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 1
+SpacesInAngles: Never
+SpacesInConditionalStatement: false
+SpacesInContainerLiterals: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+BitFieldColonSpacing: Both
+
+# Empty lines
+EmptyLineBeforeAccessModifier: Always
+EmptyLineAfterAccessModifier: Never
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+SeparateDefinitionBlocks: Leave
+
+# #include: groups are separated by an empty line, sorted alphabetically inside a group
+IncludeBlocks: Preserve
+SortIncludes: CaseInsensitive
+SortUsingDeclarations: false
+
+# Comments are not reflowed
+ReflowComments: false
+
+# Qt macros
+StatementAttributeLikeMacros: [emit]
