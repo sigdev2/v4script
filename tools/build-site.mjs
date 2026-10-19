@@ -6,8 +6,9 @@
 // The site (build/site by default) is the page of web/, the scripts of js/
 // minified by tools/minify.mjs (--no-minify copies them as they are),
 // languages.json with the version from VERSION, and examples.json made from
-// web/examples/index.json and the files next to it. --serve then serves the
-// site on http://localhost:8080 with the headers of cross-origin isolation.
+// web/examples/index.json and the files next to it. Every language must have
+// highlighting rules in web/highlight.js. --serve then serves the site on
+// http://localhost:8080 with the headers of cross-origin isolation.
 // See docs/playground.md.
 
 import { execFileSync } from 'node:child_process';
@@ -15,6 +16,7 @@ import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { hasSyntax, highlight } from '../web/highlight.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const web = path.join(root, 'web');
@@ -96,6 +98,27 @@ function collectExamples(languages) {
     return examples;
 }
 
+// The editor shows the highlighted copy of the text under its own: the copy
+// must be the same text.
+function checkHighlighting(languages, examples) {
+    const problems = [];
+    for (const language of languages.map((item) => item.id).concat(['javascript'])) {
+        if (!hasSyntax(language)) {
+            problems.push(`${language}: no highlighting rules in web/highlight.js`);
+        }
+    }
+    const plain = (html) => html.replace(/<\/?span[^>]*>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&');
+    for (const example of examples) {
+        if (plain(highlight(example.code, example.language)) !== example.code) {
+            problems.push(`${example.language}/${example.file}: the highlighted text differs from the text`);
+        }
+    }
+    if (problems.length > 0) {
+        throw new Error('Highlighting:\n  ' + problems.join('\n  '));
+    }
+}
+
 function build(options) {
     const output = options.output;
     fs.rmSync(output, { recursive: true, force: true });
@@ -113,6 +136,7 @@ function build(options) {
     fs.writeFileSync(path.join(output, 'languages.json'), JSON.stringify(manifest, null, 1) + '\n');
 
     const examples = collectExamples(manifest.languages);
+    checkHighlighting(manifest.languages, examples);
     fs.writeFileSync(path.join(output, 'examples.json'), JSON.stringify(examples) + '\n');
 
     // The site distributes the bundles of third-party interpreters: their

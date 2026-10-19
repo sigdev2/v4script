@@ -149,4 +149,7 @@ Decisions already taken for these stages:
  - BASIC `SCREEN` and Pascal `Graph`: put the picture on the canvas before
    the program waits for input (now at the end of a run and at waits for
    time) - in the Qt engine too.
- - Syntax highlighting in the editor; a link that carries a program.
+ - A link that carries a program.
+ - Highlighting: nested block comments (Scheme `#| |#`, WebAssembly
+   `(; ;)`), the interpolation in strings, a parser state instead of
+   guesses for regular expression literals.

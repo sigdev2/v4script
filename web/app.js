@@ -3,6 +3,8 @@
 // in a Web Worker (worker.js), one worker per run; a worker with the
 // language already loaded waits for the next run. See docs/playground.md.
 
+import { highlight } from './highlight.js';
+
 const REPOSITORY = 'https://github.com/sigdev2/v4script';
 const PROGRAMS_KEY = 'v4script.playground.programs';
 const STATE_KEY = 'v4script.playground.state';
@@ -11,6 +13,8 @@ const RELOADED_KEY = 'v4script.playground.reloaded';
 const INPUT_BUFFER_CHARS = 65536;
 // The console keeps the end of the output.
 const CONSOLE_LIMIT_CHARS = 1000000;
+// A longer program is not highlighted: the editor would lag behind typing.
+const HIGHLIGHT_LIMIT_CHARS = 100000;
 // The echo of a typed line has no line break where the program ends the
 // line itself: BASIC after INPUT (INPUT ; keeps it), Forth programs with CR
 // after ACCEPT, as in gforth.
@@ -43,6 +47,7 @@ const ui = {
     modified: element('modified'),
     languageInfo: element('language-info'),
     gutter: element('gutter'),
+    highlight: element('highlight'),
     code: element('code'),
     inputPane: element('input-pane'),
     input: element('input'),
@@ -358,16 +363,41 @@ function download() {
     setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }
 
-// --- The editor: a text area with line numbers
+// --- The editor: a text area with line numbers. Its text is transparent:
+// the highlighted copy under it shows through.
 
 let gutterLines = 0;
 let errorLine = 0;
+let highlightFrame = 0;
 
 function setEditorText(text) {
     ui.code.value = text;
     ui.code.scrollTop = 0;
     ui.code.scrollLeft = 0;
     updateGutter();
+    renderHighlight();
+    followScroll();
+}
+
+function renderHighlight() {
+    cancelAnimationFrame(highlightFrame);
+    highlightFrame = 0;
+    const text = ui.code.value;
+    const plain = text.length > HIGHLIGHT_LIMIT_CHARS;
+    ui.code.classList.toggle('plain', plain);
+    // The last line of the text area may be empty: the copy needs it too.
+    ui.highlight.innerHTML = plain ? '' : highlight(text, opened.language) + '\n';
+}
+
+// Typing highlights once per frame, before the frame is drawn.
+function highlightSoon() {
+    if (highlightFrame === 0)
+        highlightFrame = requestAnimationFrame(renderHighlight);
+}
+
+function followScroll() {
+    ui.gutter.scrollTop = ui.code.scrollTop;
+    ui.highlight.style.transform = 'translate(' + -ui.code.scrollLeft + 'px, ' + -ui.code.scrollTop + 'px)';
 }
 
 function updateGutter() {
@@ -412,6 +442,7 @@ function insertText(text) {
         ui.code.setRangeText(text, ui.code.selectionStart, ui.code.selectionEnd, 'end');
     edited();
     updateGutter();
+    highlightSoon();
 }
 
 function indentSelection(outdent) {
@@ -751,10 +782,9 @@ function bind() {
     ui.code.addEventListener('input', () => {
         edited();
         updateGutter();
+        highlightSoon();
     });
-    ui.code.addEventListener('scroll', () => {
-        ui.gutter.scrollTop = ui.code.scrollTop;
-    });
+    ui.code.addEventListener('scroll', followScroll);
     ui.code.addEventListener('keydown', editorKey);
     ui.input.addEventListener('input', () => {
         state.input = ui.input.value;
