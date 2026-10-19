@@ -63,7 +63,7 @@
         if (ir.k === 'braced')
             return this.listConversion(target, ir, options);
         if (ir.k === 'overload')
-            return this.overloadConversion(target, ir);
+            return this.overloadConversion(target, ir, options);
         if (X.isRef(target))
             return this.referenceConversion(target, ir, options);
         var to = unqual(target);
@@ -169,8 +169,16 @@
             (fromBase.signed && !to.signed);
     }
 
-    Parser.prototype.overloadConversion = function (target, ir) {
+    Parser.prototype.overloadConversion = function (target, ir, options) {
         var to = unqual(X.removeRef(target));
+        // std::function<int(int)> f = twice: the function is an lvalue.
+        var plain = ir.set.items.filter(function (item) { return item.kind === 'func' && !item.isMember; });
+        if (to.isClass && plain.length === 1 && ir.set.items.length === 1) {
+            this.useFunction(plain[0], ir);
+            plain[0].addressTaken = true;
+            var lvalue = this.ir('func', ir, { func: plain[0], type: plain[0].type, cat: 'lvalue' });
+            return this.conversion(target, lvalue, options);
+        }
         var pointerType = to.kind === 'pointer' && to.to.kind === 'function' ? to : null;
         if (pointerType === null && to.kind === 'function')
             pointerType = X.pointerTo(to);

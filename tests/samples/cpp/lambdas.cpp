@@ -50,6 +50,8 @@ int main()
     std::cout << generic(1, 2) << " " << generic(std::string("con"), std::string("cat")) << " " << generic(0.5, 1)
               << "\n";
     std::cout << twice(square)(3) << " " << twice([](int x) { return x + 1; })(0) << "\n";
+    std::function<int(int)> named = square;
+    std::cout << named(9) << " " << apply(std::minus<int>(), 9, 4) << "\n";
 
     std::function<long(int)> factorial = [&factorial](int n) -> long { return n <= 1 ? 1 : n * factorial(n - 1); };
     std::cout << factorial(15) << "\n";
@@ -106,6 +108,7 @@ int main()
 // 42 5 -4
 // 3 concat 1.5
 // 81 2
+// 81 5
 // 1307674368000
 // 9 8 5 3 2 1 | 3
 // 28 28
