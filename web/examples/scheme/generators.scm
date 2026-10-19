@@ -1,0 +1,37 @@
+; call/cc: a generator that walks a tree and returns the leaves one by
+; one; the walk is suspended between the calls.
+(define (make-leaf-generator tree)
+  (define return #f)
+  (define (walk node)
+    (cond ((null? node) 'skip)
+          ((pair? node) (walk (car node)) (walk (cdr node)))
+          (else (call/cc (lambda (resume)
+                           (set! walk-on (lambda () (resume #f)))
+                           (return node))))))
+  (define (walk-on)
+    (walk tree)
+    (return 'done))
+  (lambda ()
+    (call/cc (lambda (caller)
+               (set! return caller)
+               (walk-on)))))
+
+(define next-leaf (make-leaf-generator '((a b) (c (d e)) f)))
+(let loop ((leaf (next-leaf)))
+  (unless (eq? leaf 'done)
+    (display leaf) (display " ")
+    (loop (next-leaf))))
+(newline)
+
+; Two trees have the same leaves in the same order (the "same fringe"
+; problem) - without building lists of the leaves.
+(define (same-fringe? a b)
+  (let ((next-a (make-leaf-generator a)) (next-b (make-leaf-generator b)))
+    (let loop ()
+      (let ((x (next-a)) (y (next-b)))
+        (cond ((not (eq? x y)) #f)
+              ((eq? x 'done) #t)
+              (else (loop)))))))
+(display (same-fringe? '(1 (2 3) 4) '((1 2) (3 (4)))))
+(newline)
+(same-fringe? '(1 2) '(1 (3)))

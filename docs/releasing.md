@@ -38,6 +38,9 @@ git tag -a vX.Y.Z -m "v4script X.Y.Z"
 git push origin master dev vX.Y.Z
 ```
 
+The push of `master` also deploys the [playground](playground.md) to
+GitHub Pages (the workflow `Playground`).
+
 ## Release artifacts
 
 The source archive of the tag is the release. Optionally attach the

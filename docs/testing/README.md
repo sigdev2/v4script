@@ -89,7 +89,12 @@ node tools/run-samples.mjs c --run prog.c --input in.txt --dump   # one file, sh
 node tools/run-samples.mjs java --library         # translate the whole Java library
 node tools/run-samples.mjs wat --wast testsuite/  # WebAssembly spec tests (.wast)
 V4SCRIPT_JS=build/js-min node tools/run-samples.mjs pascal   # the minified scripts
+node tools/run-samples.mjs basic --examples       # the examples of the playground run without errors
 ```
+
+The examples of the [playground](../playground.md) (`web/examples`) have no
+expected output: `--examples` runs them with the input given in their index
+and fails on an error.
 
 Node is faster and more forgiving than V4: a sample that passes in Node may
 still fail in the Qt engine (see [V4 pitfalls](../internals/v4-pitfalls.md)),

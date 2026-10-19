@@ -63,7 +63,8 @@ Decisions already taken for these stages:
 
  - **Go**: `regexp`, `encoding/json`, `math/big`, complex numbers, `goto`,
    range-over-func iterators; faster 64-bit loop counters (no checks when
-   the bound is known).
+   the bound is known). A receive from the channel of `time.NewTicker`
+   never returns (`time.Tick` works).
  - **C**: `goto`, `_Generic`, `setjmp`/`longjmp`, `wchar.h`; writing files
    through the host; bounds checks inside the program memory (as
    AddressSanitizer does).
@@ -122,14 +123,17 @@ Decisions already taken for these stages:
    `V` and `P` for the `$V` and `$P` tables; BASIC `printUsing` keeps the
    names of QB64.
 
+## The playground
+
+ - Keys in real time for `INKEY$`, `ReadKey`, `KeyPressed` (now they read
+   typed lines, as in the Qt engine).
+ - BASIC `SCREEN` and Pascal `Graph`: put the picture on the canvas before
+   the program waits for input (now at the end of a run and at waits for
+   time) - in the Qt engine too.
+ - Syntax highlighting in the editor; a link that carries a program.
+
 ## Later (not now)
 
- - **A playground on GitHub Pages**: the languages in the browser with a
-   list of examples and own programs saved in `localStorage`, a build
-   script and a link from the README. The examples must be original
-   (listings from books are copyrighted). Browsers run the same scripts;
-   the differences to check are engine features (V4 is stricter, browsers
-   have newer syntax) and the host layer (output, input, timers).
  - **Readable vendor bundles**: keep the third-party interpreters in the
    repository unminified (or with source maps) so that they can be read;
    either rebuild them without minification or decide whether to

@@ -18,7 +18,8 @@ How to work on v4script itself. Contribution rules are in
 | [cmake/](../cmake) | embedding the scripts as resources, the version header |
 | [tests/](../tests) | C++ tests and the sample programs |
 | [examples/](../examples) | small projects that embed the library |
-| [tools/](../tools) | Node.js tools: vendor bundles, minification, the sample runner |
+| [web/](../web) | the playground: the page, the worker that runs the languages in a browser, the examples ([playground](playground.md)) |
+| [tools/](../tools) | Node.js tools: vendor bundles, minification, the sample runner, the playground site |
 | [docs/](README.md) | the documentation |
 
 ## Building
@@ -100,6 +101,15 @@ the V4 compiler can take. Embed it with `-DV4SCRIPT_MINIFY_JS=ON` (minifies
 at configure time) or `-DV4SCRIPT_JS_DIR=<directory>`. The resources shrink
 from 7.8 MB to 5.4 MB. Run the tests with the minified scripts before a
 release: V4 has crashed on code shapes that only the minified scripts had.
+
+## The playground
+
+The site of the playground is built from [web/](../web) and `js/` by
+[tools/build-site.mjs](../tools/build-site.mjs) and deployed to GitHub Pages
+from `master`; `node tools/build-site.mjs --serve` builds it and serves it
+locally. See [playground](playground.md). A change of the host layer or of
+the scripts of a language should keep the examples of the playground
+running: `node tools/run-samples.mjs <language> --examples` (CI runs it).
 
 ## Reference implementations
 

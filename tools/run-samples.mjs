@@ -8,6 +8,7 @@
 //   node tools/run-samples.mjs go --run file.go [--dump] [--input file]   run a file, --dump shows the JavaScript
 //   node tools/run-samples.mjs java --library   translate the whole library of the language (errors in it)
 //   node tools/run-samples.mjs wat --wast file.wast|directory   WebAssembly specification tests (.wast)
+//   node tools/run-samples.mjs basic --examples [--show]   the examples of the playground (web/examples) run without errors
 //   V4SCRIPT_JS=build/js-min node tools/run-samples.mjs go   the same with the minified scripts
 //
 // Expectations at the end of a sample are line comments of the language:
@@ -55,6 +56,23 @@ function makeAppModule() {
     return vm.runInThisContext(fs.readFileSync(file, 'utf8'), { filename: file })();
 }
 
+// A canvas that draws nothing: the examples of the playground draw on the
+// canvas of the page, and the global variable canvas is there too.
+function makeCanvas() {
+    const context = new Proxy({}, {
+        get(target, name) {
+            if (name in target)
+                return target[name];
+            if (name === 'createImageData')
+                return (width, height) => ({ width, height, data: new Uint8ClampedArray(width * height * 4) });
+            if (name === 'measureText')
+                return () => ({ width: 0 });
+            return () => undefined;
+        }
+    });
+    return { width: 300, height: 150, getContext: () => context };
+}
+
 function load(language, options) {
     runFile('host/compat.js')(globalThis);
     const info = LANGUAGES[language];
@@ -83,7 +101,7 @@ function load(language, options) {
         },
         readLine: () => input.length > 0 ? input.shift() : null,
         readModule: (name) => Object.prototype.hasOwnProperty.call(modules, name) ? modules[name] : null,
-        canvas: () => null,
+        canvas: () => options.canvas || null,
         clear: () => {},
         unit: () => 'main',
         modules: () => [appModule],
@@ -173,7 +191,7 @@ function expectations(text, comment) {
 const [language, ...rest] = nodeProcess.argv.slice(2);
 if (!LANGUAGES[language]) {
     print('usage: node run-samples.mjs <' + Object.keys(LANGUAGES).join('|') +
-                '> [filter | --run file [--dump] [--input file] | --library | --wast path]');
+                '> [filter | --run file [--dump] [--input file] | --library | --wast path | --examples [--show]]');
     nodeProcess.exit(2);
 }
 if (rest[0] === '--library') {
@@ -227,6 +245,36 @@ if (rest[0] === '--wast') {
     }
     print(totalPass + ' passed, ' + totalFail + ' failed');
     nodeProcess.exit(totalFail > 0 ? 1 : 0);
+}
+if (rest[0] === '--examples') {
+    // The examples of the playground (web/examples) run without an error,
+    // with the input given in its index; the other examples are their files.
+    const examples = path.join(ROOT, 'web', 'examples');
+    const index = JSON.parse(fs.readFileSync(path.join(examples, 'index.json'), 'utf8'));
+    const modules = {};
+    for (const [id, groups] of Object.entries(index)) {
+        for (const example of groups.flatMap((group) => group.examples))
+            modules[example.file] = fs.readFileSync(path.join(examples, id, example.file), 'utf8');
+    }
+    let failed = 0, passed = 0;
+    for (const example of (index[language] || []).flatMap((group) => group.examples)) {
+        const started = Date.now();
+        const canvas = makeCanvas();
+        globalThis.canvas = canvas;
+        const result = load(language, { input: (example.input || []).slice(), modules, canvas })
+            .run(modules[example.file]);
+        if (result.error) {
+            ++failed;
+            print('FAIL ' + example.file + ': ' + result.error.message + ' (line ' + result.error.line + ')');
+        } else {
+            ++passed;
+            print('ok   ' + example.file + ' (' + (Date.now() - started) + ' ms)');
+        }
+        if (rest.includes('--show'))
+            result.output.forEach((line) => print('     ' + line));
+    }
+    print(passed + ' passed, ' + failed + ' failed');
+    nodeProcess.exit(failed > 0 ? 1 : 0);
 }
 if (rest[0] === '--run') {
     const inputIndex = rest.indexOf('--input');

@@ -4,8 +4,10 @@
 language adapter receives, and the bridge
 ([src/HostBridge.hpp](../../src/HostBridge.hpp), implemented in
 [src/Engine.cpp](../../src/Engine.cpp)) connects it to C++. The same file runs in Node.js under
-[tools/run-samples.mjs](../../tools/run-samples.mjs) with a bridge of plain
-JavaScript - so the languages behave the same in both.
+[tools/run-samples.mjs](../../tools/run-samples.mjs) and in a browser under
+[web/worker.js](../../web/worker.js) (the [playground](../playground.md)),
+each with a bridge of plain JavaScript - so the languages behave the same
+in all three.
 
 ```
 v4script::Host (C++ callbacks)
