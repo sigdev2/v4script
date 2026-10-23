@@ -834,7 +834,11 @@
             return false;
         if (expr.k === 'call' && expr.func.native && X.isIntegral(type))
             return false;
-        if (expr.k === 'call' && expr.func.isMember && unqual(expr.type).isClass && X.isRef(expr.func.type.returns))
+        // Calls that return an object by reference: chained members and the
+        // streams - libstdc++ declares operator<< for char and strings as
+        // free functions.
+        if (expr.k === 'call' && unqual(expr.type).isClass && X.isRef(expr.func.type.returns) &&
+            (expr.func.isMember || expr.func.name === 'operator<<' || expr.func.name === 'operator>>'))
             return false;
         return true;
     }
