@@ -164,7 +164,10 @@ js_set(js_global(), "half", js_function(half));     // JavaScript calls half(7)
 Host modules are C headers too: a module `app` is `app.h` (a global
 module's header is included already) with `app_<name>` and `<name>`
 functions as in C; a `string` result is a C string, so
-`std::string text = greet("Ann");` takes it.
+`std::string text = greet("Ann");` takes it. A `value` parameter is
+`const void*`: it takes a `js_value`, a string (`describe("Ann")`,
+`describe(text.c_str())`) or `nullptr`; a number needs `js_from_int` or
+`js_from_double`.
 
 ## Modules
 

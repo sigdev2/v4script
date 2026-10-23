@@ -1,6 +1,7 @@
 // The host module "app" of the tests: header app.h with app_<name> for
 // every function and <name> where the library does not have it (log is in
 // math.h, so only app_log). Strings are C strings; std::string takes them.
+// A value parameter takes a js_value, a string or a null pointer.
 #include <app.h>
 #include <iostream>
 #include <string>
@@ -18,6 +19,7 @@ int main()
     app_log(std::string("two").c_str());
     std::cout << js_string(js_index(logged(), 1)) << " " << describe(nullptr) << " " << describe(js_array(2, 1, 2))
               << "\n";
+    std::cout << describe("Ann") << " " << describe(greeting.c_str()) << " " << describe(NULL) << "\n";
     return 0;
 }
 
@@ -26,3 +28,4 @@ int main()
 // 1 2
 // 1 2 3
 // two nothing [1,2]
+// "Ann" "Hello, Ann!" nothing

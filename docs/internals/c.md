@@ -116,6 +116,9 @@ casts and `memcpy` work as in real C.
  - Host modules: a header `<name>.h` with `name_fn` for every function and
    the plain `fn` where the built-in headers do not declare that name
    (`C.hostHeader`); a global module's header is included implicitly.
+   C++ declares `value` parameters `const void*` (C++ converts no pointer
+   to `js_value`); either way `anyValue` in `jsapi.js` tells a handle, a
+   function and a string apart by the address.
 
 ## Known places
 

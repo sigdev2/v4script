@@ -90,6 +90,9 @@ private slots:
                              << "#include <iostream>\nstd::cout << \"Hello, мир \" << 1 + 2 << \"\\n\" << 'a';\n"
                                 "std::cout << \"b\" << std::endl;\nsizeof(int) * 10 + 2;"
                              << QStringList { "Hello, мир 3", "ab" } << "42";
+        QTest::newRow("cpp stream output last")
+            << "cpp"
+            << "std::string text = \"b\";\nstd::cout << 'a' << text << \"\\n\";" << QStringList { "ab" } << "";
         QTest::newRow("java") << "java"
                               << "System.out.println(\"Hello, мир \" + (1 + 2));\nSystem.out.print(\"a\");\n"
                                  "System.out.println(\"b\");\nList.of(1, 2, 3).size() * 14"

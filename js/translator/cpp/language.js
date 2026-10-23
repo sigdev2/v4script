@@ -132,8 +132,10 @@
         this.argvAddress = 0;
         this.asyncPossible = false;
         this.errnoAddress = this.memory.allocateStatic(4, 4);
+        // A value parameter takes a js_value, a string or nullptr, as in C:
+        // C++ converts any object pointer only to const void*.
         this.hostHeaders = env.modules.map(function (module) {
-            var header = C.hostHeader(module);
+            var header = C.hostHeader(module, 'const void *');
             return { file: module.names.snake + '.h', text: header.text, names: header.names, global: module.global };
         });
         this.natives = C.libc(this);
@@ -832,7 +834,11 @@
             return false;
         if (expr.k === 'call' && expr.func.native && X.isIntegral(type))
             return false;
-        if (expr.k === 'call' && expr.func.isMember && unqual(expr.type).isClass && X.isRef(expr.func.type.returns))
+        // Calls that return an object by reference: chained members and the
+        // streams - libstdc++ declares operator<< for char and strings as
+        // free functions.
+        if (expr.k === 'call' && unqual(expr.type).isClass && X.isRef(expr.func.type.returns) &&
+            (expr.func.isMember || expr.func.name === 'operator<<' || expr.func.name === 'operator>>'))
             return false;
         return true;
     }
