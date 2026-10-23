@@ -319,15 +319,21 @@
 
     // Header <name.h> of a host module: every function as name_function
     // (app_greet) and, unless a built-in header has the name, as function
-    // (greet) too. Optional parameters are passed as NULL or 0.
-    C.hostHeader = function (module) {
+    // (greet) too. Optional parameters are passed as NULL or 0. valueType -
+    // the type of value parameters, js_value when omitted.
+    C.hostHeader = function (module, valueType) {
         var lines = ['#include <js.h>'];
         var names = [];
         module.functions.forEach(function (fn) {
             var parameters = [];
             var count = fn.getter ? 0 : fn.parameters.length;
-            for (var index = 0; index < count; ++index)
-                parameters.push(C_PARAMETER[fn.parameters[index].type] + ' ' + fn.parameters[index].name);
+            for (var index = 0; index < count; ++index) {
+                var parameter = fn.parameters[index];
+                var type = C_PARAMETER[parameter.type];
+                if (parameter.type === 'value' && valueType !== undefined)
+                    type = valueType;
+                parameters.push(type + ' ' + parameter.name);
+            }
             var tail = '(' + (parameters.length > 0 ? parameters.join(', ') : 'void') + ');';
             var result = C_RESULT[fn.result] + ' ';
             var prefixed = module.names.snake + '_' + fn.names.snake;
