@@ -8,6 +8,15 @@ server.
 
 ## Using it
 
+ - **The disclaimer.** A notice above the editor says that the playground
+   comes without warranty and that the user is responsible for the
+   programs run in it; *Got it* hides it in this browser, *Disclaimer* at
+   the bottom brings it back. Its text in [index.html](../web/index.html)
+   is the short form of the
+   [disclaimer of the README](../README.md#disclaimer): a change of one is
+   a change of the other, and a new text raises `DISCLAIMER_VERSION` in
+   [app.js](../web/app.js), so that the notice shows again to those who
+   hid it.
  - **Language and program.** The lists at the top choose a language and a
    program: an example or one of your own. A link opens a program directly:
    `#basic/guess.bas` - an example, `#pascal` - the last program of a

@@ -9,6 +9,10 @@ const REPOSITORY = 'https://github.com/sigdev2/v4script';
 const PROGRAMS_KEY = 'v4script.playground.programs';
 const STATE_KEY = 'v4script.playground.state';
 const RELOADED_KEY = 'v4script.playground.reloaded';
+const DISCLAIMER_KEY = 'v4script.playground.disclaimer';
+// A new text of the disclaimer takes a greater version: it shows again to
+// those who hid the old one.
+const DISCLAIMER_VERSION = 1;
 // The longest line of input a program can get at once.
 const INPUT_BUFFER_CHARS = 65536;
 // The console keeps the end of the output.
@@ -60,7 +64,10 @@ const ui = {
     prompt: element('prompt'),
     line: element('line'),
     isolation: element('isolation'),
-    version: element('version')
+    version: element('version'),
+    disclaimer: element('disclaimer'),
+    disclaimerClose: element('disclaimer-close'),
+    disclaimerShow: element('disclaimer-show')
 };
 
 let manifest = null;
@@ -728,6 +735,19 @@ function drawFrame(message) {
 
 // --- Start
 
+// The disclaimer comes before everything that can fail, so that it shows
+// even when the languages do not load.
+function bindDisclaimer() {
+    ui.disclaimer.hidden = readStorage(DISCLAIMER_KEY, 0) >= DISCLAIMER_VERSION;
+    ui.disclaimerClose.addEventListener('click', () => {
+        ui.disclaimer.hidden = true;
+        writeStorage(DISCLAIMER_KEY, DISCLAIMER_VERSION);
+    });
+    ui.disclaimerShow.addEventListener('click', () => {
+        ui.disclaimer.hidden = false;
+    });
+}
+
 // Cross-origin isolation (SharedArrayBuffer for typed input) needs headers
 // that GitHub Pages does not send: the service worker adds them, and the
 // first visit reloads once to get them. A browser that refuses service
@@ -831,6 +851,7 @@ async function fetchJson(url) {
 }
 
 async function start() {
+    bindDisclaimer();
     await isolate();
     try {
         [manifest, examples] = await Promise.all([fetchJson('languages.json'), fetchJson('examples.json')]);
