@@ -19,6 +19,8 @@
     --builtin: #795e26;
     --meta: #af00db;
     --variable: #001080;
+    --notice: #fff8e1;
+    --notice-border: #e8c766;
     --mono: ui-monospace, 'Cascadia Mono', 'Consolas', 'DejaVu Sans Mono', 'Liberation Mono', monospace;
     color-scheme: light dark;
 }
@@ -45,6 +47,8 @@
         --builtin: #dcdcaa;
         --meta: #c586c0;
         --variable: #9cdcfe;
+        --notice: #2a2414;
+        --notice-border: #6b5a24;
     }
 }
 
@@ -157,6 +161,38 @@ button.primary {
 button.small {
     padding: 1px 8px;
     font-size: 12px;
+}
+
+button.link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font-size: inherit;
+    text-decoration: underline;
+}
+
+.notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 10px 10px 0;
+    padding: 8px 12px;
+    background: var(--notice);
+    border: 1px solid var(--notice-border);
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.notice p {
+    flex: 1;
+    margin: 0;
+}
+
+.notice-icon {
+    color: var(--warning);
+    font-size: 16px;
+    line-height: 1.2;
 }
 
 main {
@@ -435,7 +471,10 @@ main {
 }
 
 @media (max-width: 800px) {
+    /* The least heights of the rows, the gap and the padding: below them the
+       page scrolls rather than lay the output over the footer. */
     main {
+        min-height: 580px;
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: minmax(300px, 1fr) minmax(250px, 1fr);
     }

@@ -21,6 +21,18 @@
   <button id="open" title="Open a file from the computer as my program">Open&hellip;</button>
   <input type="file" id="file" hidden>
 </header>
+<aside id="disclaimer" class="notice" aria-labelledby="disclaimer-title" hidden>
+  <span class="notice-icon" aria-hidden="true">&#9888;</span>
+  <p>
+    <strong id="disclaimer-title">Use at your own risk.</strong>
+    The playground and the interpreters of v4script are provided as is, without warranty.
+    You are responsible for the programs you write, open or run here and for what they do:
+    a program runs in your browser and can use its JavaScript, network requests included, so run only code you trust.
+    The authors accept no liability for the use of the translators, for any unlawful use, or for the programs run with them.
+    <a href="https://github.com/sigdev2/v4script#disclaimer" target="_blank" rel="noopener">Full disclaimer</a>
+  </p>
+  <button id="disclaimer-close" class="small" title="Hide this notice in this browser">Got it</button>
+</aside>
 <main>
   <section class="pane editor-pane">
     <div class="pane-title">
@@ -64,6 +76,7 @@
   <span class="spacer"></span>
   <span id="isolation" hidden></span>
   <span>Your programs and changes stay in this browser.</span>
+  <button id="disclaimer-show" class="link" title="Show the disclaimer">Disclaimer</button>
   <a href="https://github.com/sigdev2/v4script/blob/HEAD/docs/playground.md" target="_blank" rel="noopener">About</a>
   <span id="version"></span>
 </footer>

@@ -163,6 +163,37 @@ libraries, the tests and this documentation were developed in
 collaboration with Claude, under the direction and review of the
 maintainer.
 
+## Disclaimer
+
+> [!CAUTION]
+> v4script and its playground are provided **"as is", without warranty of
+> any kind** (see the [MIT License](LICENSE)). The translators and
+> interpreters are independent implementations: they may run a program
+> differently from the reference implementation of its language and may
+> contain errors.
+>
+> - **Use of the translators and interpreters.** You use v4script, the
+>   playground and their results at your own risk. The authors and
+>   contributors are not liable for any damage or loss that comes from
+>   that use: wrong results, lost data, failures of an application that
+>   embeds v4script.
+> - **Unlawful use.** You alone are responsible for using v4script in line
+>   with the laws that apply to you and with the rights of others,
+>   including the licenses and copyrights of the programs you run. The
+>   authors do not approve of, and accept no responsibility for, any
+>   unlawful or harmful use.
+> - **Programs run with v4script.** The authors do not write, review or
+>   control the programs that people run in the playground or in an
+>   application that embeds v4script, and are not responsible for their
+>   content, behavior or consequences: whoever writes, shares or runs a
+>   program is responsible for it. A program can call JavaScript - in the
+>   playground, the JavaScript of your browser, network requests included -
+>   so run only code you trust. An application that embeds v4script is
+>   responsible for what it lets programs reach (see [SECURITY](SECURITY.md)).
+>
+> Names of languages and products are trademarks of their owners;
+> v4script is not affiliated with or endorsed by them.
+
 ## License
 
 [MIT](LICENSE) © 2026 sigdev
