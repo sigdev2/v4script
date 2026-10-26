@@ -714,8 +714,10 @@
             vsnprintf: function (target, size, format, ap) {
                 return printInto(target, unsigned(size), format, ap, ap ? ap.i : 0);
             },
+            // The number of bytes written, as glibc returns it.
             puts: function (text) {
-                return write(session.stdoutAddress, bytes(text) + '\n') ? 1 : EOF;
+                var line = bytes(text) + '\n';
+                return write(session.stdoutAddress, line) ? line.length : EOF;
             },
             fputs: function (text, stream) {
                 return write(stream, bytes(text)) ? 1 : EOF;
