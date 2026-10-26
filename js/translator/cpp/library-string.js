@@ -33,36 +33,36 @@
         ['std', 70, 73, 'next'],
         ['std', 74, 77, 'prev'],
         ['std', 79, 131, 'reverse_iterator'],
-        ['std', 132, 134, 'operator=='],
-        ['std', 135, 137, 'operator!='],
-        ['std', 138, 140, 'operator<'],
-        ['std', 141, 143, 'operator>'],
-        ['std', 144, 146, 'operator<='],
-        ['std', 147, 149, 'operator>='],
-        ['std', 150, 153, 'operator-'],
-        ['std', 154, 157, 'operator+'],
-        ['std', 158, 158, 'make_reverse_iterator'],
-        ['std', 160, 190, 'move_iterator'],
-        ['std', 191, 191, 'make_move_iterator'],
-        ['std', 193, 193, 'begin'],
+        ['std', 133, 135, 'operator=='],
+        ['std', 136, 138, 'operator!='],
+        ['std', 139, 141, 'operator<'],
+        ['std', 142, 144, 'operator>'],
+        ['std', 145, 147, 'operator<='],
+        ['std', 148, 150, 'operator>='],
+        ['std', 151, 154, 'operator-'],
+        ['std', 155, 158, 'operator+'],
+        ['std', 159, 159, 'make_reverse_iterator'],
+        ['std', 161, 191, 'move_iterator'],
+        ['std', 192, 192, 'make_move_iterator'],
         ['std', 194, 194, 'begin'],
-        ['std', 195, 195, 'end'],
+        ['std', 195, 195, 'begin'],
         ['std', 196, 196, 'end'],
-        ['std', 197, 197, 'begin'],
-        ['std', 198, 198, 'end'],
-        ['std', 199, 199, 'cbegin'],
-        ['std', 200, 200, 'cend'],
-        ['std', 201, 201, 'rbegin'],
-        ['std', 202, 202, 'rend'],
-        ['std', 203, 203, 'rbegin'],
-        ['std', 204, 204, 'rend'],
-        ['std', 205, 205, 'size'],
+        ['std', 197, 197, 'end'],
+        ['std', 198, 198, 'begin'],
+        ['std', 199, 199, 'end'],
+        ['std', 200, 200, 'cbegin'],
+        ['std', 201, 201, 'cend'],
+        ['std', 202, 202, 'rbegin'],
+        ['std', 203, 203, 'rend'],
+        ['std', 204, 204, 'rbegin'],
+        ['std', 205, 205, 'rend'],
         ['std', 206, 206, 'size'],
-        ['std', 207, 207, 'empty'],
+        ['std', 207, 207, 'size'],
         ['std', 208, 208, 'empty'],
-        ['std', 209, 209, 'data'],
+        ['std', 209, 209, 'empty'],
         ['std', 210, 210, 'data'],
-        ['std', 211, 211, 'data']
+        ['std', 211, 211, 'data'],
+        ['std', 212, 212, 'data']
     ], String.raw`
 namespace std {
 struct input_iterator_tag {};
@@ -194,26 +194,27 @@ public:
     }
     reference operator[](difference_type n) const { return *(*this + n); }
 };
-template <class I> bool operator==(const reverse_iterator<I>& a, const reverse_iterator<I>& b) {
+// Two iterator types: a reverse_iterator and its const counterpart compare.
+template <class I, class J> bool operator==(const reverse_iterator<I>& a, const reverse_iterator<J>& b) {
     return a.base() == b.base();
 }
-template <class I> bool operator!=(const reverse_iterator<I>& a, const reverse_iterator<I>& b) {
+template <class I, class J> bool operator!=(const reverse_iterator<I>& a, const reverse_iterator<J>& b) {
     return a.base() != b.base();
 }
-template <class I> bool operator<(const reverse_iterator<I>& a, const reverse_iterator<I>& b) {
+template <class I, class J> bool operator<(const reverse_iterator<I>& a, const reverse_iterator<J>& b) {
     return b.base() < a.base();
 }
-template <class I> bool operator>(const reverse_iterator<I>& a, const reverse_iterator<I>& b) {
+template <class I, class J> bool operator>(const reverse_iterator<I>& a, const reverse_iterator<J>& b) {
     return a.base() < b.base();
 }
-template <class I> bool operator<=(const reverse_iterator<I>& a, const reverse_iterator<I>& b) {
+template <class I, class J> bool operator<=(const reverse_iterator<I>& a, const reverse_iterator<J>& b) {
     return !(a.base() < b.base());
 }
-template <class I> bool operator>=(const reverse_iterator<I>& a, const reverse_iterator<I>& b) {
+template <class I, class J> bool operator>=(const reverse_iterator<I>& a, const reverse_iterator<J>& b) {
     return !(b.base() < a.base());
 }
-template <class I> typename reverse_iterator<I>::difference_type operator-(const reverse_iterator<I>& a,
-                                                                            const reverse_iterator<I>& b) {
+template <class I, class J>
+auto operator-(const reverse_iterator<I>& a, const reverse_iterator<J>& b) -> decltype(b.base() - a.base()) {
     return b.base() - a.base();
 }
 template <class I> reverse_iterator<I> operator+(typename reverse_iterator<I>::difference_type n,

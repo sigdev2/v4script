@@ -209,7 +209,8 @@ other host files. A changed file is included again at the next run.
  - `sizeof` of some library classes differs: `std::function` is 8 bytes
    (32 in libstdc++), `unordered_map` and `unordered_set` 64 (56),
    `vector<bool>` 24 (40). `vector<bool>` keeps one byte per element and
-   `v[i]` is a `bool&`, not a proxy.
+   `v[i]` is a `bool&`, not a proxy; `flip()` is a member of every
+   `vector`.
  - Global objects and `static` locals are not destroyed at the end of a
    run: they stay for the next units (see
    [shared declarations](#a-unit-is-a-source-file)), so their destructors

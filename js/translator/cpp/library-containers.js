@@ -124,15 +124,15 @@ template <class I, class T> T* __uninitialized_copy(I first, I last, T* target) 
 `);
 
     X.addHeader('v4script/vector', [
-        ['std', 3, 411, 'vector'],
-        ['std', 412, 412, 'vector'],
-        ['std', 413, 415, 'operator=='],
-        ['std', 416, 416, 'operator!='],
-        ['std', 417, 419, 'operator<'],
-        ['std', 420, 420, 'operator>'],
-        ['std', 421, 421, 'operator<='],
-        ['std', 422, 422, 'operator>='],
-        ['std', 423, 423, 'swap']
+        ['std', 3, 416, 'vector'],
+        ['std', 417, 417, 'vector'],
+        ['std', 418, 420, 'operator=='],
+        ['std', 421, 421, 'operator!='],
+        ['std', 422, 424, 'operator<'],
+        ['std', 425, 425, 'operator>'],
+        ['std', 426, 426, 'operator<='],
+        ['std', 427, 427, 'operator>='],
+        ['std', 428, 428, 'swap']
     ], String.raw`
 namespace std {
 template <class T, class A = allocator<T>> class vector {
@@ -543,6 +543,11 @@ public:
         std::swap(__end, other.__end);
         std::swap(__end_of_storage, other.__end_of_storage);
     }
+    // vector<bool>::flip (vector<bool> is not a specialization here).
+    void flip() noexcept {
+        for (T* p = __begin; p != __end; ++p)
+            *p = !*p;
+    }
 };
 template <class I> vector(I, I) -> vector<typename iterator_traits<I>::value_type>;
 template <class T, class A> bool operator==(const vector<T, A>& a, const vector<T, A>& b) {
@@ -653,21 +658,26 @@ template <size_t I, class T, size_t N> T&& get(array<T, N>&& a) noexcept { retur
 `);
 
     X.addHeader('v4script/deque', [
-        ['std', 5, 93, '__deque_iterator'],
-        ['std', 94, 96, 'operator+'],
-        ['std', 98, 427, 'deque'],
-        ['std', 428, 428, 'deque'],
-        ['std', 429, 431, 'operator=='],
-        ['std', 432, 432, 'operator!='],
-        ['std', 433, 435, 'operator<'],
-        ['std', 436, 436, 'operator>'],
-        ['std', 437, 437, 'operator<='],
-        ['std', 438, 438, 'operator>='],
-        ['std', 439, 439, 'swap']
+        ['std', 7, 7, '__deque_node'],
+        ['std', 9, 99, '__deque_iterator'],
+        ['std', 100, 102, 'operator+'],
+        ['std', 104, 433, 'deque'],
+        ['std', 434, 434, 'deque'],
+        ['std', 435, 437, 'operator=='],
+        ['std', 438, 438, 'operator!='],
+        ['std', 439, 441, 'operator<'],
+        ['std', 442, 442, 'operator>'],
+        ['std', 443, 443, 'operator<='],
+        ['std', 444, 444, 'operator>='],
+        ['std', 445, 445, 'swap']
     ], String.raw`
 namespace std {
 // Blocks of 512 bytes (at least one element) as in libstdc++; a map of
 // block pointers that is recentred or grown when an end runs out.
+// The nodes of an iterator (T**) and a const_iterator (const T**) as one
+// type: their difference and order.
+template <class T> inline const void* const* __deque_node(T** node) noexcept { return (const void* const*)node; }
+
 template <class T> struct __deque_iterator {
     typedef random_access_iterator_tag iterator_category;
     typedef T value_type;
@@ -742,7 +752,8 @@ template <class T> struct __deque_iterator {
     }
     T& operator[](ptrdiff_t n) const noexcept { return *(*this + n); }
     template <class U> ptrdiff_t operator-(const __deque_iterator<U>& other) const noexcept {
-        return __block * (__node - other.__node - 1) + (__current - __first) + (other.__last - other.__current);
+        return __block * (__deque_node(__node) - __deque_node(other.__node) - 1) + (__current - __first) +
+            (other.__last - other.__current);
     }
     template <class U> bool operator==(const __deque_iterator<U>& other) const noexcept {
         return __current == other.__current;
@@ -751,7 +762,8 @@ template <class T> struct __deque_iterator {
         return __current != other.__current;
     }
     template <class U> bool operator<(const __deque_iterator<U>& other) const noexcept {
-        return __node == other.__node ? __current < other.__current : __node < other.__node;
+        return __deque_node(__node) == __deque_node(other.__node) ? __current < other.__current
+                                                                  : __deque_node(__node) < __deque_node(other.__node);
     }
     template <class U> bool operator>(const __deque_iterator<U>& other) const noexcept { return other < *this; }
     template <class U> bool operator<=(const __deque_iterator<U>& other) const noexcept { return !(other < *this); }
