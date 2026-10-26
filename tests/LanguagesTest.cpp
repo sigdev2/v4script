@@ -1035,6 +1035,19 @@ private slots:
         QCOMPARE(run.result.errorLine, 3);
     }
 
+    void cppUnitsDefineFunctionsAgain()
+    {
+        // main of every unit runs; a unit that fails changes nothing, and the
+        // next definition counts.
+        TestSession session;
+        QCOMPARE(session.run("cpp", "int main() { std::cout << 1; return 0; }", "first").output, QStringList { "1" });
+        QCOMPARE(session.run("cpp", "int main() { std::cout << 2; return 0; }", "second").output, QStringList { "2" });
+        QCOMPARE(session.run("cpp", "std::cout << 3;", "third").output, QStringList { "3" });
+        QCOMPARE(session.run("cpp", "int twice(int x) { return 2 * x; }\ntwice(4);").result.value, QString("8"));
+        QCOMPARE(session.run("cpp", "int twice(int x) { return 3 * x + nothing; }").result.status, Status::Failed);
+        QCOMPARE(session.run("cpp", "int twice(int x) { return 5 * x; }\ntwice(4);").result.value, QString("20"));
+    }
+
     void clearReachesHost()
     {
         TestSession session;

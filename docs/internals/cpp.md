@@ -94,6 +94,10 @@ and C library; everything above C is in
  - Copy elision: prvalues are never copied (C++17); a local declared in
    the outermost block that every `return` returns lives in `$ret` (NRVO,
    `returnSlot`), as g++ 13 does it - not for locals of inner blocks.
+ - A function declared again by a unit (`main` of an earlier unit too)
+   joins the `declared` list of the transaction: `findMain` finds it, and a
+   failed unit restores its old definition (`fromSession` goes through
+   `X.change`).
  - Exceptions are JavaScript exceptions (`CppException`) with the address
    of the thrown object (on the heap), its RTTI record and its destructor;
    a handler matches by the RTTI bases and adjusts the pointer. An uncaught

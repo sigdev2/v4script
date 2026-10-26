@@ -661,7 +661,11 @@
         var existing = this.findDeclaration(scope, name.name, type, params);
         if (existing !== null) {
             if (existing.fromSession) {
-                existing.fromSession = false;
+                // Declared again by this unit (main of the unit is found
+                // among the declared); a failed unit keeps the old one.
+                X.change(existing, 'fromSession', false);
+                if (X.transaction !== null)
+                    X.transaction.declared.push(existing);
                 X.change(existing, 'defined', false);
                 X.change(existing, 'body', null);
                 X.change(existing, 'lazy', null);
@@ -764,7 +768,7 @@
         var params = this.functionParams(declarator);
         X.change(func, 'params', params);
         X.change(func, 'defined', true);
-        func.fromSession = false;
+        X.change(func, 'fromSession', false);
         // A::f() { ... } outside its class or namespace sees the names of A.
         var scope = this.scope;
         if (func.owner && scope.kind === 'namespace' && func.owner !== scope)
