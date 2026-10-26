@@ -99,16 +99,27 @@ casts and `memcpy` work as in real C.
 
  - Output is UTF-8 bytes: `OutputStream` collects a line up to `\n` and
    gives it to the writer decoded (a character split between `putchar`
-   calls stays whole).
+   calls stays whole). `stderr` is unbuffered: every write goes out up to
+   the last whole character. `fflush` (`push`) flushes the writer of the
+   host too, which keeps an unfinished line: otherwise text of the other
+   stream would overtake it.
  - `printf` is `C.format` over `T.numbers`: the exact digits of a double
    and rounding half to even, as glibc; `rand` is the glibc algorithm
    (TYPE_3), the same numbers for the same `srand`. The expectations of the
    samples were checked with gcc (glibc) on Linux.
  - `qsort` is a stable merge sort over a copy (the comparison gets the
    addresses in the copy).
+ - Variable length arrays: the lengths are taken into `name$length`
+   variables at the declaration, element sizes of pointer arithmetic come
+   from `vlaSize` at run time (`elemType`), and a block with such an array
+   restores `$M.sp` in a `finally`. A parameter is declared in the
+   prototype scope of the function declarator; the same object becomes the
+   parameter of the definition, so the sizes of later parameters refer to it.
  - Files: `fopen` reads files of the host (read only); `stdin` reads the
    host input (`scanf`, `fgets`, `getchar` refill a buffer from
-   `host.input` line by line).
+   `host.input` line by line). A refill flushes the `OutputStream`s first:
+   the host flushes only its own writers before input, and a prompt
+   without `\n` would otherwise come after the answer.
  - `jsapi.js`: `js_value` handles are a table of values with lookup by
    value (`Map`), never freed before the end of the session. A C function
    in JavaScript is a wrapper that converts the arguments by the type of the

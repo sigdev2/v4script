@@ -518,7 +518,8 @@
             object.constValue = initIr.value;
         if (object.isConst && initIr !== null && initIr.value !== undefined && X.isFloat(X.unqual(type)))
             object.constValue = initIr.value;
-        var statement = this.statementNode('decl', name, { obj: object, init: initIr });
+        var statement = this.statementNode('decl', name, { obj: object, init: initIr,
+                                                          dtor: this.staticDestructor(object) });
         if (storage === 'static')
             return [statement];
         this.session.unitBody().push(statement);
@@ -661,7 +662,11 @@
         var existing = this.findDeclaration(scope, name.name, type, params);
         if (existing !== null) {
             if (existing.fromSession) {
-                existing.fromSession = false;
+                // Declared again by this unit (main of the unit is found
+                // among the declared); a failed unit keeps the old one.
+                X.change(existing, 'fromSession', false);
+                if (X.transaction !== null)
+                    X.transaction.declared.push(existing);
                 X.change(existing, 'defined', false);
                 X.change(existing, 'body', null);
                 X.change(existing, 'lazy', null);
@@ -764,7 +769,7 @@
         var params = this.functionParams(declarator);
         X.change(func, 'params', params);
         X.change(func, 'defined', true);
-        func.fromSession = false;
+        X.change(func, 'fromSession', false);
         // A::f() { ... } outside its class or namespace sees the names of A.
         var scope = this.scope;
         if (func.owner && scope.kind === 'namespace' && func.owner !== scope)
@@ -1326,7 +1331,8 @@
                 object.constValue = initIr.value;
             if (specs.inline || specs.constexpr || (object.isConst && initIr !== null && initIr.value !== undefined)) {
                 object.extern = false;
-                object.pendingInit = this.statementNode('decl', name, { obj: object, init: initIr });
+                object.pendingInit = this.statementNode('decl', name, { obj: object, init: initIr,
+                                                                        dtor: this.staticDestructor(object) });
                 this.session.staticMemberInit(object);
             }
         }
@@ -1350,8 +1356,16 @@
         });
         if (initIr !== null && initIr.value !== undefined && object.isConst)
             object.constValue = initIr.value;
-        this.session.unitBody().push(this.statementNode('decl', name, { obj: object, init: initIr }));
+        this.session.unitBody().push(this.statementNode('decl', name, { obj: object, init: initIr,
+                                                                        dtor: this.staticDestructor(object) }));
         return [];
+    };
+
+    // The destructor of an object with static storage, run when the program
+    // ends; none for objects of the library (std::cout lives as long as the
+    // session).
+    Parser.prototype.staticDestructor = function (object) {
+        return X.isRef(object.type) || object.library ? null : this.elementDestructor(object.type);
     };
 
     // The members of an anonymous union become members of the class.

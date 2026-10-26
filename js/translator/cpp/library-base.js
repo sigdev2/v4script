@@ -394,18 +394,32 @@
         ['std', 701, 701, 'sin'],
         ['std', 702, 702, 'cos'],
         ['std', 703, 703, 'cbrt'],
-        ['std', 704, 704, 'pow'],
-        ['std', 705, 705, 'hypot'],
-        ['std', 706, 706, 'atan2'],
-        ['std', 707, 707, 'isnan'],
-        ['std', 708, 708, 'isinf'],
-        ['std', 709, 709, 'isfinite'],
-        ['', 712, 712, 'abs'],
-        ['', 713, 713, 'isnan'],
-        ['', 714, 714, 'isinf'],
-        ['', 715, 715, 'isfinite'],
-        ['', 716, 716, 'isnormal'],
-        ['', 717, 717, 'signbit']
+        ['std', 704, 704, 'tan'],
+        ['std', 705, 705, 'asin'],
+        ['std', 706, 706, 'acos'],
+        ['std', 707, 707, 'atan'],
+        ['std', 708, 708, 'sinh'],
+        ['std', 709, 709, 'cosh'],
+        ['std', 710, 710, 'tanh'],
+        ['std', 711, 711, 'exp2'],
+        ['std', 712, 712, 'round'],
+        ['std', 713, 713, 'trunc'],
+        ['std', 714, 714, 'fabs'],
+        ['std', 715, 715, 'pow'],
+        ['std', 716, 716, 'fmod'],
+        ['std', 717, 717, 'fmin'],
+        ['std', 718, 718, 'fmax'],
+        ['std', 719, 719, 'hypot'],
+        ['std', 720, 720, 'atan2'],
+        ['std', 721, 721, 'isnan'],
+        ['std', 722, 722, 'isinf'],
+        ['std', 723, 723, 'isfinite'],
+        ['', 726, 726, 'abs'],
+        ['', 727, 727, 'isnan'],
+        ['', 728, 728, 'isinf'],
+        ['', 729, 729, 'isfinite'],
+        ['', 730, 730, 'isnormal'],
+        ['', 731, 731, 'signbit']
     ], String.raw`
 #undef NULL
 #define NULL 0L
@@ -1109,7 +1123,21 @@ template <class T> inline double exp(T x) { return ::exp((double)x); }
 template <class T> inline double sin(T x) { return ::sin((double)x); }
 template <class T> inline double cos(T x) { return ::cos((double)x); }
 template <class T> inline double cbrt(T x) { return ::cbrt((double)x); }
+template <class T> inline double tan(T x) { return ::tan((double)x); }
+template <class T> inline double asin(T x) { return ::asin((double)x); }
+template <class T> inline double acos(T x) { return ::acos((double)x); }
+template <class T> inline double atan(T x) { return ::atan((double)x); }
+template <class T> inline double sinh(T x) { return ::sinh((double)x); }
+template <class T> inline double cosh(T x) { return ::cosh((double)x); }
+template <class T> inline double tanh(T x) { return ::tanh((double)x); }
+template <class T> inline double exp2(T x) { return ::exp2((double)x); }
+template <class T> inline double round(T x) { return ::round((double)x); }
+template <class T> inline double trunc(T x) { return ::trunc((double)x); }
+template <class T> inline double fabs(T x) { return ::fabs((double)x); }
 template <class T, class U> inline double pow(T x, U y) { return ::pow((double)x, (double)y); }
+template <class T, class U> inline double fmod(T x, U y) { return ::fmod((double)x, (double)y); }
+template <class T, class U> inline double fmin(T x, U y) { return ::fmin((double)x, (double)y); }
+template <class T, class U> inline double fmax(T x, U y) { return ::fmax((double)x, (double)y); }
 template <class T, class U> inline double hypot(T x, U y) { return ::hypot((double)x, (double)y); }
 template <class T, class U> inline double atan2(T x, U y) { return ::atan2((double)x, (double)y); }
 template <class T> inline bool isnan(T x) { return false; }

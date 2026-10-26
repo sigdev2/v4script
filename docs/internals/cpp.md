@@ -47,7 +47,11 @@ and C library; everything above C is in
  - SFINAE: a `CompileError` while instantiating the signature of a
    candidate (also the types of its value parameters,
    `enable_if_t<…, int> = 0`) removes the candidate; an error in a body is
-   an error.
+   an error. A partial specialization whose pattern has `dependent` parts
+   (`void_t<decltype(…)>`) matches only if its argument tokens, parsed again
+   with the deduced parameters, give the same arguments (`matchPartial`).
+ - Deduction skips a function parameter whose template parameters are all
+   given explicitly: `max<double>(2.5, 1)` converts `1`.
  - A template declared again with the same text of the signature
    (`signatureKey`: without parameter names and default arguments) is the
    same template: a definition after a declaration gives its body to the
@@ -78,7 +82,9 @@ and C library; everything above C is in
    `$F[$V[$M.loadPointer(object)][slot]](object, …)`.
  - Special members a class does not declare are declared on demand
    (`declareImplicitMembers`) and defined by codegen; trivial ones copy
-   bytes (`assignobj`, `copy`).
+   bytes (`assignobj`, `copy`), arrays of classes go element by element
+   (`arrayeach`, `arrayassign`: a loop whose element is a `probe`; the
+   name of the probe is in its `slot`, shared by the copies of the IR).
  - A class value in an expression is its address; a prvalue is built in
    place (`init(destination, e)`): in the `$ret` slot of a call, in a
    temporary of the frame, in a variable. Temporaries with destructors are
@@ -88,6 +94,17 @@ and C library; everything above C is in
  - Copy elision: prvalues are never copied (C++17); a local declared in
    the outermost block that every `return` returns lives in `$ret` (NRVO,
    `returnSlot`), as g++ 13 does it - not for locals of inner blocks.
+ - An object with static storage registers its destruction when its
+   construction ends (`$c.atexitObject`, as `__cxa_atexit`): a JavaScript
+   function in the list of `atexit` of the C library. `runExitHandlers`
+   calls these functions only when a program ends (`main` returned,
+   `exit`); otherwise they are dropped and the objects stay for later
+   units. Objects of the library (`std::cout`) are not registered. A
+   destroyed `static` local resets its guard.
+ - A function declared again by a unit (`main` of an earlier unit too)
+   joins the `declared` list of the transaction: `findMain` finds it, and a
+   failed unit restores its old definition (`fromSession` goes through
+   `X.change`).
  - Exceptions are JavaScript exceptions (`CppException`) with the address
    of the thrown object (on the heap), its RTTI record and its destructor;
    a handler matches by the RTTI bases and adjusts the pointer. An uncaught
@@ -121,6 +138,12 @@ call at run time.
    only declarations that come before it in the library (`loadingOrders`):
    as in a real header, a declaration sees what is above it, and cycles
    between headers cannot start.
+ - Streams over a `FILE` write through the C library (`fwrite`,
+   `fflush`). `ostream::__write` does the work of the sentry: it flushes
+   `tie()` before the output and the stream itself after it with `unitbuf`.
+   `cin` and `cerr` are tied to `cout`, `cerr` has `unitbuf`. Reading does
+   not flush `tie()`: the C library flushes all output before it asks the
+   host for a line.
  - Library declarations are parsed outside the transaction of the unit
    (they stay when the unit fails); their static objects are initialized
    at the start of the next unit that compiles (`libraryInit`).
@@ -161,6 +184,9 @@ call at run time.
    classes, wide strings, threads, `<regex>`, `<variant>`, `<any>`,
    `std::exception_ptr`; `noexcept` functions that throw do not terminate.
  - Arguments are evaluated from left to right (g++: often right to left).
+   The source of a scalar assignment is evaluated before its target, as
+   C++17 orders them (`sourceFirst`); an assignment of class objects calls
+   `operator=` with the target first.
  - Speed of translation in V4: the first unit with `<iostream>` takes about
    0.7 s, a unit that uses several containers 2-4 s (Node.js is about 6
    times faster); most of it is parsing and checking library code.

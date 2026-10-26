@@ -796,6 +796,9 @@
         }
         if (unqual(target.type).kind === 'array')
             this.error(node, "invalid array assignment");
+        // (a, b) = x and (c ? a : b) = x change a variable through its address.
+        if (target.k === 'comma' || target.k === 'cond')
+            this.markAddressTaken(target);
     };
 
     Parser.prototype.targetName = function (target) {
@@ -898,10 +901,16 @@
         return this.ir('addr', node, { operand: operand, type: X.pointerTo(operand.type), cat: 'prvalue' });
     };
 
-    // A variable whose address is taken lives in memory.
+    // A variable whose address is taken lives in memory: also one named by
+    // the lvalue of a comma or a conditional (int& r = c ? a : b).
     Parser.prototype.markAddressTaken = function (ir) {
-        while (ir.k === 'glvadj')
-            ir = ir.operand;
+        while (ir.k === 'glvadj' || (ir.k === 'comma' && ir.cat === 'lvalue' && ir.list.length > 0))
+            ir = ir.k === 'comma' ? ir.list[ir.list.length - 1] : ir.operand;
+        if (ir.k === 'cond' && ir.cat === 'lvalue') {
+            this.markAddressTaken(ir.then);
+            this.markAddressTaken(ir.otherwise);
+            return;
+        }
         if (ir.k === 'var' && !X.isRef(ir.obj.type)) {
             ir.obj.addressTaken = true;
             if (ir.obj.constValue !== undefined)

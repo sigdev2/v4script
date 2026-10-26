@@ -17,32 +17,32 @@
         ['std', 4, 4, 'streamoff'],
         ['std', 5, 5, 'streampos'],
         ['std', 6, 6, 'ostream'],
-        ['std', 8, 104, 'ios_base'],
-        ['std', 105, 105, 'ios'],
-        ['std', 107, 107, 'boolalpha'],
-        ['std', 108, 108, 'noboolalpha'],
-        ['std', 109, 109, 'showbase'],
-        ['std', 110, 110, 'noshowbase'],
-        ['std', 111, 111, 'showpoint'],
-        ['std', 112, 112, 'noshowpoint'],
-        ['std', 113, 113, 'showpos'],
-        ['std', 114, 114, 'noshowpos'],
-        ['std', 115, 115, 'skipws'],
-        ['std', 116, 116, 'noskipws'],
-        ['std', 117, 117, 'uppercase'],
-        ['std', 118, 118, 'nouppercase'],
-        ['std', 119, 119, 'unitbuf'],
-        ['std', 120, 120, 'nounitbuf'],
-        ['std', 121, 121, 'internal'],
-        ['std', 122, 122, 'left'],
-        ['std', 123, 123, 'right'],
-        ['std', 124, 124, 'dec'],
-        ['std', 125, 125, 'hex'],
-        ['std', 126, 126, 'oct'],
-        ['std', 127, 127, 'fixed'],
-        ['std', 128, 128, 'scientific'],
-        ['std', 129, 132, 'hexfloat'],
-        ['std', 133, 133, 'defaultfloat']
+        ['std', 8, 109, 'ios_base'],
+        ['std', 110, 110, 'ios'],
+        ['std', 112, 112, 'boolalpha'],
+        ['std', 113, 113, 'noboolalpha'],
+        ['std', 114, 114, 'showbase'],
+        ['std', 115, 115, 'noshowbase'],
+        ['std', 116, 116, 'showpoint'],
+        ['std', 117, 117, 'noshowpoint'],
+        ['std', 118, 118, 'showpos'],
+        ['std', 119, 119, 'noshowpos'],
+        ['std', 120, 120, 'skipws'],
+        ['std', 121, 121, 'noskipws'],
+        ['std', 122, 122, 'uppercase'],
+        ['std', 123, 123, 'nouppercase'],
+        ['std', 124, 124, 'unitbuf'],
+        ['std', 125, 125, 'nounitbuf'],
+        ['std', 126, 126, 'internal'],
+        ['std', 127, 127, 'left'],
+        ['std', 128, 128, 'right'],
+        ['std', 129, 129, 'dec'],
+        ['std', 130, 130, 'hex'],
+        ['std', 131, 131, 'oct'],
+        ['std', 132, 132, 'fixed'],
+        ['std', 133, 133, 'scientific'],
+        ['std', 134, 137, 'hexfloat'],
+        ['std', 138, 138, 'defaultfloat']
     ], String.raw`
 namespace std {
 typedef long streamsize;
@@ -92,7 +92,8 @@ public:
     streamsize __width;
     char __fill;
     iostate __state;
-    ios_base() : __flags(skipws | dec), __precision(6), __width(0), __fill(' '), __state(0) {}
+    ostream* __tie;
+    ios_base() : __flags(skipws | dec), __precision(6), __width(0), __fill(' '), __state(0), __tie(0) {}
     ios_base(const ios_base&) = delete;
     ios_base& operator=(const ios_base&) = delete;
     virtual ~ios_base() {}
@@ -141,8 +142,12 @@ public:
     explicit operator bool() const { return !fail(); }
     bool operator!() const { return fail(); }
     static bool sync_with_stdio(bool sync = true) { return true; }
-    ostream* tie() const { return 0; }
-    ostream* tie(ostream* other) { return 0; }
+    ostream* tie() const { return __tie; }
+    ostream* tie(ostream* other) {
+        ostream* old = __tie;
+        __tie = other;
+        return old;
+    }
     void exceptions(iostate) {}
     iostate exceptions() const { return 0; }
     void imbue(int) {}
@@ -180,18 +185,18 @@ inline ios_base& defaultfloat(ios_base& s) { s.unsetf(ios_base::floatfield); ret
 `);
 
     X.addHeader('v4script/ostream', [
-        ['std', 3, 126, 'ostream'],
-        ['std', 127, 130, 'operator<<'],
-        ['std', 131, 134, 'operator<<'],
-        ['std', 135, 138, 'operator<<'],
-        ['std', 139, 146, 'operator<<'],
-        ['std', 147, 147, 'operator<<'],
-        ['std', 148, 148, 'operator<<'],
+        ['std', 3, 140, 'ostream'],
+        ['std', 141, 144, 'operator<<'],
+        ['std', 145, 148, 'operator<<'],
         ['std', 149, 152, 'operator<<'],
-        ['std', 153, 156, 'operator<<'],
-        ['std', 157, 160, 'endl'],
-        ['std', 161, 164, 'ends'],
-        ['std', 165, 165, 'flush']
+        ['std', 153, 160, 'operator<<'],
+        ['std', 161, 161, 'operator<<'],
+        ['std', 162, 162, 'operator<<'],
+        ['std', 163, 166, 'operator<<'],
+        ['std', 167, 170, 'operator<<'],
+        ['std', 171, 174, 'endl'],
+        ['std', 175, 178, 'ends'],
+        ['std', 179, 179, 'flush']
     ], String.raw`
 namespace std {
 class ostream : public ios_base {
@@ -199,13 +204,23 @@ public:
     FILE* __file;
     // The formatting state: this stream, or the input half of an iostream.
     ios_base* __fmt;
-    explicit ostream(FILE* file) : __file(file), __fmt(this) {}
+    explicit ostream(FILE* file, ostream* tie = 0, fmtflags flags = 0) : __file(file), __fmt(this) {
+        __tie = tie;
+        __flags |= flags;
+    }
     ostream(const ostream&) = delete;
     ostream& operator=(const ostream&) = delete;
     virtual ~ostream() {}
+    // Output to a FILE as the sentry of C++ does it: the tied stream is
+    // flushed first, the stream itself after the output with unitbuf.
     virtual void __write(const char* s, size_t n) {
-        if (n > 0 && __file != 0)
-            fwrite(s, 1, n, __file);
+        if (n == 0 || __file == 0)
+            return;
+        if (__fmt->__tie != 0)
+            __fmt->__tie->flush();
+        fwrite(s, 1, n, __file);
+        if (__fmt->__flags & unitbuf)
+            fflush(__file);
     }
     void __fill_out(size_t n) {
         char block[32];
@@ -315,7 +330,11 @@ public:
         __write(s, n);
         return *this;
     }
-    ostream& flush() { return *this; }
+    ostream& flush() {
+        if (__file != 0)
+            fflush(__file);
+        return *this;
+    }
     streampos tellp() { return -1; }
 };
 inline ostream& operator<<(ostream& os, char c) {
@@ -350,27 +369,27 @@ inline ostream& operator<<(ostream& os, string_view s) {
 }
 inline ostream& endl(ostream& os) {
     os.put('\n');
-    return os;
+    return os.flush();
 }
 inline ostream& ends(ostream& os) {
     os.put('\0');
     return os;
 }
-inline ostream& flush(ostream& os) { return os; }
+inline ostream& flush(ostream& os) { return os.flush(); }
 }
 `);
 
     X.addHeader('v4script/istream', [
-        ['std', 3, 229, 'istream'],
-        ['std', 230, 239, 'operator>>'],
-        ['std', 240, 240, 'operator>>'],
-        ['std', 241, 241, 'operator>>'],
-        ['std', 242, 255, 'operator>>'],
-        ['std', 256, 271, 'operator>>'],
-        ['std', 272, 282, 'getline'],
-        ['std', 283, 283, 'getline'],
-        ['std', 284, 296, 'ws'],
-        ['std', 298, 303, 'iostream']
+        ['std', 3, 231, 'istream'],
+        ['std', 232, 241, 'operator>>'],
+        ['std', 242, 242, 'operator>>'],
+        ['std', 243, 243, 'operator>>'],
+        ['std', 244, 257, 'operator>>'],
+        ['std', 258, 273, 'operator>>'],
+        ['std', 274, 284, 'getline'],
+        ['std', 285, 285, 'getline'],
+        ['std', 286, 298, 'ws'],
+        ['std', 300, 305, 'iostream']
     ], String.raw`
 namespace std {
 class istream : public ios_base {
@@ -379,7 +398,9 @@ public:
     const string* __text;
     size_t __position;
     streamsize __count;
-    explicit istream(FILE* file) : __file(file), __text(0), __position(0), __count(0) {}
+    explicit istream(FILE* file, ostream* tie = 0) : __file(file), __text(0), __position(0), __count(0) {
+        __tie = tie;
+    }
     istream(const istream&) = delete;
     istream& operator=(const istream&) = delete;
     virtual ~istream() {}
@@ -692,9 +713,9 @@ extern istream cin;
 extern ostream cout;
 extern ostream cerr;
 extern ostream clog;
-istream cin(stdin);
+istream cin(stdin, &cout);
 ostream cout(stdout);
-ostream cerr(stderr);
+ostream cerr(stderr, &cout, ios_base::unitbuf);
 ostream clog(stderr);
 }
 `);

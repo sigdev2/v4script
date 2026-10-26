@@ -50,6 +50,10 @@ int main(void)
     printf("%.3f %.3f %g\n", strtod("3.25rest", &end), atof("-1e3"), strtod("0x1.8p1", NULL));
     printf("[%s]\n", end);
     printf("%lu\n", strtoul("18446744073709551615", NULL, 10));
+    // puts returns the number of bytes it wrote (glibc), fputs 1.
+    int written = puts("\xd0\xb4\xd0\xb0!");
+    int put = fputs("ok\n", stdout);
+    printf("%d %d\n", written, put);
     return 0;
 }
 
@@ -80,3 +84,6 @@ int main(void)
 // 3.250 -1000.000 3
 // [rest]
 // 18446744073709551615
+// да!
+// ok
+// 6 1

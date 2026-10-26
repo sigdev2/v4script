@@ -123,7 +123,7 @@
             }
             if (measured.kind === 'function')
                 this.error(node, "invalid application of '" + node.k + "' to a function type");
-            if (measured.vla && node.k === 'sizeof') {
+            if (C.isVariablySized(measured) && node.k === 'sizeof') {
                 node.vlaType = measured;
                 node.type = types.ulong;
                 return;
@@ -400,6 +400,7 @@
         node.type = base.to;
         node.lvalue = true;
         node.elemSize = base.to.size;
+        node.elemType = C.isVariablySized(base.to) ? base.to : null;
     };
 
     Checker.prototype.member = function (node) {
@@ -575,6 +576,7 @@
                     this.error(node, "'" + C.typeString(left) + "' and '" + C.typeString(right) + "' are not pointers to compatible types");
                 node.pointerDifference = true;
                 node.elemSize = Math.max(1, left.to.size);
+                node.elemType = C.isVariablySized(left.to) ? left.to : null;
                 node.type = types.long;
                 return;
             }
@@ -588,6 +590,7 @@
                 this.error(node, 'arithmetic on a pointer to an incomplete type ' + this.typeName(pointerType.to));
             node.pointerArithmetic = left.kind === 'pointer' ? 'left' : 'right';
             node.elemSize = pointerType.to.kind === 'void' || pointerType.to.kind === 'function' ? 1 : pointerType.to.size;
+            node.elemType = C.isVariablySized(pointerType.to) ? pointerType.to : null;
             node.type = pointerType;
             return;
         }
@@ -694,6 +697,7 @@
                 this.invalidOperands(node, target, value);
             node.pointerArithmetic = 'left';
             node.elemSize = target.to.kind === 'void' ? 1 : target.to.size;
+            node.elemType = C.isVariablySized(target.to) ? target.to : null;
             return;
         }
         var integerOnly = op === '%' || op === '&' || op === '|' || op === '^' || op === '<<' || op === '>>';

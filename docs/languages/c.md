@@ -38,7 +38,10 @@ count;                          // the value of the run
  - Besides declarations a unit may have **statements**: they run in order,
    as the body of `main`. If the unit defines `int main(void)` (or
    `int main(int argc, char **argv)`, `argv[0]` is `"main"`), it runs after
-   them. `main` returning non-zero is the error `exit status N`.
+   them. `main` returning non-zero is the error `exit status N`. The
+   `atexit` functions run at the end of every run: after `main` returns
+   (with any status), at `exit` and after the statements of a unit
+   without `main`.
  - **Value.** If the unit has no `main` and its last statement is an
    expression (`x * 2;`, `add(2);`, `point;`), the run returns its value: a
    number, a string for `char *` and `char` arrays, an object for a struct,
@@ -67,8 +70,10 @@ count;                          // the value of the run
    through `unsigned char *` and back, misaligned too). `malloc`, `calloc`,
    `realloc`, `free` - a heap up to 512 MB; a second `free` is the error
    `double free`. The stack is 1 MB.
- - **Arrays**: multidimensional, variable length (`int a[n]`),
-   initializers `{ … }` with designators `[3] = 5`, `.x = 1`; strings are
+ - **Arrays**: multidimensional, variable length at any level
+   (`int a[n][m]`, also parameters sized by earlier ones:
+   `void f(int n, int m, int a[n][m])`; a variable length array is freed
+   at the end of its block), initializers `{ … }` with designators `[3] = 5`, `.x = 1`; strings are
    `char[]` and `char *` with UTF-8 bytes (`strlen("привет")` is 12).
  - **Structs, unions, enums**: nested and anonymous, bit fields,
    assignment and passing of structs by value, structs returned from
@@ -92,7 +97,7 @@ count;                          // the value of the run
 
 | Header | What is there |
 | --- | --- |
-| `stdio.h` | `printf`, `fprintf`, `sprintf`, `snprintf` and the `v…` variants (all conversions, flags, width and precision; floats as glibc prints them: an exact half goes to even, `inf`, `nan`), `puts`, `putchar`, `fputs`, `fputc`, `fwrite`, `sscanf`, `scanf`, `fscanf`, `fgets`, `fgetc`, `getchar`, `ungetc`, `fopen` (host files, read only), `fread`, `fseek`, `ftell`, `rewind`, `feof`, `ferror`, `fclose`, `perror`; `stdout`, `stderr`, `stdin` |
+| `stdio.h` | `printf`, `fprintf`, `sprintf`, `snprintf` and the `v…` variants (all conversions, flags, width and precision; floats as glibc prints them: an exact half goes to even, `inf`, `nan`), `puts`, `putchar`, `fputs`, `fputc`, `fwrite`, `sscanf`, `scanf`, `fscanf`, `fgets`, `fgetc`, `getchar`, `ungetc`, `fopen` (host files, read only), `fread`, `fseek`, `ftell`, `rewind`, `feof`, `ferror`, `fclose`, `fflush`, `perror`; `stdout`, `stderr`, `stdin` |
 | `stdlib.h` | `malloc`, `calloc`, `realloc`, `free`, `atoi`, `atol`, `atof`, `strtol`, `strtoul`, `strtoll`, `strtod`, `abs`, `labs`, `div`, `ldiv`, `rand` and `srand` (the same numbers as glibc), `qsort`, `bsearch`, `exit`, `atexit`, `abort` |
 | `string.h`, `strings.h` | `strlen`, `strcpy`, `strncpy`, `strcat`, `strncat`, `strcmp`, `strncmp`, `strcasecmp`, `strchr`, `strrchr`, `strstr`, `strtok`, `strspn`, `strcspn`, `strpbrk`, `strdup`, `strndup`, `strerror`, `memcpy`, `memmove`, `memset`, `memcmp`, `memchr` |
 | `math.h` | trigonometry, `exp`, `log`, `log2`, `log10`, `pow`, `sqrt`, `cbrt`, `hypot`, `floor`, `ceil`, `round`, `trunc`, `rint`, `fmod`, `remainder`, `fabs`, `fmin`, `fmax`, `frexp`, `ldexp`, `modf`, `tgamma`, `lgamma`, `erf`, `erfc`, `lround`, `isnan`, `isinf`, `M_PI` and others; `float` variants with `f` (`sqrtf`) |
@@ -100,13 +105,19 @@ count;                          // the value of the run
 | `time.h`, `unistd.h` | `time`, `clock`, `difftime`, `localtime`, `gmtime`, `mktime`, `strftime`, `ctime`, `asctime`; `sleep`, `usleep`, `nanosleep` |
 | `stdint.h`, `inttypes.h`, `limits.h`, `float.h`, `stdbool.h`, `stddef.h`, `stdarg.h`, `errno.h`, `assert.h` | `int8_t`…`uint64_t`, `PRId64` and others, `INT_MAX`…, `DBL_EPSILON`…, `bool`, `size_t`, `NULL`, `offsetof`, `va_list`, `errno`, `assert` |
 
- - `stderr` is standard error.
+ - **Output**: `stdout` is line-buffered, as gcc's on a terminal: a line
+   goes to the host at `\n`, an unfinished one at `fflush(stdout)`, before
+   input and at the end of the run. `stderr` is standard error, unbuffered:
+   after `printf("a"); fprintf(stderr, "b\n");` the host shows `b` first,
+   as a terminal does.
  - **Files** are host files: `fopen("data.txt", "r")` opens the host file
    `data.txt` for reading. A file cannot be opened for writing (`fopen`
    returns `NULL`, `errno` is `EROFS`).
  - **Input**: `stdin` is standard input of the host: `scanf` waits for the
    next lines, `fgets` and `getchar` read what is left, `EOF` and
-   `feof(stdin)` at the end of input.
+   `feof(stdin)` at the end of input. Output is written out before the
+   program waits for a line, so a prompt without `\n` is visible:
+   `printf("Name? ");` needs no `fflush(stdout)`.
 
 ## JavaScript and host modules
 

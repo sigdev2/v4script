@@ -49,6 +49,12 @@ stock.size();                                              // the value of the r
    as the body of `main`. If the unit defines `int main()` (or
    `int main(int argc, char** argv)`, `argv[0]` is `"main"`), it runs after
    them. `main` returning non-zero is the error `exit status N`.
+ - **The end of a program.** When `main` returns or `exit` is called, the
+   objects with static storage (globals, static members, `static` locals)
+   that the run constructed are destroyed in the reverse order of their
+   construction, in turn with the `atexit` functions, as with g++. A unit
+   without `main` keeps its objects for the next units; a `static` local
+   destroyed by a program is constructed again at its next pass.
  - **Value.** If the unit has no `main` and its last statement is an
    expression, the run returns its value as C does (numbers, `bool` as
    `true`/`false`, `const char*` as a string, a class as an object of its
@@ -124,7 +130,7 @@ stock.size();                                              // the value of the r
 
 | Header | What is there |
 | --- | --- |
-| `<iostream>`, `<sstream>`, `<fstream>`, `<iomanip>` | `cout`, `cerr`, `cin`, `getline`, `istringstream`, `ostringstream`, `stringstream`, `ifstream` (host files, read only), the manipulators (`setw`, `setfill`, `setprecision`, `fixed`, `scientific`, `hex`, `boolalpha`, `left`, `quoted`…); numbers are printed as libstdc++ prints them |
+| `<iostream>`, `<sstream>`, `<fstream>`, `<iomanip>` | `cout`, `cerr`, `clog`, `cin`, `getline`, `istringstream`, `ostringstream`, `stringstream`, `ifstream` (host files, read only), the manipulators (`setw`, `setfill`, `setprecision`, `fixed`, `scientific`, `hex`, `boolalpha`, `left`, `quoted`…); numbers are printed as libstdc++ prints them |
 | `<string>`, `<string_view>` | `std::string` with the short-string buffer of libstdc++ (`sizeof` is 32), `string_view`, `to_string`, `stoi`, `stol`, `stoull`, `stod` and the others, `std::hash` (MurmurHash as libstdc++) |
 | `<vector>`, `<array>`, `<deque>`, `<list>`, `<forward_list>`, `<stack>`, `<queue>` | the sequence containers and adapters, `priority_queue` |
 | `<map>`, `<set>`, `<unordered_map>`, `<unordered_set>` | red-black trees and hash tables with the buckets and the iteration order of libstdc++, `multimap`, `multiset`, hints |
@@ -138,9 +144,15 @@ stock.size();                                              // the value of the r
 `#include` of a header that is not in the table (`<regex>`, `<variant>`,
 `<any>`…) is the error `'regex' file not found`.
 
+ - **Output**: `std::cout` and `printf` share `stdout` of C, line-buffered
+   ([C](c.md#the-standard-library)); `std::endl`, `std::flush` and
+   `flush()` send an unfinished line. `std::cerr` is unbuffered and tied to
+   `std::cout`, as with g++: after `std::cout << "a"; std::cerr << "b\n";`
+   the host shows `ab`. `std::clog` is not tied (as in libstdc++).
  - **Input**: `std::cin` is standard input of the host: `>>` waits for the
    next lines, `getline` reads what is left, `std::cin.eof()` at the end of
-   input.
+   input. As `std::cin` is tied to `std::cout`, output is written out before
+   the program waits for a line: `std::cout << "Name? ";` is visible.
  - **Files**: `std::ifstream in("data.txt")` reads the host file
    `data.txt`. A file cannot be opened for writing (`ofstream` fails).
 
@@ -198,11 +210,13 @@ other host files. A changed file is included again at the next run.
 
  - The arguments of a call are evaluated from left to right (g++ often
    goes from right to left); the order is unspecified in C++, so programs
-   should not depend on it.
+   should not depend on it. The order C++17 fixes is kept: the right
+   operand of an assignment before the left one (`m[k] = m.size()`).
  - `sizeof` of some library classes differs: `std::function` is 8 bytes
    (32 in libstdc++), `unordered_map` and `unordered_set` 64 (56),
    `vector<bool>` 24 (40). `vector<bool>` keeps one byte per element and
-   `v[i]` is a `bool&`, not a proxy.
+   `v[i]` is a `bool&`, not a proxy; `flip()` is a member of every
+   `vector`.
  - `long double` is `double`. Undefined behavior is not always that of
    g++ (see [C](c.md#what-is-missing)).
  - `poisson_distribution` with a mean of 12 or more gives other numbers
@@ -214,12 +228,14 @@ other host files. A changed file is included again at the next run.
 ## What is missing
 
  - Virtual inheritance, pointers to members (`&A::f`, `.*`, `->*`),
-   `goto`, `alignas` on classes, `wchar_t` strings and `std::wstring`,
+   template template parameters, `goto`, `alignas` on classes, `wchar_t`
+   strings and `std::wstring`,
    coroutines and other C++20 features; deduction guides of
    `std::function` from a lambda.
  - Threads (`std::thread`, `mutex`, `atomic`, `future`), `<regex>`,
    `<variant>`, `<any>`, `<complex>`, `<valarray>`, `<filesystem>`,
-   locales, `std::exception_ptr`, the binomial, gamma and other
+   locales, `std::exception_ptr`, `std::bind` and `std::placeholders`
+   (lambdas do the same), the binomial, gamma and other
    distributions of `<random>` not listed above; a function declared
    `noexcept` that throws does not terminate the program.
  - Writing files, processes, network (as in [C](c.md#what-is-missing)).

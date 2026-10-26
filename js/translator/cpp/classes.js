@@ -426,10 +426,13 @@
     };
 
     // The parts whose special members decide those of the class.
-    function subobjectTypes(cls) {
+    // The classes of the bases and the members; uninitialized: without the
+    // members that have a default member initializer (a default constructor
+    // does not construct them by default).
+    function subobjectTypes(cls, uninitialized) {
         var list = cls.bases.map(function (base) { return base.type; });
         cls.dataMembers.forEach(function (field) {
-            if (field.anonymous)
+            if (field.anonymous || (uninitialized && field.initTokens !== null && field.initTokens !== undefined))
                 return;
             var type = unqual(field.type);
             while (type.kind === 'array')
@@ -507,7 +510,7 @@
                     if (X.isConst(field.type) && !plain.isClass)
                         return true;
                     return false;
-                }) || parts.some(function (part) {
+                }) || subobjectTypes(cls, true).some(function (part) {
                     var found = self.defaultCtor(part);
                     return found === null || found.deleted;
                 });

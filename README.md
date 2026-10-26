@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-  <img alt="Version 0.1.2" src="https://img.shields.io/badge/version-0.1.2-brightgreen.svg">
+  <img alt="Version 0.1.3" src="https://img.shields.io/badge/version-0.1.3-brightgreen.svg">
   <img alt="Qt 6.4+" src="https://img.shields.io/badge/Qt-6.4%2B-41cd52.svg">
   <img alt="C++17" src="https://img.shields.io/badge/C%2B%2B-17-00599c.svg">
   <img alt="14 languages" src="https://img.shields.io/badge/languages-14-orange.svg">
@@ -71,15 +71,15 @@ runtime.run("go",     "fmt.Println(strings.Repeat(\"Go\", 3))");       // GoGoGo
 | Prolog | ISO | ISO Prolog | [Tau Prolog](https://github.com/tau-prolog/tau-prolog) 0.3.4 |
 | Perl | 5 | Perl 5 (the subset of Perlito5) | [Perlito5](https://github.com/fglock/Perlito) 9.028 |
 | PHP | 7 | PHP 7 (the subset of Uniter) | [Uniter](https://github.com/asmblah/uniter) (phpruntime 9.3.0) |
-| Go | 1.22 | Go with goroutines, channels, generics and a subset of the standard library | v4script 0.1.2 |
-| C | C17 | C17 with its own linear memory and a subset of the C library | v4script 0.1.2 |
-| C++ | C++17 | C++17 over the memory of C: classes, templates, exceptions, lambdas and an STL that behaves as libstdc++ | v4script 0.1.2 |
-| Java | 21 | Java 21 with records, pattern matching, threads, streams and a JDK subset | v4script 0.1.2 |
-| Forth | 2012 | Forth 2012, compatible with gforth | v4script 0.1.2 |
-| BASIC | QBasic 4.5 | QBasic / QuickBASIC 4.5 with graphics | v4script 0.1.2 |
-| Pascal | FPC 3.2.2 | Free Pascal 3.2.2 (objfpc): classes, exceptions, SysUtils, Math, StrUtils, Classes, Crt, Graph | v4script 0.1.2 |
-| WebAssembly | 2.0 | the WAT text format, `.wast` scripts, WASI | v4script 0.1.2 |
-| Scheme | R7RS | R7RS-small, SRFI 1, 13, 18, 69, full continuations | v4script 0.1.2 |
+| Go | 1.22 | Go with goroutines, channels, generics and a subset of the standard library | v4script 0.1.3 |
+| C | C17 | C17 with its own linear memory and a subset of the C library | v4script 0.1.3 |
+| C++ | C++17 | C++17 over the memory of C: classes, templates, exceptions, lambdas and an STL that behaves as libstdc++ | v4script 0.1.3 |
+| Java | 21 | Java 21 with records, pattern matching, threads, streams and a JDK subset | v4script 0.1.3 |
+| Forth | 2012 | Forth 2012, compatible with gforth | v4script 0.1.3 |
+| BASIC | QBasic 4.5 | QBasic / QuickBASIC 4.5 with graphics | v4script 0.1.3 |
+| Pascal | FPC 3.2.2 | Free Pascal 3.2.2 (objfpc): classes, exceptions, SysUtils, Math, StrUtils, Classes, Crt, Graph | v4script 0.1.3 |
+| WebAssembly | 2.0 | the WAT text format, `.wast` scripts, WASI | v4script 0.1.3 |
+| Scheme | R7RS | R7RS-small, SRFI 1, 13, 18, 69, full continuations | v4script 0.1.3 |
 
 Languages marked *v4script* are translated into JavaScript by v4script's
 own translator; the others run in third-party interpreters written in

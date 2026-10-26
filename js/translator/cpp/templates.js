@@ -320,11 +320,13 @@
             var scope = this.templateScope(params);
             var savedPattern = this.pattern;
             this.pattern = true;
+            var argsStart = this.index;
             try {
                 specializationArgs = this.withScope(scope, function () { return this.templateArguments(); });
             } finally {
                 this.pattern = savedPattern;
             }
+            var argTokens = this.slice(argsStart, this.index);
         }
         if (this.is(';')) {
             this.next();
@@ -348,8 +350,8 @@
             var primary = this.lookup(nameTok.value);
             if (primary === null || primary.kind !== 'template')
                 this.error(nameTok, "'" + nameTok.value + "' is not a class template");
-            X.append(primary.partials, { params: params, args: specializationArgs, tokens: tokens, scope: this.scope,
-                                         library: this.library });
+            X.append(primary.partials, { params: params, args: specializationArgs, argTokens: argTokens, tokens: tokens,
+                                         scope: this.scope, library: this.library });
             return;
         }
         var template = this.declareClassTemplate(nameTok, params, tokens);
@@ -922,8 +924,53 @@
             if (ok)
                 bindings.push({ name: param.name, entity: bindingEntity(param, bound) });
         });
-        return ok ? bindings : null;
+        if (!ok)
+            return null;
+        // What deduction skips (void_t<decltype(...)>) is substituted: a
+        // failure or another type means no match (SFINAE).
+        var dependent = patternArgs.some(function (arg) { return arg.kind === 'type' && hasDependent(arg.type); });
+        if (partial.argTokens && dependent) {
+            var scope = new X.Scope('template', partial.scope);
+            bindings.forEach(function (binding) {
+                if (binding.name !== null)
+                    scope.members[binding.name] = binding.entity;
+            });
+            var substituted;
+            try {
+                substituted = new Parser(this.session, partial.argTokens, { scope: scope, library: partial.library })
+                    .templateArguments();
+            } catch (error) {
+                if (error instanceof CompileError)
+                    return null;
+                throw error;
+            }
+            if (argumentsKey(flattenArgs(substituted)) !== argumentsKey(flat))
+                return null;
+        }
+        return bindings;
     };
+
+    function hasDependent(type) {
+        if (type === null || type === undefined)
+            return false;
+        if (type.unqualified !== undefined)
+            return hasDependent(type.unqualified);
+        switch (type.kind) {
+        case 'dependent':
+            return true;
+        case 'pointer':
+        case 'lref':
+        case 'rref':
+            return hasDependent(type.to);
+        case 'array':
+            return hasDependent(type.of);
+        case 'function':
+            return hasDependent(type.returns) || type.params.some(hasDependent);
+        case 'tspec':
+            return type.args.some(function (arg) { return arg.kind === 'type' && hasDependent(arg.type); });
+        }
+        return false;
+    }
 
     // vector<T> as a pattern names vector<T, allocator<T>>: the arguments
     // of an instance that the pattern leaves to defaults are not compared.
@@ -1515,6 +1562,9 @@
     Parser.prototype.deduceCall = function (template, args, explicitArgs, node) {
         var map = new Map();
         template.params.forEach(function (param) { map.set(param.placeholder, undefined); });
+        // A function parameter whose template parameters are all explicit
+        // deduces nothing: max<double>(2.5, 1) converts 1.
+        var deducible = new Map(map);
         if (explicitArgs !== null) {
             var position = 0;
             for (var index = 0; index < template.params.length && position < explicitArgs.length; ++index) {
@@ -1529,6 +1579,7 @@
                 if ((param.kind === 'type') !== (explicitArgs[position].kind === 'type'))
                     return null;
                 map.set(param.placeholder, explicitArgs[position++]);
+                deducible.delete(param.placeholder);
             }
             if (position < explicitArgs.length)
                 return null;
@@ -1569,7 +1620,7 @@
             }
             if (argIndex >= args.length)
                 break;
-            if (!mentions(paramType, map)) {
+            if (!mentions(paramType, deducible)) {
                 ++argIndex;
                 continue;
             }
@@ -2152,8 +2203,8 @@
             this.error(node, "fold of empty expansion over " + node.op);
         }
         var items = values.slice();
-        var assignment = node.op.length > 1 && node.op.charAt(node.op.length - 1) === '=' && node.op !== '==' &&
-            node.op !== '!=' && node.op !== '<=' && node.op !== '>=';
+        var assignment = node.op === '=' || (node.op.length > 1 && node.op.charAt(node.op.length - 1) === '=' &&
+            node.op !== '==' && node.op !== '!=' && node.op !== '<=' && node.op !== '>=');
         function combine(left, right) {
             var syntax = assignment ? { k: 'assign', op: node.op, target: wrap(left), source: wrap(right) }
                                     : (node.op === ',' ? { k: 'comma', list: [wrap(left), wrap(right)] }

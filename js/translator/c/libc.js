@@ -254,6 +254,9 @@
         var memory = session.memory;
         var random = new Random();
         var tokenNext = 0;
+        // atexit functions (addresses) and, from C++, the destruction of
+        // objects with static storage (JavaScript functions), in the order
+        // they were registered.
         var exitHandlers = [];
         var staticStrings = Object.create(null);
         var tmAddress = 0;
@@ -289,11 +292,31 @@
 
         // --- Files: stdout, stderr, stdin (the host input) and read-only files of the host
 
-        function OutputStream(writer) {
+        // The length of the bytes without an unfinished UTF-8 sequence at the end.
+        function wholeLength(text) {
+            var start = text.length - 1;
+            while (start >= 0 && start > text.length - 4 && (text.charCodeAt(start) & 0xC0) === 0x80)
+                --start;
+            if (start < 0)
+                return text.length;
+            var lead = text.charCodeAt(start);
+            var length = lead >= 0xF0 ? 4 : (lead >= 0xE0 ? 3 : (lead >= 0xC0 ? 2 : 1));
+            return start + length > text.length ? start : text.length;
+        }
+
+        // Line-buffered, as stdout of C on a terminal; unbuffered (stderr):
+        // every write goes to the host at once.
+        function OutputStream(writer, unbuffered) {
             this.writer = writer;
+            this.unbuffered = unbuffered;
             this.pending = '';
         }
         OutputStream.prototype.write = function (data) {
+            if (this.unbuffered) {
+                this.pending += data;
+                this.push();
+                return;
+            }
             var text = this.pending + data;
             var end = text.lastIndexOf('\n');
             if (end < 0) {
@@ -321,6 +344,17 @@
                 this.pending = '';
             }
         };
+        // fflush: the output up to the last whole character reaches the host
+        // now, through the writer of the host too (it keeps an unfinished
+        // line): the order of stdout and stderr stays.
+        OutputStream.prototype.push = function () {
+            var end = wholeLength(this.pending);
+            if (end > 0) {
+                this.writer.write(utf8.decode(this.pending.substring(0, end)));
+                this.pending = this.pending.substring(end);
+            }
+            this.writer.flush();
+        };
 
         var files = new Map();
         function makeFile(stream) {
@@ -329,11 +363,15 @@
             return address;
         }
         var stdout = { output: new OutputStream(session.env.out), error: false, eof: false };
-        var stderr = { output: new OutputStream(session.env.err), error: false, eof: false };
+        var stderr = { output: new OutputStream(session.env.err, true), error: false, eof: false };
         // Standard input: lines of the host as UTF-8 bytes, read on demand.
+        // Buffered output goes out before a line is asked from the host, as
+        // C does for line-buffered streams and std::cin (tied to std::cout)
+        // does: a prompt without a line break shows before the wait.
         var stdin = {
             data: '', position: 0, error: false, eof: false, pushed: [],
             refill: function () {
+                session.flushOutput();
                 var line = session.env.input.readLine();
                 if (line === null)
                     return false;
@@ -442,14 +480,26 @@
             return result.count;
         }
 
+        // objects: the program ends (exit, the return of main) and its static
+        // objects are destroyed; otherwise they stay for the next units.
+        function runExitHandlers(objects) {
+            while (exitHandlers.length > 0) {
+                var handler = exitHandlers.pop();
+                if (typeof handler === 'function') {
+                    if (objects)
+                        handler();
+                } else {
+                    memory.callable(handler)();
+                }
+            }
+        }
         function exit(status) {
-            while (exitHandlers.length > 0)
-                memory.callable(exitHandlers.pop())();
+            runExitHandlers(true);
             throw new CExit(status & 255);
         }
-        session.runExitHandlers = function () {
-            while (exitHandlers.length > 0)
-                memory.callable(exitHandlers.pop())();
+        session.runExitHandlers = runExitHandlers;
+        session.atexitObject = function (destroy) {
+            exitHandlers.push(destroy);
         };
 
         // --- strtol and strtod
@@ -679,8 +729,10 @@
             vsnprintf: function (target, size, format, ap) {
                 return printInto(target, unsigned(size), format, ap, ap ? ap.i : 0);
             },
+            // The number of bytes written, as glibc returns it.
             puts: function (text) {
-                return write(session.stdoutAddress, bytes(text) + '\n') ? 1 : EOF;
+                var line = bytes(text) + '\n';
+                return write(session.stdoutAddress, line) ? line.length : EOF;
             },
             fputs: function (text, stream) {
                 return write(stream, bytes(text)) ? 1 : EOF;
@@ -741,7 +793,15 @@
             sscanf: function (text, format, list) {
                 return C.scan(memory, bytes(text), 0, bytes(format), new C.Arguments(list, 0)).count;
             },
-            fflush: function () {
+            fflush: function (stream) {
+                if (stream === 0) {
+                    stdout.output.push();
+                    stderr.output.push();
+                    return 0;
+                }
+                var target = file(stream);
+                if (target.output !== undefined)
+                    target.output.push();
                 return 0;
             },
             perror: function (text) {

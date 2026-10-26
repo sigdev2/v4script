@@ -1035,6 +1035,48 @@ private slots:
         QCOMPARE(run.result.errorLine, 3);
     }
 
+    void cppStaticObjectsLiveUntilProgramEnds()
+    {
+        // A program (a unit with main) destroys the static objects it made
+        // when it ends; a unit without main keeps them for the next units.
+        TestSession session;
+        auto run = session.run(
+            "cpp",
+            "struct Noisy { std::string tag; Noisy(const char* t) : tag(t) { std::cout << '+' << tag << '\\n'; }\n"
+            "~Noisy() { std::cout << '-' << tag << '\\n'; } };\nNoisy shared(\"shared\");\n"
+            "Noisy& get() { static Noisy s(\"static\"); return s; }",
+            "script");
+        QVERIFY2(run.result.isOk(), qPrintable(run.result.describeError()));
+        QCOMPARE(run.output, QStringList { "+shared" });
+        const QString program =
+            "Noisy own(\"own\");\n"
+            "int main() { Noisy& s = get(); std::cout << shared.tag << ' ' << s.tag << '\\n'; return 0; }";
+        run = session.run("cpp", program, "program");
+        QVERIFY2(run.result.isOk(), qPrintable(run.result.describeError()));
+        QCOMPARE(run.output, (QStringList { "+own", "+static", "shared static", "-static", "-own" }));
+        // The static local is made again; the second main runs too.
+        run = session.run("cpp", program, "program");
+        QCOMPARE(run.output, (QStringList { "+own", "+static", "shared static", "-static", "-own" }));
+        run = session.run("cpp", "get().tag.size();", "script2");
+        QCOMPARE(run.output, QStringList { "+static" });
+        QCOMPARE(run.result.value, QString("6"));
+        run = session.run("cpp", "int main() { std::cout << get().tag << '\\n'; return 0; }", "other");
+        QCOMPARE(run.output, QStringList { "static" });
+    }
+
+    void cppUnitsDefineFunctionsAgain()
+    {
+        // main of every unit runs; a unit that fails changes nothing, and the
+        // next definition counts.
+        TestSession session;
+        QCOMPARE(session.run("cpp", "int main() { std::cout << 1; return 0; }", "first").output, QStringList { "1" });
+        QCOMPARE(session.run("cpp", "int main() { std::cout << 2; return 0; }", "second").output, QStringList { "2" });
+        QCOMPARE(session.run("cpp", "std::cout << 3;", "third").output, QStringList { "3" });
+        QCOMPARE(session.run("cpp", "int twice(int x) { return 2 * x; }\ntwice(4);").result.value, QString("8"));
+        QCOMPARE(session.run("cpp", "int twice(int x) { return 3 * x + nothing; }").result.status, Status::Failed);
+        QCOMPARE(session.run("cpp", "int twice(int x) { return 5 * x; }\ntwice(4);").result.value, QString("20"));
+    }
+
     void clearReachesHost()
     {
         TestSession session;
@@ -1042,6 +1084,118 @@ private slots:
         QVERIFY(session.run("pascal", "uses Crt;\nClrScr;").result.isOk());
         QVERIFY(session.run("forth", "page").result.isOk());
         QCOMPARE(session.getClearCount(), 3);
+    }
+
+    void promptComesBeforeInput_data()
+    {
+        addLanguageColumn();
+        QTest::addColumn<QString>("code");
+
+        QTest::newRow("python") << "python"
+                                << "input('Name? ')";
+        QTest::newRow("lua") << "lua"
+                             << "io.write('Name? ')\nio.read()";
+        QTest::newRow("prolog") << "prolog"
+                                << "?- write('Name? '), read(_).";
+        QTest::newRow("perl") << "perl"
+                              << "print 'Name? ';\nmy $name = <STDIN>;";
+        QTest::newRow("php") << "php"
+                             << "echo 'Name? ';\nfgets(STDIN);";
+        QTest::newRow("go") << "go"
+                            << "fmt.Print(\"Name? \")\nvar name string\nfmt.Scan(&name)";
+        QTest::newRow("c") << "c"
+                           << "char name[16];\nprintf(\"Name? \");\nfgets(name, sizeof name, stdin);";
+        QTest::newRow("cpp") << "cpp"
+                             << "#include <iostream>\n#include <string>\nstd::string name;\n"
+                                "std::cout << \"Name? \";\nstd::getline(std::cin, name);";
+        QTest::newRow("java") << "java"
+                              << "System.out.print(\"Name? \");\nnew java.util.Scanner(System.in).nextLine();";
+        QTest::newRow("forth") << "forth"
+                               << "create buffer 16 allot\n.\" Name? \" buffer 16 accept drop";
+        QTest::newRow("basic") << "basic"
+                               << "LINE INPUT \"Name? \"; n$";
+        QTest::newRow("pascal") << "pascal"
+                                << "var name: String;\nbegin\n  Write('Name? ');\n  ReadLn(name);\nend.";
+        QTest::newRow("wat") << "wat"
+                             << "(import \"wasi_snapshot_preview1\" \"fd_read\" "
+                                "(func $fd_read (param i32 i32 i32 i32) (result i32)))\n"
+                                "(import \"wasi_snapshot_preview1\" \"fd_write\" "
+                                "(func $fd_write (param i32 i32 i32 i32) (result i32)))\n"
+                                "(memory 1)\n(data (i32.const 100) \"Name? \")\n"
+                                "(func (export \"main\")\n"
+                                "  (i32.store (i32.const 0) (i32.const 100))\n"
+                                "  (i32.store (i32.const 4) (i32.const 6))\n"
+                                "  (drop (call $fd_write (i32.const 1) (i32.const 0) (i32.const 1) (i32.const 8)))\n"
+                                "  (i32.store (i32.const 4) (i32.const 16))\n"
+                                "  (drop (call $fd_read (i32.const 0) (i32.const 0) (i32.const 1) (i32.const 8))))";
+        QTest::newRow("scheme") << "scheme"
+                                << "(display \"Name? \")\n(read-line)";
+    }
+
+    void promptComesBeforeInput()
+    {
+        // A prompt without a line break reaches the host before the host is
+        // asked for a line: a console shows it while the program waits.
+        QFETCH(QString, language);
+        QFETCH(QString, code);
+
+        QString seen;
+        bool answered = false;
+        v4script::Runtime runtime;
+        runtime.setOutput([&seen](v4script::Stream, const QString& text) { seen += text; });
+        runtime.setInput([&seen, &answered]() -> std::optional<QString> {
+            seen += "<input>";
+            if (answered) {
+                return std::nullopt;
+            }
+            answered = true;
+            return QString("ann.");
+        });
+        const auto result = runtime.run(language, code);
+        QVERIFY2(result.isOk(), qPrintable(result.describeError()));
+        QVERIFY2(seen.startsWith("Name? <input>"), qPrintable(seen));
+    }
+
+    void outputStreamsKeepOrder_data()
+    {
+        addLanguageColumn();
+        QTest::addColumn<QString>("code");
+        QTest::addColumn<QString>("seen");
+
+        // The order on a terminal with gcc and g++: stdout is line-buffered,
+        // stderr is not, fflush and std::cerr (tied to std::cout) flush it.
+        QTest::newRow("c") << "c"
+                           << "#include <stdio.h>\nint main(void)\n{\n"
+                              "    printf(\"a\");\n    fprintf(stderr, \"b\\n\");\n"
+                              "    printf(\"c\");\n    fflush(stdout);\n    fprintf(stderr, \"d\");\n"
+                              "    for (const char* p = \"мир\\n\"; *p; ++p)\n        fputc(*p, stderr);\n"
+                              "    printf(\"e\\n\");\n    return 0;\n}"
+                           << "b\nacdмир\ne\n";
+        QTest::newRow("cpp") << "cpp"
+                             << "#include <iostream>\nint main()\n{\n"
+                                "    std::cout << \"a\";\n    std::cerr << \"b\\n\";\n"
+                                "    std::cout << \"c\";\n    std::clog << \"d\\n\";\n"
+                                "    std::cout << \"e\" << std::flush;\n    std::cerr << \"f\";\n"
+                                "    std::cout << \"g\" << std::endl;\n    std::cout << \"h\";\n"
+                                "    std::cerr.tie(nullptr);\n    std::cerr << \"i\\n\";\n"
+                                "    std::cout << (std::cin.tie() == &std::cout) << (std::clog.tie() == nullptr)\n"
+                                "              << ((std::cerr.flags() & std::ios::unitbuf) != 0) << \"\\n\";\n"
+                                "    return 0;\n}"
+                             << "ab\nd\ncefg\ni\nh111\n";
+    }
+
+    void outputStreamsKeepOrder()
+    {
+        QFETCH(QString, language);
+        QFETCH(QString, code);
+        QFETCH(QString, seen);
+
+        QString output;
+        v4script::Runtime runtime;
+        runtime.setOutput([&output](v4script::Stream, const QString& text) { output += text; });
+        const auto result = runtime.run(language, code);
+        QVERIFY2(result.isOk(), qPrintable(result.describeError()));
+        QCOMPARE(output, seen);
     }
 
     void timeLimitStopsLanguages_data()

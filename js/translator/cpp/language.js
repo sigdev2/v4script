@@ -882,7 +882,7 @@
         }
         transaction.declared.forEach(function (entity) { entity.fromSession = true; });
         this.libraryInit = [];
-        return { body: body, constants: generator.constants, async: !!unit.topContext.async };
+        return { body: body, constants: generator.constants, async: !!unit.topContext.async, main: unit.main !== null };
     };
 
     // Functions that wait (sleep) or call such functions are generators;
@@ -953,10 +953,16 @@
         try {
             var result = run();
             if (compiled.async)
-                return this.runAsync(result);
-            this.runExitHandlers();
+                return this.runAsync(result, compiled.main);
+            // A program (a unit with main) ends: its static objects are
+            // destroyed; those of a unit without main stay for the next units.
+            this.runExitHandlers(compiled.main);
             return result;
         } catch (error) {
+            // main returning a status is exit(status) (exit itself has run the
+            // handlers already).
+            if (error instanceof rt.CExit)
+                this.runExitHandlers(true);
             if (error instanceof rt.CExit && error.exitCode === 0)
                 return undefined;
             throw error;
@@ -965,7 +971,7 @@
         }
     };
 
-    Session.prototype.runAsync = function (generator) {
+    Session.prototype.runAsync = function (generator, hasMain) {
         var self = this;
         var env = this.env;
         var value;
@@ -980,9 +986,10 @@
                 }
             }, delay);
         }, function (error, result) {
-            if (error === null || error === undefined) {
+            var exited = error instanceof rt.CExit;
+            if (error === null || error === undefined || exited) {
                 try {
-                    self.runExitHandlers();
+                    self.runExitHandlers(hasMain || exited);
                 } catch (exitError) {
                     error = exitError;
                 }

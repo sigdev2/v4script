@@ -356,7 +356,7 @@
             return this.callFunction(cls.dtor, [objectAddress]);
         }
         case 'probe':
-            return J.id(ir.jsName);
+            return J.id(ir.slot.name);
         }
         if (X.isRecord(unqual(ir.type)) || unqual(ir.type).kind === 'array')
             return this.address(ir);
@@ -528,28 +528,44 @@
         return setup.length === 0 ? node : J.seq(setup.concat([node]));
     }
 
+    // C++17: the right operand of an assignment is sequenced before the
+    // left one (m[k] = m.size() stores the size before the insertion). A
+    // source that a target with effects might change goes to a temporary.
+    Generator.prototype.sourceFirst = function (place, source, steps) {
+        if (place.setup.length === 0 || source.value !== undefined)
+            return source;
+        var temporary = this.temp();
+        steps.push(J.assign(temporary, this.value(source)));
+        return { k: 'probe', type: source.type, cat: 'prvalue', line: source.line, file: source.file,
+                 slot: { name: temporary.name } };
+    };
+
     Generator.prototype.assignValue = function (ir) {
         var place = this.place(ir.target);
-        return seqWith(place.setup, place.set(this.value(ir.source)));
+        var steps = [];
+        var source = this.sourceFirst(place, ir.source, steps);
+        return seqWith(steps.concat(place.setup), place.set(this.value(source)));
     };
 
     Generator.prototype.compoundValue = function (ir) {
         var place = this.place(ir.target);
         var target = ir.target.type;
+        var steps = [];
+        var source = this.sourceFirst(place, ir.source, steps);
         var result;
         if (ir.pointer) {
-            result = this.pointerStep(place.get, ir.source, ir.elemSize, ir.op);
+            result = this.pointerStep(place.get, source, ir.elemSize, ir.op);
         } else {
             var type = ir.opType;
-            var right = this.value(ir.source);
+            var right = this.value(source);
             if (ir.op === '<<' || ir.op === '>>')
-                right = ir.source.value === undefined ? J.bin('&', this.convertValue(right, ir.source.type, types.int),
-                                                              J.num(unqual(type).size * 8 - 1)) : right;
+                right = source.value === undefined ? J.bin('&', this.convertValue(right, source.type, types.int),
+                                                           J.num(unqual(type).size * 8 - 1)) : right;
             result = this.convertValue(ops.binary(kindOf(type), ir.op, this.convertValue(place.get, target, type),
                                                   right,
                                                   this.opsContext()), type, target);
         }
-        return seqWith(place.setup, place.set(result));
+        return seqWith(steps.concat(place.setup), place.set(result));
     };
 
     Generator.prototype.pointerStep = function (pointer, indexIr, size, op) {
@@ -602,6 +618,8 @@
             break;
         case 'assignobj':
             return this.assignObject(ir);
+        case 'arrayassign':
+            return this.arrayAssign(ir);
         case 'const':
             return J.undef();
         case 'temp':
@@ -640,6 +658,19 @@
 
     // target = source for objects copied as bytes (anonymous unions, trivial arrays and classes); a base
     // subobject without its tail padding.
+    // An array of classes assigned element by element.
+    Generator.prototype.arrayAssign = function (ir) {
+        var type = unqual(ir.type);
+        var target = this.temp();
+        var source = this.temp();
+        ir.targetProbe.slot.name = target.name;
+        ir.valueProbe.slot.name = source.name;
+        var body = this.effect(ir.each);
+        return J.call(this.c('eachPair'), [this.address(ir.target), this.address(ir.source), J.num(type.length),
+                                           J.num(unqual(type.of).size), J.fn(null, [target.name, source.name],
+                                                                             [J.expr(body)])]);
+    };
+
     Generator.prototype.assignObject = function (ir) {
         var size = assignedBytes(unqual(ir.type));
         if (size === 0)
@@ -707,8 +738,18 @@
         case 'incdec': {
             if (ir.k === 'incdec' && !ir.prefix)
                 break;
+            var steps = [];
+            var assigned = ir;
+            if (ir.k !== 'incdec') {
+                // The source first, as in assignValue.
+                var source = this.sourceFirst({ setup: [null] }, ir.source, steps);
+                assigned = Object.create(null);
+                Object.keys(ir).forEach(function (key) { assigned[key] = ir[key]; });
+                assigned.source = source;
+            }
             var address = this.temp();
-            return J.seq([J.assign(address, this.address(ir.target)), this.assignAt(ir, address), address]);
+            return J.seq(steps.concat([J.assign(address, this.address(ir.target)), this.assignAt(assigned, address),
+                                       address]));
         }
         case 'cond':
             return J.cond(this.test(ir.cond), this.branch(ir.then, function () { return this.address(ir.then); }),
@@ -719,7 +760,7 @@
         case 'fnaddr':
             return J.num(this.memory.functionAddress(this.session.functionIndex(ir.func)));
         case 'probe':
-            return J.id(ir.jsName);
+            return J.id(ir.slot.name);
         case 'this':
             return J.id('$this');
         case 'conv':
@@ -930,7 +971,7 @@
         var element = unqual(type.of);
         var target = this.temp();
         var probeName = this.temp();
-        ir.probe.jsName = probeName.name;
+        ir.probe.slot.name = probeName.name;
         var body = this.init(target, ir.elemInit);
         return J.call(this.c('eachPair'), [dest, this.address(ir.source), J.num(type.length), J.num(element.size),
                                            J.fn(null, [target.name, probeName.name], [J.ret(body)])]);

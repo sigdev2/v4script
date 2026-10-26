@@ -154,6 +154,17 @@
                 dtor(base + index * size);
         };
 
+        // An object with static storage, constructed: destroyed when the
+        // program ends, in turn with the atexit functions (__cxa_atexit). A
+        // static local can be constructed again afterwards: its guard is reset.
+        helpers.atexitObject = function (address, count, size, dtor, guard) {
+            session.atexitObject(function () {
+                helpers.destroyArray(address, count, size, dtor);
+                if (guard !== null)
+                    guard[0] = false;
+            });
+        };
+
         // delete[]: the destructors of the elements (the count is the 8
         // bytes before the array), then the memory.
         helpers.deleteArray = function (pointer, size, dtor) {
