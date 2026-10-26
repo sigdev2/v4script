@@ -44,8 +44,9 @@
         }
         var left = this.conditional();
         var operator = this.peek();
+        // (x = ... = pack): a fold over an assignment operator.
         if (operator.type === 'op' && ASSIGNMENT[operator.value] === 1 &&
-            !(this.noGreater > 0 && operator.value === '>>=')) {
+            !(this.noGreater > 0 && operator.value === '>>=') && !this.is('...', 1)) {
             this.next();
             var right = this.is('{') ? this.bracedList() : this.assignment();
             return this.node('assign', operator, { op: operator.value, target: left, source: right });
@@ -570,6 +571,9 @@
     Parser.prototype.nameExpression = function () {
         var tok = this.peek();
         var name = this.parseName({ allowUnknown: true });
+        // std::unknown::x: an unknown name cannot qualify.
+        if (name.entity === null && !name.dependent && !name.destructor && this.is('::'))
+            this.fail("'" + (name.prefix || '') + name.name + "' has not been declared", this.peek());
         if (X.isTypeEntity(name.entity) && (this.is('(') || this.is('{')))
             return this.functionalCast(this.entityType(name.entity), tok);
         if (name.entity !== null && name.entity.kind === 'template' && name.entity.what === 'class' && !this.pattern &&

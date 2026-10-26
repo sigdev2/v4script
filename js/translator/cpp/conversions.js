@@ -52,6 +52,13 @@
         return (outer & inner) === inner;
     }
 
+    // The same type but for cv: the qualifiers of an array are those of its
+    // elements (const int[3] and int[3]).
+    function sameUnqualified(left, right) {
+        return left === right ||
+            (left.kind === 'array' && right.kind === 'array' && X.withCv(left, 0) === X.withCv(right, 0));
+    }
+
     // --- The implicit conversion of a value to a type
     //
     // options: explicit (direct initialization: explicit constructors and
@@ -208,7 +215,8 @@
         var fromCv = X.cvOf(ir.type);
         var isRvalueRef = target.kind === 'rref';
         var constRef = !isRvalueRef && (toCv & X.CONST) !== 0 && (toCv & X.VOLATILE) === 0;
-        var related = from === toPlain || (from.isClass && toPlain.isClass && X.isBaseOf(toPlain, from));
+        var same = sameUnqualified(from, toPlain);
+        var related = same || (from.isClass && toPlain.isClass && X.isBaseOf(toPlain, from));
         if (toPlain.kind === 'function' && (ir.k === 'func' || from.kind === 'function')) {
             if (ir.k === 'func' && ir.func.type === toPlain)
                 return standard(EXACT, function () { return ir; }, { ref: target.kind });
@@ -217,10 +225,10 @@
         if (related && cvContains(toCv, fromCv) && !ir.bitfield) {
             var bindsDirectly = isRvalueRef ? ir.cat !== 'lvalue' : (ir.cat === 'lvalue' || constRef);
             if (bindsDirectly) {
-                var distance = from === toPlain ? 0 : baseDistance(from, toPlain);
+                var distance = same ? 0 : baseDistance(from, toPlain);
                 return standard(distance === 0 ? EXACT : CONVERSION, function () {
                     var glvalue = ir.cat === 'prvalue' ? self.temporaryOf(ir, ir.type) : ir;
-                    if (from !== toPlain)
+                    if (!same)
                         glvalue = self.baseSubobject(glvalue, toPlain, X.baseOffset(from, toPlain), ir);
                     return self.bound(glvalue, target);
                 }, { ref: target.kind, bindsRvalue: ir.cat !== 'lvalue', refCv: toCv, baseDistance: distance,
@@ -228,7 +236,7 @@
             }
             if (!isRvalueRef && ir.cat !== 'lvalue')
                 return null;
-            if (isRvalueRef && ir.cat === 'lvalue' && (from.isClass || from === toPlain))
+            if (isRvalueRef && ir.cat === 'lvalue' && (from.isClass || same))
                 return null;
         }
         // A conversion function giving an lvalue of the type (rare).
@@ -617,8 +625,8 @@
                 return isStatic ? null : this.ir('default', node, { type: plain, cat: 'prvalue' });
             return this.directInitialize(plain, [], node, false, true);
         }
-        if (plain.kind === 'array' && unqual(plain.of).isClass &&
-            !this.isTriviallyDefaultConstructible(unqual(baseElement(plain)))) {
+        if (plain.kind === 'array' && baseElement(plain).isClass &&
+            !this.isTriviallyDefaultConstructible(baseElement(plain))) {
             var element = this.defaultInitialize(plain.of, node, isStatic);
             return this.ir('arrayinit', node, { type: plain, items: [], fill: element, cat: 'prvalue' });
         }
@@ -645,8 +653,12 @@
             construct.zeroFirst = true;
             return construct;
         }
-        if (plain.kind === 'array')
+        if (plain.kind === 'array') {
+            if (baseElement(plain).isClass && !this.isTriviallyDefaultConstructible(baseElement(plain)))
+                return this.ir('arrayinit', node, { type: plain, items: [], fill: this.valueInitialize(plain.of, node),
+                                                    cat: 'prvalue' });
             return this.ir('zero', node, { type: plain, cat: 'prvalue' });
+        }
         if (plain.kind === 'void')
             return this.ir('conv', node, { operand: this.constant(0, types.int, node), from: types.int, to: types.void,
                                            type: types.void, cat: 'prvalue' });
@@ -942,7 +954,8 @@
                                    init: this.memberDefaultInit(type, rest.field, node) });
             } else if (X.isRef(rest.type)) {
                 this.error(node, "uninitialized reference member in '" + X.typeString(rest.type) + "'");
-            } else if (unqual(rest.type).isClass && !this.isTriviallyDefaultConstructible(unqual(rest.type))) {
+            } else if (baseElement(rest.type).isClass &&
+                       !this.isTriviallyDefaultConstructible(baseElement(rest.type))) {
                 initialized.push({ offset: rest.offset, type: rest.type, field: rest.field,
                                    init: this.valueInitialize(rest.type, node) });
             }
@@ -1016,7 +1029,8 @@
         }
         var length = type.length === null ? values.length : type.length;
         var fill = null;
-        if (values.length < length && unqual(element).isClass && !this.isTriviallyDefaultConstructible(unqual(element)))
+        if (values.length < length && baseElement(element).isClass &&
+            !this.isTriviallyDefaultConstructible(baseElement(element)))
             fill = this.valueInitialize(element, node);
         return this.ir('arrayinit', node,
                        { type: X.arrayOf(element, length), items: values, fill: fill, cat: 'prvalue' });

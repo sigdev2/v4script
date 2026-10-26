@@ -204,11 +204,16 @@ other host files. A changed file is included again at the next run.
 
  - The arguments of a call are evaluated from left to right (g++ often
    goes from right to left); the order is unspecified in C++, so programs
-   should not depend on it.
+   should not depend on it. The order C++17 fixes is kept: the right
+   operand of an assignment before the left one (`m[k] = m.size()`).
  - `sizeof` of some library classes differs: `std::function` is 8 bytes
    (32 in libstdc++), `unordered_map` and `unordered_set` 64 (56),
    `vector<bool>` 24 (40). `vector<bool>` keeps one byte per element and
    `v[i]` is a `bool&`, not a proxy.
+ - Global objects and `static` locals are not destroyed at the end of a
+   run: they stay for the next units (see
+   [shared declarations](#a-unit-is-a-source-file)), so their destructors
+   print nothing after `main` returns.
  - `long double` is `double`. Undefined behavior is not always that of
    g++ (see [C](c.md#what-is-missing)).
  - `poisson_distribution` with a mean of 12 or more gives other numbers
@@ -220,12 +225,14 @@ other host files. A changed file is included again at the next run.
 ## What is missing
 
  - Virtual inheritance, pointers to members (`&A::f`, `.*`, `->*`),
-   `goto`, `alignas` on classes, `wchar_t` strings and `std::wstring`,
+   template template parameters, `goto`, `alignas` on classes, `wchar_t`
+   strings and `std::wstring`,
    coroutines and other C++20 features; deduction guides of
    `std::function` from a lambda.
  - Threads (`std::thread`, `mutex`, `atomic`, `future`), `<regex>`,
    `<variant>`, `<any>`, `<complex>`, `<valarray>`, `<filesystem>`,
-   locales, `std::exception_ptr`, the binomial, gamma and other
+   locales, `std::exception_ptr`, `std::bind` and `std::placeholders`
+   (lambdas do the same), the binomial, gamma and other
    distributions of `<random>` not listed above; a function declared
    `noexcept` that throws does not terminate the program.
  - Writing files, processes, network (as in [C](c.md#what-is-missing)).

@@ -352,7 +352,14 @@
         if (type.kind === 'array') {
             if (this.isTriviallyCopyable(type))
                 return this.ir('assignobj', node, { target: target, source: value, type: type, cat: 'lvalue' });
-            this.error(node, 'assignment of arrays of classes is not supported');
+            // Element by element, with operator= of the element class.
+            var element = unqual(type.of);
+            var targetProbe = elementProbe(element, 'lvalue', node);
+            var valueProbe = elementProbe(X.qualify(element, X.cvOf(value.type)), value.cat, node);
+            return this.ir('arrayassign', node, { target: target, source: value, type: type, targetProbe: targetProbe,
+                                                  valueProbe: valueProbe,
+                                                  each: this.assignParts(targetProbe, valueProbe, node),
+                                                  cat: 'lvalue' });
         }
         if (target.bitfield === undefined && X.isRef(target.field ? target.field.type : types.void))
             return this.ir('comma', node, { list: [], type: types.void, cat: 'prvalue' });
@@ -360,11 +367,16 @@
                                          cat: 'lvalue' });
     };
 
+    // An element of an array in a loop of the generated code. The slot holds
+    // its JavaScript name: copies of the probe (bound to a reference) share it.
+    function elementProbe(type, cat, node) {
+        return { k: 'probe', type: type, cat: cat, line: node.line, file: node.file, slot: { name: null } };
+    }
+
     // Element-wise copy of an array of classes.
     Parser.prototype.arrayCopy = function (type, source, node, move) {
         var element = unqual(type.of);
-        var probe = { k: 'probe', type: X.qualify(element, move ? 0 : X.CONST), cat: move ? 'xvalue' : 'lvalue',
-                      line: node.line, file: node.file };
+        var probe = elementProbe(X.qualify(element, move ? 0 : X.CONST), move ? 'xvalue' : 'lvalue', node);
         var init = element.kind === 'array' ? this.arrayCopy(element, probe, node, move)
                                             : this.copyInitialize(element, probe, node);
         return this.ir('arrayeach', node, { source: source, type: type, elemInit: init, probe: probe, cat: 'prvalue' });
@@ -392,9 +404,22 @@
             placeholder = X.rref(placeholder);
         var hiddenType = this.deduceVariable(placeholder, init, { name: '__binding', line: tok.line, column: tok.column,
                                                                   file: tok.file });
+        // auto [a, b] = array: the hidden object is a copy of the array, element
+        // by element, not a pointer.
+        var checked = init.k === 'copy' ? init.expr : (init.args ? init.args[0] : null);
+        var array = refKind === null && checked && checked.k === 'checked' &&
+            X.removeRef(checked.ir.type).kind === 'array' ? checked.ir : null;
+        var hiddenInit;
+        if (array !== null) {
+            hiddenType = X.qualify(X.withCv(X.removeRef(array.type), 0), X.cvOf(placeholder));
+            hiddenInit = this.isTriviallyCopyable(hiddenType)
+                ? this.ir('arraycopy', tok, { source: array, type: hiddenType, cat: 'prvalue' })
+                : this.arrayCopy(hiddenType, array, tok, array.cat !== 'lvalue');
+        }
         var hidden = this.func.newLocal('__binding', hiddenType, tok);
-        var statements = [this.statementNode('decl', tok,
-                                             { obj: hidden, init: this.initializeVariable(hidden, init, tok) })];
+        if (array === null)
+            hiddenInit = this.initializeVariable(hidden, init, tok);
+        var statements = [this.statementNode('decl', tok, { obj: hidden, init: hiddenInit })];
         var base = this.ir('var', tok, { obj: hidden, type: X.removeRef(hiddenType), cat: 'lvalue' });
         var type = unqual(base.type);
         var self = this;

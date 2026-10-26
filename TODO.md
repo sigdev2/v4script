@@ -121,9 +121,10 @@ Decisions already taken for these stages:
    and the constrained algorithms - then the rest of C++20 (`<=>`, ranges,
    `std::span`, coroutines, modules); the version in the manifest becomes
    C++20 (designated initializers and `consteval` already work). Gaps of
-   C++17: pointers to members, virtual inheritance, `goto`, `alignas` on
-   classes, `noexcept` violations terminating, `std::exception_ptr`, wide
-   strings, deduction of `std::function` from a lambda; threads
+   C++17: pointers to members, virtual inheritance, template template
+   parameters, `goto`, `alignas` on classes, `noexcept` violations
+   terminating, `std::exception_ptr`, wide strings, deduction of
+   `std::function` from a lambda, `std::bind`; threads
    (`std::thread`, `mutex`, `atomic`), `<regex>`, `<variant>`, `<any>`,
    `<complex>`; the binomial and gamma families of `<random>` and the
    Poisson method of libstdc++ for a mean of 12 or more; `vector<bool>` as
