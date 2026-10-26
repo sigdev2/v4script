@@ -94,6 +94,13 @@ and C library; everything above C is in
  - Copy elision: prvalues are never copied (C++17); a local declared in
    the outermost block that every `return` returns lives in `$ret` (NRVO,
    `returnSlot`), as g++ 13 does it - not for locals of inner blocks.
+ - An object with static storage registers its destruction when its
+   construction ends (`$c.atexitObject`, as `__cxa_atexit`): a JavaScript
+   function in the list of `atexit` of the C library. `runExitHandlers`
+   calls these functions only when a program ends (`main` returned,
+   `exit`); otherwise they are dropped and the objects stay for later
+   units. Objects of the library (`std::cout`) are not registered. A
+   destroyed `static` local resets its guard.
  - A function declared again by a unit (`main` of an earlier unit too)
    joins the `declared` list of the transaction: `findMain` finds it, and a
    failed unit restores its old definition (`fromSession` goes through

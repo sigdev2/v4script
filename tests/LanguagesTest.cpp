@@ -1035,6 +1035,35 @@ private slots:
         QCOMPARE(run.result.errorLine, 3);
     }
 
+    void cppStaticObjectsLiveUntilProgramEnds()
+    {
+        // A program (a unit with main) destroys the static objects it made
+        // when it ends; a unit without main keeps them for the next units.
+        TestSession session;
+        auto run = session.run(
+            "cpp",
+            "struct Noisy { std::string tag; Noisy(const char* t) : tag(t) { std::cout << '+' << tag << '\\n'; }\n"
+            "~Noisy() { std::cout << '-' << tag << '\\n'; } };\nNoisy shared(\"shared\");\n"
+            "Noisy& get() { static Noisy s(\"static\"); return s; }",
+            "script");
+        QVERIFY2(run.result.isOk(), qPrintable(run.result.describeError()));
+        QCOMPARE(run.output, QStringList { "+shared" });
+        const QString program =
+            "Noisy own(\"own\");\n"
+            "int main() { Noisy& s = get(); std::cout << shared.tag << ' ' << s.tag << '\\n'; return 0; }";
+        run = session.run("cpp", program, "program");
+        QVERIFY2(run.result.isOk(), qPrintable(run.result.describeError()));
+        QCOMPARE(run.output, (QStringList { "+own", "+static", "shared static", "-static", "-own" }));
+        // The static local is made again; the second main runs too.
+        run = session.run("cpp", program, "program");
+        QCOMPARE(run.output, (QStringList { "+own", "+static", "shared static", "-static", "-own" }));
+        run = session.run("cpp", "get().tag.size();", "script2");
+        QCOMPARE(run.output, QStringList { "+static" });
+        QCOMPARE(run.result.value, QString("6"));
+        run = session.run("cpp", "int main() { std::cout << get().tag << '\\n'; return 0; }", "other");
+        QCOMPARE(run.output, QStringList { "static" });
+    }
+
     void cppUnitsDefineFunctionsAgain()
     {
         // main of every unit runs; a unit that fails changes nothing, and the

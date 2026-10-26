@@ -254,6 +254,9 @@
         var memory = session.memory;
         var random = new Random();
         var tokenNext = 0;
+        // atexit functions (addresses) and, from C++, the destruction of
+        // objects with static storage (JavaScript functions), in the order
+        // they were registered.
         var exitHandlers = [];
         var staticStrings = Object.create(null);
         var tmAddress = 0;
@@ -477,14 +480,26 @@
             return result.count;
         }
 
+        // objects: the program ends (exit, the return of main) and its static
+        // objects are destroyed; otherwise they stay for the next units.
+        function runExitHandlers(objects) {
+            while (exitHandlers.length > 0) {
+                var handler = exitHandlers.pop();
+                if (typeof handler === 'function') {
+                    if (objects)
+                        handler();
+                } else {
+                    memory.callable(handler)();
+                }
+            }
+        }
         function exit(status) {
-            while (exitHandlers.length > 0)
-                memory.callable(exitHandlers.pop())();
+            runExitHandlers(true);
             throw new CExit(status & 255);
         }
-        session.runExitHandlers = function () {
-            while (exitHandlers.length > 0)
-                memory.callable(exitHandlers.pop())();
+        session.runExitHandlers = runExitHandlers;
+        session.atexitObject = function (destroy) {
+            exitHandlers.push(destroy);
         };
 
         // --- strtol and strtod

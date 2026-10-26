@@ -38,7 +38,10 @@ count;                          // the value of the run
  - Besides declarations a unit may have **statements**: they run in order,
    as the body of `main`. If the unit defines `int main(void)` (or
    `int main(int argc, char **argv)`, `argv[0]` is `"main"`), it runs after
-   them. `main` returning non-zero is the error `exit status N`.
+   them. `main` returning non-zero is the error `exit status N`. The
+   `atexit` functions run at the end of every run: after `main` returns
+   (with any status), at `exit` and after the statements of a unit
+   without `main`.
  - **Value.** If the unit has no `main` and its last statement is an
    expression (`x * 2;`, `add(2);`, `point;`), the run returns its value: a
    number, a string for `char *` and `char` arrays, an object for a struct,

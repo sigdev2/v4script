@@ -158,17 +158,22 @@
             if (object.extern)
                 return [];
             var address = this.objectAddress(object);
-            if (node.init === null)
-                return [];
-            var init = this.fullEffect(function () { return self.initPart(address, object.type, node.init); });
-            if (object.storage === 'static' && !this.fn.isTop) {
-                // A static local: initialized at the first pass.
-                var guard = this.session.staticGuard(object);
-                return [J.if_(J.not(J.idx(this.constant(guard), J.num(0))),
-                              J.block([J.expr(J.assign(J.idx(this.constant(guard), J.num(0)), J.bool(true))),
-                                       J.expr(init)]), null)];
+            var local = object.storage === 'static' && !this.fn.isTop;
+            var guard = local ? this.session.staticGuard(object) : null;
+            var steps = [];
+            if (node.init !== null) {
+                var init = this.fullEffect(function () { return self.initPart(address, object.type, node.init); });
+                if (!isEmpty(init) || local)
+                    steps.push(J.expr(init));
             }
-            return isEmpty(init) ? [] : [J.expr(init)];
+            if (node.dtor !== null && node.dtor !== undefined)
+                steps.push(J.expr(this.registerStatic(address, object.type, node.dtor, guard)));
+            if (steps.length === 0 || !local)
+                return steps;
+            // A static local: initialized at the first pass.
+            return [J.if_(J.not(J.idx(this.constant(guard), J.num(0))),
+                          J.block([J.expr(J.assign(J.idx(this.constant(guard), J.num(0)), J.bool(true)))]
+                              .concat(steps)), null)];
         }
         this.placeObject(object);
         var type = object.type;
@@ -192,6 +197,18 @@
         if (node.dtor !== null && node.dtor !== undefined)
             statements.push(this.registerScopeObject(place, type, node.dtor, object.returnSlot));
         return statements;
+    };
+
+    // The destruction of an object with static storage when the program ends.
+    Generator.prototype.registerStatic = function (address, type, dtor, guard) {
+        var element = unqual(type);
+        var count = 1;
+        while (element.kind === 'array') {
+            count *= element.length;
+            element = unqual(element.of);
+        }
+        return J.call(this.c('atexitObject'), [address, J.num(count), J.num(element.size), this.functionTable(dtor),
+                                               guard === null ? J.nul() : this.constant(guard)]);
     };
 
     function isEmpty(node) {

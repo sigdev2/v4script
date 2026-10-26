@@ -49,6 +49,12 @@ stock.size();                                              // the value of the r
    as the body of `main`. If the unit defines `int main()` (or
    `int main(int argc, char** argv)`, `argv[0]` is `"main"`), it runs after
    them. `main` returning non-zero is the error `exit status N`.
+ - **The end of a program.** When `main` returns or `exit` is called, the
+   objects with static storage (globals, static members, `static` locals)
+   that the run constructed are destroyed in the reverse order of their
+   construction, in turn with the `atexit` functions, as with g++. A unit
+   without `main` keeps its objects for the next units; a `static` local
+   destroyed by a program is constructed again at its next pass.
  - **Value.** If the unit has no `main` and its last statement is an
    expression, the run returns its value as C does (numbers, `bool` as
    `true`/`false`, `const char*` as a string, a class as an object of its
@@ -211,10 +217,6 @@ other host files. A changed file is included again at the next run.
    `vector<bool>` 24 (40). `vector<bool>` keeps one byte per element and
    `v[i]` is a `bool&`, not a proxy; `flip()` is a member of every
    `vector`.
- - Global objects and `static` locals are not destroyed at the end of a
-   run: they stay for the next units (see
-   [shared declarations](#a-unit-is-a-source-file)), so their destructors
-   print nothing after `main` returns.
  - `long double` is `double`. Undefined behavior is not always that of
    g++ (see [C](c.md#what-is-missing)).
  - `poisson_distribution` with a mean of 12 or more gives other numbers

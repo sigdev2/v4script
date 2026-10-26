@@ -395,9 +395,13 @@
             var result = run();
             if (compiled.async)
                 return this.runAsync(result);
-            this.runExitHandlers();
+            this.runExitHandlers(true);
             return result;
         } catch (error) {
+            // main returning a status is exit(status): the atexit functions
+            // run (exit itself has run them already).
+            if (error instanceof rt.CExit)
+                this.runExitHandlers(true);
             if (error instanceof rt.CExit && error.exitCode === 0)
                 return undefined;
             throw error;
@@ -422,9 +426,9 @@
                 }
             }, delay);
         }, function (error, result) {
-            if (error === null || error === undefined) {
+            if (error === null || error === undefined || error instanceof rt.CExit) {
                 try {
-                    self.runExitHandlers();
+                    self.runExitHandlers(true);
                 } catch (exitError) {
                     error = exitError;
                 }

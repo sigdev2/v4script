@@ -518,7 +518,8 @@
             object.constValue = initIr.value;
         if (object.isConst && initIr !== null && initIr.value !== undefined && X.isFloat(X.unqual(type)))
             object.constValue = initIr.value;
-        var statement = this.statementNode('decl', name, { obj: object, init: initIr });
+        var statement = this.statementNode('decl', name, { obj: object, init: initIr,
+                                                          dtor: this.staticDestructor(object) });
         if (storage === 'static')
             return [statement];
         this.session.unitBody().push(statement);
@@ -1330,7 +1331,8 @@
                 object.constValue = initIr.value;
             if (specs.inline || specs.constexpr || (object.isConst && initIr !== null && initIr.value !== undefined)) {
                 object.extern = false;
-                object.pendingInit = this.statementNode('decl', name, { obj: object, init: initIr });
+                object.pendingInit = this.statementNode('decl', name, { obj: object, init: initIr,
+                                                                        dtor: this.staticDestructor(object) });
                 this.session.staticMemberInit(object);
             }
         }
@@ -1354,8 +1356,16 @@
         });
         if (initIr !== null && initIr.value !== undefined && object.isConst)
             object.constValue = initIr.value;
-        this.session.unitBody().push(this.statementNode('decl', name, { obj: object, init: initIr }));
+        this.session.unitBody().push(this.statementNode('decl', name, { obj: object, init: initIr,
+                                                                        dtor: this.staticDestructor(object) }));
         return [];
+    };
+
+    // The destructor of an object with static storage, run when the program
+    // ends; none for objects of the library (std::cout lives as long as the
+    // session).
+    Parser.prototype.staticDestructor = function (object) {
+        return X.isRef(object.type) || object.library ? null : this.elementDestructor(object.type);
     };
 
     // The members of an anonymous union become members of the class.
