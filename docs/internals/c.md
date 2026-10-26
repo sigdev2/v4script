@@ -99,7 +99,10 @@ casts and `memcpy` work as in real C.
 
  - Output is UTF-8 bytes: `OutputStream` collects a line up to `\n` and
    gives it to the writer decoded (a character split between `putchar`
-   calls stays whole).
+   calls stays whole). `stderr` is unbuffered: every write goes out up to
+   the last whole character. `fflush` (`push`) flushes the writer of the
+   host too, which keeps an unfinished line: otherwise text of the other
+   stream would overtake it.
  - `printf` is `C.format` over `T.numbers`: the exact digits of a double
    and rounding half to even, as glibc; `rand` is the glibc algorithm
    (TYPE_3), the same numbers for the same `srand`. The expectations of the

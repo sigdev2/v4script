@@ -92,7 +92,7 @@ count;                          // the value of the run
 
 | Header | What is there |
 | --- | --- |
-| `stdio.h` | `printf`, `fprintf`, `sprintf`, `snprintf` and the `v…` variants (all conversions, flags, width and precision; floats as glibc prints them: an exact half goes to even, `inf`, `nan`), `puts`, `putchar`, `fputs`, `fputc`, `fwrite`, `sscanf`, `scanf`, `fscanf`, `fgets`, `fgetc`, `getchar`, `ungetc`, `fopen` (host files, read only), `fread`, `fseek`, `ftell`, `rewind`, `feof`, `ferror`, `fclose`, `perror`; `stdout`, `stderr`, `stdin` |
+| `stdio.h` | `printf`, `fprintf`, `sprintf`, `snprintf` and the `v…` variants (all conversions, flags, width and precision; floats as glibc prints them: an exact half goes to even, `inf`, `nan`), `puts`, `putchar`, `fputs`, `fputc`, `fwrite`, `sscanf`, `scanf`, `fscanf`, `fgets`, `fgetc`, `getchar`, `ungetc`, `fopen` (host files, read only), `fread`, `fseek`, `ftell`, `rewind`, `feof`, `ferror`, `fclose`, `fflush`, `perror`; `stdout`, `stderr`, `stdin` |
 | `stdlib.h` | `malloc`, `calloc`, `realloc`, `free`, `atoi`, `atol`, `atof`, `strtol`, `strtoul`, `strtoll`, `strtod`, `abs`, `labs`, `div`, `ldiv`, `rand` and `srand` (the same numbers as glibc), `qsort`, `bsearch`, `exit`, `atexit`, `abort` |
 | `string.h`, `strings.h` | `strlen`, `strcpy`, `strncpy`, `strcat`, `strncat`, `strcmp`, `strncmp`, `strcasecmp`, `strchr`, `strrchr`, `strstr`, `strtok`, `strspn`, `strcspn`, `strpbrk`, `strdup`, `strndup`, `strerror`, `memcpy`, `memmove`, `memset`, `memcmp`, `memchr` |
 | `math.h` | trigonometry, `exp`, `log`, `log2`, `log10`, `pow`, `sqrt`, `cbrt`, `hypot`, `floor`, `ceil`, `round`, `trunc`, `rint`, `fmod`, `remainder`, `fabs`, `fmin`, `fmax`, `frexp`, `ldexp`, `modf`, `tgamma`, `lgamma`, `erf`, `erfc`, `lround`, `isnan`, `isinf`, `M_PI` and others; `float` variants with `f` (`sqrtf`) |
@@ -100,7 +100,11 @@ count;                          // the value of the run
 | `time.h`, `unistd.h` | `time`, `clock`, `difftime`, `localtime`, `gmtime`, `mktime`, `strftime`, `ctime`, `asctime`; `sleep`, `usleep`, `nanosleep` |
 | `stdint.h`, `inttypes.h`, `limits.h`, `float.h`, `stdbool.h`, `stddef.h`, `stdarg.h`, `errno.h`, `assert.h` | `int8_t`…`uint64_t`, `PRId64` and others, `INT_MAX`…, `DBL_EPSILON`…, `bool`, `size_t`, `NULL`, `offsetof`, `va_list`, `errno`, `assert` |
 
- - `stderr` is standard error.
+ - **Output**: `stdout` is line-buffered, as gcc's on a terminal: a line
+   goes to the host at `\n`, an unfinished one at `fflush(stdout)`, before
+   input and at the end of the run. `stderr` is standard error, unbuffered:
+   after `printf("a"); fprintf(stderr, "b\n");` the host shows `b` first,
+   as a terminal does.
  - **Files** are host files: `fopen("data.txt", "r")` opens the host file
    `data.txt` for reading. A file cannot be opened for writing (`fopen`
    returns `NULL`, `errno` is `EROFS`).

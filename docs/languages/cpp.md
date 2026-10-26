@@ -124,7 +124,7 @@ stock.size();                                              // the value of the r
 
 | Header | What is there |
 | --- | --- |
-| `<iostream>`, `<sstream>`, `<fstream>`, `<iomanip>` | `cout`, `cerr`, `cin`, `getline`, `istringstream`, `ostringstream`, `stringstream`, `ifstream` (host files, read only), the manipulators (`setw`, `setfill`, `setprecision`, `fixed`, `scientific`, `hex`, `boolalpha`, `left`, `quoted`…); numbers are printed as libstdc++ prints them |
+| `<iostream>`, `<sstream>`, `<fstream>`, `<iomanip>` | `cout`, `cerr`, `clog`, `cin`, `getline`, `istringstream`, `ostringstream`, `stringstream`, `ifstream` (host files, read only), the manipulators (`setw`, `setfill`, `setprecision`, `fixed`, `scientific`, `hex`, `boolalpha`, `left`, `quoted`…); numbers are printed as libstdc++ prints them |
 | `<string>`, `<string_view>` | `std::string` with the short-string buffer of libstdc++ (`sizeof` is 32), `string_view`, `to_string`, `stoi`, `stol`, `stoull`, `stod` and the others, `std::hash` (MurmurHash as libstdc++) |
 | `<vector>`, `<array>`, `<deque>`, `<list>`, `<forward_list>`, `<stack>`, `<queue>` | the sequence containers and adapters, `priority_queue` |
 | `<map>`, `<set>`, `<unordered_map>`, `<unordered_set>` | red-black trees and hash tables with the buckets and the iteration order of libstdc++, `multimap`, `multiset`, hints |
@@ -138,6 +138,11 @@ stock.size();                                              // the value of the r
 `#include` of a header that is not in the table (`<regex>`, `<variant>`,
 `<any>`…) is the error `'regex' file not found`.
 
+ - **Output**: `std::cout` and `printf` share `stdout` of C, line-buffered
+   ([C](c.md#the-standard-library)); `std::endl`, `std::flush` and
+   `flush()` send an unfinished line. `std::cerr` is unbuffered and tied to
+   `std::cout`, as with g++: after `std::cout << "a"; std::cerr << "b\n";`
+   the host shows `ab`. `std::clog` is not tied (as in libstdc++).
  - **Input**: `std::cin` is standard input of the host: `>>` waits for the
    next lines, `getline` reads what is left, `std::cin.eof()` at the end of
    input. As `std::cin` is tied to `std::cout`, output is written out before

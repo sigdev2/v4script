@@ -121,6 +121,12 @@ call at run time.
    only declarations that come before it in the library (`loadingOrders`):
    as in a real header, a declaration sees what is above it, and cycles
    between headers cannot start.
+ - Streams over a `FILE` write through the C library (`fwrite`,
+   `fflush`). `ostream::__write` does the work of the sentry: it flushes
+   `tie()` before the output and the stream itself after it with `unitbuf`.
+   `cin` and `cerr` are tied to `cout`, `cerr` has `unitbuf`. Reading does
+   not flush `tie()`: the C library flushes all output before it asks the
+   host for a line.
  - Library declarations are parsed outside the transaction of the unit
    (they stay when the unit fails); their static objects are initialized
    at the start of the next unit that compiles (`libraryInit`).

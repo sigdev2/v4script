@@ -1114,6 +1114,48 @@ private slots:
         QVERIFY2(seen.startsWith("Name? <input>"), qPrintable(seen));
     }
 
+    void outputStreamsKeepOrder_data()
+    {
+        addLanguageColumn();
+        QTest::addColumn<QString>("code");
+        QTest::addColumn<QString>("seen");
+
+        // The order on a terminal with gcc and g++: stdout is line-buffered,
+        // stderr is not, fflush and std::cerr (tied to std::cout) flush it.
+        QTest::newRow("c") << "c"
+                           << "#include <stdio.h>\nint main(void)\n{\n"
+                              "    printf(\"a\");\n    fprintf(stderr, \"b\\n\");\n"
+                              "    printf(\"c\");\n    fflush(stdout);\n    fprintf(stderr, \"d\");\n"
+                              "    for (const char* p = \"мир\\n\"; *p; ++p)\n        fputc(*p, stderr);\n"
+                              "    printf(\"e\\n\");\n    return 0;\n}"
+                           << "b\nacdмир\ne\n";
+        QTest::newRow("cpp") << "cpp"
+                             << "#include <iostream>\nint main()\n{\n"
+                                "    std::cout << \"a\";\n    std::cerr << \"b\\n\";\n"
+                                "    std::cout << \"c\";\n    std::clog << \"d\\n\";\n"
+                                "    std::cout << \"e\" << std::flush;\n    std::cerr << \"f\";\n"
+                                "    std::cout << \"g\" << std::endl;\n    std::cout << \"h\";\n"
+                                "    std::cerr.tie(nullptr);\n    std::cerr << \"i\\n\";\n"
+                                "    std::cout << (std::cin.tie() == &std::cout) << (std::clog.tie() == nullptr)\n"
+                                "              << ((std::cerr.flags() & std::ios::unitbuf) != 0) << \"\\n\";\n"
+                                "    return 0;\n}"
+                             << "ab\nd\ncefg\ni\nh111\n";
+    }
+
+    void outputStreamsKeepOrder()
+    {
+        QFETCH(QString, language);
+        QFETCH(QString, code);
+        QFETCH(QString, seen);
+
+        QString output;
+        v4script::Runtime runtime;
+        runtime.setOutput([&output](v4script::Stream, const QString& text) { output += text; });
+        const auto result = runtime.run(language, code);
+        QVERIFY2(result.isOk(), qPrintable(result.describeError()));
+        QCOMPARE(output, seen);
+    }
+
     void timeLimitStopsLanguages_data()
     {
         addLanguageColumn();
