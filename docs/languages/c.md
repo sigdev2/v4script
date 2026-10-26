@@ -106,7 +106,9 @@ count;                          // the value of the run
    returns `NULL`, `errno` is `EROFS`).
  - **Input**: `stdin` is standard input of the host: `scanf` waits for the
    next lines, `fgets` and `getchar` read what is left, `EOF` and
-   `feof(stdin)` at the end of input.
+   `feof(stdin)` at the end of input. Output is written out before the
+   program waits for a line, so a prompt without `\n` is visible:
+   `printf("Name? ");` needs no `fflush(stdout)`.
 
 ## JavaScript and host modules
 

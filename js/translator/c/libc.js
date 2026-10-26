@@ -331,9 +331,13 @@
         var stdout = { output: new OutputStream(session.env.out), error: false, eof: false };
         var stderr = { output: new OutputStream(session.env.err), error: false, eof: false };
         // Standard input: lines of the host as UTF-8 bytes, read on demand.
+        // Buffered output goes out before a line is asked from the host, as
+        // C does for line-buffered streams and std::cin (tied to std::cout)
+        // does: a prompt without a line break shows before the wait.
         var stdin = {
             data: '', position: 0, error: false, eof: false, pushed: [],
             refill: function () {
+                session.flushOutput();
                 var line = session.env.input.readLine();
                 if (line === null)
                     return false;

@@ -108,7 +108,9 @@ casts and `memcpy` work as in real C.
    addresses in the copy).
  - Files: `fopen` reads files of the host (read only); `stdin` reads the
    host input (`scanf`, `fgets`, `getchar` refill a buffer from
-   `host.input` line by line).
+   `host.input` line by line). A refill flushes the `OutputStream`s first:
+   the host flushes only its own writers before input, and a prompt
+   without `\n` would otherwise come after the answer.
  - `jsapi.js`: `js_value` handles are a table of values with lookup by
    value (`Map`), never freed before the end of the session. A C function
    in JavaScript is a wrapper that converts the arguments by the type of the

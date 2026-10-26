@@ -140,7 +140,8 @@ stock.size();                                              // the value of the r
 
  - **Input**: `std::cin` is standard input of the host: `>>` waits for the
    next lines, `getline` reads what is left, `std::cin.eof()` at the end of
-   input.
+   input. As `std::cin` is tied to `std::cout`, output is written out before
+   the program waits for a line: `std::cout << "Name? ";` is visible.
  - **Files**: `std::ifstream in("data.txt")` reads the host file
    `data.txt`. A file cannot be opened for writing (`ofstream` fails).
 

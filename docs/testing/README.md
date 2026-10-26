@@ -20,7 +20,7 @@ no display is needed.
 | Test | What it checks |
 | --- | --- |
 | [RuntimeTest](../../tests/RuntimeTest.cpp) | the C++ API: versions, output streams, `Host::format`, input, signatures and modules (from signatures and from a `QObject`), module files, loading, timers, the time limit, deep recursion, `reset`, `Engine` on an application engine, `ImageCanvas` |
-| [LanguagesTest](../../tests/LanguagesTest.cpp) | every language through the API: output and value, error lines, state shared by units, units run again, host modules, the canvas, calls between JavaScript and the language, module files, errors in modules, the time limit, and all samples |
+| [LanguagesTest](../../tests/LanguagesTest.cpp) | every language through the API: output and value, error lines, state shared by units, units run again, host modules, the canvas, calls between JavaScript and the language, module files, errors in modules, a prompt before input, the time limit, and all samples |
 
 [TestSession](../../tests/TestSession.hpp) is the runtime of the tests:
 output in lines (standard error prefixed with `!`, warnings with `?`),

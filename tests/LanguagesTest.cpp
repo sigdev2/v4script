@@ -1044,6 +1044,76 @@ private slots:
         QCOMPARE(session.getClearCount(), 3);
     }
 
+    void promptComesBeforeInput_data()
+    {
+        addLanguageColumn();
+        QTest::addColumn<QString>("code");
+
+        QTest::newRow("python") << "python"
+                                << "input('Name? ')";
+        QTest::newRow("lua") << "lua"
+                             << "io.write('Name? ')\nio.read()";
+        QTest::newRow("prolog") << "prolog"
+                                << "?- write('Name? '), read(_).";
+        QTest::newRow("perl") << "perl"
+                              << "print 'Name? ';\nmy $name = <STDIN>;";
+        QTest::newRow("php") << "php"
+                             << "echo 'Name? ';\nfgets(STDIN);";
+        QTest::newRow("go") << "go"
+                            << "fmt.Print(\"Name? \")\nvar name string\nfmt.Scan(&name)";
+        QTest::newRow("c") << "c"
+                           << "char name[16];\nprintf(\"Name? \");\nfgets(name, sizeof name, stdin);";
+        QTest::newRow("cpp") << "cpp"
+                             << "#include <iostream>\n#include <string>\nstd::string name;\n"
+                                "std::cout << \"Name? \";\nstd::getline(std::cin, name);";
+        QTest::newRow("java") << "java"
+                              << "System.out.print(\"Name? \");\nnew java.util.Scanner(System.in).nextLine();";
+        QTest::newRow("forth") << "forth"
+                               << "create buffer 16 allot\n.\" Name? \" buffer 16 accept drop";
+        QTest::newRow("basic") << "basic"
+                               << "LINE INPUT \"Name? \"; n$";
+        QTest::newRow("pascal") << "pascal"
+                                << "var name: String;\nbegin\n  Write('Name? ');\n  ReadLn(name);\nend.";
+        QTest::newRow("wat") << "wat"
+                             << "(import \"wasi_snapshot_preview1\" \"fd_read\" "
+                                "(func $fd_read (param i32 i32 i32 i32) (result i32)))\n"
+                                "(import \"wasi_snapshot_preview1\" \"fd_write\" "
+                                "(func $fd_write (param i32 i32 i32 i32) (result i32)))\n"
+                                "(memory 1)\n(data (i32.const 100) \"Name? \")\n"
+                                "(func (export \"main\")\n"
+                                "  (i32.store (i32.const 0) (i32.const 100))\n"
+                                "  (i32.store (i32.const 4) (i32.const 6))\n"
+                                "  (drop (call $fd_write (i32.const 1) (i32.const 0) (i32.const 1) (i32.const 8)))\n"
+                                "  (i32.store (i32.const 4) (i32.const 16))\n"
+                                "  (drop (call $fd_read (i32.const 0) (i32.const 0) (i32.const 1) (i32.const 8))))";
+        QTest::newRow("scheme") << "scheme"
+                                << "(display \"Name? \")\n(read-line)";
+    }
+
+    void promptComesBeforeInput()
+    {
+        // A prompt without a line break reaches the host before the host is
+        // asked for a line: a console shows it while the program waits.
+        QFETCH(QString, language);
+        QFETCH(QString, code);
+
+        QString seen;
+        bool answered = false;
+        v4script::Runtime runtime;
+        runtime.setOutput([&seen](v4script::Stream, const QString& text) { seen += text; });
+        runtime.setInput([&seen, &answered]() -> std::optional<QString> {
+            seen += "<input>";
+            if (answered) {
+                return std::nullopt;
+            }
+            answered = true;
+            return QString("ann.");
+        });
+        const auto result = runtime.run(language, code);
+        QVERIFY2(result.isOk(), qPrintable(result.describeError()));
+        QVERIFY2(seen.startsWith("Name? <input>"), qPrintable(seen));
+    }
+
     void timeLimitStopsLanguages_data()
     {
         addLanguageColumn();
