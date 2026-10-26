@@ -90,8 +90,20 @@
             return this.declaration(node);
         case 'staticassert':
             return [];
-        case 'block':
-            return [at(J.block(this.statements(node.items)))];
+        case 'block': {
+            var outerVla = this.blockHasVla;
+            this.blockHasVla = false;
+            var body = this.statements(node.items);
+            var hasVla = this.blockHasVla;
+            this.blockHasVla = outerVla;
+            if (!hasVla)
+                return [at(J.block(body))];
+            // The arrays of variable length go away with the block, however
+            // it is left: a loop does not fill the stack.
+            var stack = this.temp();
+            return [at(J.block([J.expr(J.assign(stack, this.M('sp'))),
+                                J.try_(body, null, null, [J.expr(J.assign(this.M('sp'), stack))])]))];
+        }
         case 'exprstmt':
             if (this.valueStatement === node)
                 return [at(J.expr(J.assign(J.id('$value'), J.call(J.mem(J.id('$c'), 'show'),
@@ -164,11 +176,17 @@
             }
             self.placeLocal(object);
             if (object.vlaAddress) {
-                var lengthName = object.jsName + '$length';
-                object.type.lengthVariable = lengthName;
-                result.push(at(J.let_(lengthName, self.vlaLength(object.type))));
-                var size = J.bin('*', J.id(lengthName), J.num(object.type.of.size));
-                result.push(at(J.let_(object.jsName, J.call(self.M('enter'), [size]))));
+                self.blockHasVla = true;
+                // The lengths are taken once, at the declaration.
+                var level = object.type;
+                for (var depth = 0; level.kind === 'array'; level = level.of, ++depth) {
+                    if (!level.vla)
+                        continue;
+                    var lengthName = object.jsName + '$length' + (depth === 0 ? '' : depth);
+                    result.push(at(J.let_(lengthName, self.vlaLength(level))));
+                    level.lengthVariable = lengthName;
+                }
+                result.push(at(J.let_(object.jsName, J.call(self.M('enter'), [self.vlaSize(object.type)]))));
                 self.fn.usesStack = true;
                 return;
             }

@@ -219,7 +219,7 @@
     // has its address taken.
     Generator.prototype.placeLocal = function (object) {
         var type = object.type;
-        if (type.vla) {
+        if (C.isVariablySized(type)) {
             object.vlaAddress = true;
             return;
         }
@@ -254,7 +254,7 @@
         case 'index': {
             var base = node.swapped ? node.index : node.expr;
             var offset = node.swapped ? node.expr : node.index;
-            return this.pointerOffset(this.rvalue(base), offset, node.elemSize, false);
+            return this.pointerOffset(this.rvalue(base), offset, this.stride(node), false);
         }
         case 'member': {
             var record = node.arrow ? this.rvalue(node.expr) : this.address(node.expr);
@@ -284,8 +284,10 @@
     // memory.
     var BAD_ADDRESS = 4294967295;
 
+    // size: a number, or the expression of a variably sized element.
     Generator.prototype.pointerOffset = function (pointer, indexNode, size, negate) {
-        if (indexNode.value !== undefined) {
+        var sizeExpr = typeof size === 'number' ? J.num(size) : size;
+        if (indexNode.value !== undefined && typeof size === 'number') {
             // A 64-bit unsigned has the same bits as a signed one: (size_t)-1 is -1.
             var constant = C.wrapConstant(indexNode.value, types.long);
             var offset = big.toFloat(constant) * size;
@@ -302,13 +304,25 @@
             index = J.cond(J.bin('===', J.un('typeof', J.assign(indexTemporary, index)), J.str('number')),
                            indexTemporary, J.call(J.mem(J.mem(J.id('$T'), 'i64'), 'toFloat'), [indexTemporary]));
             var temporary = this.temp();
-            var scaledIndex = size === 1 ? index : J.bin('*', index, J.num(size));
+            var scaledIndex = size === 1 ? index : J.bin('*', index, sizeExpr);
             var sum = J.assign(temporary, J.bin(negate ? '-' : '+', pointer, scaledIndex));
             return J.cond(J.and(J.bin('>=', sum, J.num(0)), J.bin('<', temporary, J.num(4294967296))), temporary,
                           J.num(BAD_ADDRESS));
         }
-        var scaled = size === 1 ? index : J.bin('*', index, J.num(size));
+        var scaled = size === 1 ? index : J.bin('*', index, sizeExpr);
         return J.bin(negate ? '-' : '+', pointer, scaled);
+    };
+
+    // The bytes of the element of pointer arithmetic: known at run time for
+    // a variably sized array.
+    Generator.prototype.stride = function (node) {
+        return node.elemType ? this.vlaSize(node.elemType) : node.elemSize;
+    };
+
+    Generator.prototype.pointerStep = function (to) {
+        if (C.isVariablySized(to))
+            return this.vlaSize(to);
+        return J.num(to.kind === 'void' ? 1 : to.size);
     };
 
     // Whether the address needs a check: access to an own variable does not.
@@ -398,9 +412,9 @@
     };
 
     Generator.prototype.vlaSize = function (type) {
-        if (!type.vla)
+        if (!C.isVariablySized(type))
             return J.num(type.size);
-        return J.bin('*', this.vlaLength(type), this.vlaSize(type.of));
+        return J.bin('*', type.vla ? this.vlaLength(type) : J.num(type.length), this.vlaSize(type.of));
     };
 
     Generator.prototype.vlaLength = function (type) {
@@ -483,12 +497,14 @@
             return J.cond(this.cond(node), J.num(1), J.num(0));
         if (node.pointerDifference) {
             var difference = J.bin('-', this.rvalue(node.left), this.rvalue(node.right));
+            if (node.elemType)
+                return J.bin('|', J.bin('/', difference, this.vlaSize(node.elemType)), J.num(0));
             return node.elemSize === 1 ? difference : J.bin('|', J.bin('/', difference, J.num(node.elemSize)), J.num(0));
         }
         if (node.pointerArithmetic) {
             var pointerNode = node.pointerArithmetic === 'left' ? node.left : node.right;
             var indexNode = node.pointerArithmetic === 'left' ? node.right : node.left;
-            return this.pointerOffset(this.rvalue(pointerNode), indexNode, node.elemSize, op === '-');
+            return this.pointerOffset(this.rvalue(pointerNode), indexNode, this.stride(node), op === '-');
         }
         var type = node.opType;
         var kind = kindOf(type);
@@ -543,7 +559,7 @@
         var op = node.op.slice(0, -1);
         var result;
         if (node.pointerArithmetic) {
-            result = this.pointerOffset(place.get, node.source, node.elemSize, op === '-');
+            result = this.pointerOffset(place.get, node.source, this.stride(node), op === '-');
         } else {
             var type = node.opType;
             var right = op === '<<' || op === '>>' ? this.valueAs(node.source, types.int) : this.valueAs(node.source, type);
@@ -560,7 +576,7 @@
         var type = node.type;
         var step;
         if (type.kind === 'pointer') {
-            step = J.bin(node.op === '++' ? '+' : '-', place.get, J.num(type.to.kind === 'void' ? 1 : type.to.size));
+            step = J.bin(node.op === '++' ? '+' : '-', place.get, this.pointerStep(type.to));
         } else {
             var opType = C.isInteger(type) ? C.promote(type) : type;
             var one = this.literal(1, opType);
@@ -573,7 +589,7 @@
         var old = this.temp();
         var stepFromOld;
         if (type.kind === 'pointer') {
-            stepFromOld = J.bin(node.op === '++' ? '+' : '-', old, J.num(type.to.kind === 'void' ? 1 : type.to.size));
+            stepFromOld = J.bin(node.op === '++' ? '+' : '-', old, this.pointerStep(type.to));
         } else {
             var promoted = C.isInteger(type) ? C.promote(type) : type;
             stepFromOld = this.convert(ops.binary(kindOf(promoted), node.op === '++' ? '+' : '-', this.convert(old, type, promoted),

@@ -68,6 +68,16 @@
         return { kind: 'array', of: of, length: length, size: size, align: of.align };
     };
 
+    // An array with a length known at run time at some level (int a[n][m],
+    // int a[3][m]): its size is computed by the generated code.
+    C.isVariablySized = function (type) {
+        for (; type.kind === 'array'; type = type.of) {
+            if (type.vla)
+                return true;
+        }
+        return false;
+    };
+
     C.functionType = function (returns, params, variadic, unspecified) {
         return { kind: 'function', returns: returns, params: params, variadic: !!variadic, unspecified: !!unspecified,
                  size: 1, align: 1 };
@@ -201,8 +211,9 @@
         case 'pointer':
             return C.compatible(left.to, right.to);
         case 'array':
-            return (left.length === null || right.length === null || left.length === right.length) &&
-                C.compatible(left.of, right.of);
+            // A variable length (-1) is compatible with any.
+            return (left.length === null || right.length === null || left.length < 0 || right.length < 0 ||
+                    left.length === right.length) && C.compatible(left.of, right.of);
         case 'function':
             if (!C.compatible(left.returns, right.returns))
                 return false;

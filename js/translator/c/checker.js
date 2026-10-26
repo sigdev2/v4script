@@ -217,7 +217,7 @@
                         if (length * Math.max(1, type.size) > 256 * 1024 * 1024)
                             this.error(suffix.size, 'array is too large (' + length + ' elements)');
                     } else {
-                        if (this.func === null)
+                        if (this.func === null && this.scope.kind !== 'prototype')
                             this.error(suffix.size, 'variable length array declaration not allowed at file scope');
                         vla = suffix.size;
                         length = -1;
@@ -232,21 +232,41 @@
                 if (type.kind === 'array')
                     this.error(suffix, 'function cannot return array type ' + this.typeName(type));
                 var params = [];
-                suffix.params.forEach(function (param) {
-                    if (param.oldStyle) {
-                        params.push(types.int);
-                        return;
-                    }
-                    var paramType = self.declaratorType(param.declarator, self.baseType(param.specs));
-                    // An array or a function as a parameter is a pointer.
-                    if (paramType.kind === 'array')
-                        paramType = C.pointer(paramType.of);
-                    else if (paramType.kind === 'function')
-                        paramType = C.pointer(paramType);
-                    if (paramType.kind === 'void')
-                        self.error(param, "argument may not have 'void' type");
-                    params.push(paramType);
-                });
+                // The prototype scope: a parameter is visible in the
+                // declarators after it (int n, int a[][n]). Its object becomes
+                // the parameter of a definition, so that the sizes refer to it.
+                var outer = this.scope;
+                this.scope = new Scope(outer);
+                this.scope.kind = 'prototype';
+                try {
+                    suffix.params.forEach(function (param) {
+                        if (param.oldStyle) {
+                            params.push(types.int);
+                            return;
+                        }
+                        var paramType = self.declaratorType(param.declarator, self.baseType(param.specs));
+                        // An array or a function as a parameter is a pointer.
+                        if (paramType.kind === 'array')
+                            paramType = C.pointer(paramType.of);
+                        else if (paramType.kind === 'function')
+                            paramType = C.pointer(paramType);
+                        if (paramType.kind === 'void')
+                            self.error(param, "argument may not have 'void' type");
+                        params.push(paramType);
+                        var name = param.declarator.name;
+                        if (name !== null) {
+                            if (param.declarator.paramObject === undefined) {
+                                param.declarator.paramObject = { kind: 'var', name: name, type: paramType,
+                                                                 storage: 'local', line: param.declarator.line,
+                                                                 addressTaken: false };
+                            }
+                            param.declarator.paramObject.type = paramType;
+                            self.scope.names[name] = param.declarator.paramObject;
+                        }
+                    });
+                } finally {
+                    this.scope = outer;
+                }
                 type = C.functionType(type, params, suffix.variadic, suffix.unspecified);
             }
         }
@@ -329,8 +349,13 @@
     };
 
     Checker.prototype.newLocal = function (name, type, node) {
-        var object = { kind: 'var', name: name, type: type, storage: 'local', line: node ? node.line : 0,
-                       addressTaken: false };
+        return this.addLocal({ kind: 'var', name: name, type: type, storage: 'local', line: node ? node.line : 0,
+                               addressTaken: false });
+    };
+
+    // A local variable of the function: its name in the generated code.
+    Checker.prototype.addLocal = function (object) {
+        var name = object.name;
         var used = this.func.jsNames;
         var base = T.jsName(name);
         var jsName = base;
@@ -598,7 +623,9 @@
                 info.params.push(null);
                 return;
             }
-            var object = self.newLocal(paramName, paramType, param.declarator);
+            var object = param.declarator.paramObject !== undefined
+                ? self.addLocal(param.declarator.paramObject) : self.newLocal(paramName, paramType, param.declarator);
+            object.type = paramType;
             object.param = true;
             info.params.push(object);
             self.declare(object, param.declarator);

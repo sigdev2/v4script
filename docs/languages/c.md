@@ -67,8 +67,10 @@ count;                          // the value of the run
    through `unsigned char *` and back, misaligned too). `malloc`, `calloc`,
    `realloc`, `free` - a heap up to 512 MB; a second `free` is the error
    `double free`. The stack is 1 MB.
- - **Arrays**: multidimensional, variable length (`int a[n]`),
-   initializers `{ … }` with designators `[3] = 5`, `.x = 1`; strings are
+ - **Arrays**: multidimensional, variable length at any level
+   (`int a[n][m]`, also parameters sized by earlier ones:
+   `void f(int n, int m, int a[n][m])`; a variable length array is freed
+   at the end of its block), initializers `{ … }` with designators `[3] = 5`, `.x = 1`; strings are
    `char[]` and `char *` with UTF-8 bytes (`strlen("привет")` is 12).
  - **Structs, unions, enums**: nested and anonymous, bit fields,
    assignment and passing of structs by value, structs returned from

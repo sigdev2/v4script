@@ -109,6 +109,12 @@ casts and `memcpy` work as in real C.
    samples were checked with gcc (glibc) on Linux.
  - `qsort` is a stable merge sort over a copy (the comparison gets the
    addresses in the copy).
+ - Variable length arrays: the lengths are taken into `name$length`
+   variables at the declaration, element sizes of pointer arithmetic come
+   from `vlaSize` at run time (`elemType`), and a block with such an array
+   restores `$M.sp` in a `finally`. A parameter is declared in the
+   prototype scope of the function declarator; the same object becomes the
+   parameter of the definition, so the sizes of later parameters refer to it.
  - Files: `fopen` reads files of the host (read only); `stdin` reads the
    host input (`scanf`, `fgets`, `getchar` refill a buffer from
    `host.input` line by line). A refill flushes the `OutputStream`s first:
