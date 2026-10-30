@@ -80,10 +80,47 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
+### .NET runtime
+
+Parts of the C# library follow the algorithms of the .NET runtime so that
+programs print the same as with .NET: the buckets and entries of
+`Dictionary` and `HashSet` (the order of enumeration), the introspective
+sort of `Array.Sort` and `List.Sort`, the 4-ary heap of `PriorityQueue`,
+the seeded generator of `Random` and the scale rules of `decimal`
+division ([js/translator/csharp](js/translator/csharp)).
+
+Source: <https://github.com/dotnet/runtime>
+
+```
+The MIT License (MIT)
+
+Copyright (c) .NET Foundation and Contributors
+
+All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
 ## Reference implementations (not included)
 
 The translated languages were checked against the output of gcc, the JDK,
-gforth, QB64-PE, Free Pascal, wabt, the WebAssembly specification tests and
+.NET 8, gforth, QB64-PE, Free Pascal, wabt, the WebAssembly specification tests and
 chibi-scheme ([testing](docs/testing/README.md#samples)). They were used as
 black boxes; none of their code is part of v4script except what is listed
 above. Compatible behavior (for example the same random numbers as gforth

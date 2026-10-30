@@ -9,7 +9,7 @@ the library need [embedding](../embedding/README.md) and
 | [host.md](host.md) | the host layer between C++ and the languages: the bridge, the `host` object, adapters, engines and units |
 | [translator.md](translator.md) | v4script's own translator into JavaScript: the shared core, sessions, errors and lines, fibers, recursion, adding a translated language |
 | [vendor.md](vendor.md) | languages run by third-party interpreters (Python, Lua, Prolog, Perl, PHP): building the bundles, patches, adapters |
-| [go.md](go.md), [c.md](c.md), [cpp.md](cpp.md), [java.md](java.md), [forth.md](forth.md), [basic.md](basic.md), [pascal.md](pascal.md), [wat.md](wat.md), [scheme.md](scheme.md) | each translated language: files, values, translation, the library, checking against a reference implementation |
+| [go.md](go.md), [c.md](c.md), [cpp.md](cpp.md), [java.md](java.md), [csharp.md](csharp.md), [forth.md](forth.md), [basic.md](basic.md), [pascal.md](pascal.md), [wat.md](wat.md), [scheme.md](scheme.md) | each translated language: files, values, translation, the library, checking against a reference implementation |
 | [v4-pitfalls.md](v4-pitfalls.md) | bugs and limits of the Qt 6.4 JavaScript engine that the code works around |
 
 ## Architecture

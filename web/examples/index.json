@@ -401,6 +401,36 @@
       ]
     }
   ],
+  "csharp": [
+    {
+      "group": "C#",
+      "examples": [
+        {
+          "file": "Hello.cs",
+          "title": "Hello: Console.ReadLine",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "Shapes.cs",
+          "title": "Records and pattern matching"
+        },
+        {
+          "file": "Linq.cs",
+          "title": "LINQ queries"
+        },
+        {
+          "file": "Tasks.cs",
+          "title": "async and await"
+        },
+        {
+          "file": "Canvas.cs",
+          "title": "Drawing on the canvas"
+        }
+      ]
+    }
+  ],
   "forth": [
     {
       "group": "Forth",

@@ -9,12 +9,12 @@
   <img alt="Version 0.1.3" src="https://img.shields.io/badge/version-0.1.3-brightgreen.svg">
   <img alt="Qt 6.4+" src="https://img.shields.io/badge/Qt-6.4%2B-41cd52.svg">
   <img alt="C++17" src="https://img.shields.io/badge/C%2B%2B-17-00599c.svg">
-  <img alt="14 languages" src="https://img.shields.io/badge/languages-14-orange.svg">
+  <img alt="15 languages" src="https://img.shields.io/badge/languages-15-orange.svg">
   <a href="https://sigdev2.github.io/v4script/"><img alt="Playground" src="https://img.shields.io/badge/playground-online-8a2be2.svg"></a>
 </p>
 
 <p align="center">
-  Python · Lua · Prolog · Perl · PHP · Go · C · C++ · Java · Forth · BASIC · Pascal · WebAssembly · Scheme
+  Python · Lua · Prolog · Perl · PHP · Go · C · C++ · Java · C# · Forth · BASIC · Pascal · WebAssembly · Scheme
 </p>
 
 <p align="center">
@@ -23,8 +23,8 @@
 
 ---
 
-**v4script** lets a Qt application run programs written in fourteen
-languages - from QBasic and Turbo Pascal classics to Go, C++, Java and
+**v4script** lets a Qt application run programs written in fifteen
+languages - from QBasic and Turbo Pascal classics to Go, C++, Java, C# and
 WebAssembly - inside the JavaScript engine that every Qt Qml installation
 already has. No compilers, no external processes, no native interpreters:
 one static library, a few lines of C++, and your users can script your
@@ -41,26 +41,27 @@ runtime.run("go",     "fmt.Println(strings.Repeat(\"Go\", 3))");       // GoGoGo
 
 ## Why v4script
 
-- 🧩 **Fourteen languages, one engine.** Every language runs in the same
+- 🧩 **Fifteen languages, one engine.** Every language runs in the same
   `QJSEngine` as JavaScript, shares its global object and can call
   JavaScript - and the other way round.
 - 🔌 **Your API in every language.** Give programs a `QObject` and its
-  methods become a Go package, a C or C++ header, a Java class, a Pascal
-  unit, Prolog predicates and Scheme procedures - with names and types in
+  methods become a Go package, a C or C++ header, a Java or C# class, a
+  Pascal unit, Prolog predicates and Scheme procedures - with names and types in
   the conventions of each language.
 - 🎯 **Faithful behavior.** The translated languages are checked against
   real implementations: Pascal prints numbers exactly as Free Pascal does,
   BASIC follows QBasic down to `PRINT USING` and `RND`, C has its own
   memory with real pointers, the C++ library gives the numbers of
-  libstdc++'s `<random>` and the order of its hash tables, WebAssembly
-  passes the specification tests.
+  libstdc++'s `<random>` and the order of its hash tables, C# formats
+  numbers and orders dictionaries as .NET does, WebAssembly passes the
+  specification tests.
 - 🛡️ **Safe to embed.** Programs see only what the application gives them:
   output, standard input, module files, a canvas. A watchdog stops runaway
   code, deep recursion is an error, not a crash.
 - 🎨 **Graphics included.** QBasic `SCREEN 13` and Pascal `Graph` draw on a
   canvas - into a `QImage` or a Qt Quick `Canvas`.
-- 📦 **Pick what you need.** Embed all languages (about 12 MB of scripts,
-  6.4 MB minified) or just the few your application uses.
+- 📦 **Pick what you need.** Embed all languages (about 14 MB of scripts,
+  7.4 MB minified) or just the few your application uses.
 
 ## Supported languages
 
@@ -75,6 +76,7 @@ runtime.run("go",     "fmt.Println(strings.Repeat(\"Go\", 3))");       // GoGoGo
 | C | C17 | C17 with its own linear memory and a subset of the C library | v4script 0.1.3 |
 | C++ | C++17 | C++17 over the memory of C: classes, templates, exceptions, lambdas and an STL that behaves as libstdc++ | v4script 0.1.3 |
 | Java | 21 | Java 21 with records, pattern matching, threads, streams and a JDK subset | v4script 0.1.3 |
+| C# | 12 | C# 12 with generics, LINQ, records, patterns, async/await, threads and a .NET 8 subset | v4script 0.1.3 |
 | Forth | 2012 | Forth 2012, compatible with gforth | v4script 0.1.3 |
 | BASIC | QBasic 4.5 | QBasic / QuickBASIC 4.5 with graphics | v4script 0.1.3 |
 | Pascal | FPC 3.2.2 | Free Pascal 3.2.2 (objfpc): classes, exceptions, SysUtils, Math, StrUtils, Classes, Crt, Graph | v4script 0.1.3 |
@@ -89,7 +91,7 @@ JavaScript. Versions are available to the application too:
 ## Coming next
 
 The translator grows one language at a time, in this order:
-**C#**, Kotlin, Rust, Swift, Dart, Scala, F#, Haskell, Erlang, Fortran,
+**Kotlin**, Rust, Swift, Dart, Scala, F#, Haskell, Erlang, Fortran,
 COBOL, Nim, Zig, x86 assemblers (NASM, FASM, TASM) and ASMX, Verilog,
 MASM, Ada, Common Lisp, the NES (ca65) and Z80 (sjasmplus) assemblers,
 CoffeeScript, the .NET IL assembler. See [TODO](TODO.md) for the plan and
@@ -97,9 +99,10 @@ the known gaps.
 
 ## Try it online
 
-The [playground](https://sigdev2.github.io/v4script/) runs all fourteen
+The [playground](https://sigdev2.github.io/v4script/) runs all fifteen
 languages in the browser with the same scripts: pick an example - BASIC
 games and graphics, Pascal `Graph`, goroutines in Go, records in Java,
+LINQ in C#,
 `call/cc` in Scheme - or write your own program; it stays in your browser.
 How it works and how it differs from the Qt engine:
 [playground](docs/playground.md).
@@ -143,6 +146,7 @@ compiler. To use it in your project, add it as a subdirectory and link
 | [Perlito5](https://github.com/fglock/Perlito) | Perl | [Artistic License 2.0](https://www.perlfoundation.org/artistic-license-20.html) |
 | [Uniter](https://github.com/asmblah/uniter) | PHP | [MIT](https://opensource.org/licenses/MIT) |
 | [QB64 Phoenix Edition](https://github.com/QB64-Phoenix-Edition/QB64pe) | BASIC graphics algorithms, the 8x8 font of Pascal `Graph` | [MIT](https://opensource.org/licenses/MIT) |
+| [.NET runtime](https://github.com/dotnet/runtime) | the algorithms of C# collections, sorting and `Random` | [MIT](https://github.com/dotnet/runtime/blob/main/LICENSE.TXT) |
 
 The full list of bundled packages and their license texts is in
 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md).

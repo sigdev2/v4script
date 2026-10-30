@@ -1,7 +1,7 @@
 # Embedding v4script
 
 v4script is a static C++ library for Qt applications. It runs programs in
-14 languages inside a `QJSEngine` and lets the application decide what the
+15 languages inside a `QJSEngine` and lets the application decide what the
 programs see: output, standard input, module files, a canvas and its own
 API (host modules).
 
@@ -72,8 +72,8 @@ time.
 | `V4SCRIPT_BUILD_EXAMPLES` | top level only | build [examples/](../../examples) |
 
 Embedded size of each language (the host layer adds 25 KB, the translator
-core shared by Go, C, C++, Java, Forth, BASIC, Pascal, WebAssembly and
-Scheme 124 KB; minified: 10 KB and 50 KB):
+core shared by Go, C, C++, Java, C#, Forth, BASIC, Pascal, WebAssembly
+and Scheme 124 KB; minified: 10 KB and 50 KB):
 
 | Language | Scripts | Minified |
 | --- | --- | --- |
@@ -86,6 +86,7 @@ Scheme 124 KB; minified: 10 KB and 50 KB):
 | C | 354 KB | 166 KB |
 | C++ (with the files of C) | 1449 KB | 920 KB |
 | Java | 852 KB | 570 KB |
+| C# | 1641 KB | 1011 KB |
 | Forth | 199 KB | 91 KB |
 | BASIC | 309 KB | 143 KB |
 | Pascal | 732 KB | 391 KB |

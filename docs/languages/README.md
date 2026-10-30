@@ -16,6 +16,7 @@ beyond what the embedding application gives.
 | C | [c.md](c.md) | C17 | the v4script translator, own linear memory |
 | C++ | [cpp.md](cpp.md) | C++17 | the v4script translator over the memory of C, the standard library written in C++ |
 | Java | [java.md](java.md) | 21 | the v4script translator, a JDK subset written in Java |
+| C# | [csharp.md](csharp.md) | 12 | the v4script translator, a .NET 8 subset written in C# |
 | Forth | [forth.md](forth.md) | Forth 2012 | an interpreter of v4script, definitions translated into JavaScript; own linear memory |
 | BASIC | [basic.md](basic.md) | QBasic 4.5 | the v4script translator, graphics on a canvas |
 | Pascal | [pascal.md](pascal.md) | Free Pascal 3.2.2 | the v4script translator (objfpc mode), classes, `Graph` on a canvas |
@@ -43,8 +44,8 @@ standard input come from, errors, and what is missing.
    before the program reads input. Standard error (where the language has
    it) is a separate stream, and so are interpreter warnings (PHP, Prolog).
  - **Value.** Like an interactive session, a run returns the value of the
-   program (`Result::value`): Python, Lua, Go, C, C++, Java and Pascal - the
-   last expression of the unit; PHP - the value of `return` in the unit;
+   program (`Result::value`): Python, Lua, Go, C, C++, Java, C# and Pascal -
+   the last expression of the unit; PHP - the value of `return` in the unit;
    Forth - what is left on the stack (`<2> 1 2`); WebAssembly - the result
    of the last `invoke` command or of the function `main`; Scheme - the
    value of the last form (as `write` prints it). Prolog, Perl and BASIC
@@ -59,6 +60,7 @@ standard input come from, errors, and what is missing.
    interrupted (`Status::Interrupted`); the variables of the language
    stay.
  - **Programs that wait** (`time.Sleep` in Go, `Thread.sleep` in Java,
+   `Thread.Sleep` and `Task.Delay` in C#,
    `std::this_thread::sleep_for` in C++, `SLEEP` in BASIC, `Delay` in
    Pascal, SRFI 18 threads in Scheme, Forth `MS`) end their run when
    everything waits for time and go on in timers of the engine: run the
@@ -70,7 +72,7 @@ standard input come from, errors, and what is missing.
    (`Host::readModule(name)`): `import` in Python and Go, `require` in Lua,
    `consult` in Prolog, `use` and `require` in Perl, `include` and
    `require` in PHP, `#include` in C and C++, a class `Name` from
-   `Name.java` in Java, `INCLUDE` and `REQUIRE` in Forth, `'$INCLUDE: 'name'` in BASIC,
+   `Name.java` in Java, a type `Name` from `Name.cs` in C#, `INCLUDE` and `REQUIRE` in Forth, `'$INCLUDE: 'name'` in BASIC,
    `uses Name` (`Name.pas`) and `{$I name}` in Pascal, `(import "name" …)`
    (`name.wat`) in WebAssembly, `(import (name))` (`name.sld`), `load` and
    `include` in Scheme. Files are read only. A changed file is loaded again
@@ -78,6 +80,7 @@ standard input come from, errors, and what is missing.
  - **Standard input** comes from the host (`Host::readLine`, or
    `Runtime::setInputText`): `input()`, `io.read`, `read/1`, `<STDIN>`,
    `fgets(STDIN)`, `fmt.Scan`, `scanf`, `std::cin`, `Scanner(System.in)`,
+   `Console.ReadLine`,
    `ACCEPT`, `INPUT`, `ReadLn`, WASI `fd_read`, `read-line`. Without a host
    input programs see the end of input.
 
@@ -107,6 +110,7 @@ runtime.addModule(v4script::HostModule("app", object, {
 | Go | - | `app.Greet("Ann")`, `app.Counter()` |
 | C, C++ | `greet("Ann")`, `counter()` | `app_greet("Ann")` |
 | Java | `greet("Ann")`, `counter()` | `App.greet("Ann")` |
+| C# | `Greet("Ann")`, `Counter` | `App.Greet("Ann")`, `App.Counter` |
 | Forth | `s" Ann" greet`, `counter` | `app.greet`, `app.counter` |
 | BASIC | `GREET("Ann")`, `COUNTER` | `APP.greet("Ann")`, `APP.counter` |
 | Pascal | `Greet('Ann')`, `Counter` | `App.Greet('Ann')`, `App.Counter` |
@@ -119,11 +123,12 @@ runtime.addModule(v4script::HostModule("app", object, {
    the language (`log` in a language that has its own `log` stays the
    language's); the function is then reachable through the module.
  - Names follow the language: `isEven` is `is_even` in C, C++ and Prolog,
-   `IsEven` in Go and Pascal, `is-even` in Scheme and Forth, `ISEVEN` in
+   `IsEven` in Go, C# and Pascal, `is-even` in Scheme and Forth, `ISEVEN` in
    BASIC; JavaScript, Python, Lua, Perl, PHP, Java and WebAssembly keep the
    JavaScript name. In C and C++ a module is the header `app.h` (included
-   implicitly for a global module), in Java the class `app.App`, in Pascal
-   the unit `App`, in Go the package `app`.
+   implicitly for a global module), in Java the class `app.App`, in C# the
+   static class `App` (getters are properties), in Pascal the unit `App`,
+   in Go the package `app`.
  - Types: `int` is a 64-bit integer where the language has one (`int64`,
    `long`, `long long`), `value` is a handle of a JavaScript value
    (`js.Value`, `JsValue`, `js_value`, `OBJECT`, `JSValue`), `array` an
@@ -152,12 +157,12 @@ functions to JavaScript.
 | `o.fillStyle = "red"` | `o.Set("fillStyle", "red")` | `js_set(o, "fillStyle", "red")` | `o.set("fillStyle", "red")` | `js" red" o s" fillStyle" js-set` |
 | `Math.max(1, 5)` | `js.Global().Get("Math").Call("max", 1, 5)` | `js_call(js_get(js_global(), "Math"), "max", 1, 5)` | `Js.global().get("Math").call("max", 1, 5)` | `1 5 2 js-global s" Math" js-get s" max" js-call` |
 
-| JavaScript | BASIC | Pascal | Scheme |
-| --- | --- | --- | --- |
-| `o.value("B2")` | `o.value("B2")` | `o.value('B2')` | `(o.value "B2")` |
-| `o.title` | `o.title` | `o.title` | `o.title` |
-| `o.fillStyle = "red"` | `o.fillStyle = "red"` | `o.fillStyle := 'red'` | `(set! o.fillStyle "red")` |
-| `Math.max(1, 5)` | `JS.Math.max(1, 5)` | `JS.Math.max(1, 5)` | `(Math.max 1 5)` |
+| JavaScript | C# | BASIC | Pascal | Scheme |
+| --- | --- | --- | --- | --- |
+| `o.value("B2")` | `o.Call("value", "B2")` | `o.value("B2")` | `o.value('B2')` | `(o.value "B2")` |
+| `o.title` | `o["title"]` | `o.title` | `o.title` | `o.title` |
+| `o.fillStyle = "red"` | `o["fillStyle"] = "red"` | `o.fillStyle = "red"` | `o.fillStyle := 'red'` | `(set! o.fillStyle "red")` |
+| `Math.max(1, 5)` | `Js.Global["Math"].Call("max", 1, 5)` | `JS.Math.max(1, 5)` | `JS.Math.max(1, 5)` | `(Math.max 1 5)` |
 
 Prolog uses the predicates of the library `js` ([prolog.md](prolog.md)),
 WebAssembly imports functions from the modules `js` and `'`

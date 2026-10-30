@@ -14,6 +14,7 @@ adapter in [languages.json](../../languages.json).
 | [C](c.md) | linear memory, the preprocessor, type checking, function pointers, variable arguments, libc, `js_value` |
 | [C++](cpp.md) | parsing with names resolved on the fly, templates parsed again per instance, class layout and vtables, exceptions, copy elision, constant evaluation, the standard library written in C++ and parsed by name on demand |
 | [Java](java.md) | classes in JavaScript, inference of generics, the JDK library written in Java and loaded on demand, threads as fibers, `JsValue` |
+| [C#](csharp.md) | classes and structs in JavaScript, reified generics, overload resolution and inference of C# 12, the .NET library written in C# and loaded on demand, async methods and threads as fibers, numbers as text as in .NET |
 | [Forth](forth.md) | the interpreter and the dictionary in JavaScript, definitions translated through a virtual stack, labels into blocks and loops, memory, JavaScript handles |
 | [BASIC](basic.md) | the program shared by units, module variables, QBasic arithmetic with overflow, parameters by reference, GOSUB and ON ERROR as a state machine, graphics on a canvas |
 | [Pascal](pascal.md) | a one-pass compiler with the types of Free Pascal, x86_64 arithmetic by ranges, values and references (records, `var`, pointers), classes on prototypes, units written in Pascal with external functions, Graph on a canvas, number formatting |

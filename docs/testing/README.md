@@ -66,6 +66,7 @@ black box:
 | C | gcc with glibc on Linux |
 | C++ | g++ 13 with libstdc++ on Linux (`g++ -std=c++17`) |
 | Java | JDK 19 (`java --enable-preview`) |
+| C# | .NET 8 (`csc` of the SDK 8.0 with C# 12 and the implicit usings of a console project, run with `dotnet exec`) |
 | Forth | gforth 0.7.3; Forth 2012 words missing in it by hand |
 | BASIC | QB64-PE 4.7.0, where it departs from QBasic - QBasic rules |
 | Pascal | Free Pascal 3.2.2 (`fpc -Mobjfpc -Sh`); Graph against `ptcgraph` under Xvfb |
@@ -87,7 +88,7 @@ cd tools && npm ci && cd ..
 node tools/run-samples.mjs go                     # all Go samples
 node tools/run-samples.mjs go slices              # samples whose name contains "slices"
 node tools/run-samples.mjs c --run prog.c --input in.txt --dump   # one file, show the generated JavaScript
-node tools/run-samples.mjs java --library         # translate the whole Java library (also cpp)
+node tools/run-samples.mjs java --library         # translate the whole Java library (also cpp, csharp)
 node tools/run-samples.mjs wat --wast testsuite/  # WebAssembly spec tests (.wast)
 V4SCRIPT_JS=build/js-min node tools/run-samples.mjs pascal   # the minified scripts
 node tools/run-samples.mjs basic --examples       # the examples of the playground run without errors
