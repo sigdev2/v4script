@@ -97,8 +97,25 @@ items.Count                           // the value of the run
    (`when`)/`finally`, `throw` expressions, `using` statements and
    declarations (`IDisposable`, `IAsyncDisposable`), `lock`, `yield return`
    and `yield break`, `checked` blocks.
- - **Ranges and indices**: `^1`, `1..3` on arrays, strings and lists;
+ - **Ranges and indices**: `^1`, `1..3` on arrays and strings, `^1` on
+   lists, both on any type with `Length` (or `Count`) and `Slice`;
    rectangular (`int[,]`) and jagged arrays.
+ - **Spans**: `Span<T>`, `ReadOnlySpan<T>`, `Memory<T>`,
+   `ReadOnlyMemory<T>`, `ArraySegment<T>` - views of an array or a string
+   (`text.AsSpan(1, 3)`, `string` converts to `ReadOnlySpan<char>`),
+   `Slice`, `span[1..^1]`, `foreach`, `stackalloc int[n]` (a new array),
+   `MemoryExtensions` (`IndexOf`, `SequenceEqual`, `StartsWith`, `Trim`,
+   `Sort`, `Reverse`, `BinarySearch`…), and spans in `int.Parse`,
+   `new string(span)`, `StringBuilder.Append`, `TextWriter.Write`.
+ - **Generic math**: `INumber<T>` and the other interfaces of
+   `System.Numerics` (`INumberBase`, `IBinaryInteger`, `IFloatingPoint`,
+   `IFloatingPointIeee754`, `IRootFunctions`, `IMinMaxValue`, the operator
+   interfaces `IAdditionOperators<TSelf, TOther, TResult>`…) on all
+   numeric types and `BigInteger`: `T.Zero`, `a + b`, `a < b` and `++`
+   where `T : INumber<T>`, `T.CreateChecked(x)`, `CreateSaturating`,
+   `CreateTruncating`, `T.Max`, `T.Clamp`, `T.PopCount`, `T.Sqrt`,
+   `T.Pi`…, with the overflow rules of each type; own types implement the
+   operator interfaces with ordinary operators.
  - **LINQ**: all methods of `Enumerable` (deferred as in .NET) and the
    query syntax (`from`, `where`, `select`, `orderby`, `group … by … into`,
    `join … on … equals … into`, `let`), anonymous types.
@@ -230,14 +247,24 @@ translated again at the next run.
  - Reflection beyond `GetType()`, `typeof`, `Type.Name`/`FullName`,
    attributes with an effect (`[Flags]`, `[Obsolete]` and others are
    parsed, `[Flags]` changes `ToString`), `unsafe` code and pointers,
-   `fixed`, `stackalloc`, `Span<T>` and `Memory<T>`, generic math
-   (`INumber<T>`, operators of type parameters), `System.Xml`, `System.Net`,
+   `fixed`, `System.Xml`, `System.Net`,
    `System.Text.Json`, LINQ to anything but objects, `Expression` trees,
    `Thread.Abort` and `Interrupt`, `async void` with a `SynchronizationContext`.
  - Files, network, processes, environment variables
    (`Environment.GetEnvironmentVariable` returns `null`).
  - **Definite assignment** is not checked (`CS0165`): an unassigned local
    reads its default value. Nullable warnings are not given.
+ - **Spans** are ordinary structs: the rules of `ref struct` (no boxing,
+   no fields in classes, no `await` across them) are not checked, the
+   indexer gets and sets an element but returns no `ref`
+   (`ref int first = ref span[0]` is not supported), `stackalloc` makes an
+   array.
+ - **Generic math**: `checked` operators (`operator checked +`) and the
+   `TryConvertFrom…`/`TryConvertTo…` members are missing, so
+   `T.CreateChecked` takes only the numeric types and `BigInteger`; a type
+   of the program that implements `INumber<T>` needs the members of this
+   subset only. `Math.Cbrt` and `T.Cbrt` may differ from .NET in the last
+   digit.
  - **Access checks** are those of the compiler for members of the program;
    `internal` is `public`.
  - **Boxed values:** a boxed `int`, `bool` or `string` is the same

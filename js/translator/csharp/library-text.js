@@ -28,6 +28,8 @@ public sealed class StringBuilder
     public extern StringBuilder Append(char value);
     public extern StringBuilder Append(char value, int repeatCount);
     public extern StringBuilder Append(char[] value);
+    public StringBuilder Append(ReadOnlySpan<char> value) => Append(value.ToString());
+    public StringBuilder Append(ReadOnlyMemory<char> value) => Append(value.Span.ToString());
     public extern StringBuilder Append(char[] value, int startIndex, int charCount);
     public extern StringBuilder Append(bool value);
     public extern StringBuilder Append(int value);

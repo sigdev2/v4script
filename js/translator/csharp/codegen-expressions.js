@@ -283,7 +283,8 @@
         var holder = this.typeSymRef(method.owner);
         // T.M(): the member of the type argument (or the default of the interface).
         if (typeParam !== null && typeParam !== undefined)
-            return J.call(this.rt('callStatic'), [this.typeRef(typeParam), J.str(method.jsName), this.typeRef(ownerType), J.arr(args)]);
+            return J.call(this.rt('callStatic'), [this.typeRef(typeParam), J.str(method.jsName), this.typeRef(ownerType), J.arr(args),
+                                                  J.str(method.name)]);
         if (ownerType !== null && ownerType !== undefined && ownerType.kind === 'named' && ownerType.args.length > 0 &&
             method.owner.allTypeParams.length > 0)
             return J.call(J.mem(J.mem(holder, method.jsName), 'call'), [this.typeRef(ownerType)].concat(args));
@@ -584,6 +585,14 @@
         return J.call(this.rt('arraySlice'), [this.expression(expr.array), this.expression(expr.range)]);
     };
 
+    // receiver[range] by Slice(start, length).
+    G.expr_sliceCall = function (expr) {
+        var receiver = this.stable(this.receiver(expr.receiver));
+        var count = this.memberRead(receiver.ref, expr.countMember, expr.receiver.type);
+        return this.withSetup(receiver.setup, J.call(this.rt('sliceCall'), [receiver.ref, this.expression(expr.range), count,
+                                                                            J.str(expr.method.jsName)]));
+    };
+
     G.expr_stringChar = function (expr) {
         var text = this.stable(this.expression(expr.string));
         var index = this.expression(expr.index);
@@ -695,7 +704,7 @@
     G.expr_unary = function (expr) {
         var operand = expr.operand;
         if (expr.kind === 'user')
-            return this.staticCall(expr.ownerType, expr.method, [this.storedValue(operand)]);
+            return this.staticCall(expr.ownerType, expr.method, [this.storedValue(operand)], expr.typeParam);
         if (expr.lifted) {
             var value = this.stable(this.expression(operand));
             var inner = this.unaryCode(expr.op, expr.kind, value.ref, expr);
@@ -757,7 +766,7 @@
                                           : J.nul();
                 return this.withSetup(leftLifted.setup.concat(rightLifted.setup), J.cond(bothNull, whenNull, liftedCall));
             }
-            return this.staticCall(expr.ownerType, expr.method, [this.storedValue(expr.left), this.storedValue(expr.right)]);
+            return this.staticCall(expr.ownerType, expr.method, [this.storedValue(expr.left), this.storedValue(expr.right)], expr.typeParam);
         case 'string':
         case 'reference':
             return J.bin(expr.op === '==' ? '===' : '!==', this.expression(expr.left), this.expression(expr.right));

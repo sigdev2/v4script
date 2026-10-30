@@ -19,7 +19,7 @@ project): the samples were checked with it.
 | [runtime.js](../../js/translator/csharp/runtime.js), [runtime-helpers.js](../../js/translator/csharp/runtime-helpers.js), [runtime-tasks.js](../../js/translator/csharp/runtime-tasks.js) | `$cs`: types at run time, casts, boxing, structs, arrays, delegates, exceptions; helpers of the translated code, `dynamic`; tasks, async methods, iterators, threads |
 | [decimal.js](../../js/translator/csharp/decimal.js), [format.js](../../js/translator/csharp/format.js), [collation.js](../../js/translator/csharp/collation.js) | `decimal` arithmetic; numbers as text and parsing (standard, custom and composite formats); string comparison as the invariant culture |
 | [natives-system.js](../../js/translator/csharp/natives-system.js), [natives-runtime.js](../../js/translator/csharp/natives-runtime.js) | natives of `System`: primitive types, `String`, `Array`, `Enum`, sorting; `Console`, `File`, `Math`, `Convert`, `Random`, `Type` |
-| `library-*.js` | the library in C#: `System` (two parts), collections, sorted collections, LINQ, text, regular expressions, `BigInteger`, time, threading, `V4Script` (`JsValue`, `Js`, `JsException`, host modules) |
+| `library-*.js` | the library in C#: `System` (two parts), collections, sorted collections, LINQ, text, spans (`library-memory.js`), regular expressions, `BigInteger` and the interfaces of generic math (`library-numerics.js`), time, threading, `V4Script` (`JsValue`, `Js`, `JsException`, host modules) |
 | [language.js](../../js/translator/csharp/language.js) | the session: the shared scope of the units, the unit, `Main`, the value, types from host files, the run and its continuation in timers |
 
 ## Values
@@ -121,6 +121,27 @@ project): the samples were checked with it.
    positions, so a group is found by its text inside the match.
  - `BigInteger` is a struct over a `T.big` integer (`_value`, `null` is
    zero).
+ - **Spans** ([library-memory.js](../../js/translator/csharp/library-memory.js))
+   are structs of an array (or a string for `ReadOnlySpan<char>`), a start
+   and a length; the indexers are natives. `string` declares the
+   conversion to `ReadOnlySpan<char>` (user-defined conversions of `string`
+   are looked up like those of `decimal`); `stackalloc` is an array
+   converted to `Span<T>`; `x[a..b]` on a type with `Length` and
+   `Slice(int, int)` is `$cs.sliceCall`.
+ - **Generic math**: the interfaces of `System.Numerics` are C# in
+   `library-numerics.js` with `static abstract` and `static virtual`
+   members (operators too). An operator on a type parameter is looked up
+   in the interfaces of its constraints (`operatorCandidates`) and, like
+   `T.Zero`, calls `$cs.callStatic(T, jsName, interface, args, name)`:
+   the member of the type argument, else for the numeric types of
+   `System` the native `CS.numericMember(type, name)` (they have no C#
+   implementation: a table per kind - small integers, `long`, `ulong`,
+   `float`, `double`, `decimal`), else the default of the interface.
+   `double.CreateChecked(x)` and the other members that the numeric types
+   lack in C# are found in their interfaces (`interfaceStatics`). The
+   interfaces of generic math of library types are not loaded at the
+   start: their part of `$ifaces` is made at the first type test
+   (`lazyInterfaces`).
  - Library chunks are marked with the source `library`: the place of an
    error in them is the user line that called the library.
  - Host modules: a module is a static class (`CS.hostLibrary`: the title
@@ -169,5 +190,6 @@ project): the samples were checked with it.
  - V4 (Qt 6.4) workarounds: `\B(?=…)` in `replace` inserts twice
    (`groupInteger` is a loop); a `return` with a call goes through a
    temporary (see [V4 pitfalls](v4-pitfalls.md)).
- - Missing: definite assignment (`CS0165`), nullable warnings, generic
-   math, `Span<T>`, reflection, stack traces.
+ - Missing: definite assignment (`CS0165`), nullable warnings, `ref`
+   returns of span indexers, checked operators of generic math,
+   reflection, stack traces.

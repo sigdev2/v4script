@@ -135,9 +135,10 @@ Decisions already taken for these stages:
    `java.time`, `CompletableFuture`, `java.util.concurrent.locks`, detailed
    `NullPointerException` messages and `at …` lines in `printStackTrace`,
    `==` of strings and `Integer` by identity.
- - **C#**: definite assignment (`CS0165`) and nullable warnings; generic
-   math (`INumber<T>`, operators on type parameters); `Span<T>`,
-   `Memory<T>`, `stackalloc`; reflection beyond `GetType`; stack traces of
+ - **C#**: definite assignment (`CS0165`) and nullable warnings; checked
+   operators and `TryConvertFrom…` of generic math; `ref` returns (span
+   indexers, `ref` locals of elements) and the rules of `ref struct`;
+   reflection beyond `GetType`; stack traces of
    exceptions; `finally` must not run when an unhandled exception ends the
    program; `(object)1 == (object)1` by identity (boxed `int`, `bool` and
    `string` are JavaScript values); regular expressions with lookbehind,

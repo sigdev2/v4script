@@ -277,6 +277,7 @@
         "translator/csharp/library-linq.js",
         "translator/csharp/library-sorted.js",
         "translator/csharp/library-text.js",
+        "translator/csharp/library-memory.js",
         "translator/csharp/library-regex.js",
         "translator/csharp/library-numerics.js",
         "translator/csharp/library-time.js",

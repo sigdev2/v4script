@@ -362,13 +362,20 @@
         if (sym.baseType !== null && sym.kind !== 'interface')
             baseRef = CS.isOpen(sym.baseType) ? this.typeSymRef(sym.baseType.sym)
                 : this.withTypeContext(sym, true, function () { return self.typeRef(sym.baseType); });
-        var interfaceRefs = J.arr(sym.interfaces.filter(function (iface) { return !CS.isOpen(iface); }).map(function (iface) {
-            return self.typeRef(iface);
-        }));
+        var closed = sym.interfaces.filter(function (iface) { return !CS.isOpen(iface); });
+        // The interfaces of generic math of library types load when a type
+        // test needs them: Int32 would bring two dozen into every program.
+        var lazy = closed.filter(function (iface) { return sym.library && /^System\.Numerics\.I/.test(iface.sym.qname); });
+        var eager = closed.filter(function (iface) { return lazy.indexOf(iface) < 0; });
+        var interfaceRefs = J.arr(eager.map(function (iface) { return self.typeRef(iface); }));
         // The interfaces after the definition: Int32 implements IComparable<int>.
         var out = [J.var_(varName, J.call(this.rt('defineType'), [J.str(sym.jsId), this.constant(this.typeMeta(sym)),
                                                                    this.fieldsFunction(sym), baseRef, J.arr([])])),
                    J.expr(J.assign(J.mem(ref, '$ifaces'), interfaceRefs))];
+        if (lazy.length > 0)
+            out.push(J.expr(J.call(this.rt('lazyInterfaces'), [ref, J.fn(null, [], [J.ret(J.arr(lazy.map(function (iface) {
+                return self.typeRef(iface);
+            })))])])));
         // Generic types: their supertypes with the arguments.
         if (sym.allTypeParams.length > 0)
             out.push(J.expr(J.assign(J.mem(ref, '$supers'), this.supersFunction(sym))));

@@ -206,7 +206,7 @@
         };
         if (expr.kind === 'user') {
             var before = keep(place.read);
-            var changed = this.staticCall(expr.ownerType, expr.method, [before.ref]);
+            var changed = this.staticCall(expr.ownerType, expr.method, [before.ref], expr.typeParam);
             if (expr.prefix || !valueUsed)
                 return this.withSetup(place.setup.concat(before.setup), place.write(changed));
             return this.withSetup(place.setup.concat(before.setup), J.seq([place.write(changed), before.ref]));

@@ -86,7 +86,7 @@ and Scheme 124 KB; minified: 10 KB and 50 KB):
 | C | 354 KB | 166 KB |
 | C++ (with the files of C) | 1449 KB | 920 KB |
 | Java | 852 KB | 570 KB |
-| C# | 1641 KB | 1011 KB |
+| C# | 1728 KB | 1078 KB |
 | Forth | 199 KB | 91 KB |
 | BASIC | 309 KB | 143 KB |
 | Pascal | 732 KB | 391 KB |

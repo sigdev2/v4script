@@ -574,6 +574,28 @@
             if (type.kind === 'tparam')
                 return this.typeParamStaticAccess(type, name, typeArgs, node, scope);
             var members = this.accessible(CS.lookupMembers(type, name), fromType);
+            if (type.kind === 'named' && type.sym.special !== undefined && type.sym.library &&
+                (members.length === 0 || members.every(function (entry) { return entry.member.symbolKind === 'method'; }))) {
+                // double.CreateChecked(x), int.Zero, double.Round(x, 2): generic
+                // math of the numeric types (overloads the type itself lacks).
+                var numeric = this.interfaceStatics(type, name).filter(function (entry) {
+                    return !members.some(function (own) {
+                        return own.member.symbolKind === 'method' && entry.member.symbolKind === 'method' &&
+                            CS.signatureKey(own.member, CS.typeMap(own.owner)) === CS.signatureKey(entry.member, CS.typeMap(entry.owner));
+                    });
+                });
+                if (numeric.length > 0 && members.length === 0) {
+                    var result = this.memberResult(numeric, null, true, typeArgs, node, scope, { typeAccess: true });
+                    result.typeParam = type;
+                    return result;
+                }
+                if (numeric.length > 0 && numeric[0].member.symbolKind === 'method') {
+                    var group = this.memberResult(members.concat(numeric), null, true, typeArgs, node, scope, { typeAccess: true });
+                    group.numericOverloads = numeric.map(function (entry) { return entry.member; });
+                    group.numericType = type;
+                    return group;
+                }
+            }
             if (members.length === 0)
                 this.noMember(type, name, node, true);
             return this.memberResult(members, null, true, typeArgs, node, scope, { typeAccess: true });
@@ -619,6 +641,22 @@
             this.error(node, 'CS0572', "'" + name + "': cannot reference a type through an expression; try '" +
                        CS.typeName(valueType) + '.' + name + "' instead");
         return this.memberResult(found2, value, false, typeArgs, node, scope, {});
+    };
+
+    // The static abstract and virtual members named name of the interfaces
+    // of a type (the most derived interface first).
+    C.interfaceStatics = function (type, name) {
+        var result = [];
+        CS.interfacesOf(type).forEach(function (iface) {
+            (iface.sym.complete().members[name] || []).forEach(function (member) {
+                var method = member.symbolKind === 'property' ? CS.findGetter(member) || member.setter : member;
+                if (member.isStatic && method !== null && method !== undefined && (method.isAbstract || method.isVirtual) &&
+                    !member.isOperator && !result.some(function (entry) { return CS.signatureKey(entry.member, CS.typeMap(entry.owner)) ===
+                                                                                   CS.signatureKey(member, CS.typeMap(iface)); }))
+                    result.push({ member: member, owner: iface });
+            });
+        });
+        return result;
     };
 
     // T.M where T : I: a static abstract or virtual member of I, found at
@@ -1309,6 +1347,19 @@
         // list[^1]: an Index on a countable type with an int indexer.
         if (node.args.length === 1) {
             var argument = this.attemptBind(function () { return self.bindValue(node.args[0].expr, scope); });
+            // span[1..^1]: a Range on a countable type with Slice(int, int).
+            if (argument !== null && this.isRangeType(argument.type) && !found.some(function (entry) {
+                return entry.member.params.length === 1 && self.isRangeType(entry.member.params[0].type);
+            })) {
+                var slice = CS.lookupMembers(type, 'Slice').filter(function (entry) {
+                    var member = entry.member;
+                    return member.symbolKind === 'method' && !member.isStatic && member.params.length === 2 &&
+                        CS.isSpecial(member.params[0].type, 'int') && CS.isSpecial(member.params[1].type, 'int');
+                })[0];
+                if (slice !== undefined)
+                    return bound('sliceCall', node, { receiver: target, range: argument, countMember: this.countMember(type, node),
+                                                      method: slice.member, type: CS.subst(slice.member.returnType, CS.typeMap(slice.owner)) });
+            }
             if (argument !== null && this.isIndexType(argument.type) && !found.some(function (entry) {
                 return entry.member.params.length === 1 && self.isIndexType(entry.member.params[0].type);
             })) {

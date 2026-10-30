@@ -553,9 +553,13 @@
         }
         case 'delegate':
             return this.anonymousMethod(false);
-        case 'stackalloc':
-            this.error('CS0214', 'Pointers and fixed size buffers may only be used in an unsafe context');
-            break;
+        case 'stackalloc': {
+            // stackalloc int[n], stackalloc[] { 1, 2 }: a Span<T> over a new array.
+            var array = this.newExpression('stackalloc');
+            if (array.k !== 'newArray' && array.k !== 'newImplicitArray')
+                this.error('CS1575', 'A stackalloc expression requires [] after type', token);
+            return this.node('stackalloc', token, { array: array });
+        }
         case 'ref':
             this.next();
             return this.node('refExpr', token, { expr: this.unary() });
@@ -804,8 +808,9 @@
 
     // --- new
 
-    P.newExpression = function () {
-        var token = this.expect('new');
+    // keyword: new, or stackalloc before an array creation.
+    P.newExpression = function (keyword) {
+        var token = this.expect(keyword || 'new');
         // new[] { 1, 2 }: an implicitly typed array.
         if (this.is('[')) {
             this.next();

@@ -86,6 +86,12 @@ public interface IComparable
     int CompareTo(object obj);
 }
 
+public interface IParsable<TSelf> where TSelf : IParsable<TSelf>
+{
+    static abstract TSelf Parse(string s, IFormatProvider provider);
+    static abstract bool TryParse(string s, IFormatProvider provider, out TSelf result);
+}
+
 public interface IComparable<in T>
 {
     int CompareTo(T other);
@@ -132,10 +138,12 @@ public readonly struct Boolean : IComparable, IComparable<bool>, IEquatable<bool
 }
 
 [V4Primitive("value")]
-public readonly struct Char : IComparable, IComparable<char>, IEquatable<char>, IConvertible
+public readonly struct Char : IComparable, IComparable<char>, IEquatable<char>, IConvertible,
+    System.Numerics.IBinaryInteger<char>, System.Numerics.IMinMaxValue<char>, System.Numerics.IUnsignedNumber<char>
 {
     public const char MaxValue = '￿';
     public const char MinValue = '\0';
+    string IFormattable.ToString(string format, IFormatProvider formatProvider) => ToString();
     public extern int CompareTo(object value);
     public extern int CompareTo(char value);
     public extern bool Equals(char obj);
@@ -184,7 +192,8 @@ public readonly struct Char : IComparable, IComparable<char>, IEquatable<char>, 
 }
 
 [V4Primitive("value")]
-public readonly struct SByte : IComparable, IComparable<sbyte>, IEquatable<sbyte>, IFormattable, IConvertible
+public readonly struct SByte : IComparable, IComparable<sbyte>, IEquatable<sbyte>, IFormattable, IConvertible,
+    System.Numerics.IBinaryInteger<sbyte>, System.Numerics.IMinMaxValue<sbyte>, System.Numerics.ISignedNumber<sbyte>
 {
     public const sbyte MaxValue = 127;
     public const sbyte MinValue = -128;
@@ -198,12 +207,17 @@ public readonly struct SByte : IComparable, IComparable<sbyte>, IEquatable<sbyte
     public extern string ToString(IFormatProvider provider);
     public extern string ToString(string format, IFormatProvider provider);
     public static extern sbyte Parse(string s);
+    public static sbyte Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static sbyte Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out sbyte result) => TryParse(s.ToString(), out result);
     public static extern sbyte Parse(string s, IFormatProvider provider);
     public static extern bool TryParse(string s, out sbyte result);
 }
 
 [V4Primitive("value")]
-public readonly struct Byte : IComparable, IComparable<byte>, IEquatable<byte>, IFormattable, IConvertible
+public readonly struct Byte : IComparable, IComparable<byte>, IEquatable<byte>, IFormattable, IConvertible,
+    System.Numerics.IBinaryInteger<byte>, System.Numerics.IMinMaxValue<byte>, System.Numerics.IUnsignedNumber<byte>
 {
     public const byte MaxValue = 255;
     public const byte MinValue = 0;
@@ -217,12 +231,17 @@ public readonly struct Byte : IComparable, IComparable<byte>, IEquatable<byte>, 
     public extern string ToString(IFormatProvider provider);
     public extern string ToString(string format, IFormatProvider provider);
     public static extern byte Parse(string s);
+    public static byte Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static byte Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out byte result) => TryParse(s.ToString(), out result);
     public static extern byte Parse(string s, IFormatProvider provider);
     public static extern bool TryParse(string s, out byte result);
 }
 
 [V4Primitive("value")]
-public readonly struct Int16 : IComparable, IComparable<short>, IEquatable<short>, IFormattable, IConvertible
+public readonly struct Int16 : IComparable, IComparable<short>, IEquatable<short>, IFormattable, IConvertible,
+    System.Numerics.IBinaryInteger<short>, System.Numerics.IMinMaxValue<short>, System.Numerics.ISignedNumber<short>
 {
     public const short MaxValue = 32767;
     public const short MinValue = -32768;
@@ -236,12 +255,17 @@ public readonly struct Int16 : IComparable, IComparable<short>, IEquatable<short
     public extern string ToString(IFormatProvider provider);
     public extern string ToString(string format, IFormatProvider provider);
     public static extern short Parse(string s);
+    public static short Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static short Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out short result) => TryParse(s.ToString(), out result);
     public static extern short Parse(string s, IFormatProvider provider);
     public static extern bool TryParse(string s, out short result);
 }
 
 [V4Primitive("value")]
-public readonly struct UInt16 : IComparable, IComparable<ushort>, IEquatable<ushort>, IFormattable, IConvertible
+public readonly struct UInt16 : IComparable, IComparable<ushort>, IEquatable<ushort>, IFormattable, IConvertible,
+    System.Numerics.IBinaryInteger<ushort>, System.Numerics.IMinMaxValue<ushort>, System.Numerics.IUnsignedNumber<ushort>
 {
     public const ushort MaxValue = 65535;
     public const ushort MinValue = 0;
@@ -255,12 +279,17 @@ public readonly struct UInt16 : IComparable, IComparable<ushort>, IEquatable<ush
     public extern string ToString(IFormatProvider provider);
     public extern string ToString(string format, IFormatProvider provider);
     public static extern ushort Parse(string s);
+    public static ushort Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static ushort Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out ushort result) => TryParse(s.ToString(), out result);
     public static extern ushort Parse(string s, IFormatProvider provider);
     public static extern bool TryParse(string s, out ushort result);
 }
 
 [V4Primitive("number")]
-public readonly struct Int32 : IComparable, IComparable<int>, IEquatable<int>, IFormattable, IConvertible, ISpanFormattable
+public readonly struct Int32 : IComparable, IComparable<int>, IEquatable<int>, IFormattable, IConvertible, ISpanFormattable,
+    System.Numerics.IBinaryInteger<int>, System.Numerics.IMinMaxValue<int>, System.Numerics.ISignedNumber<int>
 {
     public const int MaxValue = 2147483647;
     public const int MinValue = -2147483648;
@@ -274,6 +303,10 @@ public readonly struct Int32 : IComparable, IComparable<int>, IEquatable<int>, I
     public extern string ToString(IFormatProvider provider);
     public extern string ToString(string format, IFormatProvider provider);
     public static extern int Parse(string s);
+    public static int Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static int Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out int result) => TryParse(s.ToString(), out result);
     public static extern int Parse(string s, IFormatProvider provider);
     public static extern int Parse(string s, System.Globalization.NumberStyles style);
     public static extern int Parse(string s, System.Globalization.NumberStyles style, IFormatProvider provider);
@@ -299,7 +332,8 @@ public readonly struct Int32 : IComparable, IComparable<int>, IEquatable<int>, I
 }
 
 [V4Primitive("value")]
-public readonly struct UInt32 : IComparable, IComparable<uint>, IEquatable<uint>, IFormattable, IConvertible
+public readonly struct UInt32 : IComparable, IComparable<uint>, IEquatable<uint>, IFormattable, IConvertible,
+    System.Numerics.IBinaryInteger<uint>, System.Numerics.IMinMaxValue<uint>, System.Numerics.IUnsignedNumber<uint>
 {
     public const uint MaxValue = 4294967295;
     public const uint MinValue = 0;
@@ -313,6 +347,10 @@ public readonly struct UInt32 : IComparable, IComparable<uint>, IEquatable<uint>
     public extern string ToString(IFormatProvider provider);
     public extern string ToString(string format, IFormatProvider provider);
     public static extern uint Parse(string s);
+    public static uint Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static uint Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out uint result) => TryParse(s.ToString(), out result);
     public static extern uint Parse(string s, IFormatProvider provider);
     public static extern bool TryParse(string s, out uint result);
     public static extern uint PopCount(uint value);
@@ -323,7 +361,8 @@ public readonly struct UInt32 : IComparable, IComparable<uint>, IEquatable<uint>
 }
 
 [V4Primitive("value")]
-public readonly struct Int64 : IComparable, IComparable<long>, IEquatable<long>, IFormattable, IConvertible
+public readonly struct Int64 : IComparable, IComparable<long>, IEquatable<long>, IFormattable, IConvertible,
+    System.Numerics.IBinaryInteger<long>, System.Numerics.IMinMaxValue<long>, System.Numerics.ISignedNumber<long>
 {
     public const long MaxValue = 9223372036854775807;
     public const long MinValue = -9223372036854775808;
@@ -337,6 +376,10 @@ public readonly struct Int64 : IComparable, IComparable<long>, IEquatable<long>,
     public extern string ToString(IFormatProvider provider);
     public extern string ToString(string format, IFormatProvider provider);
     public static extern long Parse(string s);
+    public static long Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static long Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out long result) => TryParse(s.ToString(), out result);
     public static extern long Parse(string s, IFormatProvider provider);
     public static extern long Parse(string s, System.Globalization.NumberStyles style);
     public static extern bool TryParse(string s, out long result);
@@ -351,7 +394,8 @@ public readonly struct Int64 : IComparable, IComparable<long>, IEquatable<long>,
 }
 
 [V4Primitive("value")]
-public readonly struct UInt64 : IComparable, IComparable<ulong>, IEquatable<ulong>, IFormattable, IConvertible
+public readonly struct UInt64 : IComparable, IComparable<ulong>, IEquatable<ulong>, IFormattable, IConvertible,
+    System.Numerics.IBinaryInteger<ulong>, System.Numerics.IMinMaxValue<ulong>, System.Numerics.IUnsignedNumber<ulong>
 {
     public const ulong MaxValue = 18446744073709551615;
     public const ulong MinValue = 0;
@@ -365,6 +409,10 @@ public readonly struct UInt64 : IComparable, IComparable<ulong>, IEquatable<ulon
     public extern string ToString(IFormatProvider provider);
     public extern string ToString(string format, IFormatProvider provider);
     public static extern ulong Parse(string s);
+    public static ulong Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static ulong Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out ulong result) => TryParse(s.ToString(), out result);
     public static extern ulong Parse(string s, IFormatProvider provider);
     public static extern bool TryParse(string s, out ulong result);
     public static extern ulong PopCount(ulong value);
@@ -373,7 +421,8 @@ public readonly struct UInt64 : IComparable, IComparable<ulong>, IEquatable<ulon
 }
 
 [V4Primitive("value")]
-public readonly struct Single : IComparable, IComparable<float>, IEquatable<float>, IFormattable, IConvertible
+public readonly struct Single : IComparable, IComparable<float>, IEquatable<float>, IFormattable, IConvertible,
+    System.Numerics.IBinaryFloatingPointIeee754<float>, System.Numerics.IMinMaxValue<float>
 {
     public const float MaxValue = 3.40282347E+38f;
     public const float MinValue = -3.40282347E+38f;
@@ -393,6 +442,10 @@ public readonly struct Single : IComparable, IComparable<float>, IEquatable<floa
     public extern string ToString(IFormatProvider provider);
     public extern string ToString(string format, IFormatProvider provider);
     public static extern float Parse(string s);
+    public static float Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static float Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out float result) => TryParse(s.ToString(), out result);
     public static extern float Parse(string s, IFormatProvider provider);
     public static extern bool TryParse(string s, out float result);
     public static extern bool TryParse(string s, System.Globalization.NumberStyles style, IFormatProvider provider, out float result);
@@ -406,7 +459,8 @@ public readonly struct Single : IComparable, IComparable<float>, IEquatable<floa
 }
 
 [V4Primitive("value")]
-public readonly struct Double : IComparable, IComparable<double>, IEquatable<double>, IFormattable, IConvertible
+public readonly struct Double : IComparable, IComparable<double>, IEquatable<double>, IFormattable, IConvertible,
+    System.Numerics.IBinaryFloatingPointIeee754<double>, System.Numerics.IMinMaxValue<double>
 {
     public const double MaxValue = 1.7976931348623157E+308;
     public const double MinValue = -1.7976931348623157E+308;
@@ -427,6 +481,10 @@ public readonly struct Double : IComparable, IComparable<double>, IEquatable<dou
     public extern string ToString(IFormatProvider provider);
     public extern string ToString(string format, IFormatProvider provider);
     public static extern double Parse(string s);
+    public static double Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static double Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out double result) => TryParse(s.ToString(), out result);
     public static extern double Parse(string s, IFormatProvider provider);
     public static extern double Parse(string s, System.Globalization.NumberStyles style);
     public static extern double Parse(string s, System.Globalization.NumberStyles style, IFormatProvider provider);
@@ -455,7 +513,8 @@ public readonly struct Double : IComparable, IComparable<double>, IEquatable<dou
 }
 
 [V4Primitive("value")]
-public readonly struct Decimal : IComparable, IComparable<decimal>, IEquatable<decimal>, IFormattable, IConvertible
+public readonly struct Decimal : IComparable, IComparable<decimal>, IEquatable<decimal>, IFormattable, IConvertible,
+    System.Numerics.IFloatingPoint<decimal>, System.Numerics.IMinMaxValue<decimal>, System.Numerics.ISignedNumber<decimal>
 {
     public const decimal MaxValue = 79228162514264337593543950335m;
     public const decimal MinValue = -79228162514264337593543950335m;
@@ -478,6 +537,10 @@ public readonly struct Decimal : IComparable, IComparable<decimal>, IEquatable<d
     public byte Scale => GetScale(this);
     private static extern byte GetScale(decimal value);
     public static extern decimal Parse(string s);
+    public static decimal Parse(ReadOnlySpan<char> s, IFormatProvider provider = null) => Parse(s.ToString(), provider);
+    public static decimal Parse(ReadOnlySpan<char> s, System.Globalization.NumberStyles style, IFormatProvider provider = null) =>
+        Parse(s.ToString(), style, provider);
+    public static bool TryParse(ReadOnlySpan<char> s, out decimal result) => TryParse(s.ToString(), out result);
     public static extern decimal Parse(string s, IFormatProvider provider);
     public static extern decimal Parse(string s, System.Globalization.NumberStyles style);
     public static extern decimal Parse(string s, System.Globalization.NumberStyles style, IFormatProvider provider);
@@ -548,6 +611,8 @@ public sealed class String : IComparable, IComparable<string>, IEquatable<string
     public extern String(char c, int count);
     public extern String(char[] value);
     public extern String(char[] value, int startIndex, int length);
+    public extern String(ReadOnlySpan<char> value);
+    public static implicit operator ReadOnlySpan<char>(string value) => value.AsSpan();
     public extern int Length { get; }
     [System.Runtime.CompilerServices.IndexerName("Chars")]
     public extern char this[int index] { get; }
@@ -573,6 +638,9 @@ public sealed class String : IComparable, IComparable<string>, IEquatable<string
     public static extern string Concat(object arg0, object arg1, object arg2);
     public static extern string Concat(params object[] args);
     public static extern string Concat(string str0, string str1);
+    public static string Concat(ReadOnlySpan<char> str0, ReadOnlySpan<char> str1) => str0.ToString() + str1.ToString();
+    public static string Concat(ReadOnlySpan<char> str0, ReadOnlySpan<char> str1, ReadOnlySpan<char> str2) =>
+        str0.ToString() + str1.ToString() + str2.ToString();
     public static extern string Concat(string str0, string str1, string str2);
     public static extern string Concat(string str0, string str1, string str2, string str3);
     public static extern string Concat(params string[] values);
@@ -1031,6 +1099,14 @@ public readonly struct Range : IEquatable<Range>
     public override bool Equals(object value) => value is Range other && Equals(other);
     public override int GetHashCode() => _start.GetHashCode() * 31 + _end.GetHashCode();
     public override string ToString() => _start.ToString() + ".." + _end.ToString();
+    public (int Offset, int Length) GetOffsetAndLength(int length)
+    {
+        int start = _start.GetOffset(length);
+        int end = _end.GetOffset(length);
+        if ((uint)end > (uint)length || (uint)start > (uint)end)
+            throw new ArgumentOutOfRangeException("length");
+        return (start, end - start);
+    }
 }
 `);
 })(globalThis);

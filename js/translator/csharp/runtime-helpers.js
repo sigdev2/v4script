@@ -378,16 +378,26 @@
     };
 
     // T.M() for a static abstract or virtual member of an interface: the
-    // member of the type argument, else the default of the interface.
-    R.callStatic = function (type, name, iface, args) {
+    // member of the type argument (generic math of the numeric types by
+    // its C# name member), else the default of the interface (with this =
+    // the constructed interface: its type arguments).
+    R.callStatic = function (type, name, iface, args, member) {
         if (type.$lazy === true)
             type.$run();
         var holder = type;
         while (holder !== null && holder !== undefined && typeof holder[name] !== 'function')
             holder = holder.$def;
+        if (holder !== null && holder !== undefined)
+            return holder[name].apply(type, args);
+        var numeric = CS.numericMember(type, member, name);
+        if (numeric !== null)
+            return numeric.apply(type, args);
+        holder = iface;
+        while (holder !== null && holder !== undefined && typeof holder[name] !== 'function')
+            holder = holder.$def;
         if (holder === null || holder === undefined)
-            holder = iface.$def !== null && iface.$def !== undefined && typeof iface[name] !== 'function' ? iface.$def : iface;
-        return holder[name].apply(type, args);
+            throw this.exception('System.MissingMethodException', "Method not found: '" + this.typeName(type) + '.' + member + "'.");
+        return holder[name].apply(iface, args);
     };
 
     // new T()
@@ -507,6 +517,11 @@
         var slice = array.slice(bounds[0], bounds[1]);
         slice.$t = array.$t;
         return slice;
+    };
+
+    R.sliceCall = function (receiver, range, length, name) {
+        var bounds = rangeBounds(range, length);
+        return receiver[name](bounds[0], bounds[1] - bounds[0]);
     };
 
     R.stringSlice = function (text, range) {

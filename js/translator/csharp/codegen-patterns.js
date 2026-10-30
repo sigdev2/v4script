@@ -80,6 +80,10 @@
             return CS.isNullableValue(from) ? J.bin('!==', value, J.nul()) : J.bool(true);
         if (CS.sameType(from, target) || (CS.Conversions.isImplicitReference(from, target) && from.kind !== 'tparam'))
             return J.bin('!==', value, J.nul());
+        // A struct is always of the interfaces it implements (it is not boxed here).
+        if (from.kind === 'named' && CS.isValueType(from) && !CS.isNullableValue(from) &&
+            CS.Conversions.isImplicitReferenceOrBoxingOrIdentity(from, target))
+            return J.bool(true);
         if (from.kind === 'tparam' && !CS.typeParamIsReference(from.sym))
             return J.call(this.rt('is'), [J.call(this.rt('toObject'), [this.typeRef(from), value]), this.typeRef(target)]);
         if (CS.isSpecial(target, 'int'))

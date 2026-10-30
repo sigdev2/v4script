@@ -547,6 +547,8 @@ public abstract class TextWriter : IDisposable
     public virtual void Write(string format, params object[] arg) => Write(string.Format(format, arg));
     public virtual void WriteLine() => Write(NewLine);
     public virtual void WriteLine(string value) => Write((value ?? "") + NewLine);
+    public virtual void Write(ReadOnlySpan<char> buffer) => Write(buffer.ToString());
+    public virtual void WriteLine(ReadOnlySpan<char> buffer) => WriteLine(buffer.ToString());
     public virtual void WriteLine(char value) => Write(value.ToString() + NewLine);
     public virtual void WriteLine(bool value) => WriteLine(value ? "True" : "False");
     public virtual void WriteLine(int value) => WriteLine(value.ToString());

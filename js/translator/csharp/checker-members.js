@@ -699,18 +699,29 @@
         if (name === undefined || arity > 2 || arity === 0)
             this.error(member, arity === 1 ? 'CS1019' : 'CS1020', arity === 1 ? 'Overloadable unary operator expected'
                                                                              : 'Overloadable binary operator expected');
-        if (!mods.public || !mods.static)
+        var inInterface = sym.kind === 'interface';
+        if (!(mods.public || inInterface) || !mods.static)
             this.error(member, 'CS0558', "User-defined operator '" + CS.symbolTypeName(sym) + '.operator ' + member.op + '(' +
                        ')\' must be declared static and public');
         var method = CS.MethodSymbol(name, sym, mods);
         method.isOperator = true;
+        // static abstract and static virtual operators of interfaces (generic math).
+        if (inInterface) {
+            method.access = 'public';
+            if (member.body === null && member.expr === null)
+                method.isAbstract = true;
+            else if (mods.virtual)
+                method.isVirtual = true;
+        }
         method.node = member;
         method.scope = sym.scope.child('method', { method: method });
         method.returnType = this.resolveType(member.returnType, method.scope);
         method.params = this.parameters(member.params, method.scope, method);
         var selfType = CS.selfType(sym);
+        // In an interface a type parameter of it stands for the type (TSelf).
         var involves = method.params.some(function (param) {
-            return CS.sameType(CS.underlyingNullable(param.type), selfType);
+            var type = CS.underlyingNullable(param.type);
+            return CS.sameType(type, selfType) || (inInterface && type.kind === 'tparam' && type.sym.owner === sym);
         });
         if (!involves)
             this.error(member, arity === 1 ? 'CS0562' : 'CS0563', arity === 1
@@ -1082,7 +1093,11 @@
                     methods = [member.getter, member.setter].filter(function (item) { return item !== null; });
                 else if (member.symbolKind === 'event')
                     methods = [member.adder, member.remover];
-                methods = methods.filter(function (method) { return !method.isStatic || method.isAbstract || method.isVirtual; });
+                // Static members of interfaces: generic math, natives for the predefined types.
+                var nativeStatics = sym.library && sym.special !== undefined;
+                methods = methods.filter(function (method) {
+                    return !method.isStatic || (!nativeStatics && (method.isAbstract || method.isVirtual));
+                });
                 if (methods.length > 0 && methods[0].isStatic && sym.kind === 'interface')
                     return;
                 methods.forEach(function (method) {

@@ -17,6 +17,14 @@
     // --- Arrays
 
     // new int[3], new int[2, 3], new int[] { 1, 2 }, new int[3][].
+    // stackalloc: the array as a Span<T> (no stack memory in JavaScript).
+    C.bind_stackalloc = function (node, scope) {
+        var array = this.bindValue(node.array, scope);
+        if (array.type.kind !== 'array' || array.type.rank !== 1)
+            this.error(node, 'CS1575', 'A stackalloc expression requires [] after type');
+        return this.convert(array, CS.libraryType('System.Span`1', [array.type.elem]), node, false);
+    };
+
     C.bind_newArray = function (node, scope) {
         var self = this;
         var arrayType, sizes = null;

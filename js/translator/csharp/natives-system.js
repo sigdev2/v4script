@@ -1232,6 +1232,11 @@
                 throw argRange('startIndex', 'Index was out of range. Must be non-negative and less than the size of the collection.');
             return charsToString(chars, start, length);
         },
+        '.ctor(ReadOnlySpan<char>)': function (span) {
+            if (span._text !== null && span._text !== undefined)
+                return span._text.substr(span._start, span._length);
+            return span._length === 0 ? '' : charsToString(span._array, span._start, span._length);
+        },
         'get_Length()': function () { return this.length; },
         'get_Item(int)': function (index) {
             if (!(index >= 0 && index < this.length))

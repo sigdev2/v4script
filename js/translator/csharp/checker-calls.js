@@ -177,7 +177,8 @@
         var call = bound('call', node, { receiver: receiver, method: method, ownerType: result.owner, typeArgs: result.typeArgs,
                                          args: result.args, type: result.returnType, isBase: group.isBase,
                                          argOrder: result.argOrder, localFunction: !!group.localFunction,
-                                         typeParam: group.typeParam || null });
+                                         typeParam: group.typeParam ||
+                                             (group.numericOverloads && group.numericOverloads.indexOf(method) >= 0 ? group.numericType : null) });
         if (method.isLocal && this.currentFunction(scope) !== null)
             this.noteCall(scope, method);
         else

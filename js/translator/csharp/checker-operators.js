@@ -384,16 +384,38 @@
         var finished = this.finishCall(best, args, node, scope, {});
         this.noteCall(scope, method);
         return bound('binary', node, { op: op, kind: 'user', method: method, ownerType: best.owner, left: finished.args[0],
-                                       right: finished.args[1], type: finished.returnType });
+                                       right: finished.args[1], type: finished.returnType,
+                                       typeParam: candidateTypeParam(candidates, best) });
     };
 
-    // Operators named name in the types (and their base classes).
+    // The type parameter whose interface gave the chosen operator.
+    function candidateTypeParam(candidates, best) {
+        for (var index = 0; index < candidates.length; ++index) {
+            var candidate = candidates[index];
+            if (candidate.member === best.method && candidate.typeParam !== undefined && CS.sameType(candidate.owner, best.owner))
+                return candidate.typeParam;
+        }
+        return null;
+    }
+
+    // Operators named name in the types (and their base classes); for a
+    // type parameter also the static abstract and virtual operators of the
+    // interfaces of its constraints (generic math), with typeParam.
     C.operatorCandidates = function (name, types) {
         var result = [];
         types.forEach(function (type) {
             var under = CS.underlyingNullable(type);
-            if (under.kind === 'tparam')
+            if (under.kind === 'tparam') {
+                CS.lookupMembers(under, name).forEach(function (entry) {
+                    var member = entry.member;
+                    if (member.symbolKind === 'method' && member.isOperator && member.isStatic && entry.owner.sym.kind === 'interface' &&
+                        (member.isAbstract || member.isVirtual) && !result.some(function (other) {
+                            return other.member === member && CS.sameType(other.owner, entry.owner);
+                        }))
+                        result.push({ member: member, owner: entry.owner, typeParam: under });
+                });
                 under = CS.effectiveBaseClass(under.sym);
+            }
             for (var current = under; current !== null && current.kind === 'named'; current = CS.baseTypeOf(current)) {
                 var sym = current.sym.complete();
                 if (sym.special !== undefined && sym.special !== 'decimal')
@@ -418,7 +440,8 @@
         var attempt = this.findApplicable(candidates, args, null, null);
         if (attempt.best === null)
             return null;
-        return { method: attempt.best.method, owner: attempt.best.owner, best: attempt.best };
+        return { method: attempt.best.method, owner: attempt.best.owner, best: attempt.best,
+                 typeParam: candidateTypeParam(candidates, attempt.best) };
     };
 
     // && and ||: bool operands (user-defined & | with true/false operators too).
@@ -532,7 +555,7 @@
             var finished = this.finishCall(user.best, [{ name: null, refKind: '', node: node.operand, outDecl: null, expr: operand }],
                                            node, scope, {});
             return bound('unary', node, { op: node.op, operand: finished.args[0], kind: 'user', method: user.method,
-                                          ownerType: user.owner, type: finished.returnType });
+                                          ownerType: user.owner, type: finished.returnType, typeParam: user.typeParam });
         }
         if (type.kind === 'dynamic')
             return bound('dynamicUnary', node, { op: node.op, operand: operand, type: node.op === '!' ? CS.boolType() : CS.DYNAMIC });
@@ -614,7 +637,7 @@
         this.checkAssignable(target, node.operand, scope);
         if (user !== null)
             return bound('increment', node, { op: node.op, prefix: prefix, target: target, kind: 'user', method: user.method,
-                                              ownerType: user.owner, type: type });
+                                              ownerType: user.owner, type: type, typeParam: user.typeParam });
         if (type.kind === 'dynamic')
             return bound('increment', node, { op: node.op, prefix: prefix, target: target, kind: 'dynamic', type: type });
         var under = CS.underlyingNullable(type);
@@ -702,7 +725,8 @@
             if (type.kind === 'tparam')
                 type = CS.effectiveBaseClass(type.sym);
             for (var current = type; current !== null && current.kind === 'named'; current = CS.baseTypeOf(current)) {
-                if (current.sym.special !== undefined && current.sym.special !== 'decimal')
+                // Of the predefined types decimal and string declare conversions.
+                if (current.sym.special !== undefined && current.sym.special !== 'decimal' && current.sym.special !== 'string')
                     break;
                 if (!types.some(function (other) { return CS.sameType(other, current); }))
                     types.push(current);

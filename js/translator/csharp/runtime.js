@@ -108,6 +108,23 @@
     // under the names of the interfaces. aliases: [interface member name,
     // implementing member name]; default methods of interfaces are copied
     // when the class has no own implementation.
+    // More interfaces of a type, made at the first read of $ifaces (the
+    // definition reads only $eagerIfaces).
+    Runtime.prototype.lazyInterfaces = function (ctor, more) {
+        var eager = ctor.$ifaces;
+        ctor.$eagerIfaces = eager;
+        var settle = function (value) {
+            Object.defineProperty(ctor, '$ifaces', { value: value, writable: true, configurable: true, enumerable: true });
+            return value;
+        };
+        Object.defineProperty(ctor, '$ifaces', {
+            get: function () { return settle(eager.concat(more())); },
+            set: settle,
+            configurable: true,
+            enumerable: true
+        });
+    };
+
     Runtime.prototype.finishType = function (ctor, aliases) {
         var proto = ctor.prototype;
         var all = [];
@@ -130,7 +147,7 @@
                 proto[pair[0]] = fn;
         });
         // Default interface methods.
-        var queue = ctor.$ifaces.slice();
+        var queue = (ctor.$eagerIfaces || ctor.$ifaces).slice();
         var seen = [];
         while (queue.length > 0) {
             var iface = queue.shift();
