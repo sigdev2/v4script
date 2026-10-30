@@ -44,10 +44,13 @@ implementation, tests, documentation). The order approved by the owner:
 | 29 | Z80 assembler: sjasmplus | planned |
 | 30 | CoffeeScript | planned |
 | 31 | IL assembler (.NET CIL) | planned |
+| 32 | Ruby | planned |
+| 33 | TypeScript | planned |
 
 Remaining order: Kotlin, Rust, Swift, Dart, Scala, F#, Haskell,
 Erlang, Fortran, COBOL, Nim, Zig, assemblers, Verilog, MASM, Ada,
-Common Lisp, the NES and Z80 assemblers, CoffeeScript, IL assembler.
+Common Lisp, the NES and Z80 assemblers, CoffeeScript, IL assembler,
+Ruby, TypeScript.
 
 Decisions already taken for these stages:
 
@@ -103,8 +106,31 @@ Decisions already taken for these stages:
    the `System` subset. The evaluation stack is typed at translation time
    as the verifier of .NET does. Reference: ilasm and the .NET 8 runtime
    (MIT).
- - **Ruby** is not planned through Opal: Opal crashes the V4 compiler.
-   It would need its own translator.
+ - **Ruby**: Ruby 3.3 translated by v4script - Opal is not used, it
+   crashes the V4 compiler. Everything is an object: open classes, modules
+   as mixins (`include`, `extend`, `prepend`), singleton methods, blocks,
+   procs and lambdas with `yield`, `method_missing`, `define_method` and
+   `send`; `Integer` grows into a big integer and `Rational` is exact
+   (`T.big`, `T.rat` of the core); mutable strings, symbols, `Hash` in
+   insertion order, `Range`, `Struct`; `Comparable`, `Enumerable` and
+   most of the core library written in Ruby; exceptions with `retry` and
+   `ensure`, `catch`/`throw`; `Fiber` and external enumerators
+   (`Enumerator#next`) over fibers - a block may suspend anywhere in the
+   call chain, so measure the price of generators first; `Thread` and
+   `Queue` over the scheduler; `puts`, `p`, `gets`, `format` as CRuby
+   prints them. Method calls are dynamic: a cache per call site, no
+   static types. Reference: CRuby 3.3, a black box.
+ - **TypeScript**: the official compiler (Apache-2.0) of TypeScript 5 as a
+   vendor bundle built down to ES2016, as the other interpreters. A unit
+   is transpiled to ES2016 (`transpileModule`: types erased, `enum`,
+   `namespace`, parameter properties and decorators translated,
+   `async`/`await`, `?.` and `??` lowered) and runs in the same engine
+   as JavaScript, sharing its global object; run-time errors get
+   TypeScript lines from the source map. Type checking with the
+   diagnostics of `tsc` (the `lib` declarations of ES2016 and declarations
+   of the host modules) when V4 checks a unit fast enough. Check first
+   that V4 compiles the bundle (about 9 MB; deep expressions) and how long
+   it takes to load. Reference: `tsc` and Node.js.
 
 ## Gaps of the current languages
 

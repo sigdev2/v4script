@@ -94,8 +94,8 @@ The translator grows one language at a time, in this order:
 **Kotlin**, Rust, Swift, Dart, Scala, F#, Haskell, Erlang, Fortran,
 COBOL, Nim, Zig, x86 assemblers (NASM, FASM, TASM) and ASMX, Verilog,
 MASM, Ada, Common Lisp, the NES (ca65) and Z80 (sjasmplus) assemblers,
-CoffeeScript, the .NET IL assembler. See [TODO](TODO.md) for the plan and
-the known gaps.
+CoffeeScript, the .NET IL assembler, Ruby, TypeScript. See [TODO](TODO.md)
+for the plan and the known gaps.
 
 ## Try it online
 
