@@ -29,6 +29,7 @@ int main(int argc, char* argv[])
         { "go", "fmt.Println(\"Hello from Go\", len([]rune(\"héllo\")))" },
         { "c", "printf(\"Hello from C %zu\\n\", sizeof(long));" },
         { "java", "System.out.println(\"Hello from Java \" + Integer.MAX_VALUE);" },
+        { "csharp", "Console.WriteLine($\"Hello from C# {decimal.MaxValue}\");" },
         { "forth", ".( Hello from Forth ) 6 7 * . cr" },
         { "basic", "PRINT \"Hello from BASIC\"; 1 / 3" },
         { "pascal", "WriteLn('Hello from Pascal ', High(Int64));" },

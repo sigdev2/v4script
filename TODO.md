@@ -17,8 +17,8 @@ implementation, tests, documentation). The order approved by the owner:
 | 2 | C | done |
 | 3 | Java | done |
 | 4 | C++ | done (C++17; C++20 with concepts later) |
-| 5 | **C#** | next |
-| 6 | Kotlin | planned |
+| 5 | C# | done (C# 12, a .NET 8 subset) |
+| 6 | **Kotlin** | next |
 | 7 | Scheme | done (R7RS-small) |
 | 8 | Pascal | done (Free Pascal 3.2.2) |
 | 9 | BASIC | done (QBasic) |
@@ -45,7 +45,7 @@ implementation, tests, documentation). The order approved by the owner:
 | 30 | CoffeeScript | planned |
 | 31 | IL assembler (.NET CIL) | planned |
 
-Remaining order: C#, Kotlin, Rust, Swift, Dart, Scala, F#, Haskell,
+Remaining order: Kotlin, Rust, Swift, Dart, Scala, F#, Haskell,
 Erlang, Fortran, COBOL, Nim, Zig, assemblers, Verilog, MASM, Ada,
 Common Lisp, the NES and Z80 assemblers, CoffeeScript, IL assembler.
 
@@ -135,6 +135,16 @@ Decisions already taken for these stages:
    `java.time`, `CompletableFuture`, `java.util.concurrent.locks`, detailed
    `NullPointerException` messages and `at …` lines in `printStackTrace`,
    `==` of strings and `Integer` by identity.
+ - **C#**: definite assignment (`CS0165`) and nullable warnings; checked
+   operators and `TryConvertFrom…` of generic math; `ref` returns (span
+   indexers, `ref` locals of elements) and the rules of `ref struct`;
+   reflection beyond `GetType`; stack traces of
+   exceptions; `finally` must not run when an unhandled exception ends the
+   program; `(object)1 == (object)1` by identity (boxed `int`, `bool` and
+   `string` are JavaScript values); regular expressions with lookbehind,
+   balancing groups and local inline options (now `RegExp` of V4), exact
+   group positions; `System.Text.Json`, `System.Collections.Concurrent`,
+   `System.Collections.Immutable`; more `Console` (`ReadKey`, cursor).
  - **Forth**: `SEE`, `N>R`/`NR>`, xchar words (except `XEMIT`), the Block
    and File word sets (only including host files now); `MS` in words called
    through `EXECUTE` from words compiled before the first waiting word -

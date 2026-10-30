@@ -230,6 +230,33 @@ const SYNTAXES = {
             constant: 'true false null',
         },
     },
+    csharp: {
+        rules: [
+            [/^[ \t]*#[ \t]*\w*.*/, 'meta'],
+            [/\$*"{3,}[\s\S]*?(?:"{3,}|(?![\s\S]))/, 'string'],
+            [LINE_COMMENT, 'comment'],
+            [BLOCK_COMMENT, 'comment'],
+            [/\$?@"(?:""|[^"])*"?|@\$"(?:""|[^"])*"?/, 'string'],
+            [/\$?"(?:\\.|[^"\\\n])*"?/, 'string'],
+            [SINGLE_QUOTED, 'string'],
+            [/^[ \t]*\[[A-Za-z_][\w.]*(?:\(.*\))?\]/, 'meta'],
+            [HEXADECIMAL, 'number'],
+            [NUMBER, 'number'],
+            [/@[A-Za-z_]\w*/, 'variable'],
+            [IDENTIFIER, 'word'],
+        ],
+        words: {
+            keyword: 'abstract as async await base break case catch checked class const continue default delegate do ' +
+                'else enum event explicit extern finally fixed for foreach goto if implicit in init interface internal is ' +
+                'lock namespace new operator out override params partial private protected public readonly record ref ' +
+                'required return sealed sizeof stackalloc static struct switch this throw try typeof unchecked unsafe ' +
+                'using var virtual volatile when where while with yield and or not get set add remove value global ' +
+                'from select orderby group by into join on equals let ascending descending nameof scoped file',
+            type: 'bool byte char decimal double dynamic float int long nint nuint object sbyte short string uint ulong ' +
+                'ushort void',
+            constant: 'true false null',
+        },
+    },
     forth: {
         ignoreCase: true,
         rules: [

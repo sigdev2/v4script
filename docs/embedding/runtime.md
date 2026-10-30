@@ -73,6 +73,7 @@ v4script::Result result = runtime.run("go", code, "main.go");
 ## Programs that go on after a run
 
 Programs that wait for time (`time.Sleep` in Go, `Thread.sleep` in Java,
+`Thread.Sleep` and `Task.Delay` in C#,
 `SLEEP` in BASIC, `Delay` in Pascal, `MS` in Forth, SRFI 18 threads in
 Scheme, `setTimeout` in JavaScript) end their run when everything waits and
 go on in timers of the engine. With `Runtime`:

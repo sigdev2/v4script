@@ -83,6 +83,7 @@ int main(int argc, char* argv[])
           "print(text.shout('python'), len(text.words('a b c')))" },
         { "go", "fmt.Println(store.Buy(\"pear\", 2), store.Price(\"plum\"), store.Total())" },
         { "java", "System.out.println(buy(\"plum\") + \" \" + total());" },
+        { "csharp", "Console.WriteLine(Buy(\"plum\") + \" \" + Total);" },
         { "pascal", "WriteLn(Buy('apple', 4), ' ', Total:0:2);" },
         { "basic", "PRINT BUY(\"kiwi\"); STORE.total" },
         { "scheme", "(display (list (buy \"pear\") (total) (text.shout \"scheme\")))\n(newline)" },

@@ -17,5 +17,5 @@ The shortest program that shows the problem, and its standard input if any:
 The output, the value or the error (with its line).
 
 **What you expected**
-Ideally the output of the reference implementation (gcc, java, fpc, gforth,
+Ideally the output of the reference implementation (gcc, java, dotnet, fpc, gforth,
 QB64-PE, chibi-scheme, wabt…) or a reference to the language specification.
