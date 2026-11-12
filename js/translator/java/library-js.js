@@ -256,6 +256,7 @@ public class JsException extends RuntimeException {
         return qname;
     };
 
+    // The native of a function of a host module (Kotlin uses it too).
     function hostMethod(fn, parameters) {
         return function () {
             var values = [];
@@ -291,6 +292,8 @@ public class JsException extends RuntimeException {
             return wrap(result);
         };
     }
+
+    Java.hostMethod = hostMethod;
 
     // System.in: lines of the host, as UTF-8 bytes for read().
     var pendingInput = '';

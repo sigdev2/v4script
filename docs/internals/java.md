@@ -52,7 +52,10 @@ checked with it.
    `$clinit` right after the classes of the chunk are defined (a library
    chunk is a compilation unit translated at its first use). The
    JavaScript name of a method is `name$arity`, with the parameter types
-   after erasure when arities clash. `$is` is the set of classes and
+   after erasure when arities clash; a class completed while a supertype
+   is still completing (`List` from a member of `Collection`) gets its
+   names after the supertype (`assignJsNamesWhenReady`), so the order of
+   use does not change them. `$is` is the set of classes and
    interfaces for `instanceof`, `$meta` the name, the kind (`enum`,
    `record`) and the functional method. `default` methods of interfaces
    are copied into the class prototype (`finishClass`).
@@ -150,6 +153,11 @@ argument (`incompatible types`), as javac does.
 
 ## Known places
 
+ - The stack of an exception is taken in `fillInStackTrace`, under the
+   frames of the constructors of the exception classes; V8 (a browser,
+   Node.js) keeps 10 frames by default, so the native raises
+   `Error.stackTraceLimit` while it takes the stack - otherwise the place
+   of the error is cut off.
  - V4 (Qt 6.4) workarounds: typed arrays have no `sort` (sorting of
    primitives is our own, `natives-util.js`); `sort` and `splice` break an
    array after `shift` (fiber queues are new arrays); a tail call of a

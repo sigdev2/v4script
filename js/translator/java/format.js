@@ -270,6 +270,11 @@
         var lower = conversion.toLowerCase();
         var upper = conversion !== lower;
         var text;
+        // null is "null" (cut to the precision) for every conversion but %b (as in the JDK).
+        if ((value === null || value === undefined) && lower !== 'b' && lower !== 'c' && lower !== 'h') {
+            text = spec.precision >= 0 ? 'null'.substring(0, spec.precision) : 'null';
+            return pad(upper ? text.toUpperCase() : text, spec, false);
+        }
         switch (lower) {
         case 'd':
         case 'o':

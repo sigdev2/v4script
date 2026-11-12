@@ -117,10 +117,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+### Kotlin
+
+The Kotlin library of v4script follows the public API of the Kotlin
+standard library (the declarations of `kotlin.*`), and
+`kotlin.random.Random` implements the XorWow generator of Kotlin with its
+seeding, so that seeded programs get the numbers of the JVM
+([js/translator/kotlin](js/translator/kotlin)).
+
+Source: <https://github.com/JetBrains/kotlin>
+
+```
+Copyright 2010-2026 JetBrains s.r.o. and Kotlin Programming Language contributors.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations under
+the License.
+```
+
 ## Reference implementations (not included)
 
 The translated languages were checked against the output of gcc, the JDK,
-.NET 8, gforth, QB64-PE, Free Pascal, wabt, the WebAssembly specification tests and
+.NET 8, kotlinc, gforth, QB64-PE, Free Pascal, wabt, the WebAssembly specification tests and
 chibi-scheme ([testing](docs/testing/README.md#samples)). They were used as
 black boxes; none of their code is part of v4script except what is listed
 above. Compatible behavior (for example the same random numbers as gforth

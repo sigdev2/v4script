@@ -102,7 +102,35 @@
             }
         });
         this.implicitMembers(sym);
+        this.assignJsNamesWhenReady(sym);
+    };
+
+    // The JavaScript names of a class need those of its supertypes. A class
+    // completed while a supertype is still completing (List from a method
+    // of Collection) is named when the supertype is.
+    Checker.prototype.assignJsNamesWhenReady = function (sym) {
+        var blockers = Java.supertypeClosure(sym.thisType).slice(1).filter(function (type) {
+            return type.sym.state === 'completing' || type.sym.namesBlocked > 0;
+        });
+        if (blockers.length === 0) {
+            this.assignJsNamesAndRelease(sym);
+            return;
+        }
+        sym.namesBlocked = blockers.length;
+        blockers.forEach(function (type) {
+            (type.sym.namesWaiting = type.sym.namesWaiting || []).push(sym);
+        });
+    };
+
+    Checker.prototype.assignJsNamesAndRelease = function (sym) {
+        var self = this;
         this.assignJsNames(sym);
+        var waiting = sym.namesWaiting || [];
+        sym.namesWaiting = [];
+        waiting.forEach(function (other) {
+            if (--other.namesBlocked === 0)
+                self.assignJsNamesAndRelease(other);
+        });
     };
     // Implicit members: the default constructor, the accessors of a record,
     // values() and valueOf() of an enum.

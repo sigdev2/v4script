@@ -45,7 +45,7 @@ Or with `FetchContent`:
 include(FetchContent)
 FetchContent_Declare(v4script
     GIT_REPOSITORY https://github.com/sigdev2/v4script.git
-    GIT_TAG v0.1.4)
+    GIT_TAG v0.1.5)
 FetchContent_MakeAvailable(v4script)
 target_link_libraries(myapp PRIVATE V4Script::V4Script)
 ```
@@ -72,7 +72,7 @@ time.
 | `V4SCRIPT_BUILD_EXAMPLES` | top level only | build [examples/](../../examples) |
 
 Embedded size of each language (the host layer adds 25 KB, the translator
-core shared by Go, C, C++, Java, C#, Forth, BASIC, Pascal, WebAssembly
+core shared by Go, C, C++, Java, C#, Kotlin, Forth, BASIC, Pascal, WebAssembly
 and Scheme 124 KB; minified: 10 KB and 50 KB):
 
 | Language | Scripts | Minified |
@@ -85,8 +85,9 @@ and Scheme 124 KB; minified: 10 KB and 50 KB):
 | Go | 537 KB | 270 KB |
 | C | 354 KB | 166 KB |
 | C++ (with the files of C) | 1449 KB | 920 KB |
-| Java | 852 KB | 570 KB |
+| Java | 854 KB | 571 KB |
 | C# | 1728 KB | 1078 KB |
+| Kotlin (with the files of Java) | 1779 KB | 1112 KB |
 | Forth | 199 KB | 91 KB |
 | BASIC | 309 KB | 143 KB |
 | Pascal | 732 KB | 391 KB |
@@ -141,7 +142,7 @@ order of [languages.json](../../languages.json). Every `LanguageInfo` has:
 | `version` | `3.2.2`, `R7RS`, `C17` | the version of the language |
 | `dialect` | `Free Pascal 3.2.2 (objfpc mode)` | what exactly is implemented |
 | `implementation` | `v4script`, `Skulpt` | who runs it: v4script's own translator or a third-party interpreter |
-| `implementationVersion` | `0.1.4`, `ae5f462` | the version of the implementation |
+| `implementationVersion` | `0.1.5`, `ae5f462` | the version of the implementation |
 | `license` | `MIT`, `BSD-3-Clause` | the license of the implementation |
 | `extensions` | `pas`, `pp` | file extensions; `findLanguageForFile("main.pas")` uses them |
 | `lineComment` | `//` | the line comment of the language |

@@ -431,6 +431,36 @@
       ]
     }
   ],
+  "kotlin": [
+    {
+      "group": "Kotlin",
+      "examples": [
+        {
+          "file": "Hello.kt",
+          "title": "Hello: readLine and string templates",
+          "input": [
+            "Ann"
+          ]
+        },
+        {
+          "file": "Shapes.kt",
+          "title": "Sealed classes and when"
+        },
+        {
+          "file": "Collections.kt",
+          "title": "Collections and lambdas"
+        },
+        {
+          "file": "Threads.kt",
+          "title": "Threads"
+        },
+        {
+          "file": "Canvas.kt",
+          "title": "Drawing on the canvas"
+        }
+      ]
+    }
+  ],
   "forth": [
     {
       "group": "Forth",

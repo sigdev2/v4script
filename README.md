@@ -6,15 +6,15 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-  <img alt="Version 0.1.4" src="https://img.shields.io/badge/version-0.1.4-brightgreen.svg">
+  <img alt="Version 0.1.5" src="https://img.shields.io/badge/version-0.1.5-brightgreen.svg">
   <img alt="Qt 6.4+" src="https://img.shields.io/badge/Qt-6.4%2B-41cd52.svg">
   <img alt="C++17" src="https://img.shields.io/badge/C%2B%2B-17-00599c.svg">
-  <img alt="15 languages" src="https://img.shields.io/badge/languages-15-orange.svg">
+  <img alt="16 languages" src="https://img.shields.io/badge/languages-16-orange.svg">
   <a href="https://sigdev2.github.io/v4script/"><img alt="Playground" src="https://img.shields.io/badge/playground-online-8a2be2.svg"></a>
 </p>
 
 <p align="center">
-  Python · Lua · Prolog · Perl · PHP · Go · C · C++ · Java · C# · Forth · BASIC · Pascal · WebAssembly · Scheme
+  Python · Lua · Prolog · Perl · PHP · Go · C · C++ · Java · C# · Kotlin · Forth · BASIC · Pascal · WebAssembly · Scheme
 </p>
 
 <p align="center">
@@ -23,9 +23,9 @@
 
 ---
 
-**v4script** lets a Qt application run programs written in fifteen
-languages - from QBasic and Turbo Pascal classics to Go, C++, Java, C# and
-WebAssembly - inside the JavaScript engine that every Qt Qml installation
+**v4script** lets a Qt application run programs written in sixteen
+languages - from QBasic and Turbo Pascal classics to Go, C++, Java, C#,
+Kotlin and WebAssembly - inside the JavaScript engine that every Qt Qml installation
 already has. No compilers, no external processes, no native interpreters:
 one static library, a few lines of C++, and your users can script your
 application in the language they like.
@@ -41,27 +41,27 @@ runtime.run("go",     "fmt.Println(strings.Repeat(\"Go\", 3))");       // GoGoGo
 
 ## Why v4script
 
-- 🧩 **Fifteen languages, one engine.** Every language runs in the same
+- 🧩 **Sixteen languages, one engine.** Every language runs in the same
   `QJSEngine` as JavaScript, shares its global object and can call
   JavaScript - and the other way round.
 - 🔌 **Your API in every language.** Give programs a `QObject` and its
   methods become a Go package, a C or C++ header, a Java or C# class, a
-  Pascal unit, Prolog predicates and Scheme procedures - with names and types in
+  Kotlin object, a Pascal unit, Prolog predicates and Scheme procedures - with names and types in
   the conventions of each language.
 - 🎯 **Faithful behavior.** The translated languages are checked against
   real implementations: Pascal prints numbers exactly as Free Pascal does,
   BASIC follows QBasic down to `PRINT USING` and `RND`, C has its own
   memory with real pointers, the C++ library gives the numbers of
   libstdc++'s `<random>` and the order of its hash tables, C# formats
-  numbers and orders dictionaries as .NET does, WebAssembly passes the
-  specification tests.
+  numbers and orders dictionaries as .NET does, Kotlin prints as `kotlinc`
+  on the JVM, WebAssembly passes the specification tests.
 - 🛡️ **Safe to embed.** Programs see only what the application gives them:
   output, standard input, module files, a canvas. A watchdog stops runaway
   code, deep recursion is an error, not a crash.
 - 🎨 **Graphics included.** QBasic `SCREEN 13` and Pascal `Graph` draw on a
   canvas - into a `QImage` or a Qt Quick `Canvas`.
-- 📦 **Pick what you need.** Embed all languages (about 14 MB of scripts,
-  7.4 MB minified) or just the few your application uses.
+- 📦 **Pick what you need.** Embed all languages (about 15 MB of scripts,
+  8 MB minified) or just the few your application uses.
 
 ## Supported languages
 
@@ -72,16 +72,17 @@ runtime.run("go",     "fmt.Println(strings.Repeat(\"Go\", 3))");       // GoGoGo
 | Prolog | ISO | ISO Prolog | [Tau Prolog](https://github.com/tau-prolog/tau-prolog) 0.3.4 |
 | Perl | 5 | Perl 5 (the subset of Perlito5) | [Perlito5](https://github.com/fglock/Perlito) 9.028 |
 | PHP | 7 | PHP 7 (the subset of Uniter) | [Uniter](https://github.com/asmblah/uniter) (phpruntime 9.3.0) |
-| Go | 1.22 | Go with goroutines, channels, generics and a subset of the standard library | v4script 0.1.4 |
-| C | C17 | C17 with its own linear memory and a subset of the C library | v4script 0.1.4 |
-| C++ | C++17 | C++17 over the memory of C: classes, templates, exceptions, lambdas and an STL that behaves as libstdc++ | v4script 0.1.4 |
-| Java | 21 | Java 21 with records, pattern matching, threads, streams and a JDK subset | v4script 0.1.4 |
-| C# | 12 | C# 12 with generics, LINQ, records, patterns, async/await, threads and a .NET 8 subset | v4script 0.1.4 |
-| Forth | 2012 | Forth 2012, compatible with gforth | v4script 0.1.4 |
-| BASIC | QBasic 4.5 | QBasic / QuickBASIC 4.5 with graphics | v4script 0.1.4 |
-| Pascal | FPC 3.2.2 | Free Pascal 3.2.2 (objfpc): classes, exceptions, SysUtils, Math, StrUtils, Classes, Crt, Graph | v4script 0.1.4 |
-| WebAssembly | 2.0 | the WAT text format, `.wast` scripts, WASI | v4script 0.1.4 |
-| Scheme | R7RS | R7RS-small, SRFI 1, 13, 18, 69, full continuations | v4script 0.1.4 |
+| Go | 1.22 | Go with goroutines, channels, generics and a subset of the standard library | v4script 0.1.5 |
+| C | C17 | C17 with its own linear memory and a subset of the C library | v4script 0.1.5 |
+| C++ | C++17 | C++17 over the memory of C: classes, templates, exceptions, lambdas and an STL that behaves as libstdc++ | v4script 0.1.5 |
+| Java | 21 | Java 21 with records, pattern matching, threads, streams and a JDK subset | v4script 0.1.5 |
+| C# | 12 | C# 12 with generics, LINQ, records, patterns, async/await, threads and a .NET 8 subset | v4script 0.1.5 |
+| Kotlin | 2.4 | Kotlin 2.4 for the JVM: data, sealed and value classes, generics, extensions, lambdas, sequences, threads and the standard library | v4script 0.1.5 |
+| Forth | 2012 | Forth 2012, compatible with gforth | v4script 0.1.5 |
+| BASIC | QBasic 4.5 | QBasic / QuickBASIC 4.5 with graphics | v4script 0.1.5 |
+| Pascal | FPC 3.2.2 | Free Pascal 3.2.2 (objfpc): classes, exceptions, SysUtils, Math, StrUtils, Classes, Crt, Graph | v4script 0.1.5 |
+| WebAssembly | 2.0 | the WAT text format, `.wast` scripts, WASI | v4script 0.1.5 |
+| Scheme | R7RS | R7RS-small, SRFI 1, 13, 18, 69, full continuations | v4script 0.1.5 |
 
 Languages marked *v4script* are translated into JavaScript by v4script's
 own translator; the others run in third-party interpreters written in
@@ -91,18 +92,18 @@ JavaScript. Versions are available to the application too:
 ## Coming next
 
 The translator grows one language at a time, in this order:
-**Kotlin**, Rust, Swift, Dart, Scala, F#, Haskell, Erlang, Fortran,
+**Rust**, Swift, Dart, Scala, F#, Haskell, Erlang, Fortran,
 COBOL, Nim, Zig, x86 assemblers (NASM, FASM, TASM) and ASMX, Verilog,
 MASM, Ada, Common Lisp, the NES (ca65) and Z80 (sjasmplus) assemblers,
-CoffeeScript, the .NET IL assembler. See [TODO](TODO.md) for the plan and
-the known gaps.
+CoffeeScript, the .NET IL assembler, Ruby, TypeScript. See [TODO](TODO.md)
+for the plan and the known gaps.
 
 ## Try it online
 
-The [playground](https://sigdev2.github.io/v4script/) runs all fifteen
+The [playground](https://sigdev2.github.io/v4script/) runs all sixteen
 languages in the browser with the same scripts: pick an example - BASIC
 games and graphics, Pascal `Graph`, goroutines in Go, records in Java,
-LINQ in C#,
+LINQ in C#, sealed classes and sequences in Kotlin,
 `call/cc` in Scheme - or write your own program; it stays in your browser.
 How it works and how it differs from the Qt engine:
 [playground](docs/playground.md).
@@ -147,6 +148,7 @@ compiler. To use it in your project, add it as a subdirectory and link
 | [Uniter](https://github.com/asmblah/uniter) | PHP | [MIT](https://opensource.org/licenses/MIT) |
 | [QB64 Phoenix Edition](https://github.com/QB64-Phoenix-Edition/QB64pe) | BASIC graphics algorithms, the 8x8 font of Pascal `Graph` | [MIT](https://opensource.org/licenses/MIT) |
 | [.NET runtime](https://github.com/dotnet/runtime) | the algorithms of C# collections, sorting and `Random` | [MIT](https://github.com/dotnet/runtime/blob/main/LICENSE.TXT) |
+| [Kotlin](https://github.com/JetBrains/kotlin) | the API of the Kotlin standard library and the algorithm of `kotlin.random.Random` | [Apache-2.0](https://github.com/JetBrains/kotlin/blob/master/license/LICENSE.txt) |
 
 The full list of bundled packages and their license texts is in
 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md).
