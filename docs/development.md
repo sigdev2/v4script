@@ -115,7 +115,7 @@ node tools/run-samples.mjs cpp --library    # parse and check the whole library
 value of its last expression) and checks that no expression is deeper than
 the V4 compiler can take. Embed it with `-DV4SCRIPT_MINIFY_JS=ON` (minifies
 at configure time) or `-DV4SCRIPT_JS_DIR=<directory>`. The resources shrink
-from 14.0 MB to 7.4 MB. Run the tests with the minified scripts before a
+from 14.8 MB to 8.0 MB. Run the tests with the minified scripts before a
 release: V4 has crashed on code shapes that only the minified scripts had.
 
 ## The playground
@@ -130,8 +130,8 @@ running: `node tools/run-samples.mjs <language> --examples` (CI runs it).
 ## Reference implementations
 
 The translated languages are checked against real implementations used as
-black boxes (their output, not their sources): gcc, JDK, gforth, QB64-PE,
-Free Pascal, wabt and the WebAssembly spec tests, chibi-scheme
+black boxes (their output, not their sources): gcc, JDK, .NET, kotlinc,
+gforth, QB64-PE, Free Pascal, wabt and the WebAssembly spec tests, chibi-scheme
 ([testing](testing/README.md#samples)). On Windows they run in WSL. Code of
 v4script is written from the behavior and the published specifications;
 do not copy code of those implementations unless its license allows it and

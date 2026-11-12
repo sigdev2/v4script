@@ -257,6 +257,28 @@ const SYNTAXES = {
             constant: 'true false null',
         },
     },
+    kotlin: {
+        rules: [
+            [/"""[\s\S]*?(?:"""|(?![\s\S]))/, 'string'],
+            [LINE_COMMENT, 'comment'],
+            [BLOCK_COMMENT, 'comment'],
+            [DOUBLE_QUOTED, 'string'],
+            [SINGLE_QUOTED, 'string'],
+            [/@[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*/, 'meta'],
+            [/[A-Za-z_]\w*@/, 'meta'],
+            [HEXADECIMAL, 'number'],
+            [NUMBER, 'number'],
+            [IDENTIFIER, 'word'],
+        ],
+        words: {
+            keyword: 'abstract annotation as break by catch class companion const constructor continue crossinline data ' +
+                'do else enum external final finally for fun get if import in infix init inline inner interface internal ' +
+                'is lateinit noinline object open operator out override package private protected public reified ' +
+                'return sealed set super suspend tailrec this throw try typealias val value var vararg when where while',
+            type: 'Any Boolean Byte Char Double Float Int Long Nothing Short String UByte UInt ULong UShort Unit',
+            constant: 'true false null',
+        },
+    },
     forth: {
         ignoreCase: true,
         rules: [

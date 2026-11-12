@@ -72,7 +72,7 @@ time.
 | `V4SCRIPT_BUILD_EXAMPLES` | top level only | build [examples/](../../examples) |
 
 Embedded size of each language (the host layer adds 25 KB, the translator
-core shared by Go, C, C++, Java, C#, Forth, BASIC, Pascal, WebAssembly
+core shared by Go, C, C++, Java, C#, Kotlin, Forth, BASIC, Pascal, WebAssembly
 and Scheme 124 KB; minified: 10 KB and 50 KB):
 
 | Language | Scripts | Minified |
@@ -85,8 +85,9 @@ and Scheme 124 KB; minified: 10 KB and 50 KB):
 | Go | 537 KB | 270 KB |
 | C | 354 KB | 166 KB |
 | C++ (with the files of C) | 1449 KB | 920 KB |
-| Java | 852 KB | 570 KB |
+| Java | 854 KB | 571 KB |
 | C# | 1728 KB | 1078 KB |
+| Kotlin (with the files of Java) | 1779 KB | 1112 KB |
 | Forth | 199 KB | 91 KB |
 | BASIC | 309 KB | 143 KB |
 | Pascal | 732 KB | 391 KB |

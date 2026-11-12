@@ -18,11 +18,11 @@ implementation, tests, documentation). The order approved by the owner:
 | 3 | Java | done |
 | 4 | C++ | done (C++17; C++20 with concepts later) |
 | 5 | C# | done (C# 12, a .NET 8 subset) |
-| 6 | **Kotlin** | next |
+| 6 | Kotlin | done (Kotlin 2.4, the standard library in Kotlin) |
 | 7 | Scheme | done (R7RS-small) |
 | 8 | Pascal | done (Free Pascal 3.2.2) |
 | 9 | BASIC | done (QBasic) |
-| 10 | Rust | planned |
+| 10 | **Rust** | next |
 | 11 | Swift | planned |
 | 12 | Dart | planned |
 | 13 | Scala | planned |
@@ -47,7 +47,7 @@ implementation, tests, documentation). The order approved by the owner:
 | 32 | Ruby | planned |
 | 33 | TypeScript | planned |
 
-Remaining order: Kotlin, Rust, Swift, Dart, Scala, F#, Haskell,
+Remaining order: Rust, Swift, Dart, Scala, F#, Haskell,
 Erlang, Fortran, COBOL, Nim, Zig, assemblers, Verilog, MASM, Ada,
 Common Lisp, the NES and Z80 assemblers, CoffeeScript, IL assembler,
 Ruby, TypeScript.
@@ -171,6 +171,14 @@ Decisions already taken for these stages:
    balancing groups and local inline options (now `RegExp` of V4), exact
    group positions; `System.Text.Json`, `System.Collections.Concurrent`,
    `System.Collections.Immutable`; more `Console` (`ReadKey`, cursor).
+ - **Kotlin**: `kotlinx.coroutines` (`runBlocking`, `launch`, `async`,
+   `delay`, channels, `Flow`) over the suspend generators and the fiber
+   scheduler; reflection beyond `KClass` names (`members`,
+   `KProperty0.isInitialized`); inline functions inlined (now calls, so
+   non-local jumps are exceptions); value classes without boxes; type
+   inference of lambdas deep in nested generic calls without an expected
+   type (the variables of an inner call are fixed early); `===` of boxed
+   numbers by identity; regular expressions on `RegExp` as in Java.
  - **Forth**: `SEE`, `N>R`/`NR>`, xchar words (except `XEMIT`), the Block
    and File word sets (only including host files now); `MS` in words called
    through `EXECUTE` from words compiled before the first waiting word -

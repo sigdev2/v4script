@@ -2,7 +2,7 @@
 
 A host module is an API of the application that programs in every language
 can call: a package in Go, a header in C and C++, a class in Java, a static
-class in C#, a unit in Pascal, predicates in Prolog, procedures in Scheme, imports in
+class in C#, an object in Kotlin, a unit in Pascal, predicates in Prolog, procedures in Scheme, imports in
 WebAssembly. The implementation is one JavaScript object (often a wrapped
 `QObject`); the description of its functions tells every language how to
 show and convert them.
@@ -99,6 +99,7 @@ the full table in [languages](../languages/README.md#host-modules)):
 | C, C++ | `greet`, `is_even` (included header) | `#include <app.h>`: `app_greet`, `app_is_even` |
 | Java | static import: `greet("Ann")` | the class `app.App`: `App.greet` |
 | C# | `using static`: `Greet("Ann")`, `Counter` | the static class `App`: `App.Greet`, `App.Counter` |
+| Kotlin | `greet("Ann")`, `counter` | the object `app.App`: `App.greet`, `App.counter` |
 | Forth | words `greet`, `is-even` | words `app.greet`, `app.is-even` |
 | BASIC | `GREET("Ann")`, `COUNTER` | the object `APP`: `APP.greet("Ann")` |
 | Pascal | `Greet('Ann')`, `Counter` | the unit `App`: `App.Greet('Ann')` |
@@ -113,7 +114,7 @@ the full table in [languages](../languages/README.md#host-modules)):
    `log` is Scheme's. The function stays reachable through the module
    (`app_log`, `app.log`). Choose names that do not clash, or make the
    module non-global.
- - Optional parameters give overloads (Java, C#, Pascal), predicates of several
+ - Optional parameters give overloads (Java, C#, Kotlin, Pascal), predicates of several
    arities (Prolog), a trailing `...any` (Go), `NULL`/0 (C, Forth).
 
 ## Values and errors

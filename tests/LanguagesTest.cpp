@@ -41,13 +41,14 @@ private slots:
                     !language.license.isEmpty() && !language.extensions.isEmpty() && !language.lineComment.isEmpty(),
                 qPrintable(language.id));
         }
-        const QStringList expected { "python", "lua",    "prolog", "perl",  "php",    "go",  "c",     "cpp",
-                                     "java",   "csharp", "forth",  "basic", "pascal", "wat", "scheme" };
+        const QStringList expected { "python", "lua",    "prolog", "perl",  "php",   "go",     "c",   "cpp",
+                                     "java",   "csharp", "kotlin", "forth", "basic", "pascal", "wat", "scheme" };
         QCOMPARE(ids, expected);
         QCOMPARE(v4script::findLanguage("php")->name, QString("PHP"));
         QCOMPARE(v4script::findLanguage("go")->version, QString("1.22"));
         QVERIFY(!v4script::findLanguage("cobol").has_value());
         QCOMPARE(v4script::findLanguageForFile("Program.cs")->id, QString("csharp"));
+        QCOMPARE(v4script::findLanguageForFile("Main.kt")->id, QString("kotlin"));
         QCOMPARE(v4script::findLanguageForFile("main.GO")->id, QString("go"));
         QCOMPARE(v4script::findLanguageForFile(".pl")->id, QString("perl"));
         QCOMPARE(v4script::findLanguageForFile("pro")->id, QString("prolog"));
@@ -101,6 +102,10 @@ private slots:
         QTest::newRow("csharp") << "csharp"
                                 << "Console.WriteLine(\"Hello, мир \" + (1 + 2));\nConsole.Write(\"a\");\n"
                                    "Console.WriteLine(\"b\");\nnew List<int> { 1, 2, 3 }.Count * 14"
+                                << QStringList { "Hello, мир 3", "ab" } << "42";
+        QTest::newRow("kotlin") << "kotlin"
+                                << "println(\"Hello, мир \" + (1 + 2))\nprint(\"a\")\nprintln(\"b\")\n"
+                                   "listOf(1, 2, 3).size * 14"
                                 << QStringList { "Hello, мир 3", "ab" } << "42";
         QTest::newRow("forth") << "forth"
                                << ".\" Hello, мир \" 1 2 + 0 .r cr\n.\" a\"\n.\" b\" cr\n6 7 *"
@@ -251,6 +256,18 @@ private slots:
         QTest::newRow("csharp host") << "csharp"
                                      << "int x = 1;\nFail(\"Z\");"
                                      << "RangeError" << 2;
+        QTest::newRow("kotlin") << "kotlin"
+                                << "val x = 1\nval y = x + undefinedName"
+                                << "unresolved reference 'undefinedName'" << 2;
+        QTest::newRow("kotlin syntax") << "kotlin"
+                                       << "val x = 1\nval y = = 2"
+                                       << "syntax error: Expecting an expression" << 2;
+        QTest::newRow("kotlin exception") << "kotlin"
+                                          << "val a = IntArray(0)\nval n = a.size\nprintln(a[3])"
+                                          << "ArrayIndexOutOfBoundsException: Index 3 out of bounds for length 0" << 3;
+        QTest::newRow("kotlin host") << "kotlin"
+                                     << "val x = 1\nfail(\"Z\")"
+                                     << "RangeError" << 2;
         QTest::newRow("forth") << "forth"
                                << "1 2 +\nundefined-word"
                                << "Undefined word: undefined-word" << 2;
@@ -389,6 +406,10 @@ private slots:
                                 << "int @base = 40;\nint Add(int v) => @base + v;"
                                 << "Add(2)"
                                 << "42";
+        QTest::newRow("kotlin") << "kotlin"
+                                << "val base = 40\nfun add(v: Int) = base + v"
+                                << "add(2)"
+                                << "42";
         QTest::newRow("forth") << "forth"
                                << "40 constant base-value\n: add ( n -- n ) base-value + ;"
                                << "2 add"
@@ -475,6 +496,11 @@ private slots:
             << "csharp"
             << "record K(int X);\nenum Color { Red }\nclass Shape { public virtual int Get() => 7; }\n"
                "int F() => new K(new Shape().Get()).X;\nF()"
+            << "7";
+        QTest::newRow("kotlin")
+            << "kotlin"
+            << "data class K(val x: Int)\nenum class Color { RED }\nopen class Shape { open fun get() = 7 }\n"
+               "fun f() = K(Shape().get()).x\nf()"
             << "7";
         QTest::newRow("forth") << "forth"
                                << "variable kept\n: f 7 ;\nf"
@@ -576,6 +602,8 @@ private slots:
         QTest::newRow("csharp") << "csharp"
                                 << "Console.WriteLine(Greet(\"Ann\") + \" \" + Counter + \" \" + App.Counter);\n"
                                    "Log(\"one\");";
+        QTest::newRow("kotlin") << "kotlin"
+                                << "println(greet(\"Ann\") + \" \" + counter + \" \" + App.counter)\nlog(\"one\")";
         QTest::newRow("forth") << "forth"
                                << "s\" Ann\" greet type space counter 0 .r space app.counter 0 .r cr\n"
                                   "s\" one\" log";
@@ -647,6 +675,9 @@ private slots:
         QTest::newRow("csharp") << "csharp"
                                 << "var ctx = Canvas.Call(\"getContext\", \"2d\");\nctx[\"fillStyle\"] = \"red\";\n"
                                    "ctx.Call(\"fillRect\", 0, 0, 50, 40);";
+        QTest::newRow("kotlin") << "kotlin"
+                                << "val ctx = canvas.call(\"getContext\", \"2d\")\nctx[\"fillStyle\"] = \"red\"\n"
+                                   "ctx.call(\"fillRect\", 0, 0, 50, 40)";
         QTest::newRow("forth") << "forth"
                                << "js\" 2d\" 1 canvas s\" getContext\" js-call value ctx\n"
                                   "js\" red\" ctx s\" fillStyle\" js-set\n0 0 50 40 4 ctx s\" fillRect\" js-call drop";
@@ -755,6 +786,11 @@ private slots:
                                    "Console.WriteLine(Js.Global.Call(\"jsDouble\", 21).AsInt());"
                                 << "42"
                                 << "csSquare(7)";
+        QTest::newRow("kotlin") << "kotlin"
+                                << "Js.global()[\"ktSquare\"] = { x: Int -> x * x }\n"
+                                   "println(Js.global().call(\"jsDouble\", 21).asInt())"
+                                << "42"
+                                << "ktSquare(7)";
         QTest::newRow("forth") << "forth"
                                << ": square ( n -- n*n ) dup * ;\n"
                                   "' square js-function js-global s\" forthSquare\" js-set\n"
@@ -861,6 +897,11 @@ private slots:
                                 << "public static class Mathx\n{\n    public static int Triple(int x) => 3 * x;\n}\n"
                                 << "public static class Mathx\n{\n    public static int Triple(int x) => -x;\n}\n"
                                 << "Mathx.Triple(5)";
+        QTest::newRow("kotlin") << "kotlin"
+                                << "Mathx.kt"
+                                << "object Mathx {\n    fun triple(x: Int) = 3 * x\n}\n"
+                                << "object Mathx {\n    fun triple(x: Int) = -x\n}\n"
+                                << "Mathx.triple(5)";
         QTest::newRow("forth") << "forth"
                                << "mathx.fs"
                                << ": triple 3 * ;\n"
@@ -980,6 +1021,16 @@ private slots:
             << "Broken.cs"
             << "public static class Broken\n{\n    public static int F()\n    {\n        return +;\n    }\n}\n"
             << "Broken.F()" << 5;
+        QTest::newRow("kotlin")
+            << "kotlin"
+            << "Bad.kt"
+            << "object Bad {\n    fun f(): Int {\n        val a = IntArray(1)\n        return a[2]\n"
+               "    }\n}\n"
+            << "Bad.f()" << 4;
+        QTest::newRow("kotlin syntax") << "kotlin"
+                                       << "Broken.kt"
+                                       << "object Broken {\n    fun f(): Int {\n        return +\n    }\n}\n"
+                                       << "Broken.f()" << 3;
         QTest::newRow("forth") << "forth"
                                << "bad.fs"
                                << ": ok 1 ;\n: bad\n  0\n  @ ;\n"
@@ -1165,6 +1216,8 @@ private slots:
                               << "System.out.print(\"Name? \");\nnew java.util.Scanner(System.in).nextLine();";
         QTest::newRow("csharp") << "csharp"
                                 << "Console.Write(\"Name? \");\nConsole.ReadLine();";
+        QTest::newRow("kotlin") << "kotlin"
+                                << "print(\"Name? \")\nreadLine()";
         QTest::newRow("forth") << "forth"
                                << "create buffer 16 allot\n.\" Name? \" buffer 16 accept drop";
         QTest::newRow("basic") << "basic"
@@ -1325,6 +1378,11 @@ private slots:
                                      << "var t = Task.Run(() => { while (true) Thread.Sleep(0); });\nt.Wait();"
                                      << "kept"
                                      << "5";
+        QTest::newRow("kotlin") << "kotlin"
+                                << "var kept = 5"
+                                << "fun deep(n: Int) = n\nwhile (true) deep(1)"
+                                << "kept"
+                                << "5";
         QTest::newRow("forth") << "forth"
                                << "5 constant kept"
                                << ": deep ( n -- n ) ;\n: spin begin 1 deep drop again ;\nspin"
