@@ -814,7 +814,16 @@
     };
     natives['java.lang.Throwable'] = {
         'fillInStackTrace()': function () {
-            Object.defineProperty(this, 'stack', { value: new Error('').stack, writable: true, configurable: true, enumerable: false });
+            // The constructors of the exception are on the stack too: V8 (a
+            // browser, Node.js) keeps 10 frames, and the place of the error
+            // would be cut off.
+            var limit = Error.stackTraceLimit;
+            if (typeof limit === 'number' && limit < 64)
+                Error.stackTraceLimit = 64;
+            var stack = new Error('').stack;
+            if (typeof limit === 'number' && limit < 64)
+                Error.stackTraceLimit = limit;
+            Object.defineProperty(this, 'stack', { value: stack, writable: true, configurable: true, enumerable: false });
             // The place is the first throw (not the exception constructor).
             Object.defineProperty(this, '$fresh', { value: true, writable: true, configurable: true, enumerable: false });
             return this;

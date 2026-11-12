@@ -48,6 +48,12 @@ public interface AutoCloseable {
     void close() throws Exception;
 }
 
+public interface Appendable {
+    Appendable append(CharSequence text) throws java.io.IOException;
+    Appendable append(CharSequence text, int start, int end) throws java.io.IOException;
+    Appendable append(char value) throws java.io.IOException;
+}
+
 public interface Runnable {
     void run();
 }
@@ -527,7 +533,7 @@ public final class StrictMath {
 `);
     // The text of a StringBuilder is a JavaScript string in a field of the object.
     Java.addLibrary('java.lang.builder', 'java.lang', String.raw`
-public final class StringBuilder implements CharSequence, Comparable<StringBuilder> {
+public final class StringBuilder implements CharSequence, Comparable<StringBuilder>, Appendable {
     public native StringBuilder();
     public native StringBuilder(int capacity);
     public native StringBuilder(String text);
